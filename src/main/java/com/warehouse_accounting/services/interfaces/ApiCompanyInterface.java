@@ -12,7 +12,7 @@ import retrofit2.http.Path;
 
 import java.util.List;
 
-public interface CompanyServiceInterface {
+public interface ApiCompanyInterface {
 
     @GET("/api/companies/")
     Call<List<CompanyDto>> getAll();

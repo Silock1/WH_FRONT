@@ -1,7 +1,8 @@
 package com.warehouse_accounting.services.impl;
 
 import com.warehouse_accounting.models.dto.CompanyDto;
-import com.warehouse_accounting.services.interfaces.CompanyServiceInterface;
+import com.warehouse_accounting.services.interfaces.ApiCompanyInterface;
+import com.warehouse_accounting.services.interfaces.CompanyService;
 import org.springframework.stereotype.Service;
 import retrofit2.Retrofit;
 
@@ -9,12 +10,12 @@ import java.io.IOException;
 import java.util.List;
 
 @Service
-public class CompanyService {
+public class CompanyServiceImpl implements CompanyService {
 
-    private final CompanyServiceInterface service;
+    private final ApiCompanyInterface service;
 
-    public CompanyService(Retrofit retrofit) {
-        service = retrofit.create(CompanyServiceInterface.class);
+    public CompanyServiceImpl(Retrofit retrofit) {
+        service = retrofit.create(ApiCompanyInterface.class);
     }
 
     public List<CompanyDto> getAll() throws IOException {
