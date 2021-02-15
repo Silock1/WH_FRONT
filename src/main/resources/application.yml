@@ -3,4 +3,5 @@ server:
 
 retrofit:
   baseUrl: http://localhost:4446/
-  logLevel: BASIC #NONE,BASIC,HEADERS,BODY
+  restServices:
+    role_url: api/role

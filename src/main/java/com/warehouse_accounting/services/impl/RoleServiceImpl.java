@@ -1,82 +1,87 @@
 package com.warehouse_accounting.services.impl;
 
-import com.warehouse_accounting.components.RetrofitServiceGenerator;
 import com.warehouse_accounting.models.dto.RoleDto;
 import com.warehouse_accounting.services.interfaces.RoleService;
-import com.warehouse_accounting.services.interfaces.retrofit.RoleRetrofitService;
-import com.warehouse_accounting.util.exception.NotFoundEntityException;
+import com.warehouse_accounting.services.interfaces.retrofit.RoleApi;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.Level;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 @Log4j2
 @Service
 public class RoleServiceImpl implements RoleService {
-    private final RoleRetrofitService service;
+    private final RoleApi roleApi;
+    private final String roleUrl;
 
-    public RoleServiceImpl(RetrofitServiceGenerator generator) {
-        this.service = generator.createService(RoleRetrofitService.class);
+    public RoleServiceImpl(@Value("${retrofit.restServices.role_url}") String roleUrl, Retrofit retrofit) {
+        this.roleUrl = roleUrl;
+        this.roleApi = retrofit.create(RoleApi.class);
     }
 
     @Override
     public List<RoleDto> getAll() {
+        List<RoleDto> roleDtoList = Collections.emptyList();
+        Call<List<RoleDto>> roleGetAllCall = roleApi.getAll(roleUrl);
         try {
-            Call<List<RoleDto>> callSync = service.getAll();
-            Response<List<RoleDto>> response = callSync.execute();
-            return response.body();
-        } catch (Exception ex) {
-            log.log(Level.ERROR, "Ошибка при получении списка ролей", ex);
-            throw new NotFoundEntityException("Ошибка при получении списка ролей", ex);
+            roleDtoList = roleGetAllCall.execute().body();
+            log.info("Успешно выполнен запрос на получение списка RoleDto");
+        } catch (IOException e) {
+            log.error("Произошла ошибка при выполнении запроса на получение списка RoleDto");
         }
+        return roleDtoList;
     }
 
     @Override
     public RoleDto getById(Long id) {
+        RoleDto roleDto = null;
+        Call<RoleDto> callSync = roleApi.getById(roleUrl, id);
         try {
-            Call<RoleDto> callSync = service.getById(id);
             Response<RoleDto> response = callSync.execute();
-            return response.body();
+            roleDto = response.body();
+            log.info("Успешно выполнен запрос на получение RoleDto по id: {}", id);
         } catch (Exception ex) {
-            log.log(Level.ERROR, "Ошибка при получении роли по id: {}", id, ex);
-            throw new NotFoundEntityException(String.format("Ошибка при получении роли по id: %d", id), ex);
+            log.error("Произошла ошибка при выполнении запроса на получение RoleDto по id: {}", id);
         }
+        return roleDto;
     }
 
     @Override
     public void create(RoleDto dto) {
+        Call<Void> call = roleApi.create(roleUrl, dto);
         try {
-            Call<Void> call = service.create(dto);
             call.execute();
+            log.info("Успешно выполнен запрос на создание RoleDto");
         } catch (IOException e) {
-            log.log(Level.ERROR, "Ошибка при создании роли: {}", dto, e);
-            throw new RuntimeException(String.format("Ошибка при создании роли: %s", dto), e);
+            log.error("Произошла ошибка при выполнении запроса на создании RoleDto");
         }
     }
 
     @Override
     public void update(RoleDto dto) {
+        Call<Void> call = roleApi.update(roleUrl, dto);
         try {
-            Call<Void> call = service.update(dto);
             call.execute();
+            log.info("Успешно выполнен запрос на изменении RoleDto");
         } catch (IOException e) {
-            log.log(Level.ERROR, "Ошибка при изменении роли : {}", dto, e);
-            throw new RuntimeException(String.format("Ошибка при изменении роли: %s", dto), e);
+            log.error("Произошла ошибка при выполнении запроса на изменении RoleDto");
         }
     }
 
     @Override
     public void deleteById(Long id) {
+        Call<Void> call = roleApi.deleteById(roleUrl, id);
         try {
-            Call<Void> call = service.deleteById(id);
             call.execute();
+            log.info("Успешно выполнен запрос на удаление RoleDto");
         } catch (IOException e) {
-            log.log(Level.ERROR, "Ошибка при удалении роли по id: {}", id, e);
-            throw new NotFoundEntityException(String.format("Ошибка при удалении роли по id: %d", id), e);
+            log.error("Произошла ошибка при выполнении запроса на удаление RoleDto по id: {}", id);
         }
     }
 }
