@@ -20,8 +20,6 @@ public class TaxSystemServiceImpl implements TaxSystemService {
     @Value("${retrofit.restServices.tax_system_url}")
     private String taxSystemUrl;
 
-
-
     public TaxSystemServiceImpl(Retrofit retrofit) {
         this.taxSystemApi = retrofit.create(TaxSystemApi.class);
     }
