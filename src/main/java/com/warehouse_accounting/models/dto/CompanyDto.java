@@ -43,5 +43,5 @@ public class CompanyDto {
 
     private String stamp;
 
-    private LegalDetailDto legalDetailDto = new LegalDetailDto();
+    private LegalDetailDto legalDetailDto;
 }
