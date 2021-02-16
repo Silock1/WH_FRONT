@@ -42,7 +42,7 @@ public class TaxSystemServiceImpl implements TaxSystemService {
 
     @Override
     public TaxSystemDto getById(Long id) {
-        Call<TaxSystemDto> taxSystemDtoGetByIdCall =  taxSystemApi.getById(taxSystemUrl + id);
+        Call<TaxSystemDto> taxSystemDtoGetByIdCall =  taxSystemApi.getById(taxSystemUrl, id);
         try {
             taxSystemDto = taxSystemDtoGetByIdCall.execute().body();
             log.info("Успешно выполнен запрос на получение TaxSystemDto c id = {}", id);
@@ -75,7 +75,7 @@ public class TaxSystemServiceImpl implements TaxSystemService {
     @Override
     public void deleteById(Long id) {
         try {
-            taxSystemApi.deleteById(taxSystemUrl+id).execute();
+            taxSystemApi.deleteById(taxSystemUrl, id).execute();
             log.info("Успешно выполнен запрос на удаление TaxSystemDto с id = {}", id);
         } catch (IOException ioException) {
             log.error("Ошибка при удалении TaxSystemDto с id = {}", id);

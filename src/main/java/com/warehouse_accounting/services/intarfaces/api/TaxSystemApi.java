@@ -18,8 +18,8 @@ public interface TaxSystemApi {
     Call<List<TaxSystemDto>> getAll(@Path(value = "url", encoded = true) String url);
 
     @Headers("Accept: application/json")
-    @GET("{url}")
-    Call<TaxSystemDto> getById(@Path(value = "url", encoded = true) String url);
+    @GET("{url}/{id}")
+    Call<TaxSystemDto> getById(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
 
     @Headers("Accept: application/json")
     @PUT("{url}")
@@ -30,6 +30,6 @@ public interface TaxSystemApi {
     Call<TaxSystemDto> create(@Path(value = "url", encoded = true) String url, @Body TaxSystemDto taxSystemDto);
 
     @Headers("Accept: application/json")
-    @DELETE("{url}")
-    Call<TaxSystemDto> deleteById(@Path(value = "url", encoded = true) String url);
+    @DELETE("{url}/{id}")
+    Call<TaxSystemDto> deleteById(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
 }
