@@ -19,8 +19,6 @@ public class TaxSystemServiceImpl implements TaxSystemService {
     private final TaxSystemApi taxSystemApi;
     @Value("${retrofit.restServices.tax_system_url}")
     private String taxSystemUrl;
-    private List<TaxSystemDto> taxSystemDtoList = new ArrayList<>();
-    private TaxSystemDto taxSystemDto = new TaxSystemDto();
 
 
 
@@ -30,6 +28,7 @@ public class TaxSystemServiceImpl implements TaxSystemService {
 
     @Override
     public List<TaxSystemDto> getAll() {
+        List<TaxSystemDto> taxSystemDtoList = new ArrayList<>();
         Call<List<TaxSystemDto>> taxSystemDtoGetAllCall =  taxSystemApi.getAll(taxSystemUrl);
         try {
             taxSystemDtoList = taxSystemDtoGetAllCall.execute().body();
@@ -42,6 +41,7 @@ public class TaxSystemServiceImpl implements TaxSystemService {
 
     @Override
     public TaxSystemDto getById(Long id) {
+        TaxSystemDto taxSystemDto = new TaxSystemDto();
         Call<TaxSystemDto> taxSystemDtoGetByIdCall =  taxSystemApi.getById(taxSystemUrl, id);
         try {
             taxSystemDto = taxSystemDtoGetByIdCall.execute().body();
