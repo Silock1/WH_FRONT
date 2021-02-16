@@ -5,7 +5,6 @@ import com.warehouse_accounting.services.intarfaces.api.TaxSystemApi;
 import com.warehouse_accounting.services.intarfaces.TaxSystemService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -16,7 +15,6 @@ import java.util.List;
 
 @Log4j2
 @Service
-//@PropertySource("classpath:application.yml")
 public class TaxSystemServiceImpl implements TaxSystemService {
     private final TaxSystemApi taxSystemApi;
     @Value("${retrofit.restServices.tax_system_url}")
