@@ -16,10 +16,10 @@ import java.util.List;
 
 @Log4j2
 @Service
-@PropertySource("classpath:application.yml")
+//@PropertySource("classpath:application.yml")
 public class TaxSystemServiceImpl implements TaxSystemService {
     private final TaxSystemApi taxSystemApi;
-    @Value("${tax_system_url}")
+    @Value("${retrofit.restServices.tax_system_url}")
     private String taxSystemUrl;
     private List<TaxSystemDto> taxSystemDtoList = new ArrayList<>();
     private TaxSystemDto taxSystemDto = new TaxSystemDto();

@@ -5,3 +5,4 @@ retrofit:
   baseUrl: http://localhost:4446/
   restServices:
     role_url: api/role
+    tax_system_url: /api/tax_systems
