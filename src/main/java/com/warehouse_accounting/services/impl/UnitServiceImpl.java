@@ -29,9 +29,9 @@ public class UnitServiceImpl implements UnitService {
     @Override
     public List<UnitDto> getAll() {
         List<UnitDto> unitDtoList = Collections.emptyList();
-        Call<List<UnitDto>> roleGetAllCall = unitApi.getAll(unitUrl);
+        Call<List<UnitDto>> unitGetAllCall = unitApi.getAll(unitUrl);
         try {
-            unitDtoList = roleGetAllCall.execute().body();
+            unitDtoList = unitGetAllCall.execute().body();
             log.info("Успешно выполнен запрос на получение списка UnitDto");
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на получение списка UnitDto");
