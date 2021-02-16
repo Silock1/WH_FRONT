@@ -54,8 +54,9 @@ public class TaxSystemServiceImpl implements TaxSystemService {
 
     @Override
     public void update(TaxSystemDto taxSystemDto) {
+        Call<?> updateCall = taxSystemApi.update(taxSystemUrl, taxSystemDto);
         try {
-            taxSystemApi.update(taxSystemUrl, taxSystemDto).execute();
+            updateCall.execute();
             log.info("Успешно выполнен запрос на обновление TaxSystemDto c id = {}", taxSystemDto.getId());
         } catch (IOException ioException) {
             log.error("Ошибка при обновлении TaxSystemDto c id = {}", taxSystemDto.getId());
@@ -64,8 +65,9 @@ public class TaxSystemServiceImpl implements TaxSystemService {
 
     @Override
     public void create(TaxSystemDto taxSystemDto) {
+        Call<?> createCall = taxSystemApi.create(taxSystemUrl, taxSystemDto);
         try {
-            taxSystemApi.create(taxSystemUrl, taxSystemDto).execute();
+            createCall.execute();
             log.info("Успешно выполнен запрос на создание {}", taxSystemDto);
         } catch (IOException ioException) {
             log.error("Ошибка при создании {}", taxSystemDto);
@@ -74,8 +76,9 @@ public class TaxSystemServiceImpl implements TaxSystemService {
 
     @Override
     public void deleteById(Long id) {
+        Call<?> deleteCall = taxSystemApi.deleteById(taxSystemUrl, id);
         try {
-            taxSystemApi.deleteById(taxSystemUrl, id).execute();
+            deleteCall.execute();
             log.info("Успешно выполнен запрос на удаление TaxSystemDto с id = {}", id);
         } catch (IOException ioException) {
             log.error("Ошибка при удалении TaxSystemDto с id = {}", id);
