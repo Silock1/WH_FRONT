@@ -15,21 +15,21 @@ import java.util.List;
 public interface TaxSystemApi {
     @Headers("Accept: application/json")
     @GET("{url}")
-    public Call<List<TaxSystemDto>> getAll(@Path(value = "url", encoded = true) String url);
+    Call<List<TaxSystemDto>> getAll(@Path(value = "url", encoded = true) String url);
 
     @Headers("Accept: application/json")
     @GET("{url}")
-    public Call<TaxSystemDto> getById(@Path(value = "url", encoded = true) String url);
+    Call<TaxSystemDto> getById(@Path(value = "url", encoded = true) String url);
 
     @Headers("Accept: application/json")
     @PUT("{url}")
-    public Call<TaxSystemDto> update(@Path(value = "url", encoded = true) String url, @Body TaxSystemDto taxSystemDto);
+    Call<TaxSystemDto> update(@Path(value = "url", encoded = true) String url, @Body TaxSystemDto taxSystemDto);
 
     @Headers("Accept: application/json")
     @POST("{url}")
-    public Call<TaxSystemDto> create(@Path(value = "url", encoded = true) String url, @Body TaxSystemDto taxSystemDto);
+    Call<TaxSystemDto> create(@Path(value = "url", encoded = true) String url, @Body TaxSystemDto taxSystemDto);
 
     @Headers("Accept: application/json")
     @DELETE("{url}")
-    public Call<TaxSystemDto> deleteById(@Path(value = "url", encoded = true) String url);
+    Call<TaxSystemDto> deleteById(@Path(value = "url", encoded = true) String url);
 }

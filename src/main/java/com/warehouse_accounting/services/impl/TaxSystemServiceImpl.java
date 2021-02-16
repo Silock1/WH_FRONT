@@ -14,22 +14,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
-private List<TaxSystemDto> taxSystemDtoList = new ArrayList<>();
-private TaxSystemDto taxSystemDto = new TaxSystemDto();
-@Override
-public List<RoleDto> getAll() {
-    Call<List<RoleDto>> roleGetAllCall = roleApi.getAll(roleUrl);
-    try {
-        roleDtoList = roleGetAllCall.execute().body();
-        log.info("Успешно выполнен запрос на получение списка RoleDto");
-    } catch (IOException e) {
-        log.error("Произошла ошибка при выполнении запроса на получение списка RoleDto");
-    }
-    return roleDtoList;
-}
- */
-
 @Log4j2
 @Service
 @PropertySource("classpath:application.yml")
