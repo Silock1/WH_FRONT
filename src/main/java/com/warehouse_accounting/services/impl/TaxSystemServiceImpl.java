@@ -1,7 +1,7 @@
 package com.warehouse_accounting.services.impl;
 
 import com.warehouse_accounting.models.dto.TaxSystemDto;
-import com.warehouse_accounting.services.intarfaces.TaxSystemApi;
+import com.warehouse_accounting.services.intarfaces.api.TaxSystemApi;
 import com.warehouse_accounting.services.intarfaces.TaxSystemService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;

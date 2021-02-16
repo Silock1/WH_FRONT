@@ -1,4 +1,4 @@
-package com.warehouse_accounting.services.intarfaces;
+package com.warehouse_accounting.services.intarfaces.api;
 
 import com.warehouse_accounting.models.dto.TaxSystemDto;
 import retrofit2.Call;
