@@ -1,9 +1,14 @@
-package com.warehouse_accounting.services.interfaces.retrofit;
+package com.warehouse_accounting.services.interfaces.api;
 
 import com.warehouse_accounting.models.dto.WarehouseDto;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.http.*;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
+import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
 
 import java.util.List;
 
@@ -18,14 +23,14 @@ public interface WarehouseApi {
 
     @Headers("Accept: application/json")
     @POST("{url}")
-    Call<ResponseBody> create(@Path(value = "url", encoded = true) String url, @Body WarehouseDto dto);
+    Call<Void> create(@Path(value = "url", encoded = true) String url, @Body WarehouseDto dto);
 
 
     @Headers("Accept: application/json")
     @PUT("{url}")
-    Call<ResponseBody> update(@Path(value = "url", encoded = true) String url, @Body WarehouseDto dto);
+    Call<Void> update(@Path(value = "url", encoded = true) String url, @Body WarehouseDto dto);
 
     @Headers("Accept: application/json")
     @DELETE("{url}/{id}")
-    Call<ResponseBody> deleteById(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
+    Call<Void> deleteById(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
 }
