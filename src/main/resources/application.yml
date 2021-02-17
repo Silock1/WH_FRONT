@@ -19,8 +19,8 @@ retrofit:
     legal_detail_url: /api/legal_details
     product_group_url: /api/product_groups
     tax_system_url: /api/tax_systems
-    type_of_contractor_url: /api/types_of_contractors
-    type_of_price_url: /api/types_of_prices
+    type_of_contractor_url: /api/types_of_contractor
+    type_of_price_url: /api/types_of_price
     unit_url: /api/units
     warehouse_url: /api/warehouses
 
