@@ -11,9 +11,9 @@ public interface CompanyService {
 
     CompanyDto getById(long id) throws IOException;
 
-    int create(CompanyDto companyDto) throws IOException;
+    void create(CompanyDto companyDto) throws IOException;
 
-    int update(CompanyDto companyDto) throws IOException;
+    void update(CompanyDto companyDto) throws IOException;
 
-    int deleteById(Long id) throws IOException;
+    void deleteById(Long id) throws IOException;
 }

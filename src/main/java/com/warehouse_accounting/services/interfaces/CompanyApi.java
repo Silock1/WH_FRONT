@@ -21,17 +21,17 @@ public interface CompanyApi {
 
     @Headers("Accept: application/json")
     @GET("{url}/{id}")
-    Call<CompanyDto> getById(@Path("url") String url, @Path("id") long id);
+    Call<CompanyDto> getById(@Path(value = "url", encoded = true) String url, @Path("id") long id);
 
     @Headers("Accept: application/json")
     @POST("{url}")
-    Call<ResponseBody> create(@Path("url") String url, @Body CompanyDto companyDto);
+    Call<Void> create(@Path(value = "url", encoded = true) String url, @Body CompanyDto companyDto);
 
     @Headers("Accept: application/json")
     @PUT("{url}")
-    Call<ResponseBody> update(@Path("url") String url, @Body CompanyDto companyDto);
+    Call<Void> update(@Path(value = "url", encoded = true) String url, @Body CompanyDto companyDto);
 
     @Headers("Accept: application/json")
     @DELETE("{url}/{id}")
-    Call<ResponseBody> deleteById(@Path("url") String url, @Path("id") Long id);
+    Call<Void> deleteById(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
 }

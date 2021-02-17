@@ -6,6 +6,7 @@ import com.warehouse_accounting.services.interfaces.CompanyService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import java.io.IOException;
@@ -25,53 +26,79 @@ public class CompanyServiceImpl implements CompanyService {
         URL = url;
     }
 
+    @Override
     public List<CompanyDto> getAll() {
         List<CompanyDto> result = new ArrayList<>();
         try {
-            result = service.getAll(URL).execute().body();
+            Response<List<CompanyDto>> listResponse = service.getAll(URL).execute();
+            if (listResponse.isSuccessful()) {
+                result = listResponse.body();
+                log.info("Успешно выполнен запрос на получение списка Company");
+            } else {
+                log.error("Произошла ошибка при выполнении запроса на получение списка Company, код: " + listResponse.code());
+            }
         } catch (IOException exception) {
-            log.error("Something went wrong while receiving Company list", exception);
+            log.error("Произошла ошибка при выполнении запроса на получение списка Company", exception);
         }
         return result;
     }
 
+    @Override
     public CompanyDto getById(long id) {
         CompanyDto result = new CompanyDto();
         try {
-            result = service.getById(URL, id).execute().body();
+            Response<CompanyDto> response = service.getById(URL, id).execute();
+            if (response.isSuccessful()) {
+                result = response.body();
+                log.info("Успешно выполнен запрос на получение Company");
+            } else {
+                log.error("Произошла ошибка при выполнении запроса на получение Companyпо id: " + id + "код: " + response.code());
+            }
         } catch (IOException exception) {
-            log.error("Something went wrong while receiving Company", exception);
+            log.error("Произошла ошибка при выполнении запроса на получение Company по id: " + id, exception);
         }
         return result;
     }
 
-    public int create(CompanyDto companyDto) {
-        int result = 0;
+    @Override
+    public void create(CompanyDto companyDto) {
         try {
-            result = service.create(URL, companyDto).execute().code();
+            Response<Void> response = service.create(URL, companyDto).execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на создание Company");
+            } else {
+                log.error("Произошла ошибка при выполнении запроса на создане Company, код: " + response.code());
+            }
         } catch (IOException exception) {
-            log.error("Something went wrong while creating Company", exception);
+            log.error("Произошла ошибка при выполнении запроса на создане Company", exception);
         }
-        return result;
     }
 
-    public int update(CompanyDto companyDto) {
-        int result = 0;
+    @Override
+    public void update(CompanyDto companyDto) {
         try {
-            result = service.update(URL, companyDto).execute().code();
+            Response<Void> response = service.update(URL, companyDto).execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на изменение Company");
+            } else {
+                log.error("Произошла ошибка при выполнении запроса на изменение Company, код: " + response.code());
+            }
         } catch (IOException exception) {
-            log.error("Something went wrong while updating Company", exception);
+            log.error("Произошла ошибка при выполнении запроса на изменение Company", exception);
         }
-        return result;
     }
 
-    public int deleteById(Long id) {
-        int result = 0;
+    @Override
+    public void deleteById(Long id) {
         try {
-            result = service.deleteById(URL, id).execute().code();
+            Response<Void> response = service.deleteById(URL, id).execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на удаление Company");
+            } else {
+                log.error("Произошла ошибка при выполнении запроса на удаление Company по id: ," + id + " код: " + response.code());
+            }
         } catch (IOException exception) {
-            log.error("Something went wrong while deleting Company", exception);
+            log.error("Произошла ошибка при выполнении запроса на удаление Company по id: " + id, exception);
         }
-        return result;
     }
 }
