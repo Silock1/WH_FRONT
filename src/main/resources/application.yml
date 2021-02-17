@@ -1,5 +1,8 @@
+server:
+  port: 4447
+
 retrofit:
   baseUrl: http://localhost:4446/
   restServices:
     role_url: api/role
-    warehouse_url: api/warehouse
+    position-url: api/positions
