@@ -5,4 +5,4 @@ retrofit:
   baseUrl: http://localhost:4446/
   restServices:
     role_url: api/role
-    company_url: api/companies
+    position-url: api/positions
