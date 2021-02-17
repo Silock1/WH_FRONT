@@ -5,6 +5,7 @@ import com.warehouse_accounting.services.intarfaces.api.TaxSystemApi;
 import com.warehouse_accounting.services.intarfaces.TaxSystemService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Log4j2
 @Service
+@Scope("prototype")
 public class TaxSystemServiceImpl implements TaxSystemService {
     private final TaxSystemApi taxSystemApi;
     @Value("${retrofit.restServices.tax_system_url}")
@@ -52,7 +54,7 @@ public class TaxSystemServiceImpl implements TaxSystemService {
 
     @Override
     public void update(TaxSystemDto taxSystemDto) {
-        Call<?> updateCall = taxSystemApi.update(taxSystemUrl, taxSystemDto);
+        Call<Void> updateCall = taxSystemApi.update(taxSystemUrl, taxSystemDto);
         try {
             updateCall.execute();
             log.info("Успешно выполнен запрос на обновление TaxSystemDto c id = {}", taxSystemDto.getId());
@@ -63,7 +65,7 @@ public class TaxSystemServiceImpl implements TaxSystemService {
 
     @Override
     public void create(TaxSystemDto taxSystemDto) {
-        Call<?> createCall = taxSystemApi.create(taxSystemUrl, taxSystemDto);
+        Call<Void> createCall = taxSystemApi.create(taxSystemUrl, taxSystemDto);
         try {
             createCall.execute();
             log.info("Успешно выполнен запрос на создание {}", taxSystemDto);
@@ -74,7 +76,7 @@ public class TaxSystemServiceImpl implements TaxSystemService {
 
     @Override
     public void deleteById(Long id) {
-        Call<?> deleteCall = taxSystemApi.deleteById(taxSystemUrl, id);
+        Call<Void> deleteCall = taxSystemApi.deleteById(taxSystemUrl, id);
         try {
             deleteCall.execute();
             log.info("Успешно выполнен запрос на удаление TaxSystemDto с id = {}", id);
