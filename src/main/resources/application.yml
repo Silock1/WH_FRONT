@@ -6,3 +6,4 @@ retrofit:
   restServices:
     role_url: api/role
     position-url: api/positions
+    company_url: api/companies
