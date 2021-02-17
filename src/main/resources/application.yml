@@ -4,7 +4,7 @@ server:
 retrofit:
   baseUrl: http://localhost:4446/
   restServices:
-    role_url: api/roles
+    role_url: api/role
     position_url: api/positions
     attribute_of_calculation_object_url: api/attribute_of_calculation_objects
     bank_account_url: /api/bank_accounts
@@ -21,9 +21,5 @@ retrofit:
     tax_system_url: /api/tax_systems
     type_of_contractor_url: /api/types_of_contractor
     type_of_price_url: /api/types_of_price
-    unit_url: /api/units
+    unit_url: api/units
     warehouse_url: /api/warehouses
-
-
-
-
