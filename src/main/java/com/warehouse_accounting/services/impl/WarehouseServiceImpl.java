@@ -3,9 +3,8 @@ package com.warehouse_accounting.services.impl;
 
 import com.warehouse_accounting.models.dto.WarehouseDto;
 import com.warehouse_accounting.services.interfaces.WarehouseService;
-import com.warehouse_accounting.services.interfaces.retrofit.WarehouseApi;
+import com.warehouse_accounting.services.interfaces.api.WarehouseApi;
 import lombok.extern.log4j.Log4j2;
-import okhttp3.ResponseBody;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
@@ -54,7 +53,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     public void create(WarehouseDto warehouseDto) {
-        Call<ResponseBody> call = warehouseService.create(warehouseUrl, warehouseDto);
+        Call<Void> call = warehouseService.create(warehouseUrl, warehouseDto);
         try {
             call.execute();
             log.info("Успешно выполнен запрос на создание WarehouseDto");
@@ -65,7 +64,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     public void update(WarehouseDto warehouseDto) {
-        Call<ResponseBody> call = warehouseService.update(warehouseUrl, warehouseDto);
+        Call<Void> call = warehouseService.update(warehouseUrl, warehouseDto);
         try {
             call.execute();
             log.info("Успешно выполнен запрос на изменении WarehouseDto");
@@ -76,7 +75,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     public void deleteById(Long id) {
-        Call<ResponseBody> call = warehouseService.deleteById(warehouseUrl, id);
+        Call<Void> call = warehouseService.deleteById(warehouseUrl, id);
         try {
             call.execute();
             log.info("Успешно выполнен запрос на удаление WarehouseDto");
