@@ -16,7 +16,6 @@ import java.util.List;
 
 @Log4j2
 @Service
-@Scope("prototype")
 public class TaxSystemServiceImpl implements TaxSystemService {
     private final TaxSystemApi taxSystemApi;
     @Value("${retrofit.restServices.tax_system_url}")
