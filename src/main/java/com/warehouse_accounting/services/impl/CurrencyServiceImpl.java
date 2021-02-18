@@ -7,6 +7,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import java.io.IOException;
@@ -28,62 +29,82 @@ public class CurrencyServiceImpl implements CurrencyService {
 
     @Override
     public List<CurrencyDto> getAll() {
-        List<CurrencyDto> currencyDtoList = new ArrayList<>();
+        List<CurrencyDto> list = new ArrayList<>();
         Call<List<CurrencyDto>> listCall = api.getAll(url);
         try {
-            listCall.execute().body();
-            log.info("Успешно выполнен запрос на получение списка CurrencyDto");
+            Response<List<CurrencyDto>> response = listCall.execute();
+            if (response.isSuccessful()){
+                list = response.body();
+                log.info("Успешно выполнен запрос на получение списка CurrencyDto");
+            }else {
+                log.error("Произошла ошибка {} при выполнении запроса на получение списка CurrencyDto", response.code());
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение списка CurrencyDto");
+            log.error("Произошла ошибка при выполнении запроса на получение списка CurrencyDto " + e);
         }
-        return currencyDtoList;
+        return list;
     }
 
     @Override
     public CurrencyDto getById(Long id) {
-        CurrencyDto currencyDto = new CurrencyDto();
+        CurrencyDto dto = new CurrencyDto();
         Call<CurrencyDto> call = api.getById(url, id);
         try {
-            call.execute().body();
-            log.info("Успешно выполнен запрос на получение CurrencyDto");
+            Response<CurrencyDto> response = call.execute();
+            if (response.isSuccessful()){
+                dto = response.body();
+                log.info("Успешно выполнен запрос на получение CurrencyDto");
+            }else {
+                log.error("Произошла ошибка {} при выполнении запроса на получение CurrencyDto c id {}", response.code(), id);
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение CurrencyDto");
+            log.error("Произошла ошибка при выполнении запроса на получение CurrencyDto " + e);
         }
-        return currencyDto;
+        return dto;
     }
 
     @Override
     public void create(CurrencyDto dto) {
         Call<Void> call = api.create(url, dto);
         try {
-            call.execute();
-            log.info("Успешно выполнен запрос на создание CurrencyDto");
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()){
+                log.info("Успешно выполнен запрос на создание CurrencyDto");
+            }else {
+                log.error("Произошла ошибка {} при выполнении запроса на создание CurrencyDto c id {}", response.code(), dto.getId());
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на создание CurrencyDto");
+            log.error("Произошла ошибка при выполнении запроса на создание CurrencyDto " + e);
         }
-
     }
 
     @Override
     public void update(CurrencyDto dto) {
         Call<Void> call = api.update(url, dto);
         try {
-            call.execute();
-            log.info("Успешно выполнен запрос на обновление CurrencyDto");
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()){
+                log.info("Успешно выполнен запрос на обновление CurrencyDto");
+            }else {
+                log.error("Произошла ошибка {} при выполнении запроса на обновление CurrencyDto c id {}", response.code(), dto.getId());
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на обновление CurrencyDto");
+            log.error("Произошла ошибка при выполнении запроса на обновление CurrencyDto" + e);
         }
-
     }
 
     @Override
     public void deleteById(Long id) {
         Call<Void> call = api.deleteById(url, id);
         try {
-            call.execute();
-            log.info("Успешно выполнен запрос на удаление CurrencyDto");
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()){
+                log.info("Успешно выполнен запрос на удаление CurrencyDto");
+            }else {
+                log.error("Произошла ошибка {} при выполнении запроса на удаление CurrencyDto c id {}", response.code(), id);
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на удаление CurrencyDto");
+            log.error("Произошла ошибка при выполнении запроса на удаление CurrencyDto" + e);
         }
     }
 }
