@@ -11,7 +11,7 @@ public interface TypeOfContractorService {
 
     void create(TypeOfContractorDto tcDTO);
 
-    void deleteByID(Long Id);
+    void deleteById(Long Id);
 
     void update(TypeOfContractorDto tcDTO) ;
 }
