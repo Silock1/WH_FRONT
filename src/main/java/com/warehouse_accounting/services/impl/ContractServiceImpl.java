@@ -5,6 +5,7 @@ import com.warehouse_accounting.services.interfaces.ContractService;
 import com.warehouse_accounting.services.interfaces.api.ContractApi;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -14,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Log4j2
+@Service
 public class ContractServiceImpl implements ContractService {
     private final ContractApi contractApi;
     private final String contractUrl;
