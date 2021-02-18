@@ -68,9 +68,9 @@ public class ContractorGroupServiceImpl implements ContractorGroupService {
         try {
             Response<Void> response = call.execute();
             if (response.isSuccessful()){
-                log.info("Успешно выполнен запрос на обновление ContractorGroupDto");
+                log.info("Успешно выполнен запрос на создание ContractorGroupDto");
             }else {
-                log.error("Произошла ошибка {} при выполнении запроса на обновление ContractorGroupDto c id {}", response.code(), dto.getId());
+                log.error("Произошла ошибка {} при выполнении запроса на создание ContractorGroupDto c id {}", response.code(), dto.getId());
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на создание ContractorGroupDto " + e);
