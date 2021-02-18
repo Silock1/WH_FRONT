@@ -21,7 +21,7 @@ public class CurrencyServiceImpl implements CurrencyService {
     private final CurrencyApi api;
     private final String url;
 
-    public CurrencyServiceImpl(Retrofit retrofit, @Value("${retrofit.restServices.position_url}") String url) {
+    public CurrencyServiceImpl(Retrofit retrofit, @Value("${retrofit.restServices.currency_url}") String url) {
         this.api = retrofit.create(CurrencyApi.class);
         this.url = url;
     }
