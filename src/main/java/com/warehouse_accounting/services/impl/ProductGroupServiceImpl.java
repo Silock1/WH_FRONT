@@ -27,29 +27,38 @@ public class ProductGroupServiceImpl implements ProductGroupService {
 
     @Override
     public List<ProductGroupDto> getAll() {
-        List<ProductGroupDto> contractorGroupDtoList = Collections.emptyList();
+        List<ProductGroupDto> productGroupDtoList = Collections.emptyList();
         Call<List<ProductGroupDto>> groupApiAll = productGroupApi.getAll(productGroupUrl);
         try {
-            contractorGroupDtoList = groupApiAll.execute().body();
-            log.info("Успешно выполнен запрос на получение списка ProductGroupDto");
+            Response<List<ProductGroupDto>> response = groupApiAll.execute();
+            if (response.isSuccessful()) {
+                productGroupDtoList = response.body();
+                log.info("Успешно выполнен запрос на получение списка ProductGroupDto");
+            } else {
+                log.error("Произошла ошибка при выполнении запроса на получение списка ProductGroupDto");
+            }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на получение списка ProductGroupDto", e);
         }
-        return contractorGroupDtoList;
+        return productGroupDtoList;
     }
 
     @Override
     public ProductGroupDto getById(Long id) {
-        ProductGroupDto contractorGroupDto = null;
+        ProductGroupDto productGroupDto = null;
         Call<ProductGroupDto> callSync = productGroupApi.getById(productGroupUrl, id);
         try {
             Response<ProductGroupDto> response = callSync.execute();
-            contractorGroupDto = response.body();
-            log.info("Успешно выполнен запрос на получение ProductGroupDto по id: {}", id);
+            if (response.isSuccessful()) {
+                productGroupDto = response.body();
+                log.info("Успешно выполнен запрос на получение ProductGroupDto по id: {}", id);
+            } else {
+                log.error("Произошла ошибка при выполнении запроса на получение ProductGroupDto по id: {}", id);
+            }
         } catch (Exception e) {
             log.error("Произошла ошибка при выполнении запроса на получение ProductGroupDto по id", e);
         }
-        return contractorGroupDto;
+        return productGroupDto;
     }
 
     @Override
