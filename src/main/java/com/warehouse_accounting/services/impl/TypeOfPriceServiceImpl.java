@@ -16,11 +16,11 @@ import java.util.List;
 
 @Log4j2
 @Service
-public class TypeOfPrice implements TypeOfPriceService {
+public class TypeOfPriceServiceImpl implements TypeOfPriceService {
     private final TypeOfPriceApi typeOfPriceApi;
     private final String typeOfPriceUrl;
 
-    public TypeOfPrice(@Value("${retrofit.restServices.type_of_price_url}") String typeOfPriceUrl, Retrofit retrofit) {
+    public TypeOfPriceServiceImpl(@Value("${retrofit.restServices.type_of_price_url}") String typeOfPriceUrl, Retrofit retrofit) {
         this.typeOfPriceUrl = typeOfPriceUrl;
         this.typeOfPriceApi = retrofit.create(TypeOfPriceApi.class);
     }
@@ -30,10 +30,15 @@ public class TypeOfPrice implements TypeOfPriceService {
         List<TypeOfPriceDto> typeOfPriceDtos = Collections.emptyList();
         Call<List<TypeOfPriceDto>> typeOfPriceApiAll = typeOfPriceApi.getAll(typeOfPriceUrl);
         try {
-            typeOfPriceDtos = typeOfPriceApiAll.execute().body();
-            log.info("Успешно выполнен запрос на получение списка TypeOfPriceDto");
+            Response<List<TypeOfPriceDto>> response = typeOfPriceApiAll.execute();
+            if (response.isSuccessful()) {
+                typeOfPriceDtos = response.body();
+                log.info("Успешно выполнен запрос на получение списка TypeOfPriceDto");
+            } else {
+                log.error("Произошла ошибка при выполнении запроса на получение списка TypeOfPriceDto");
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение списка TypeOfPriceDto");
+            log.error("Произошла ошибка при выполнении запроса на получение списка TypeOfPriceDto", e);
         }
         return typeOfPriceDtos;
     }
@@ -44,10 +49,14 @@ public class TypeOfPrice implements TypeOfPriceService {
         Call<TypeOfPriceDto> callSync = typeOfPriceApi.getById(typeOfPriceUrl, id);
         try {
             Response<TypeOfPriceDto> response = callSync.execute();
-            typeOfPriceDto = response.body();
-            log.info("Успешно выполнен запрос на получение TypeOfPriceDto по id: {}", id);
-        } catch (Exception ex) {
-            log.error("Произошла ошибка при выполнении запроса на получение TypeOfPriceDto по id: {}", id);
+            if (response.isSuccessful()) {
+                typeOfPriceDto = response.body();
+                log.info("Успешно выполнен запрос на получение TypeOfPriceDto по id: {}", id);
+            } else {
+                log.error("Произошла ошибка при выполнении запроса на получение TypeOfPriceDto по id: {}", id);
+            }
+        } catch (Exception e) {
+            log.error("Произошла ошибка при выполнении запроса на получение TypeOfPriceDto по id", e);
         }
         return typeOfPriceDto;
     }
@@ -62,7 +71,7 @@ public class TypeOfPrice implements TypeOfPriceService {
                 log.error("Произошла ошибка при выполнении запроса на создании TypeOfPriceDto");
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на создании TypeOfPriceDto");
+            log.error("Произошла ошибка при выполнении запроса на создании TypeOfPriceDto", e);
         }
     }
 
@@ -76,7 +85,7 @@ public class TypeOfPrice implements TypeOfPriceService {
                 log.error("Произошла ошибка при выполнении запроса на изменении TypeOfPriceDto");
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на изменении TypeOfPriceDto");
+            log.error("Произошла ошибка при выполнении запроса на изменении TypeOfPriceDto", e);
         }
     }
 
@@ -90,7 +99,7 @@ public class TypeOfPrice implements TypeOfPriceService {
                 log.error("Произошла ошибка при выполнении запроса на удаление TypeOfPriceDto по id: {}", id);
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на удаление TypeOfPriceDto по id: {}", id);
+            log.error("Произошла ошибка при выполнении запроса на удаление TypeOfPriceDto по id", e);
         }
     }
 }
