@@ -1,11 +1,10 @@
 package com.warehouse_accounting.services.impl;
 
 import com.warehouse_accounting.models.dto.TaxSystemDto;
-import com.warehouse_accounting.services.intarfaces.api.TaxSystemApi;
-import com.warehouse_accounting.services.intarfaces.TaxSystemService;
+import com.warehouse_accounting.services.interfaces.api.TaxSystemApi;
+import com.warehouse_accounting.services.interfaces.TaxSystemService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
 import retrofit2.Retrofit;
