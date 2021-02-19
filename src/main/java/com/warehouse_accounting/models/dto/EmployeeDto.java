@@ -32,12 +32,12 @@ public class EmployeeDto {
 
     private String password;
 
-    //private DepartmentDto department = new DepartmentDto();
+    //private DepartmentDto department;
 
-    private PositionDto position = new PositionDto();
+    private PositionDto position;
 
     private Set<RoleDto> roles;
 
-    private ImageDto image = new ImageDto();
+    private ImageDto image;
 
 }
