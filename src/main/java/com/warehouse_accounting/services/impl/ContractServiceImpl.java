@@ -43,8 +43,7 @@ public class ContractServiceImpl implements ContractService {
         ContractDto contractDto = null;
         Call<ContractDto> callSync = contractApi.getById(contractUrl, id);
         try {
-            Response<ContractDto> response = callSync.execute();
-            contractDto = response.body();
+            contractDto = callSync.execute().body();
             log.info("Успешно выполнен запрос на получение ContractDto по id: {}", id);
         } catch (Exception e) {
             log.error("Произошла ошибка при выполнении запроса на получение ContractDto по id", e);
