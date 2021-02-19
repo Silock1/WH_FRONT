@@ -2,7 +2,7 @@ package com.warehouse_accounting.services.impl;
 
 import com.warehouse_accounting.models.dto.UnitDto;
 import com.warehouse_accounting.services.interfaces.UnitService;
-import com.warehouse_accounting.services.interfaces.retrofit.UnitApi;
+import com.warehouse_accounting.services.interfaces.api.UnitApi;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
