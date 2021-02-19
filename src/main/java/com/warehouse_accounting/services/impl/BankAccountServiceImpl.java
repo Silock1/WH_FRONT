@@ -30,10 +30,15 @@ public class BankAccountServiceImpl implements BankAccountService {
         List<BankAccountDto> bankAccountDtoList = Collections.emptyList();
         Call<List<BankAccountDto>> bankAccountGetAllCall = bankAccountApi.getAll(bankAccountUrl);
         try {
-            bankAccountDtoList = bankAccountGetAllCall.execute().body();
-            log.info("Успешно выполнен запрос на получение списка BankAccountDto");
+            Response<List<BankAccountDto>> response = bankAccountGetAllCall.execute();
+            if (response.isSuccessful()) {
+                bankAccountDtoList = response.body();
+                log.info("Успешно выполнен запрос на получение списка BankAccountDto");
+            } else {
+                log.error("Произошла ошибка при выполнении запроса на получение списка BankAccountDto");
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение списка BankAccountDto");
+            log.error("Произошла ошибка при выполнении запроса на получение списка BankAccountDto", e);
         }
         return bankAccountDtoList;
     }
@@ -44,10 +49,14 @@ public class BankAccountServiceImpl implements BankAccountService {
         Call<BankAccountDto> callSync = bankAccountApi.getById(bankAccountUrl, id);
         try {
             Response<BankAccountDto> response = callSync.execute();
-            bankAccountDto = response.body();
-            log.info("Успешно выполнен запрос на получение BankAccountDto по id: {}", id);
-        } catch (Exception ex) {
-            log.error("Произошла ошибка при выполнении запроса на получение BankAccountDto по id: {}", id);
+            if (response.isSuccessful()) {
+                bankAccountDto = response.body();
+                log.info("Успешно выполнен запрос на получение BankAccountDto по id: {}", id);
+            } else {
+                log.error("Произошла ошибка при выполнении запроса на получение BankAccountDto по id: {}", id);
+            }
+        } catch (Exception e) {
+            log.error("Произошла ошибка при выполнении запроса на получение BankAccountDto по id", e);
         }
         return bankAccountDto;
     }
@@ -59,7 +68,7 @@ public class BankAccountServiceImpl implements BankAccountService {
             call.execute();
             log.info("Успешно выполнен запрос на создание BankAccountDto");
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на создании BankAccountDto");
+            log.error("Произошла ошибка при выполнении запроса на создании BankAccountDto", e);
         }
     }
 
@@ -70,7 +79,7 @@ public class BankAccountServiceImpl implements BankAccountService {
             call.execute();
             log.info("Успешно выполнен запрос на изменении BankAccountDto");
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на изменении BankAccountDto");
+            log.error("Произошла ошибка при выполнении запроса на изменении BankAccountDto", e);
         }
     }
 
@@ -81,7 +90,7 @@ public class BankAccountServiceImpl implements BankAccountService {
             call.execute();
             log.info("Успешно выполнен запрос на удаление BankAccountDto");
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на удаление BankAccountDto по id: {}", id);
+            log.error("Произошла ошибка при выполнении запроса на удаление BankAccountDto по id", e);
         }
     }
 }
