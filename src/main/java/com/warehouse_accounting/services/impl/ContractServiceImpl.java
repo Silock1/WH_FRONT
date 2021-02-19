@@ -30,8 +30,13 @@ public class ContractServiceImpl implements ContractService {
         List<ContractDto> contractDtoList = Collections.emptyList();
         Call<List<ContractDto>> roleGetAllCall = contractApi.getAll(contractUrl);
         try {
-            contractDtoList = roleGetAllCall.execute().body();
-            log.info("Успешно выполнен запрос на получение списка ContractDto");
+            Response<List<ContractDto>> response = roleGetAllCall.execute();
+            if (response.isSuccessful()) {
+                contractDtoList = response.body();
+                log.info("Успешно выполнен запрос на получение списка ContractDto");
+            } else {
+                log.error("Произошла ошибка при выполнении запроса на получение списка ContractDto");
+            }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на получение списка ContractDto", e);
         }
@@ -43,8 +48,13 @@ public class ContractServiceImpl implements ContractService {
         ContractDto contractDto = null;
         Call<ContractDto> callSync = contractApi.getById(contractUrl, id);
         try {
-            contractDto = callSync.execute().body();
-            log.info("Успешно выполнен запрос на получение ContractDto по id: {}", id);
+            Response<ContractDto> response = callSync.execute();
+            if (response.isSuccessful()){
+                contractDto = response.body();
+                log.info("Успешно выполнен запрос на получение ContractDto по id: {}", id);
+            } else {
+                log.error("Произошла ошибка при выполнении запроса на получение ContractDto по id: {}", id);
+            }
         } catch (Exception e) {
             log.error("Произошла ошибка при выполнении запроса на получение ContractDto по id", e);
         }
