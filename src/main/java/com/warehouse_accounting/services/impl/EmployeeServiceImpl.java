@@ -18,17 +18,17 @@ import java.util.List;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeApi employeeApi;
-    @Value("${retrofit.restServices.employee_url}")
-    private String employeeUrl;
+    private final String url;
 
-    public EmployeeServiceImpl(Retrofit retrofit) {
+    public EmployeeServiceImpl(@Value("${retrofit.restServices.employee_url}") String url, Retrofit retrofit) {
         this.employeeApi = retrofit.create(EmployeeApi.class);
+        this.url = url;
     }
 
     @Override
     public List<EmployeeDto> getAll() {
         List<EmployeeDto> employeeDtoList = new ArrayList<>();
-        Call<List<EmployeeDto>> employeeListCall = employeeApi.getAll(employeeUrl);
+        Call<List<EmployeeDto>> employeeListCall = employeeApi.getAll(url);
         try {
             Response<List<EmployeeDto>> response = employeeListCall.execute();
             if (response.isSuccessful()){
@@ -46,7 +46,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDto getById(Long id) {
         EmployeeDto employeeDto = EmployeeDto.builder().build();
-        Call<EmployeeDto> employeeCall = employeeApi.getById(employeeUrl, id);
+        Call<EmployeeDto> employeeCall = employeeApi.getById(url, id);
         try {
             Response<EmployeeDto> response = employeeCall.execute();
             if (response.isSuccessful()){
@@ -63,7 +63,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void create(EmployeeDto employeeDto) {
-        Call<Void> voidCall = employeeApi.create(employeeUrl, employeeDto);
+        Call<Void> voidCall = employeeApi.create(url, employeeDto);
         try {
             Response<Void> response = voidCall.execute();
             if (response.isSuccessful()){
@@ -78,7 +78,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void update(EmployeeDto employeeDto) {
-        Call<Void> voidCall = employeeApi.update(employeeUrl, employeeDto);
+        Call<Void> voidCall = employeeApi.update(url, employeeDto);
         try {
             Response<Void> response = voidCall.execute();
             if (response.isSuccessful()){
@@ -94,7 +94,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void deleteById(Long id) {
-        Call<Void> voidCall = employeeApi.deleteById(employeeUrl, id);
+        Call<Void> voidCall = employeeApi.deleteById(url, id);
         try {
             Response<Void> response = voidCall.execute();
             if (response.isSuccessful()){
