@@ -99,11 +99,4 @@ public class WarehouseServiceImpl implements WarehouseService {
             e.printStackTrace();
         }
     }
-
-    @PostConstruct
-    public void test() {
-        create(WarehouseDto.builder().name("sdsdsdsds").build());
-        create(WarehouseDto.builder().name("ssdsds2222222222s").build());
-        System.out.println(getById(1l));
-    }
 }
