@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +34,8 @@ public class WarehouseServiceImpl implements WarehouseService {
             listWarehouseDto = call.execute().body();
             log.info("Успешно выполнен запрос на получение списка WarehouseDto");
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение списка WarehouseDto");
+            log.error("Произошла ошибка при выполнении запроса : {}", e.getMessage());
+            e.printStackTrace();
         }
         return listWarehouseDto;
     }
@@ -43,10 +45,15 @@ public class WarehouseServiceImpl implements WarehouseService {
         WarehouseDto warehouseDto = null;
         Call<WarehouseDto> call = warehouseService.getById(warehouseUrl, id);
         try {
-            warehouseDto = call.execute().body();
-            log.info("Успешно выполнен запрос на получение WarehouseDto по id: {}", id);
+            if (call.execute().isSuccessful()) {
+                warehouseDto = call.clone().execute().body();
+                log.info("Успешно выполнен запрос на получение WarehouseDto по id: {}", id);
+            } else {
+                log.error("Произошла ошибка при выполнении запроса на получение  WarehouseDto по id: {}", id);
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение  WarehouseDto по id: {}", id);
+            log.error("Произошла ошибка при выполнении запроса : {}", e.getMessage());
+            e.printStackTrace();
         }
         return warehouseDto;
     }
@@ -58,7 +65,8 @@ public class WarehouseServiceImpl implements WarehouseService {
             call.execute();
             log.info("Успешно выполнен запрос на создание WarehouseDto");
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на создании WarehouseDto");
+            log.error("Произошла ошибка при выполнении запроса: {}", e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -66,10 +74,14 @@ public class WarehouseServiceImpl implements WarehouseService {
     public void update(WarehouseDto warehouseDto) {
         Call<Void> call = warehouseService.update(warehouseUrl, warehouseDto);
         try {
-            call.execute();
-            log.info("Успешно выполнен запрос на изменении WarehouseDto");
+            if (call.execute().isSuccessful()) {
+                log.info("Успешно выполнен запрос на изменении WarehouseDto");
+            } else {
+                log.error("Произошла ошибка при выполнении запроса на изменении WarehouseDto");
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на изменении WarehouseDto");
+            log.error("Произошла ошибка при выполнении запроса : {}", e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -77,11 +89,21 @@ public class WarehouseServiceImpl implements WarehouseService {
     public void deleteById(Long id) {
         Call<Void> call = warehouseService.deleteById(warehouseUrl, id);
         try {
-            call.execute();
-            log.info("Успешно выполнен запрос на удаление WarehouseDto");
+            if (call.execute().isSuccessful()) {
+                log.info("Успешно выполнен запрос на удаление WarehouseDto");
+            } else {
+                log.error("Произошла ошибка при выполнении запроса на удаление WarehouseDto по id: {}", id);
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на удаление WarehouseDto по id: {}", id);
+            log.error("Произошла ошибка при выполнении запроса : {}", e.getMessage());
+            e.printStackTrace();
         }
     }
 
+    @PostConstruct
+    public void test() {
+        create(WarehouseDto.builder().name("sdsdsdsds").build());
+        create(WarehouseDto.builder().name("ssdsds2222222222s").build());
+        System.out.println(getById(1l));
+    }
 }
