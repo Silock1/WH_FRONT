@@ -65,8 +65,11 @@ public class BankAccountServiceImpl implements BankAccountService {
     public void create(BankAccountDto dto) {
         Call<Void> call = bankAccountApi.create(bankAccountUrl, dto);
         try {
-            call.execute();
-            log.info("Успешно выполнен запрос на создание BankAccountDto");
+            if (call.execute().isSuccessful()) {
+                log.info("Успешно выполнен запрос на создание BankAccountDto");
+            } else {
+                log.error("Произошла ошибка при выполнении запроса на создании BankAccountDto");
+            }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на создании BankAccountDto", e);
         }
@@ -76,8 +79,11 @@ public class BankAccountServiceImpl implements BankAccountService {
     public void update(BankAccountDto dto) {
         Call<Void> call = bankAccountApi.update(bankAccountUrl, dto);
         try {
-            call.execute();
-            log.info("Успешно выполнен запрос на изменении BankAccountDto");
+            if (call.execute().isSuccessful()) {
+                log.info("Успешно выполнен запрос на изменении BankAccountDto");
+            } else {
+                log.error("Произошла ошибка при выполнении запроса на изменении BankAccountDto");
+            }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на изменении BankAccountDto", e);
         }
@@ -87,8 +93,11 @@ public class BankAccountServiceImpl implements BankAccountService {
     public void deleteById(Long id) {
         Call<Void> call = bankAccountApi.deleteById(bankAccountUrl, id);
         try {
-            call.execute();
-            log.info("Успешно выполнен запрос на удаление BankAccountDto");
+            if (call.execute().isSuccessful()) {
+                log.info("Успешно выполнен запрос на удаление BankAccountDto");
+            } else {
+                log.error("Произошла ошибка при выполнении запроса на удаление BankAccountDto по id: {}", id);
+            }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на удаление BankAccountDto по id", e);
         }
