@@ -6,7 +6,7 @@ html, body, td, .gwt-TextArea, textarea {
 #navbarTop {
     background: #1f75a8;
     vertical-align: middle;
-    border-color: inherit;
+    /*border-color: inherit;*/
     height: 58px;
     width: 100%;
 }
@@ -21,25 +21,24 @@ html, body, td, .gwt-TextArea, textarea {
 }
 
 #rightSideNavBar {
-    position: relative;
+    height: 100%;
+    vertical-align: inherit;
 }
 
 #rightSideNavBar img {
-    margin: auto;
-    position: relative;
     float: right;
-    padding-top: 7px;
+    padding-top: 18px;
     padding-left: 7px;
     padding-right: 7px;
 }
 
 #logo_main {
-    padding-left: 3px;
+    padding-left: 16px;
 }
 
 #vertical_layout {
+    margin-top: 9px;
     padding: 0;
-    margin: 0;
 }
 
 #vertical_layout span {
@@ -58,9 +57,16 @@ vaadin-tabs {
 
 vaadin-tab {
     align-self: center;
-    padding-left: 17px;
-    padding-right: 17px;
+    padding-left: 15px;
+    padding-right: 15px;
+    height: 100%;
 }
-vaadin-tab select {
+
+[aria-selected="true"] {
     background-color: rgba(0, 0, 0, 0.15);
+}
+
+:focus {
+    background-color: rgba(0, 0, 0, 0.15);
+    outline: unset;
 }
