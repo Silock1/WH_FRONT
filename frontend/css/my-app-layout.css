@@ -3,23 +3,64 @@ html, body, td, .gwt-TextArea, textarea {
     font: 12px "Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
 }
 
-div#navbar {
+#navbarTop {
     background: #1f75a8;
-    display: table-row-group;
     vertical-align: middle;
     border-color: inherit;
     height: 58px;
-    width: calc(100vw - 21px)
+    width: 100%;
+}
+
+#navBarText {
+    color: rgb(198, 221, 234);
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    margin: 0;
+    font: 11px "“Helvetica Neue”", Helvetica, Arial, "“Lucida Grande”", sans-serif;
+}
+
+#rightSideNavBar {
+    position: relative;
+}
+
+#rightSideNavBar img {
+    margin: auto;
+    position: relative;
+    float: right;
+    padding-top: 7px;
+    padding-left: 7px;
+    padding-right: 7px;
 }
 
 #logo_main {
-    padding-left: 5px;
+    padding-left: 3px;
 }
 
 #vertical_layout {
     padding: 0;
+    margin: 0;
 }
 
-#navBarText {
-    margin-top: 0;
+#vertical_layout span {
+    padding: 0;
+    margin: 0;
+}
+
+#vertical_layout img {
+    padding-top: 15px;
+    margin: 0;
+}
+
+vaadin-tabs {
+    height: 100%;
+}
+
+vaadin-tab {
+    align-self: center;
+    padding-left: 17px;
+    padding-right: 17px;
+}
+vaadin-tab select {
+    background-color: rgba(0, 0, 0, 0.15);
 }

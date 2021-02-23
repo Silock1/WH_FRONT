@@ -2,6 +2,7 @@ package com.warehouse_accounting.components;
 
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -10,8 +11,7 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
-import com.vaadin.flow.theme.Theme;
-import com.vaadin.flow.theme.lumo.Lumo;
+import com.vaadin.flow.theme.NoTheme;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.DataInputStream;
@@ -23,8 +23,9 @@ import java.util.List;
 
 @Route
 @Log4j2
-@Theme(value = Lumo.class, variant = Lumo.DARK)
-@CssImport("./css/my-app-layout.css")
+@NoTheme
+@CssImport(value = "./css/my-app-layout.css", themeFor = "vaadin-app-layout")
+@CssImport(value = "./css/my-app-layout.css")
 public class AppView extends AppLayout {
     private final String LOGO_PNG = "logo_main.svg";
 
@@ -58,6 +59,12 @@ public class AppView extends AppLayout {
             Tab tab = new Tab(verticalLayout);
             navBarTabs.add(tab);
         }
+        Div rightSideNavBar = new Div();
+        rightSideNavBar.add(new Image("https://online.moysklad.ru/app/cdn/r880/images/menu/help.svg","help"));
+        rightSideNavBar.add(new Image("https://online.moysklad.ru/app/cdn/r880/images/menu/bell.svg","notification"));
+        rightSideNavBar.setMinHeight("58");
+        rightSideNavBar.setId("rightSideNavBar");
+        rightSideNavBar.setWidthFull();
 
         StreamResource resource = new StreamResource("logo_main.svg",
                 () -> getImageInputStream(LOGO_PNG)); // Если icons будут в виде файлов в static лежать
@@ -65,7 +72,7 @@ public class AppView extends AppLayout {
         logo.setId("logo_main");
         logo.setHeight("19px");
         logo.setWidth("58px");
-        addToNavbar(logo, navBarTabs);
+        addToNavbar(logo, navBarTabs, rightSideNavBar);
     }
 
     public static InputStream getImageInputStream(String svgIconName) {
@@ -73,7 +80,7 @@ public class AppView extends AppLayout {
         try {
             imageInputStream = new DataInputStream(new FileInputStream("src/main/resources/static/icons/" + svgIconName));
         } catch (IOException ex) {
-            log.error("При чтении icon произошла ошибка: ", ex);
+            log.error("При чтении icon {} произошла ошибка", svgIconName);
         }
         return imageInputStream;
     }
