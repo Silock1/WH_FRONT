@@ -57,7 +57,9 @@ public class AppView extends AppLayout {
             verticalLayout.setId("vertical_layout");
             verticalLayout.setAlignItems(FlexComponent.Alignment.CENTER);
             Tab tab = new Tab(verticalLayout);
-            navBarTabs.add(tab);
+            Tab separatorTab = new Tab();
+            separatorTab.setId("separator_tab");
+            navBarTabs.add(tab, separatorTab);
         }
         Div rightSideNavBar = new Div();
         rightSideNavBar.add(new Image("https://online.moysklad.ru/app/cdn/r880/images/menu/help.svg","help"));
@@ -67,7 +69,7 @@ public class AppView extends AppLayout {
         rightSideNavBar.setWidthFull();
 
         StreamResource resource = new StreamResource("logo_main.svg",
-                () -> getImageInputStream(LOGO_PNG)); // Если icons будут в виде файлов в static лежать
+                () -> getImageInputStream(LOGO_PNG)); // Если icons будут в виде svg файлов в static лежать
         Image logo = new Image(resource, "logo_main");
         logo.setId("logo_main");
         logo.setHeight("19px");

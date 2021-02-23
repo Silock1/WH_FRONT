@@ -62,6 +62,16 @@ vaadin-tab {
     height: 100%;
 }
 
+vaadin-tab:hover {
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+#separator_tab {
+    background: #1f75a8;
+    min-width: 8px;
+    padding: 0;
+}
+
 [aria-selected="true"] {
     background-color: rgba(0, 0, 0, 0.15);
 }
