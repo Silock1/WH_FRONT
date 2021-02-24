@@ -85,7 +85,7 @@ public class WarehouseServiceImpl implements WarehouseService {
             if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на изменение WarehouseDto");
             } else {
-                log.error("Произошла ошибка {] при выполнении запроса на изменение WarehouseDto",response.code());
+                log.error("Произошла ошибка {} при выполнении запроса на изменение WarehouseDto",response.code());
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на изменение WarehouseDto", e);
