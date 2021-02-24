@@ -8,9 +8,9 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -31,11 +31,15 @@ public class WarehouseServiceImpl implements WarehouseService {
         List<WarehouseDto> listWarehouseDto = Collections.emptyList();
         Call<List<WarehouseDto>> call = warehouseService.getAll(warehouseUrl);
         try {
-            listWarehouseDto = call.execute().body();
-            log.info("Успешно выполнен запрос на получение списка WarehouseDto");
+            Response<List<WarehouseDto>> response = call.execute();
+            if (response.isSuccessful()) {
+                listWarehouseDto = response.body();
+                log.info("Успешно выполнен запрос на получение списка WarehouseDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на получение списка WarehouseDto", response.code());
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса : {}", e.getMessage());
-            e.printStackTrace();
+            log.error("Произошла ошибка при выполнении запроса на получение списка WarehouseDto", e);
         }
         return listWarehouseDto;
     }
@@ -45,15 +49,15 @@ public class WarehouseServiceImpl implements WarehouseService {
         WarehouseDto warehouseDto = null;
         Call<WarehouseDto> call = warehouseService.getById(warehouseUrl, id);
         try {
-            if (call.execute().isSuccessful()) {
-                warehouseDto = call.clone().execute().body();
+            Response<WarehouseDto> response = call.execute();
+            if (response.isSuccessful()) {
+                warehouseDto = response.body();
                 log.info("Успешно выполнен запрос на получение WarehouseDto по id: {}", id);
             } else {
-                log.error("Произошла ошибка при выполнении запроса на получение  WarehouseDto по id: {}", id);
+                log.error("Произошла ошибка {} при выполнении запроса на получение  WarehouseDto по id: {}", response.code(), id);
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса : {}", e.getMessage());
-            e.printStackTrace();
+            log.error("Произошла ошибка при выполнении запроса на получение  WarehouseDto по id", e);
         }
         return warehouseDto;
     }
@@ -62,11 +66,14 @@ public class WarehouseServiceImpl implements WarehouseService {
     public void create(WarehouseDto warehouseDto) {
         Call<Void> call = warehouseService.create(warehouseUrl, warehouseDto);
         try {
-            call.execute();
-            log.info("Успешно выполнен запрос на создание WarehouseDto");
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на создание WarehouseDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на создание WarehouseDto", response.code());
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса: {}", e.getMessage());
-            e.printStackTrace();
+            log.error("Произошла ошибка при выполнении запроса на создание WarehouseDto", e);
         }
     }
 
@@ -74,14 +81,14 @@ public class WarehouseServiceImpl implements WarehouseService {
     public void update(WarehouseDto warehouseDto) {
         Call<Void> call = warehouseService.update(warehouseUrl, warehouseDto);
         try {
-            if (call.execute().isSuccessful()) {
-                log.info("Успешно выполнен запрос на изменении WarehouseDto");
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на изменение WarehouseDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на изменении WarehouseDto");
+                log.error("Произошла ошибка {] при выполнении запроса на изменение WarehouseDto",response.code());
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса : {}", e.getMessage());
-            e.printStackTrace();
+            log.error("Произошла ошибка при выполнении запроса на изменение WarehouseDto", e);
         }
     }
 
@@ -89,14 +96,14 @@ public class WarehouseServiceImpl implements WarehouseService {
     public void deleteById(Long id) {
         Call<Void> call = warehouseService.deleteById(warehouseUrl, id);
         try {
-            if (call.execute().isSuccessful()) {
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на удаление WarehouseDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на удаление WarehouseDto по id: {}", id);
+                log.error("Произошла ошибка {} при выполнении запроса на удаление WarehouseDto по id: {}",response.code(), id);
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса : {}", e.getMessage());
-            e.printStackTrace();
+            log.error("Произошла ошибка при выполнении запроса на удаление WarehouseDto по id", e);
         }
     }
 }
