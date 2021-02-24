@@ -57,8 +57,8 @@ vaadin-tabs {
 
 vaadin-tab {
     align-self: center;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 8px;
+    padding-right: 8px;
     height: 100%;
 }
 
