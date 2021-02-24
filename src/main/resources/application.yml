@@ -24,3 +24,4 @@ retrofit:
     type_of_price_url: api/type_of_prices
     unit_url: api/units
     warehouse_url: api/warehouses
+    bankAccount_url: api/bankAccounts
