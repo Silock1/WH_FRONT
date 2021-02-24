@@ -1,0 +1,82 @@
+html, body, td, .gwt-TextArea, textarea {
+    color: #222;
+    font: 12px "Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+}
+
+#navbarTop {
+    background: #1f75a8;
+    vertical-align: middle;
+    /*border-color: inherit;*/
+    height: 58px;
+    width: 100%;
+}
+
+#navBarText {
+    color: rgb(198, 221, 234);
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    margin: 0;
+    font: 11px "“Helvetica Neue”", Helvetica, Arial, "“Lucida Grande”", sans-serif;
+}
+
+#rightSideNavBar {
+    height: 100%;
+    vertical-align: inherit;
+}
+
+#rightSideNavBar img {
+    float: right;
+    padding-top: 18px;
+    padding-left: 7px;
+    padding-right: 7px;
+}
+
+#logo_main {
+    padding-left: 16px;
+}
+
+#vertical_layout {
+    margin-top: 9px;
+    padding: 0;
+}
+
+#vertical_layout span {
+    padding: 0;
+    margin: 0;
+}
+
+#vertical_layout img {
+    padding-top: 15px;
+    margin: 0;
+}
+
+vaadin-tabs {
+    height: 100%;
+}
+
+vaadin-tab {
+    align-self: center;
+    padding-left: 8px;
+    padding-right: 8px;
+    height: 100%;
+}
+
+vaadin-tab:hover {
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+#separator_tab {
+    background: #1f75a8;
+    min-width: 8px;
+    padding: 0;
+}
+
+[aria-selected="true"] {
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+:focus {
+    background-color: rgba(0, 0, 0, 0.15);
+    outline: unset;
+}
