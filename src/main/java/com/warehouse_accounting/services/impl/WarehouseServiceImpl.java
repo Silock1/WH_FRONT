@@ -18,8 +18,8 @@ import java.util.List;
 @Log4j2
 @Service
 public class WarehouseServiceImpl implements WarehouseService {
-    WarehouseApi warehouseService;
-    String warehouseUrl;
+    private final WarehouseApi warehouseService;
+    private final String warehouseUrl;
 
     public WarehouseServiceImpl(@Value("${retrofit.restServices.warehouse_url}") String warehouseUrl, Retrofit retrofit) {
         this.warehouseService = retrofit.create(WarehouseApi.class);
