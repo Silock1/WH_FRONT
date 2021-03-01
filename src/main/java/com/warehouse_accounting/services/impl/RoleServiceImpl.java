@@ -30,10 +30,15 @@ public class RoleServiceImpl implements RoleService {
         List<RoleDto> roleDtoList = Collections.emptyList();
         Call<List<RoleDto>> roleGetAllCall = roleApi.getAll(roleUrl);
         try {
-            roleDtoList = roleGetAllCall.execute().body();
-            log.info("Успешно выполнен запрос на получение списка RoleDto");
+            Response<List<RoleDto>> response = roleGetAllCall.execute();
+            if (response.isSuccessful()) {
+                roleDtoList = response.body();
+                log.info("Успешно выполнен запрос на получение списка RoleDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на получение списка RoleDto", response.code());
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение списка RoleDto");
+            log.error("Произошла ошибка при выполнении запроса на получение списка RoleDto", e);
         }
         return roleDtoList;
     }
@@ -44,10 +49,14 @@ public class RoleServiceImpl implements RoleService {
         Call<RoleDto> callSync = roleApi.getById(roleUrl, id);
         try {
             Response<RoleDto> response = callSync.execute();
-            roleDto = response.body();
-            log.info("Успешно выполнен запрос на получение RoleDto по id: {}", id);
-        } catch (Exception ex) {
-            log.error("Произошла ошибка при выполнении запроса на получение RoleDto по id: {}", id);
+            if (response.isSuccessful()) {
+                roleDto = response.body();
+                log.info("Успешно выполнен запрос на получение RoleDto по id: {}", id);
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на получение RoleDto по id {}",response.code(), id);
+            }
+        } catch (Exception e) {
+            log.error("Произошла ошибка при выполнении запроса на получение RoleDto по id", e);
         }
         return roleDto;
     }
@@ -56,10 +65,14 @@ public class RoleServiceImpl implements RoleService {
     public void create(RoleDto dto) {
         Call<Void> call = roleApi.create(roleUrl, dto);
         try {
-            call.execute();
-            log.info("Успешно выполнен запрос на создание RoleDto");
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на создание RoleDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на создание RoleDto", response.code());
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на создании RoleDto");
+            log.error("Произошла ошибка при выполнении запроса на создание RoleDto", e);
         }
     }
 
@@ -67,10 +80,14 @@ public class RoleServiceImpl implements RoleService {
     public void update(RoleDto dto) {
         Call<Void> call = roleApi.update(roleUrl, dto);
         try {
-            call.execute();
-            log.info("Успешно выполнен запрос на изменении RoleDto");
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на изменение RoleDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на изменение RoleDto",response.code());
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на изменении RoleDto");
+            log.error("Произошла ошибка при выполнении запроса на изменение RoleDto", e);
         }
     }
 
@@ -78,10 +95,14 @@ public class RoleServiceImpl implements RoleService {
     public void deleteById(Long id) {
         Call<Void> call = roleApi.deleteById(roleUrl, id);
         try {
-            call.execute();
-            log.info("Успешно выполнен запрос на удаление RoleDto");
+            Response<Void> response = call.execute();
+            if(response.isSuccessful()){
+                log.info("Успешно выполнен запрос на удаление RoleDto");
+            }else{
+                log.error("Произошла ошибка {} при выполнении запроса на удаление RoleDto по id",response.code());
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на удаление RoleDto по id: {}", id);
+            log.error("Произошла ошибка при выполнении запроса на удаление RoleDto по id", e);
         }
     }
 }

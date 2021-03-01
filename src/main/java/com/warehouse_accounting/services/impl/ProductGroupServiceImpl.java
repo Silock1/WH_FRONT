@@ -35,7 +35,7 @@ public class ProductGroupServiceImpl implements ProductGroupService {
                 productGroupDtoList = response.body();
                 log.info("Успешно выполнен запрос на получение списка ProductGroupDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на получение списка ProductGroupDto: response cod: {}", response.code());
+                log.error("Произошла ошибка {} при выполнении запроса на получение списка ProductGroupDto", response.code());
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на получение списка ProductGroupDto", e);
@@ -53,7 +53,7 @@ public class ProductGroupServiceImpl implements ProductGroupService {
                 productGroupDto = response.body();
                 log.info("Успешно выполнен запрос на получение ProductGroupDto по id: {}", id);
             } else {
-                log.error("Произошла ошибка при выполнении запроса на получение ProductGroupDto по id: {}; response cod: {}", id, response.code());
+                log.error("Произошла ошибка {} при выполнении запроса на получение ProductGroupDto по id: {}", response.code(),id);
             }
         } catch (Exception e) {
             log.error("Произошла ошибка при выполнении запроса на получение ProductGroupDto по id", e);
@@ -69,10 +69,10 @@ public class ProductGroupServiceImpl implements ProductGroupService {
             if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на создание ProductGroupDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на создании ProductGroupDto; response cod: {}", response.code());
+                log.error("Произошла ошибка {} при выполнении запроса на создание ProductGroupDto", response.code());
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на создании ProductGroupDto", e);
+            log.error("Произошла ошибка при выполнении запроса на создание ProductGroupDto", e);
         }
     }
 
@@ -82,12 +82,12 @@ public class ProductGroupServiceImpl implements ProductGroupService {
         try {
             Response<Void> response = call.execute();
             if (response.isSuccessful()) {
-                log.info("Успешно выполнен запрос на изменении ProductGroupDto");
+                log.info("Успешно выполнен запрос на изменение ProductGroupDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на изменении ProductGroupDto; response cod: {}", response.code());
+                log.error("Произошла ошибка {} при выполнении запроса на изменение ProductGroupDto", response.code());
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на изменении ProductGroupDto", e);
+            log.error("Произошла ошибка при выполнении запроса на изменение ProductGroupDto", e);
         }
     }
 
@@ -99,7 +99,7 @@ public class ProductGroupServiceImpl implements ProductGroupService {
             if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на удаление ProductGroupDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на удаление ProductGroupDto по id: {}; response cod: {}", id, response.code());
+                log.error("Произошла ошибка {} при выполнении запроса на удаление ProductGroupDto по id", response.code());
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на удаление ProductGroupDto по id", e);

@@ -35,7 +35,7 @@ public class CompanyServiceImpl implements CompanyService {
                 result = listResponse.body();
                 log.info("Успешно выполнен запрос на получение списка Company");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на получение списка Company, код: " + listResponse.code());
+                log.error("Произошла ошибка {} при выполнении запроса на получение списка Company", listResponse.code());
             }
         } catch (IOException exception) {
             log.error("Произошла ошибка при выполнении запроса на получение списка Company", exception);
@@ -52,10 +52,10 @@ public class CompanyServiceImpl implements CompanyService {
                 result = response.body();
                 log.info("Успешно выполнен запрос на получение Company");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на получение Companyпо id: " + id + "код: " + response.code());
+                log.error("Произошла ошибка {} при выполнении запроса на получение Company по id {}", response.code(), id);
             }
         } catch (IOException exception) {
-            log.error("Произошла ошибка при выполнении запроса на получение Company по id: " + id, exception);
+            log.error("Произошла ошибка при выполнении запроса на получение Company по id", exception);
         }
         return result;
     }
@@ -67,7 +67,7 @@ public class CompanyServiceImpl implements CompanyService {
             if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на создание Company");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на создане Company, код: " + response.code());
+                log.error("Произошла ошибка {} при выполнении запроса на создане Company", response.code());
             }
         } catch (IOException exception) {
             log.error("Произошла ошибка при выполнении запроса на создане Company", exception);
@@ -81,7 +81,7 @@ public class CompanyServiceImpl implements CompanyService {
             if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на изменение Company");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на изменение Company, код: " + response.code());
+                log.error("Произошла ошибка {} при выполнении запроса на изменение Company", response.code());
             }
         } catch (IOException exception) {
             log.error("Произошла ошибка при выполнении запроса на изменение Company", exception);
@@ -95,10 +95,10 @@ public class CompanyServiceImpl implements CompanyService {
             if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на удаление Company");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на удаление Company по id: ," + id + " код: " + response.code());
+                log.error("Произошла ошибка {} при выполнении запроса на удаление Company по id", response.code());
             }
         } catch (IOException exception) {
-            log.error("Произошла ошибка при выполнении запроса на удаление Company по id: " + id, exception);
+            log.error("Произошла ошибка при выполнении запроса на удаление Company по id", exception);
         }
     }
 }

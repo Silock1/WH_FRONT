@@ -7,6 +7,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import java.io.IOException;
@@ -30,10 +31,15 @@ public class ImageServiceImpl implements ImageService {
         List<ImageDto> imageDtoList = new ArrayList<>(0);
         Call<List<ImageDto>> listCall = api.getAll(url);
         try {
-            imageDtoList = listCall.execute().body();
-            log.info("Успешно выполнен запрос на получение списка ImageDto");
+            Response<List<ImageDto>> response = listCall.execute();
+            if (response.isSuccessful()) {
+                imageDtoList = response.body();
+                log.info("Успешно выполнен запрос на получение списка ImageDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на получение списка ImageDto", response.code());
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение списка ImageDto");
+            log.error("Произошла ошибка при выполнении запроса на получение списка ImageDto", e);
         }
         return imageDtoList;
     }
@@ -41,12 +47,17 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public ImageDto getById(Long id) {
         ImageDto imageDto = new ImageDto();
-        Call<ImageDto> call = api.getById(url,id);
+        Call<ImageDto> call = api.getById(url, id);
         try {
-            call.execute().body();
-            log.info("Успешно выполнен запрос на получение сImageDto");
+            Response<ImageDto> response = call.execute();
+            if (response.isSuccessful()) {
+                imageDto = response.body();
+                log.info("Успешно выполнен запрос на получение сImageDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на получение ImageDto по id {}", response.code(), id);
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение ImageDto");
+            log.error("Произошла ошибка при выполнении запроса на получение ImageDto", e);
         }
         return imageDto;
     }
@@ -55,10 +66,14 @@ public class ImageServiceImpl implements ImageService {
     public void create(ImageDto dto) {
         Call<Void> call = api.create(url, dto);
         try {
-            call.execute();
-            log.info("Успешно выполнен запрос на создание ImageDto");
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на создание ImageDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на создание ImageDto", response.code());
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на создание ImageDto");
+            log.error("Произошла ошибка при выполнении запроса на создание ImageDto", e);
         }
     }
 
@@ -66,10 +81,14 @@ public class ImageServiceImpl implements ImageService {
     public void update(ImageDto dto) {
         Call<Void> call = api.update(url, dto);
         try {
-            call.execute();
-            log.info("Успешно выполнен запрос на обновление ImageDto");
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на обновление ImageDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на обновление ImageDto", response.code());
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на обновление ImageDto");
+            log.error("Произошла ошибка при выполнении запроса на обновление ImageDto", e);
         }
     }
 
@@ -77,10 +96,14 @@ public class ImageServiceImpl implements ImageService {
     public void deleteById(Long id) {
         Call<Void> call = api.deleteById(url, id);
         try {
-            call.execute();
-            log.info("Успешно выполнен запрос на удаление ImageDto");
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на удаление ImageDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на удаление ImageDto", response.code());
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на удаление ImageDto");
+            log.error("Произошла ошибка при выполнении запроса на удаление ImageDto", e);
         }
     }
 }

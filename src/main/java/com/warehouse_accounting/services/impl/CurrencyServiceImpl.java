@@ -33,14 +33,14 @@ public class CurrencyServiceImpl implements CurrencyService {
         Call<List<CurrencyDto>> listCall = api.getAll(url);
         try {
             Response<List<CurrencyDto>> response = listCall.execute();
-            if (response.isSuccessful()){
+            if (response.isSuccessful()) {
                 list = response.body();
                 log.info("Успешно выполнен запрос на получение списка CurrencyDto");
-            }else {
+            } else {
                 log.error("Произошла ошибка {} при выполнении запроса на получение списка CurrencyDto", response.code());
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение списка CurrencyDto " + e);
+            log.error("Произошла ошибка при выполнении запроса на получение списка CurrencyDto ", e);
         }
         return list;
     }
@@ -51,14 +51,14 @@ public class CurrencyServiceImpl implements CurrencyService {
         Call<CurrencyDto> call = api.getById(url, id);
         try {
             Response<CurrencyDto> response = call.execute();
-            if (response.isSuccessful()){
+            if (response.isSuccessful()) {
                 dto = response.body();
                 log.info("Успешно выполнен запрос на получение CurrencyDto");
-            }else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение CurrencyDto c id {}", response.code(), id);
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на получение CurrencyDto по id {}", response.code(), id);
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение CurrencyDto " + e);
+            log.error("Произошла ошибка при выполнении запроса на получение CurrencyDto ", e);
         }
         return dto;
     }
@@ -68,13 +68,13 @@ public class CurrencyServiceImpl implements CurrencyService {
         Call<Void> call = api.create(url, dto);
         try {
             Response<Void> response = call.execute();
-            if (response.isSuccessful()){
+            if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на создание CurrencyDto");
-            }else {
-                log.error("Произошла ошибка {} при выполнении запроса на создание CurrencyDto c id {}", response.code(), dto.getId());
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на создание CurrencyDto", response.code());
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на создание CurrencyDto " + e);
+            log.error("Произошла ошибка при выполнении запроса на создание CurrencyDto ", e);
         }
     }
 
@@ -83,13 +83,13 @@ public class CurrencyServiceImpl implements CurrencyService {
         Call<Void> call = api.update(url, dto);
         try {
             Response<Void> response = call.execute();
-            if (response.isSuccessful()){
+            if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на обновление CurrencyDto");
-            }else {
-                log.error("Произошла ошибка {} при выполнении запроса на обновление CurrencyDto c id {}", response.code(), dto.getId());
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на обновление CurrencyDto", response.code());
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на обновление CurrencyDto" + e);
+            log.error("Произошла ошибка при выполнении запроса на обновление CurrencyDto", e);
         }
     }
 
@@ -98,13 +98,13 @@ public class CurrencyServiceImpl implements CurrencyService {
         Call<Void> call = api.deleteById(url, id);
         try {
             Response<Void> response = call.execute();
-            if (response.isSuccessful()){
+            if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на удаление CurrencyDto");
-            }else {
-                log.error("Произошла ошибка {} при выполнении запроса на удаление CurrencyDto c id {}", response.code(), id);
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на удаление CurrencyDto", response.code());
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на удаление CurrencyDto" + e);
+            log.error("Произошла ошибка при выполнении запроса на удаление CurrencyDto", e);
         }
     }
 }

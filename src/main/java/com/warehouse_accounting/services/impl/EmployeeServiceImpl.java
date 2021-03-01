@@ -31,14 +31,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         Call<List<EmployeeDto>> employeeListCall = employeeApi.getAll(url);
         try {
             Response<List<EmployeeDto>> response = employeeListCall.execute();
-            if (response.isSuccessful()){
+            if (response.isSuccessful()) {
                 employeeDtoList = response.body();
                 log.info("Список EmployeeDto получен успешно");
-            }else {
+            } else {
                 log.error("При получении списка EmployeeDto произошла ошибка: {}", response.code());
             }
         } catch (IOException ioException) {
-            log.error("При получении списка EmployeeDto произошла ошибка");
+            log.error("При получении списка EmployeeDto произошла ошибка", ioException);
         }
         return employeeDtoList;
     }
@@ -49,14 +49,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         Call<EmployeeDto> employeeCall = employeeApi.getById(url, id);
         try {
             Response<EmployeeDto> response = employeeCall.execute();
-            if (response.isSuccessful()){
+            if (response.isSuccessful()) {
                 employeeDto = response.body();
                 log.info("EmployeeDto c id: {} получен успешно", id);
-            }else {
+            } else {
                 log.error("При получении EmployeeDto c id: {} произошла ошибка: {}", id, response.code());
             }
         } catch (IOException ioException) {
-            log.error("При получении EmployeeDto c id: {} произошла ошибка", id);
+            log.error("Произошла ошибка при выполнении запроса на получение EmployeeDto по id",ioException);
         }
         return employeeDto;
     }
@@ -66,13 +66,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         Call<Void> voidCall = employeeApi.create(url, employeeDto);
         try {
             Response<Void> response = voidCall.execute();
-            if (response.isSuccessful()){
+            if (response.isSuccessful()) {
                 log.info("{} создан успешно", employeeDto);
-            }else {
+            } else {
                 log.error("При создании {} произошла ошибка: {}", employeeDto, response.code());
             }
         } catch (IOException ioException) {
-            log.error("При создании {} произошла ошибка", employeeDto);
+            log.error("Произошла ошибка при выполнении запроса на создание EmployeeDto",ioException);
         }
     }
 
@@ -81,14 +81,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         Call<Void> voidCall = employeeApi.update(url, employeeDto);
         try {
             Response<Void> response = voidCall.execute();
-            if (response.isSuccessful()){
+            if (response.isSuccessful()) {
                 log.info("EmployeeDto с id: {} обновлен успешно", employeeDto.getId());
-            }else {
+            } else {
                 log.error("При обновлении EmployeeDto с id: {} произошла ошибка: {}",
                         employeeDto.getId(), response.code());
             }
         } catch (IOException ioException) {
-            log.error("При обновлении EmployeeDto с id: {} произошла ошибка", employeeDto.getId());
+            log.error("Произошла ошибка при выполнении запроса на обновление EmployeeDto по id",ioException);
         }
     }
 
@@ -97,14 +97,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         Call<Void> voidCall = employeeApi.deleteById(url, id);
         try {
             Response<Void> response = voidCall.execute();
-            if (response.isSuccessful()){
+            if (response.isSuccessful()) {
                 log.info("EmployeeDto с id: {} удален успешно", id);
-            }else {
+            } else {
                 log.error("При удалении EmployeeDto с id: {} произошла ошибка: {}",
                         id, response.code());
             }
         } catch (IOException ioException) {
-            log.error("При удалении EmployeeDto с id: {} произошла ошибка", id);
+            log.error("Произошла ошибка при выполнении запроса на удаление EmployeeDto", ioException);
         }
     }
 }

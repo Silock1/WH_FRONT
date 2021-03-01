@@ -36,7 +36,7 @@ public class ContractorServiceImpl implements ContractorService {
                 contractorDto = response.body();
                 log.info("Успешно выполнен запрос на получение списка ContractorDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на получение списка ContractorDto");
+                log.error("Произошла ошибка {} при выполнении запроса на получение списка ContractorDto", response.code());
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на получение списка ContractorDto", e);
@@ -54,7 +54,7 @@ public class ContractorServiceImpl implements ContractorService {
                 contractorDto = response.body();
                 log.info("Успешно выполнен запрос на получение ContractorDto по id: {}", id);
             } else {
-                log.error("Произошла ошибка при выполнении запроса на получение ContractorDto по id: {}", id);
+                log.error("Произошла ошибка {} при выполнении запроса на получение ContractorDto по id {}", response.code(), id);
             }
         } catch (Exception e) {
             log.error("Произошла ошибка при выполнении запроса на получение ContractorDto по id", e);
@@ -66,10 +66,11 @@ public class ContractorServiceImpl implements ContractorService {
     public void create(ContractorDto dto) {
         Call<Void> call = contractorApi.create(contractorUrl, dto);
         try {
-            if (call.execute().isSuccessful()) {
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на создание ContractorDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на создании ContractorDto");
+                log.error("Произошла ошибка {} при выполнении запроса на создании ContractorDto", response.code());
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на создании ContractorDto", e);
@@ -80,13 +81,14 @@ public class ContractorServiceImpl implements ContractorService {
     public void update(ContractorDto dto) {
         Call<Void> call = contractorApi.update(contractorUrl, dto);
         try {
-            if (call.execute().isSuccessful()) {
-                log.info("Успешно выполнен запрос на изменении ContractorDto");
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на изменение ContractorDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на изменении ContractorDto");
+                log.error("Произошла ошибка {} при выполнении запроса на изменение ContractorDto", response.code());
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на изменении ContractorDto", e);
+            log.error("Произошла ошибка при выполнении запроса на изменение ContractorDto", e);
         }
     }
 
@@ -94,10 +96,11 @@ public class ContractorServiceImpl implements ContractorService {
     public void deleteById(Long id) {
         Call<Void> call = contractorApi.deleteById(contractorUrl, id);
         try {
-            if (call.execute().isSuccessful()) {
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на удаление ContractorDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на удаление ContractorDto по id: {}", id);
+                log.error("Произошла ошибка {} при выполнении запроса на удаление ContractorDto", response.code());
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на удаление ContractorDto по id", e);
