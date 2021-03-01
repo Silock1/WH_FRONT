@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Route
 @Log4j2
@@ -37,20 +39,22 @@ public class AppView extends AppLayout {
         Tabs navBarTabs = new Tabs();
         List<String> tabNames = Arrays.asList("Показатели", "Закупки", "Продажи", "Товары",
                 "Контрагенты", "Деньги", "Розница", "Производство", "Задачи", "Приложения");
-        List<String> iconsUrls = Arrays.asList("https://online.moysklad.ru/app/cdn/r880/images/menu/indicators.svg",
-                "https://online.moysklad.ru/app/cdn/r880/images/menu/procurement.svg",
-                "https://online.moysklad.ru/app/cdn/r880/images/menu/selling.svg",
-                "https://online.moysklad.ru/app/cdn/r880/images/menu/goods.svg",
-                "https://online.moysklad.ru/app/cdn/r880/images/menu/contragents.svg",
-                "https://online.moysklad.ru/app/cdn/r880/images/menu/money.svg",
-                "https://online.moysklad.ru/app/cdn/r880/images/menu/retail.svg",
-                "https://online.moysklad.ru/app/cdn/r880/images/menu/manufacture.svg",
-                "https://online.moysklad.ru/app/cdn/r880/images/menu/tasks.svg",
-                "https://online.moysklad.ru/app/cdn/r880/images/menu/embed-apps.svg");
+        List<StreamResource> streamResources = Stream.of(
+                "indicators.svg",
+                "procurement.svg",
+                "selling.svg",
+                "goods.svg",
+                "contragents.svg",
+                "money.svg",
+                "retail.svg",
+                "manufacture.svg",
+                "tasks.svg",
+                "embed-apps.svg"
+        ).map(name -> new StreamResource(name, () -> getImageInputStream(name))).collect(Collectors.toList());
 
-        for (int i = 0; i<tabNames.size(); i++) {
+        for (int i = 0; i < tabNames.size(); i++) {
             VerticalLayout verticalLayout = new VerticalLayout();
-            Image icon = new Image(iconsUrls.get(i), "tab_icon");
+            Image icon = new Image(streamResources.get(i), "tab_icon");
             Span tabName = new Span(tabNames.get(i));
             tabName.setId("navBarText");
             verticalLayout.add(icon, tabName);
@@ -61,15 +65,15 @@ public class AppView extends AppLayout {
             separatorTab.setId("separator_tab");
             navBarTabs.add(tab, separatorTab);
         }
+
         Div rightSideNavBar = new Div();
-        rightSideNavBar.add(new Image("https://online.moysklad.ru/app/cdn/r880/images/menu/help.svg","help"));
-        rightSideNavBar.add(new Image("https://online.moysklad.ru/app/cdn/r880/images/menu/bell.svg","notification"));
+        rightSideNavBar.add(new Image(new StreamResource("help.svg", () -> getImageInputStream("help.svg")), "help"));
+        rightSideNavBar.add(new Image(new StreamResource("bell.svg", () -> getImageInputStream("bell.svg")), "notification"));
         rightSideNavBar.setMinHeight("58");
         rightSideNavBar.setId("rightSideNavBar");
         rightSideNavBar.setWidthFull();
 
-        StreamResource resource = new StreamResource("logo_main.svg",
-                () -> getImageInputStream(LOGO_PNG)); // Если icons будут в виде svg файлов в static лежать
+        StreamResource resource = new StreamResource("logo_main.svg", () -> getImageInputStream(LOGO_PNG)); // Если icons будут в виде svg файлов в static лежать
         Image logo = new Image(resource, "logo_main");
         logo.setId("logo_main");
         logo.setHeight("19px");
