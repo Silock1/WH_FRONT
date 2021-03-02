@@ -11,7 +11,6 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
-import com.vaadin.flow.theme.NoTheme;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.DataInputStream;
@@ -23,7 +22,6 @@ import java.util.List;
 
 @Route
 @Log4j2
-@NoTheme
 @CssImport(value = "./css/my-app-layout.css", themeFor = "vaadin-app-layout")
 @CssImport(value = "./css/my-app-layout.css")
 public class AppView extends AppLayout {
@@ -56,6 +54,9 @@ public class AppView extends AppLayout {
             verticalLayout.add(icon, tabName);
             verticalLayout.setId("vertical_layout");
             verticalLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+            String name = tabNames.get(i);
+            verticalLayout.addClickListener(event ->
+                    verticalLayout.getUI().ifPresent(ui -> ui.navigate(resolveSubMenuView(name))));
             Tab tab = new Tab(verticalLayout);
             Tab separatorTab = new Tab();
             separatorTab.setId("separator_tab");
@@ -85,5 +86,17 @@ public class AppView extends AppLayout {
             log.error("При чтении icon {} произошла ошибка", svgIconName);
         }
         return imageInputStream;
+    }
+
+    private String resolveSubMenuView(String name) {
+        String subMenuView;
+        switch (name) {
+            case "Товары":
+                subMenuView = "goods";
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + name);
+        }
+        return subMenuView;
     }
 }
