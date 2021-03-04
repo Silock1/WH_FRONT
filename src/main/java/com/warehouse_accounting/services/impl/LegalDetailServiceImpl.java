@@ -35,7 +35,7 @@ public class LegalDetailServiceImpl implements LegalDetailService {
                 legalDetailDtoList = response.body();
                 log.info("Успешно выполнен запрос на получение списка LegalDetailDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на получение списка LegalDetailDto");
+                log.error("Произошла ошибка {} при выполнении запроса на получение списка LegalDetailDto",response.code());
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на получение списка LegalDetailDto", e);
@@ -53,7 +53,7 @@ public class LegalDetailServiceImpl implements LegalDetailService {
                 legalDetailDto = response.body();
                 log.info("Успешно выполнен запрос на получение LegalDetailDto по id: {}", id);
             } else {
-                log.error("Произошла ошибка при выполнении запроса на получение LegalDetailDto по id: {}", id);
+                log.error("Произошла ошибка {} при выполнении запроса на получение LegalDetailDto по id: {}",response.code(), id);
             }
         } catch (Exception e) {
             log.error("Произошла ошибка при выполнении запроса на получение LegalDetailDto по id", e);
@@ -65,10 +65,11 @@ public class LegalDetailServiceImpl implements LegalDetailService {
     public void create(LegalDetailDto dto) {
         Call<Void> call = legalDetailApi.create(legalDetailUrl, dto);
         try {
-            if (call.execute().isSuccessful()) {
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на создание LegalDetailDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на создании LegalDetailDto");
+                log.error("Произошла ошибка {} при выполнении запроса на создании LegalDetailDto",response.code());
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на создании LegalDetailDto", e);
@@ -79,10 +80,11 @@ public class LegalDetailServiceImpl implements LegalDetailService {
     public void update(LegalDetailDto dto) {
         Call<Void> call = legalDetailApi.update(legalDetailUrl, dto);
         try {
-            if (call.execute().isSuccessful()) {
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на изменении LegalDetailDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на изменении LegalDetailDto");
+                log.error("Произошла ошибка {} при выполнении запроса на изменении LegalDetailDto", response.code());
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на изменении LegalDetailDto", e);
@@ -93,7 +95,8 @@ public class LegalDetailServiceImpl implements LegalDetailService {
     public void deleteById(Long id) {
         Call<Void> call = legalDetailApi.deleteById(legalDetailUrl, id);
         try {
-            if (call.execute().isSuccessful()) {
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на удаление LegalDetailDto");
             } else {
                 log.error("Произошла ошибка при выполнении запроса на удаление LegalDetailDto по id: {}", id);

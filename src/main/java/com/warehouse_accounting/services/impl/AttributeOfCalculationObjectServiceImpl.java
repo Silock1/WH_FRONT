@@ -39,7 +39,7 @@ public class AttributeOfCalculationObjectServiceImpl implements AttributeOfCalcu
                 log.error("Произошла ошибка {} при выполнении запроса на получение списка AttributeOfCalculationObjectDto", response.code());
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение списка AttributeOfCalculationObjectDto");
+            log.error("Произошла ошибка при выполнении запроса на получение списка AttributeOfCalculationObjectDto",e);
         }
         return attributeOfCalculationObjectDtoList;
     }
@@ -54,10 +54,10 @@ public class AttributeOfCalculationObjectServiceImpl implements AttributeOfCalcu
                 attributeOfCalculationObjectDto = response.body();
                 log.info("Успешно выполнен запрос на получение AttributeOfCalculationObjectDto");
             } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение AttributeOfCalculationObjectDto c id {}", response.code(), id);
+                log.error("Произошла ошибка {} при выполнении запроса на получение AttributeOfCalculationObjectDto по id {}", response.code(), id);
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение AttributeOfCalculationObjectDto");
+            log.error("Произошла ошибка при выполнении запроса на получение AttributeOfCalculationObjectDto",e);
         }
         return attributeOfCalculationObjectDto;
     }
@@ -73,7 +73,7 @@ public class AttributeOfCalculationObjectServiceImpl implements AttributeOfCalcu
                 log.error("Произошла ошибка {} при выполнении запроса на создание AttributeOfCalculationObjectDto", response.code());
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на создание AttributeOfCalculationObjectDto");
+            log.error("Произошла ошибка при выполнении запроса на создание AttributeOfCalculationObjectDto",e);
         }
     }
 
@@ -88,7 +88,7 @@ public class AttributeOfCalculationObjectServiceImpl implements AttributeOfCalcu
                 log.error("Произошла ошибка {} при выполнении запроса на обновление AttributeOfCalculationObjectDto", response.code());
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на обновление AttributeOfCalculationObjectDto");
+            log.error("Произошла ошибка при выполнении запроса на обновление AttributeOfCalculationObjectDto",e);
         }
     }
 
@@ -103,7 +103,7 @@ public class AttributeOfCalculationObjectServiceImpl implements AttributeOfCalcu
                 log.error("Произошла ошибка {} при выполнении запроса на удаление AttributeOfCalculationObjectDto", response.code());
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на удаление AttributeOfCalculationObjectDto");
+            log.error("Произошла ошибка при выполнении запроса на удаление AttributeOfCalculationObjectDto",e);
         }
     }
 }

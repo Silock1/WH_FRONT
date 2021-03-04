@@ -35,7 +35,7 @@ public class BankAccountServiceImpl implements BankAccountService {
                 bankAccountDtoList = response.body();
                 log.info("Успешно выполнен запрос на получение списка BankAccountDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на получение списка BankAccountDto");
+                log.error("Произошла ошибка {} при выполнении запроса на получение списка BankAccountDto",response.code());
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на получение списка BankAccountDto", e);
@@ -53,7 +53,7 @@ public class BankAccountServiceImpl implements BankAccountService {
                 bankAccountDto = response.body();
                 log.info("Успешно выполнен запрос на получение BankAccountDto по id: {}", id);
             } else {
-                log.error("Произошла ошибка при выполнении запроса на получение BankAccountDto по id: {}", id);
+                log.error("Произошла ошибка {} при выполнении запроса на получение BankAccountDto по id: {}",response.code(), id);
             }
         } catch (Exception e) {
             log.error("Произошла ошибка при выполнении запроса на получение BankAccountDto по id", e);
@@ -65,10 +65,11 @@ public class BankAccountServiceImpl implements BankAccountService {
     public void create(BankAccountDto dto) {
         Call<Void> call = bankAccountApi.create(bankAccountUrl, dto);
         try {
-            if (call.execute().isSuccessful()) {
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на создание BankAccountDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на создании BankAccountDto");
+                log.error("Произошла ошибка {} при выполнении запроса на создании BankAccountDto",response.code());
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на создании BankAccountDto", e);
@@ -79,10 +80,11 @@ public class BankAccountServiceImpl implements BankAccountService {
     public void update(BankAccountDto dto) {
         Call<Void> call = bankAccountApi.update(bankAccountUrl, dto);
         try {
-            if (call.execute().isSuccessful()) {
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на изменении BankAccountDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на изменении BankAccountDto");
+                log.error("Произошла ошибка {} при выполнении запроса на изменении BankAccountDto",response.code());
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на изменении BankAccountDto", e);
@@ -93,10 +95,11 @@ public class BankAccountServiceImpl implements BankAccountService {
     public void deleteById(Long id) {
         Call<Void> call = bankAccountApi.deleteById(bankAccountUrl, id);
         try {
-            if (call.execute().isSuccessful()) {
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на удаление BankAccountDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на удаление BankAccountDto по id: {}", id);
+                log.error("Произошла ошибка {} при выполнении запроса на удаление BankAccountDto по id: {}",response.code(), id);
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на удаление BankAccountDto по id", e);

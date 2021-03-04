@@ -10,6 +10,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -35,7 +36,7 @@ public class TypeOfPriceServiceImpl implements TypeOfPriceService {
                 typeOfPriceDtos = response.body();
                 log.info("Успешно выполнен запрос на получение списка TypeOfPriceDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на получение списка TypeOfPriceDto");
+                log.error("Произошла ошибка {} при выполнении запроса на получение списка TypeOfPriceDto",response.code());
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на получение списка TypeOfPriceDto", e);
@@ -53,7 +54,7 @@ public class TypeOfPriceServiceImpl implements TypeOfPriceService {
                 typeOfPriceDto = response.body();
                 log.info("Успешно выполнен запрос на получение TypeOfPriceDto по id: {}", id);
             } else {
-                log.error("Произошла ошибка при выполнении запроса на получение TypeOfPriceDto по id: {}", id);
+                log.error("Произошла ошибка {} при выполнении запроса на получение TypeOfPriceDto по id {} ",response.code(), id);
             }
         } catch (Exception e) {
             log.error("Произошла ошибка при выполнении запроса на получение TypeOfPriceDto по id", e);
@@ -65,10 +66,11 @@ public class TypeOfPriceServiceImpl implements TypeOfPriceService {
     public void create(TypeOfPriceDto dto) {
         Call<Void> call = typeOfPriceApi.create(typeOfPriceUrl, dto);
         try {
-            if (call.execute().isSuccessful()) {
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на создание TypeOfPriceDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на создании TypeOfPriceDto");
+                log.error("Произошла ошибка {} при выполнении запроса на создании TypeOfPriceDto",response.code());
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на создании TypeOfPriceDto", e);
@@ -79,13 +81,14 @@ public class TypeOfPriceServiceImpl implements TypeOfPriceService {
     public void update(TypeOfPriceDto dto) {
         Call<Void> call = typeOfPriceApi.update(typeOfPriceUrl, dto);
         try {
-            if (call.execute().isSuccessful()) {
-                log.info("Успешно выполнен запрос на изменении TypeOfPriceDto");
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на изменение TypeOfPriceDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на изменении TypeOfPriceDto");
+                log.error("Произошла ошибка {} при выполнении запроса на изменение TypeOfPriceDto",response.code());
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на изменении TypeOfPriceDto", e);
+            log.error("Произошла ошибка при выполнении запроса на изменение TypeOfPriceDto", e);
         }
     }
 
@@ -93,10 +96,11 @@ public class TypeOfPriceServiceImpl implements TypeOfPriceService {
     public void deleteById(Long id) {
         Call<Void> call = typeOfPriceApi.deleteById(typeOfPriceUrl, id);
         try {
-            if (call.execute().isSuccessful()) {
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на удаление TypeOfPriceDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на удаление TypeOfPriceDto по id: {}", id);
+                log.error("Произошла ошибка {} при выполнении запроса на удаление TypeOfPriceDto по id {}",response.code(), id);
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на удаление TypeOfPriceDto по id", e);

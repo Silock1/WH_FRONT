@@ -35,7 +35,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                 departmentDtoList = response.body();
                 log.info("Успешно выполнен запрос на получение списка DepartmentDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на получение списка DepartmentDto");
+                log.error("Произошла ошибка {} при выполнении запроса на получение списка DepartmentDto", response.code());
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на получение списка DepartmentDto", e);
@@ -53,7 +53,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                 departmentDto = response.body();
                 log.info("Успешно выполнен запрос на получение DepartmentDto по id: {}", id);
             } else {
-                log.error("Произошла ошибка при выполнении запроса на получение DepartmentDto по id: {}", id);
+                log.error("Произошла ошибка {} при выполнении запроса на получение DepartmentDto по id: {}", response.code(), id);
             }
         } catch (Exception e) {
             log.error("Произошла ошибка при выполнении запроса на получение DepartmentDto по id", e);
@@ -65,13 +65,14 @@ public class DepartmentServiceImpl implements DepartmentService {
     public void create(DepartmentDto departmentDto) {
         Call<Void> call = departmentApi.create(departmentUrl, departmentDto);
         try {
-            if (call.execute().isSuccessful()) {
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на создание DepartmentDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на создании DepartmentDto");
+                log.error("Произошла ошибка {} при выполнении запроса на создание DepartmentDto", response.code());
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на создании DepartmentDto", e);
+            log.error("Произошла ошибка при выполнении запроса на создание DepartmentDto", e);
         }
     }
 
@@ -79,13 +80,14 @@ public class DepartmentServiceImpl implements DepartmentService {
     public void update(DepartmentDto departmentDto) {
         Call<Void> call = departmentApi.update(departmentUrl, departmentDto);
         try {
-            if (call.execute().isSuccessful()) {
-                log.info("Успешно выполнен запрос на изменении DepartmentDto");
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на изменениуе DepartmentDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на изменении DepartmentDto");
+                log.error("Произошла ошибка {} при выполнении запроса на изменение DepartmentDto", response.code());
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на изменении DepartmentDto", e);
+            log.error("Произошла ошибка при выполнении запроса на изменение DepartmentDto", e);
         }
     }
 
@@ -93,10 +95,11 @@ public class DepartmentServiceImpl implements DepartmentService {
     public void deleteById(Long id) {
         Call<Void> call = departmentApi.deleteById(departmentUrl, id);
         try {
-            if (call.execute().isSuccessful()) {
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на удаление DepartmentDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на удаление DepartmentDto по id: {}", id);
+                log.error("Произошла ошибка {} при выполнении запроса на удаление DepartmentDto по id: {}", response.code(), id);
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на удаление DepartmentDto по id", e);

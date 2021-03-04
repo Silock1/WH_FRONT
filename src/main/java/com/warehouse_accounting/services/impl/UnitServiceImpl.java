@@ -31,10 +31,15 @@ public class UnitServiceImpl implements UnitService {
         List<UnitDto> unitDtoList = Collections.emptyList();
         Call<List<UnitDto>> unitGetAllCall = unitApi.getAll(unitUrl);
         try {
-            unitDtoList = unitGetAllCall.execute().body();
-            log.info("Успешно выполнен запрос на получение списка UnitDto");
+            Response<List<UnitDto>> response = unitGetAllCall.execute();
+            if (response.isSuccessful()) {
+                unitDtoList = response.body();
+                log.info("Успешно выполнен запрос на получение списка UnitDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на получение списка UnitDto", response.code());
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение списка UnitDto");
+            log.error("Произошла ошибка при выполнении запроса на получение списка UnitDto", e);
         }
         return unitDtoList;
     }
@@ -42,13 +47,17 @@ public class UnitServiceImpl implements UnitService {
     @Override
     public UnitDto getById(Long id) {
         UnitDto unitDto = null;
-        Call<UnitDto> callSync = unitApi.getById(unitUrl, id);
+        Call<UnitDto> call = unitApi.getById(unitUrl, id);
         try {
-            Response<UnitDto> response = callSync.execute();
-            unitDto = response.body();
-            log.info("Успешно выполнен запрос на получение UnitDto по id: {}", id);
-        } catch (Exception ex) {
-            log.error("Произошла ошибка при выполнении запроса на получение UnitDto по id: {}", id);
+            Response<UnitDto> execute = call.execute();
+            if (execute.isSuccessful()) {
+                unitDto = execute.body();
+                log.info("Успешно выполнен запрос на получение UnitDto по id: {}", id);
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на получение UnitDto по id: {}", execute.code(), id);
+            }
+        } catch (Exception e) {
+            log.error("Произошла ошибка при выполнении запроса на получение UnitDto по id", e);
         }
         return unitDto;
     }
@@ -57,10 +66,15 @@ public class UnitServiceImpl implements UnitService {
     public void create(UnitDto dto) {
         Call<Void> call = unitApi.create(unitUrl, dto);
         try {
-            call.execute();
-            log.info("Успешно выполнен запрос на создание UnitDto");
+            Response<Void> response = call.execute();
+
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на создание UnitDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на создание UnitDto", response.code());
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на создании UnitDto");
+            log.error("Произошла ошибка при выполнении запроса на создание UnitDto", e);
         }
     }
 
@@ -68,10 +82,14 @@ public class UnitServiceImpl implements UnitService {
     public void update(UnitDto dto) {
         Call<Void> call = unitApi.update(unitUrl, dto);
         try {
-            call.execute();
-            log.info("Успешно выполнен запрос на изменении UnitDto");
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на изменение UnitDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на изменение UnitDto",response.code());
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на изменении UnitDto");
+            log.error("Произошла ошибка при выполнении запроса на изменение UnitDto", e);
         }
     }
 
@@ -79,10 +97,14 @@ public class UnitServiceImpl implements UnitService {
     public void deleteById(Long id) {
         Call<Void> call = unitApi.deleteById(unitUrl, id);
         try {
-            call.execute();
-            log.info("Успешно выполнен запрос на удаление UnitDto");
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на удаление UnitDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на удаление UnitDto по id: {}",response.code(), id);
+            }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на удаление UnitDto по id: {}", id);
+            log.error("Произошла ошибка при выполнении запроса на удаление UnitDto по id", e);
         }
     }
 }

@@ -32,14 +32,14 @@ public class ContractorGroupServiceImpl implements ContractorGroupService {
         Call<List<ContractorGroupDto>> listCall = api.getAll(url);
         try {
             Response<List<ContractorGroupDto>> response = listCall.execute();
-            if (response.isSuccessful()){
+            if (response.isSuccessful()) {
                 list = response.body();
                 log.info("Успешно выполнен запрос на получение списка ContractorGroupDto");
-            }else {
+            } else {
                 log.error("Произошла ошибка {} при выполнении запроса на получение списка ContractorGroupDto", response.code());
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение списка ContractorGroupDto " + e);
+            log.error("Произошла ошибка при выполнении запроса на получение списка ContractorGroupDto ", e);
         }
         return list;
     }
@@ -50,14 +50,14 @@ public class ContractorGroupServiceImpl implements ContractorGroupService {
         Call<ContractorGroupDto> call = api.getById(url, id);
         try {
             Response<ContractorGroupDto> response = call.execute();
-            if (response.isSuccessful()){
+            if (response.isSuccessful()) {
                 dto = response.body();
                 log.info("Успешно выполнен запрос на получение ContractorGroupDto");
-            }else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение ContractorGroupDto c id {}", response.code(), id);
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на получение ContractorGroupDto по id {}", response.code(), id);
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение ContractorGroupDto " + e);
+            log.error("Произошла ошибка при выполнении запроса на получение ContractorGroupDto ", e);
         }
         return dto;
     }
@@ -67,13 +67,13 @@ public class ContractorGroupServiceImpl implements ContractorGroupService {
         Call<Void> call = api.create(url, dto);
         try {
             Response<Void> response = call.execute();
-            if (response.isSuccessful()){
+            if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на создание ContractorGroupDto");
-            }else {
-                log.error("Произошла ошибка {} при выполнении запроса на создание ContractorGroupDto c id {}", response.code(), dto.getId());
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на создание ContractorGroupDto", response.code());
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на создание ContractorGroupDto " + e);
+            log.error("Произошла ошибка при выполнении запроса на создание ContractorGroupDto ", e);
         }
     }
 
@@ -82,13 +82,13 @@ public class ContractorGroupServiceImpl implements ContractorGroupService {
         Call<Void> call = api.update(url, dto);
         try {
             Response<Void> response = call.execute();
-            if (response.isSuccessful()){
+            if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на обновление ContractorGroupDto");
-            }else {
-                log.error("Произошла ошибка {} при выполнении запроса на обновление ContractorGroupDto c id {}", response.code(), dto.getId());
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на обновление ContractorGroupDto", response.code());
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на обновление ContractorGroupDto" + e);
+            log.error("Произошла ошибка при выполнении запроса на обновление ContractorGroupDto", e);
         }
     }
 
@@ -97,13 +97,13 @@ public class ContractorGroupServiceImpl implements ContractorGroupService {
         Call<Void> call = api.deleteById(url, id);
         try {
             Response<Void> response = call.execute();
-            if (response.isSuccessful()){
+            if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на удаление ContractorGroupDto");
-            }else {
-                log.error("Произошла ошибка {} при выполнении запроса на удаление ContractorGroupDto c id {}", response.code(), id);
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на удаление ContractorGroupDto", response.code());
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на удаление ContractorGroupDto" + e);
+            log.error("Произошла ошибка при выполнении запроса на удаление ContractorGroupDto", e);
         }
     }
 }

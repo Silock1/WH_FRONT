@@ -35,7 +35,7 @@ public class ContractServiceImpl implements ContractService {
                 contractDtoList = response.body();
                 log.info("Успешно выполнен запрос на получение списка ContractDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на получение списка ContractDto");
+                log.error("Произошла ошибка {} при выполнении запроса на получение списка ContractDto",response.code());
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на получение списка ContractDto", e);
@@ -53,7 +53,7 @@ public class ContractServiceImpl implements ContractService {
                 contractDto = response.body();
                 log.info("Успешно выполнен запрос на получение ContractDto по id: {}", id);
             } else {
-                log.error("Произошла ошибка при выполнении запроса на получение ContractDto по id: {}", id);
+                log.error("Произошла ошибка {} при выполнении запроса на получение ContractDto по id {}",response.code(),id);
             }
         } catch (Exception e) {
             log.error("Произошла ошибка при выполнении запроса на получение ContractDto по id", e);
@@ -65,10 +65,11 @@ public class ContractServiceImpl implements ContractService {
     public void create(ContractDto dto) {
         Call<Void> call = contractApi.create(contractUrl, dto);
         try {
-            if (call.execute().isSuccessful()) {
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на создание ContractDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на создании ContractDto");
+                log.error("Произошла ошибка {} при выполнении запроса на создании ContractDto",response.code());
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на создании ContractDto", e);
@@ -79,13 +80,14 @@ public class ContractServiceImpl implements ContractService {
     public void update(ContractDto dto) {
         Call<Void> call = contractApi.update(contractUrl, dto);
         try {
-            if (call.execute().isSuccessful()) {
-                log.info("Успешно выполнен запрос на изменении ContractDto");
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на изменение ContractDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на изменении ContractDto");
+                log.error("Произошла ошибка {} при выполнении запроса на изменение ContractDto",response.code());
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на изменении ContractDto", e);
+            log.error("Произошла ошибка при выполнении запроса на изменениие ContractDto", e);
         }
     }
 
@@ -93,10 +95,11 @@ public class ContractServiceImpl implements ContractService {
     public void deleteById(Long id) {
         Call<Void> call = contractApi.deleteById(contractUrl, id);
         try {
-            if (call.execute().isSuccessful()) {
+            Response<Void> response = call.execute();
+            if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на удаление ContractDto");
             } else {
-                log.error("Произошла ошибка при выполнении запроса на удаление ContractDto по id: {}", id);
+                log.error("Произошла ошибка {} при выполнении запроса на удаление ContractDto по id",response.code());
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на удаление ContractDto по id", e);
