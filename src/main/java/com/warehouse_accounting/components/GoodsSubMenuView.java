@@ -1,5 +1,7 @@
 package com.warehouse_accounting.components;
 
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
@@ -13,8 +15,11 @@ import java.util.List;
 @PageTitle("Товары")
 public class GoodsSubMenuView extends VerticalLayout {
 
+    private final Div pageContent = new Div();
+
     public GoodsSubMenuView() {
         add(initSubMenu());
+        add(pageContent);
     }
 
     private Tabs initSubMenu() {
@@ -34,6 +39,46 @@ public class GoodsSubMenuView extends VerticalLayout {
             tab.add(item);
             subMenuTabs.add(tab);
         }
+        subMenuTabs.addSelectedChangeListener(event -> {
+            switch (event.getSelectedTab().getLabel()) {
+                case "Товары и услуги":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Товары и услуги"));
+                    break;
+                case "Оприходования":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Оприходования"));
+                    break;
+                case "Списания":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Списания"));
+                    break;
+                case "Инвентаризация":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Инвентаризация"));
+                    break;
+                case "Внутренние заказы":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Внутренние заказы"));
+                    break;
+                case "Перемещения":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Перемещения"));
+                    break;
+                case "Прайс-листы":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Прайс-листы"));
+                    break;
+                case "Остатки":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Остатки"));
+                    break;
+                case "Обороты":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Обороты"));
+                    break;
+            }
+        });
         return subMenuTabs;
     }
 }
