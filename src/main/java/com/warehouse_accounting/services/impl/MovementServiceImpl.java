@@ -20,7 +20,7 @@ public class MovementServiceImpl implements MovementService {
     private final MovementApi movementApi;
     private final String movementUrl;
 
-    public MovementServiceImpl(@Value("${retrofit.restServices.movements_url}") String movementUrl, Retrofit retrofit) {
+    public MovementServiceImpl(@Value("${retrofit.restServices.movement_url}") String movementUrl, Retrofit retrofit) {
         this.movementUrl = movementUrl;
         this.movementApi = retrofit.create(MovementApi.class);
     }
