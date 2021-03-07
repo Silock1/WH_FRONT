@@ -7,6 +7,7 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.warehouse_accounting.components.goods.GoodsAndService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +19,11 @@ public class GoodsSubMenuView extends VerticalLayout {
     private final Div pageContent = new Div();
 
     public GoodsSubMenuView() {
-        add(initSubMenu());
+        Tabs tabs = initSubMenu();
+        if (tabs.getSelectedIndex() == 0) {
+            pageContent.add((new GoodsAndService(pageContent)));
+        }
+        add(tabs);
         add(pageContent);
     }
 
@@ -43,7 +48,7 @@ public class GoodsSubMenuView extends VerticalLayout {
             switch (event.getSelectedTab().getLabel()) {
                 case "Товары и услуги":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Товары и услуги"));
+                    pageContent.add(new GoodsAndService(pageContent));
                     break;
                 case "Оприходования":
                     pageContent.removeAll();
