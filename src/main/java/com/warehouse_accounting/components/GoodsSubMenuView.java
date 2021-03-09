@@ -12,6 +12,7 @@ import com.warehouse_accounting.components.goods.GoodsAndService;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Route(value = "goods", layout = AppView.class)
 @PageTitle("Товары")
@@ -19,22 +20,13 @@ public class GoodsSubMenuView extends VerticalLayout {
 
     private final MovementView movementView;
     private final Div pageContent = new Div();
+    private GoodsAndService goodsAndService;
 
     public GoodsSubMenuView(MovementView movementView) {
         this.movementView = movementView;
         pageContent.setSizeFull();
-        Tabs subMenu = initSubMenu();
-        if (subMenu.getSelectedIndex()==0) {
-            pageContent.add(new Span("Товары и услуги"));
-        }
-        add(subMenu);
-    public GoodsSubMenuView() {
-        Tabs tabs = initSubMenu();
-        if (tabs.getSelectedIndex() == 0) {
-            pageContent.add((new GoodsAndService(pageContent)));
-        }
-        add(tabs);
-        add(pageContent);
+        pageContent.add(initGoodsAndService(pageContent));
+        add(initSubMenu(), pageContent);
     }
 
     private Tabs initSubMenu() {
@@ -58,7 +50,7 @@ public class GoodsSubMenuView extends VerticalLayout {
             switch (event.getSelectedTab().getLabel()) {
                 case "Товары и услуги":
                     pageContent.removeAll();
-                    pageContent.add(new GoodsAndService(pageContent));
+                    pageContent.add(initGoodsAndService(pageContent));
                     break;
                 case "Оприходования":
                     pageContent.removeAll();
@@ -95,5 +87,12 @@ public class GoodsSubMenuView extends VerticalLayout {
             }
         });
         return subMenuTabs;
+    }
+
+    private GoodsAndService initGoodsAndService(Div pageContent){
+        if (Objects.isNull(goodsAndService)) {
+            goodsAndService = new GoodsAndService(pageContent);
+        }
+        return goodsAndService;
     }
 }

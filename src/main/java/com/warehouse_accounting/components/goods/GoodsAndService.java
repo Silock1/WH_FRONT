@@ -73,7 +73,6 @@ public class GoodsAndService extends VerticalLayout {
         TextField searchField = new TextField();
         searchField.setPlaceholder("наименование, код или артикул");
         searchField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-
         searchField.addInputListener(inputEvent -> {
             //grid filter
         });
