@@ -7,6 +7,7 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.warehouse_accounting.components.movements.MovementView;
 import com.warehouse_accounting.components.goods.GoodsAndService;
 
 import java.util.Arrays;
@@ -16,8 +17,17 @@ import java.util.List;
 @PageTitle("Товары")
 public class GoodsSubMenuView extends VerticalLayout {
 
+    private final MovementView movementView;
     private final Div pageContent = new Div();
 
+    public GoodsSubMenuView(MovementView movementView) {
+        this.movementView = movementView;
+        pageContent.setSizeFull();
+        Tabs subMenu = initSubMenu();
+        if (subMenu.getSelectedIndex()==0) {
+            pageContent.add(new Span("Товары и услуги"));
+        }
+        add(subMenu);
     public GoodsSubMenuView() {
         Tabs tabs = initSubMenu();
         if (tabs.getSelectedIndex() == 0) {
@@ -68,7 +78,7 @@ public class GoodsSubMenuView extends VerticalLayout {
                     break;
                 case "Перемещения":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Перемещения"));
+                    pageContent.add(movementView);
                     break;
                 case "Прайс-листы":
                     pageContent.removeAll();
