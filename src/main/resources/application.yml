@@ -25,3 +25,4 @@ retrofit:
     unit_url: api/units
     warehouse_url: api/warehouses
     bankAccount_url: api/bankAccounts
+    movement_url: api/movements
