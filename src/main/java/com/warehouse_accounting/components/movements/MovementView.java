@@ -65,18 +65,15 @@ public class MovementView extends VerticalLayout {
         Span text = new Span("Перемещения");
         text.setClassName("pageTitle");
 
-        Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH));
-        refreshButton.addClickListener(event -> {
+        Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH), event -> {
             //TODO повод поработать этот функционал
         });
 
-        Button addMovementButton = new Button("Перемещение", new Icon(VaadinIcon.PLUS));
-        addMovementButton.addClickListener(event -> {
+        Button addMovementButton = new Button("Перемещение", new Icon(VaadinIcon.PLUS), event -> {
             //TODO повод поработать этот функционал
         });
 
-        Button filterButton = new Button("Фильтр");
-        filterButton.addClickListener(event -> {
+        Button filterButton = new Button("Фильтр", event -> {
             //TODO повод поработать этот функционал
         });
 
