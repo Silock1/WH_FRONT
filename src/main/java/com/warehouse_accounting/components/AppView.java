@@ -4,7 +4,9 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -37,22 +39,23 @@ public class AppView extends AppLayout {
         Tabs navBarTabs = new Tabs();
         List<String> tabNames = Arrays.asList("Показатели", "Закупки", "Продажи", "Товары",
                 "Контрагенты", "Деньги", "Розница", "Производство", "Задачи", "Приложения");
-        List<StreamResource> streamResources = Stream.of(
-                "indicators.svg",
-                "procurement.svg",
-                "selling.svg",
-                "goods.svg",
-                "contragents.svg",
-                "money.svg",
-                "retail.svg",
-                "manufacture.svg",
-                "tasks.svg",
-                "embed-apps.svg"
-        ).map(name -> new StreamResource(name, () -> getImageInputStream(name))).collect(Collectors.toList());
+        List<VaadinIcon> streamResources = Stream.of(
+                VaadinIcon.BAR_CHART,
+                VaadinIcon.STOCK,
+                VaadinIcon.SUITCASE,
+                VaadinIcon.CART_O,
+                VaadinIcon.USERS,
+                VaadinIcon.WALLET,
+                VaadinIcon.SHOP,
+                VaadinIcon.FACTORY,
+                VaadinIcon.TASKS,
+                VaadinIcon.GRID_BIG_O).collect(Collectors.toList());
 
         for (int i = 0; i < tabNames.size(); i++) {
             VerticalLayout verticalLayout = new VerticalLayout();
-            Image icon = new Image(streamResources.get(i), "tab_icon");
+            Icon icon = new Icon(streamResources.get(i));
+            icon.setSize("18px");
+            icon.setColor("white");
             Span tabName = new Span(tabNames.get(i));
             tabName.setId("navBarText");
             verticalLayout.add(icon, tabName);
@@ -68,8 +71,14 @@ public class AppView extends AppLayout {
         }
 
         Div rightSideNavBar = new Div();
-        rightSideNavBar.add(new Image(new StreamResource("help.svg", () -> getImageInputStream("help.svg")), "help"));
-        rightSideNavBar.add(new Image(new StreamResource("bell.svg", () -> getImageInputStream("bell.svg")), "notification"));
+        Icon iconHelp = new Icon(VaadinIcon.QUESTION_CIRCLE_O);
+        iconHelp.setColor("white");
+        iconHelp.setSize("18px");
+        Icon iconBell = new Icon(VaadinIcon.BELL_O);
+        iconBell.setColor("white");
+        iconBell.setSize("18px");
+        rightSideNavBar.add(iconHelp);
+        rightSideNavBar.add(iconBell);
         rightSideNavBar.setMinHeight("58");
         rightSideNavBar.setId("rightSideNavBar");
         rightSideNavBar.setWidthFull();
