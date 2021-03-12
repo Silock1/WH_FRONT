@@ -16,7 +16,7 @@ html, body, td, .gwt-TextArea, textarea {
     display: block;
     text-align: center;
     text-decoration: none;
-    margin: 0;
+    margin: 5px 0 0 0;
     font: 11px "“Helvetica Neue”", Helvetica, Arial, "“Lucida Grande”", sans-serif;
 }
 
@@ -25,11 +25,11 @@ html, body, td, .gwt-TextArea, textarea {
     vertical-align: inherit;
 }
 
-#rightSideNavBar img {
+#rightSideNavBar * {
     float: right;
     padding-top: 18px;
-    padding-left: 7px;
-    padding-right: 7px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 #logo_main {
