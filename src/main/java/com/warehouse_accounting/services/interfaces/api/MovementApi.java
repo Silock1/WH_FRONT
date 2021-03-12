@@ -1,6 +1,7 @@
 package com.warehouse_accounting.services.interfaces.api;
 
 import com.warehouse_accounting.models.dto.MovementDto;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -31,5 +32,8 @@ public interface MovementApi {
 
     @Headers("Accept: application/json")
     @DELETE("{url}/{id}")
-    Call<Void> deleteById(@Path(value = "url",encoded = true) String url, @Path("id") Long id);
+    Call<Void> deleteById(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
+
+    @GET("{url}")
+    Call<ResponseBody> getExcel(@Path(value = "url", encoded = true) String url);
 }

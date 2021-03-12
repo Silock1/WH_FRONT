@@ -1,6 +1,7 @@
 package com.warehouse_accounting.services.interfaces;
 
 import com.warehouse_accounting.models.dto.MovementDto;
+import okhttp3.ResponseBody;
 
 import java.util.List;
 
@@ -15,4 +16,6 @@ public interface MovementService {
     void update(MovementDto dto);
 
     void deleteById(Long id);
+
+    ResponseBody getExcel();
 }

@@ -43,6 +43,11 @@
             <version>${jackson.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.vaadin.olli</groupId>
+            <artifactId>file-download-wrapper</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
@@ -130,5 +135,11 @@
             </build>
         </profile>
     </profiles>
+    <repositories>
+        <repository>
+            <id>vaadin-addons</id>
+            <url>http://maven.vaadin.com/vaadin-addons</url>
+        </repository>
+    </repositories>
 
 </project>

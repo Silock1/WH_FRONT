@@ -4,6 +4,7 @@ import com.warehouse_accounting.models.dto.MovementDto;
 import com.warehouse_accounting.services.interfaces.MovementService;
 import com.warehouse_accounting.services.interfaces.api.MovementApi;
 import lombok.extern.log4j.Log4j2;
+import okhttp3.ResponseBody;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
@@ -104,5 +105,23 @@ public class MovementServiceImpl implements MovementService {
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на удаление MovementDto по id", e);
         }
+    }
+
+    @Override
+    public ResponseBody getExcel() {
+        Call<ResponseBody> call = movementApi.getExcel(movementUrl + "/export/xlsx");
+        ResponseBody responseBody = null;
+        try {
+            Response<ResponseBody> response = call.execute();
+            if (response.isSuccessful()) {
+                responseBody = response.body();
+                log.info("Успешно выполнен запрос на получение списка MovementDto в виде таблички");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на получение списка MovementDto в виде таблички", response.code());
+            }
+        } catch (IOException e) {
+            log.error("Произошла ошибка при выполнении запроса на получение списка MovementDto в виде таблички", e);
+        }
+        return responseBody;
     }
 }

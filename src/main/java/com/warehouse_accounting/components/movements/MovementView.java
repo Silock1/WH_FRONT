@@ -15,11 +15,15 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
 import com.warehouse_accounting.models.dto.MovementDto;
 import com.warehouse_accounting.services.interfaces.MovementService;
 import org.springframework.stereotype.Component;
+import org.vaadin.olli.FileDownloadWrapper;
+
+import java.time.LocalDateTime;
 
 @Component
 @UIScope
@@ -146,11 +150,16 @@ public class MovementView extends VerticalLayout {
             //TODO повод поработать этот функционал
         });
 
-        Button settingsButtons = new Button(new Icon(VaadinIcon.COG));
-        settingsButtons.addClickListener(event -> {
+        Button settingsButton = new Button(new Icon(VaadinIcon.COG));
+        settingsButton.addClickListener(event -> {
             //TODO повод поработать этот функционал
         });
 
-        horizontalToolPanelLayout.add(helpButton, text, refreshButton, addMovementButton, filterButton, searchField, numberField, menuBar, settingsButtons);
+        FileDownloadWrapper buttonWrapper = new FileDownloadWrapper(
+                new StreamResource(LocalDateTime.now().toString() + "someSheet.xlsx",
+                        () -> movementService.getExcel().byteStream()));
+        buttonWrapper.wrapComponent(new Button("Скачать XLSX", new Icon(VaadinIcon.DOWNLOAD)));
+
+        horizontalToolPanelLayout.add(helpButton, text, refreshButton, addMovementButton, filterButton, searchField, numberField, menuBar, settingsButton, buttonWrapper);
     }
 }
