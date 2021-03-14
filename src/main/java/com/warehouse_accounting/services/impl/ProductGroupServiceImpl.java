@@ -29,18 +29,7 @@ public class ProductGroupServiceImpl implements ProductGroupService {
     public List<ProductGroupDto> getAll() {
         List<ProductGroupDto> productGroupDtoList = Collections.emptyList();
         Call<List<ProductGroupDto>> groupApiAll = productGroupApi.getAll(productGroupUrl);
-        try {
-            Response<List<ProductGroupDto>> response = groupApiAll.execute();
-            if (response.isSuccessful()) {
-                productGroupDtoList = response.body();
-                log.info("Успешно выполнен запрос на получение списка ProductGroupDto");
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение списка ProductGroupDto", response.code());
-            }
-        } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение списка ProductGroupDto", e);
-        }
-        return productGroupDtoList;
+        return getProductGroupDtos(productGroupDtoList, groupApiAll);
     }
 
     @Override
@@ -104,5 +93,27 @@ public class ProductGroupServiceImpl implements ProductGroupService {
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на удаление ProductGroupDto по id", e);
         }
+    }
+
+    @Override
+    public List<ProductGroupDto> getAllByParentGroupId(Long id) {
+        List<ProductGroupDto> productGroupDtoList = Collections.emptyList();
+        Call<List<ProductGroupDto>> groupApiAll = productGroupApi.getAllByParentId(productGroupUrl + "/parent", id);
+        return getProductGroupDtos(productGroupDtoList, groupApiAll);
+    }
+
+    private List<ProductGroupDto> getProductGroupDtos(List<ProductGroupDto> productGroupDtoList, Call<List<ProductGroupDto>> groupApiAll) {
+        try {
+            Response<List<ProductGroupDto>> response = groupApiAll.execute();
+            if (response.isSuccessful()) {
+                productGroupDtoList = response.body();
+                log.info("Успешно выполнен запрос на получение списка ProductGroupDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на получение списка ProductGroupDto", response.code());
+            }
+        } catch (IOException e) {
+            log.error("Произошла ошибка при выполнении запроса на получение списка ProductGroupDto", e);
+        }
+        return productGroupDtoList;
     }
 }
