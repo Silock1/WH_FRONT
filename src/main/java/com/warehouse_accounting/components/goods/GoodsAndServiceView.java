@@ -16,7 +16,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.component.treegrid.TreeGrid;
+import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.warehouse_accounting.components.AppView;
 import com.warehouse_accounting.components.goods.forms.GoodsForm;
 import com.warehouse_accounting.components.goods.forms.GroupForm;
 import com.warehouse_accounting.components.goods.forms.ServiceForm;
@@ -25,10 +27,11 @@ import com.warehouse_accounting.models.dto.ProductGroupDto;
 import com.warehouse_accounting.services.interfaces.ProductGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-@SpringComponent
+@Component
 public class GoodsAndServiceView extends VerticalLayout {
     private final TreeGrid<ProductGroupDto> treeGrid;
     private final ProductGroupService productGroupService;

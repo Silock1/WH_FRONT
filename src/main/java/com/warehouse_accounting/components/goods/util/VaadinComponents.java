@@ -4,12 +4,12 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.treegrid.TreeGrid;
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.warehouse_accounting.models.dto.ProductDto;
 import com.warehouse_accounting.models.dto.ProductGroupDto;
 import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
-@SpringComponent
+@Component
 public class VaadinComponents {
 
     @Bean(name = "mainLayer")

@@ -9,7 +9,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.treegrid.TreeGrid;
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.warehouse_accounting.components.goods.GoodsAndServiceView;
 import com.warehouse_accounting.components.goods.forms.GroupForm;
 import com.warehouse_accounting.models.dto.ProductDto;
@@ -17,6 +16,7 @@ import com.warehouse_accounting.models.dto.ProductGroupDto;
 import com.warehouse_accounting.services.interfaces.ProductGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -24,8 +24,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 
-@SpringComponent
+@Component
 public class GoodsGridLayout extends HorizontalLayout {
     private final ProductGroupService productGroupService;
     private final TreeGrid<ProductGroupDto> treeGrid;
@@ -36,12 +37,11 @@ public class GoodsGridLayout extends HorizontalLayout {
     private final Div mainLayer;
     private GoodsAndServiceView parentLayer;
 
-    public GoodsGridLayout(
-            @Qualifier("mainLayer") Div mainLayer,
-            @Qualifier("goodsSelectedTextField") TextField selectedTextField,
-            @Qualifier("goodsGrid") Grid<ProductDto> productDtoGrid,
-            @Qualifier("goodsTreeGrid") TreeGrid<ProductGroupDto> treeGrid,
-            ProductGroupService productGroupService) {
+    public GoodsGridLayout(@Qualifier("mainLayer") Div mainLayer,
+                           @Qualifier("goodsSelectedTextField") TextField selectedTextField,
+                           @Qualifier("goodsGrid") Grid<ProductDto> productDtoGrid,
+                           @Qualifier("goodsTreeGrid") TreeGrid<ProductGroupDto> treeGrid,
+                           ProductGroupService productGroupService) {
         this.selectedTextField = selectedTextField;
         this.productDtoGrid = productDtoGrid;
         this.treeGrid = treeGrid;
@@ -58,10 +58,17 @@ public class GoodsGridLayout extends HorizontalLayout {
     }
 
     public void initThreeGrid(Long groupId) {
+        initRootProductGroup();
         treeGrid.removeAllColumns();
         ProductGroupDto rootGroup = productGroupService.getById(groupId);
-        treeGrid.setItems(Collections.singleton(rootGroup),
-                productGroupDto -> productGroupService.getAllByParentGroupId(productGroupDto.getId()));
+        treeGrid.setItems(Collections.singleton(rootGroup), productGroupDto -> {
+            List<ProductGroupDto> allByParentGroupId = productGroupService.getAllByParentGroupId(productGroupDto.getId());
+            if (Objects.nonNull(allByParentGroupId)) {
+                return allByParentGroupId;
+            } else {
+                return Collections.emptyList();
+            }
+        });
         treeGrid.addComponentHierarchyColumn(productGroupDto -> {
             HorizontalLayout productGroupLine = new HorizontalLayout();
             productGroupLine.setPadding(false);
@@ -128,16 +135,6 @@ public class GoodsGridLayout extends HorizontalLayout {
     }
 
     private List<ProductDto> getTestProductDtos(Long groupId) {
-        if (productGroupService.getAll().isEmpty()) {
-            ProductGroupDto groupDto = ProductGroupDto.builder()
-                    .name("Товары и услуги")
-                    .productGroupDto(ProductGroupDto.builder()
-                            .name("Test")
-                            .build())
-                    .build();
-            productGroupService.create(groupDto);
-        }
-
         List<ProductDto> productDtos = new ArrayList<>();
         ProductDto productDto1 = ProductDto.builder()
                 .id(1L)
@@ -158,5 +155,15 @@ public class GoodsGridLayout extends HorizontalLayout {
         productDtos.add(productDto1);
         productDtos.add(productDto2);
         return productDtos;
+    }
+
+    private void initRootProductGroup() {
+        if (productGroupService.getAll().isEmpty()) {
+            ProductGroupDto groupDto = ProductGroupDto.builder()
+                    .name("Товары и услуги")
+                    .sortNumber("1")
+                    .build();
+            productGroupService.create(groupDto);
+        }
     }
 }
