@@ -1,9 +1,12 @@
 package com.warehouse_accounting.models.dto;
 
+import com.warehouse_accounting.model.dto.TypeOfContractorDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @Builder
