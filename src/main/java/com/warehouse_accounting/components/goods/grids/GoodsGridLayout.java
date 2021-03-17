@@ -61,36 +61,38 @@ public class GoodsGridLayout extends HorizontalLayout {
         initRootProductGroup();
         treeGrid.removeAllColumns();
         ProductGroupDto rootGroup = productGroupService.getById(groupId);
-        treeGrid.setItems(Collections.singleton(rootGroup), productGroupDto -> {
-            List<ProductGroupDto> allByParentGroupId = productGroupService.getAllByParentGroupId(productGroupDto.getId());
-            if (Objects.nonNull(allByParentGroupId)) {
-                return allByParentGroupId;
-            } else {
-                return Collections.emptyList();
-            }
-        });
-        treeGrid.addComponentHierarchyColumn(productGroupDto -> {
-            HorizontalLayout productGroupLine = new HorizontalLayout();
-            productGroupLine.setPadding(false);
-            if (productGroupDto.getId().equals(groupId)) {
-                initGrid(groupId);
-                Span name = new Span(productGroupDto.getName());
-                productGroupLine.add(name);
-            } else {
-                Icon editIcon = new Icon(VaadinIcon.PENCIL);
-                editIcon.setSize("10px");
-                Span edit = new Span(editIcon);
-                edit.addClickListener(iconClickEvent -> {
-                    GroupForm serviceForm = new GroupForm(mainLayer, parentLayer, productGroupService, productGroupDto, true);
-                    mainLayer.removeAll();
-                    mainLayer.add(serviceForm);
-                });
-                Span name = new Span(productGroupDto.getName());
-                productGroupLine.add(edit, name);
-            }
-            productGroupLine.addClickListener(productGroup -> initGrid(productGroupDto.getId()));
-            return productGroupLine;
-        });
+        if (Objects.nonNull(rootGroup)) {
+            treeGrid.setItems(Collections.singleton(rootGroup), productGroupDto -> {
+                List<ProductGroupDto> allByParentGroupId = productGroupService.getAllByParentGroupId(productGroupDto.getId());
+                if (Objects.nonNull(allByParentGroupId)) {
+                    return allByParentGroupId;
+                } else {
+                    return Collections.emptyList();
+                }
+            });
+            treeGrid.addComponentHierarchyColumn(productGroupDto -> {
+                HorizontalLayout productGroupLine = new HorizontalLayout();
+                productGroupLine.setPadding(false);
+                if (productGroupDto.getId().equals(groupId)) {
+                    initGrid(groupId);
+                    Span name = new Span(productGroupDto.getName());
+                    productGroupLine.add(name);
+                } else {
+                    Icon editIcon = new Icon(VaadinIcon.PENCIL);
+                    editIcon.setSize("10px");
+                    Span edit = new Span(editIcon);
+                    edit.addClickListener(iconClickEvent -> {
+                        GroupForm serviceForm = new GroupForm(mainLayer, parentLayer, productGroupService, productGroupDto, true);
+                        mainLayer.removeAll();
+                        mainLayer.add(serviceForm);
+                    });
+                    Span name = new Span(productGroupDto.getName());
+                    productGroupLine.add(edit, name);
+                }
+                productGroupLine.addClickListener(productGroup -> initGrid(productGroupDto.getId()));
+                return productGroupLine;
+            });
+        }
 
         treeGrid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         treeGrid.expand(rootGroup);
