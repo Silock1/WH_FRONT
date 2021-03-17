@@ -1,4 +1,4 @@
-package com.warehouse_accounting.model.dto;
+package com.warehouse_accounting.models.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,4 +15,3 @@ public class TypeOfContractorDto {
     private String sortNumber;
 
 }
-

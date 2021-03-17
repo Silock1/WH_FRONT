@@ -1,6 +1,6 @@
 package com.warehouse_accounting.services.interfaces;
 
-import com.warehouse_accounting.model.dto.TypeOfContractorDto;
+import com.warehouse_accounting.models.dto.TypeOfContractorDto;
 
 import java.util.List;
 
