@@ -1,9 +1,7 @@
 package com.warehouse_accounting.services.interfaces.api;
 
-import com.warehouse_accounting.model.dto.TypeOfContractorDto;
-import org.springframework.stereotype.Component;
+import com.warehouse_accounting.models.dto.TypeOfContractorDto;
 import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.http.*;
 
 import java.util.List;
