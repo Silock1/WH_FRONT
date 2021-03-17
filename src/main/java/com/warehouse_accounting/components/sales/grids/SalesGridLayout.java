@@ -14,29 +14,28 @@ import java.util.List;
 public class SalesGridLayout extends HorizontalLayout {
 
     private final TextField selectedTextField;
-    private final Grid<CustomerOrdersDto> CustomerOrdersDtoGrid = new Grid<>(CustomerOrdersDto.class, false);
+    private final Grid<CustomerOrdersDto> customerOrdersDtoGrid = new Grid<>(CustomerOrdersDto.class, false);
 
     public SalesGridLayout(TextField selectedTextField) {
         this.selectedTextField = selectedTextField;
-
         add(initGrid());
     }
 
     private Grid<CustomerOrdersDto> initGrid() {
-        CustomerOrdersDtoGrid.setColumns(getVisibleColumn().keySet().toArray(String[]::new));
-        CustomerOrdersDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI);
+        customerOrdersDtoGrid.setColumns(getVisibleColumn().keySet().toArray(String[]::new));
+        customerOrdersDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI);
 
-        getVisibleColumn().forEach((key, value) -> CustomerOrdersDtoGrid.getColumnByKey(key).setHeader(value));
-        CustomerOrdersDtoGrid.asMultiSelect().addSelectionListener(listener -> {
+        getVisibleColumn().forEach((key, value) -> customerOrdersDtoGrid.getColumnByKey(key).setHeader(value));
+        customerOrdersDtoGrid.asMultiSelect().addSelectionListener(listener -> {
             int selectSize = listener.getAllSelectedItems().size();
             selectedTextField.setValue(String.valueOf(selectSize));
         });
-        CustomerOrdersDtoGrid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_ROW_STRIPES);
-        return CustomerOrdersDtoGrid;
+        customerOrdersDtoGrid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_ROW_STRIPES);
+        return customerOrdersDtoGrid;
     }
 
     public Grid<CustomerOrdersDto> getProductGrid() {
-        return CustomerOrdersDtoGrid;
+        return customerOrdersDtoGrid;
     }
 
     private HashMap<String, String> getVisibleColumn() {
@@ -52,10 +51,6 @@ public class SalesGridLayout extends HorizontalLayout {
         fieldNameColumnName.put("sent", "Отправлено");
         fieldNameColumnName.put("print", "Напечатано");
         fieldNameColumnName.put("comment", "Комментарий");
-
-
         return fieldNameColumnName;
     }
-
-
 }

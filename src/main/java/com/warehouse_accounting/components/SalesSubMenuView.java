@@ -91,5 +91,4 @@ public class SalesSubMenuView extends VerticalLayout {
         }
         return customerOrders;
     }
-
 }

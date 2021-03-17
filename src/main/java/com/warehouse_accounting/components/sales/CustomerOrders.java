@@ -43,7 +43,6 @@ public class CustomerOrders extends VerticalLayout {
         Label textProducts = new Label();
         textProducts.setText("Заказы покупателей");
 
-
         Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH));
         refreshButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
 
@@ -57,16 +56,13 @@ public class CustomerOrders extends VerticalLayout {
         searchField.setPlaceholder("Номер или комментарий");
         searchField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         searchField.addInputListener(inputEvent -> {
-            //grid filter
+
         });
 
         HorizontalLayout editMenuBar = getEditMenuBar();
         HorizontalLayout statusMenuBar = getStatusMenuBar();
         HorizontalLayout createMenuBar = getCreateMenuBar();
-
         HorizontalLayout printMenuBar = getPrintMenuBar();
-
-
 
         groupControl.add(helpButton, textProducts, refreshButton, addOrderButton,
                 addFilterButton, searchField, editMenuBar, statusMenuBar, createMenuBar, printMenuBar);
@@ -92,8 +88,7 @@ public class CustomerOrders extends VerticalLayout {
         editMenu.getSubMenu().addItem("Удалить", menuItemClickEvent -> {
             int selected = salesGridLayout.getProductGrid().asMultiSelect().getSelectedItems().size();
             Notification notification = new Notification(String.format("Выделено для удаления %d", selected),
-                    3000,
-                    Notification.Position.MIDDLE);
+                    3000, Notification.Position.MIDDLE);
             notification.open();
         });
 
@@ -170,7 +165,6 @@ public class CustomerOrders extends VerticalLayout {
         groupStatus.setSpacing(false);
         groupStatus.setAlignItems(Alignment.CENTER);
         return groupStatus;
-
     }
 
     private HorizontalLayout getCreateMenuBar() {
@@ -214,7 +208,6 @@ public class CustomerOrders extends VerticalLayout {
         return groupCreate;
     }
 
-
     private HorizontalLayout getPrintMenuBar() {
         MenuBar printMenuBar = new MenuBar();
         printMenuBar.addThemeVariants(MenuBarVariant.LUMO_SMALL);
@@ -246,6 +239,4 @@ public class CustomerOrders extends VerticalLayout {
         groupPrint.setAlignItems(Alignment.CENTER);
         return groupPrint;
     }
-
-
 }
