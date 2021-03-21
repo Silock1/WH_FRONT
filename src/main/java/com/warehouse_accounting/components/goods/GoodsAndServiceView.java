@@ -4,6 +4,7 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
@@ -17,51 +18,41 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
 import com.warehouse_accounting.components.goods.forms.GoodsForm;
 import com.warehouse_accounting.components.goods.forms.GroupForm;
 import com.warehouse_accounting.components.goods.forms.ServiceForm;
 import com.warehouse_accounting.components.goods.grids.GoodsGridLayout;
+import com.warehouse_accounting.models.dto.ProductDto;
 import com.warehouse_accounting.models.dto.ProductGroupDto;
 import com.warehouse_accounting.services.interfaces.ProductGroupService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@UIScope
 @Component
+@Route(value = "goodsAndServiceView", layout = AppView.class)
 public class GoodsAndServiceView extends VerticalLayout {
-    private final TreeGrid<ProductGroupDto> treeGrid;
     private final ProductGroupService productGroupService;
-    private final TextField textFieldGridSelected;
-    private final Div pageContent;
-    private final Div mainLayer;
+    private final TreeGrid<ProductGroupDto> treeGrid = new TreeGrid<>();
+    private final TextField textFieldGridSelected = new TextField();
+    private final Grid<ProductDto> productDtoGrid = new Grid<>(ProductDto.class, false);
+    private Div mainDiv;
     private GoodsGridLayout goodsGridLayout;
     private Long rootGroupId = 1L; //TODO переопределить для текущего пользователя
 
-    public GoodsAndServiceView(@Qualifier("mainLayer") Div parentLayer,
-                               @Qualifier("goodsLayer") Div pageContent,
-                               @Qualifier("goodsSelectedTextField") TextField textFieldGridSelected,
-                               @Qualifier("goodsTreeGrid") TreeGrid<ProductGroupDto> treeGrid,
-                               ProductGroupService productGroupService) {
-        this.mainLayer = parentLayer;
-        this.textFieldGridSelected = textFieldGridSelected;
-        this.treeGrid = treeGrid;
+    public GoodsAndServiceView(ProductGroupService productGroupService) {
         this.productGroupService = productGroupService;
-        this.pageContent = pageContent;
+        goodsGridLayout = new GoodsGridLayout(productGroupService, this);
+        Div pageContent = new Div();
         pageContent.setSizeFull();
-        add(getGroupButtons(), pageContent);
-    }
-
-    @Autowired
-    public void setGoodsGridLayout(GoodsGridLayout goodsGridLayout) {
-        this.goodsGridLayout = goodsGridLayout;
         pageContent.add(goodsGridLayout);
+        add(initGroupButtons(), pageContent);
     }
 
-    private HorizontalLayout getGroupButtons() {
+    private HorizontalLayout initGroupButtons() {
         HorizontalLayout groupControl = new HorizontalLayout();
 
         Button helpButton = new Button(new Icon(VaadinIcon.QUESTION_CIRCLE));
@@ -80,17 +71,17 @@ public class GoodsAndServiceView extends VerticalLayout {
         Button addProductButton = new Button("Товар", new Icon(VaadinIcon.PLUS));
         addProductButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         addProductButton.addClickListener(event -> {
-            GoodsForm goodsForm = new GoodsForm(mainLayer, this);
-            mainLayer.removeAll();
-            mainLayer.add(goodsForm);
+            GoodsForm goodsForm = new GoodsForm(mainDiv, this);
+            mainDiv.removeAll();
+            mainDiv.add(goodsForm);
         });
 
         Button addServiceButton = new Button("Услуга", new Icon(VaadinIcon.PLUS));
         addServiceButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         addServiceButton.addClickListener(event -> {
-            ServiceForm serviceForm = new ServiceForm(mainLayer, this);
-            mainLayer.removeAll();
-            mainLayer.add(serviceForm);
+            ServiceForm serviceForm = new ServiceForm(mainDiv, this);
+            mainDiv.removeAll();
+            mainDiv.add(serviceForm);
         });
 
         Button addKitButton = new Button("Комплект", new Icon(VaadinIcon.PLUS));
@@ -99,12 +90,11 @@ public class GoodsAndServiceView extends VerticalLayout {
         Button addGroupButton = new Button("Группа", new Icon(VaadinIcon.PLUS));
         addGroupButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         addGroupButton.addClickListener(buttonClickEvent -> {
-            ProductGroupDto selectGroup;
             Optional<ProductGroupDto> selectedGroup = treeGrid.getSelectedItems().stream().findFirst();
-            selectGroup = selectedGroup.orElseGet(() -> productGroupService.getById(rootGroupId));
-            GroupForm groupForm = new GroupForm(mainLayer, this, productGroupService, selectGroup, false);
-            mainLayer.removeAll();
-            mainLayer.add(groupForm);
+            ProductGroupDto selectGroup = selectedGroup.orElseGet(() -> productGroupService.getById(rootGroupId));
+            GroupForm groupForm = new GroupForm(mainDiv, this, productGroupService, selectGroup, false);
+            mainDiv.removeAll();
+            mainDiv.add(groupForm);
         });
 
         Button addFilterButton = new Button("Фильтр", new Icon(VaadinIcon.PLUS));
@@ -117,7 +107,7 @@ public class GoodsAndServiceView extends VerticalLayout {
             //grid filter
         });
 
-        HorizontalLayout editMenuBar = getEditMenuBar();
+        HorizontalLayout editMenuBar = initEditMenuBar();
 
         HorizontalLayout printMenuBar = getPrintMenuBar();
 
@@ -132,7 +122,7 @@ public class GoodsAndServiceView extends VerticalLayout {
         return groupControl;
     }
 
-    private HorizontalLayout getEditMenuBar() {
+    private HorizontalLayout initEditMenuBar() {
         Icon agileDownIcon = new Icon(VaadinIcon.ANGLE_DOWN);
         agileDownIcon.setSize("12px");
         textFieldGridSelected.setReadOnly(true);
@@ -261,5 +251,25 @@ public class GoodsAndServiceView extends VerticalLayout {
 
     public GoodsGridLayout getGoodsGridLayout() {
         return goodsGridLayout;
+    }
+
+    public void setMainDiv(Div div) {
+        this.mainDiv = div;
+    }
+
+    public Div getMainDiv() {
+        return mainDiv;
+    }
+
+    public TextField getTextFieldGridSelected() {
+        return textFieldGridSelected;
+    }
+
+    public Grid<ProductDto> getProductDtoGrid() {
+        return productDtoGrid;
+    }
+
+    public TreeGrid<ProductGroupDto> getTreeGrid() {
+        return treeGrid;
     }
 }

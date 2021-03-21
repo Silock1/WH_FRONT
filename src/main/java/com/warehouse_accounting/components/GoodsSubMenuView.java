@@ -10,24 +10,22 @@ import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.goods.GoodsAndServiceView;
 import com.warehouse_accounting.components.movements.MovementView;
-import org.springframework.beans.factory.annotation.Qualifier;
 
+import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.List;
 
 @PageTitle("Товары")
 @Route(value = "goods", layout = AppView.class)
-@PreserveOnRefresh
 public class GoodsSubMenuView extends VerticalLayout {
 
     private final MovementView movementView;
     private final GoodsAndServiceView goodsAndService;
-    private final Div pageContent;
+    private final Div pageContent = new Div();
 
-    public GoodsSubMenuView(@Qualifier("mainLayer") Div pageContent, MovementView movementView, GoodsAndServiceView goodsAndService) {
+    public GoodsSubMenuView(MovementView movementView, GoodsAndServiceView goodsAndService) {
         this.movementView = movementView;
         this.goodsAndService = goodsAndService;
-        this.pageContent = pageContent;
         this.pageContent.removeAll();
         pageContent.add(goodsAndService);
         pageContent.setSizeFull();
@@ -92,5 +90,10 @@ public class GoodsSubMenuView extends VerticalLayout {
             }
         });
         return subMenuTabs;
+    }
+
+    @PostConstruct
+    public void setMainDiv(){
+        goodsAndService.setMainDiv(pageContent);
     }
 }

@@ -64,7 +64,7 @@ public class GroupForm extends VerticalLayout {
         if (edited) {
             groupId.setValue(productGroupDto.getId().toString());
             groupName.setValue(productGroupDto.getName());
-            group.setValue(productGroupService.getById(productGroupDto.getProductGroupDto().getId()));
+            group.setValue(productGroupDto.getProductGroupDto());
             actions.add(delete);
         } else {
             group.setValue(Objects.isNull(productGroupDto) ? rootGroup : productGroupDto);
