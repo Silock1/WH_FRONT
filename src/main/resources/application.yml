@@ -26,3 +26,4 @@ retrofit:
     warehouse_url: api/warehouses
     bankAccount_url: api/bankAccounts
     movement_url: api/movements
+    project_url: api/projects

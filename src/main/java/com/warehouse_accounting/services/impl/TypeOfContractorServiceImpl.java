@@ -1,7 +1,7 @@
 package com.warehouse_accounting.services.impl;
 
 
-import com.warehouse_accounting.model.dto.TypeOfContractorDto;
+import com.warehouse_accounting.models.dto.TypeOfContractorDto;
 import com.warehouse_accounting.services.interfaces.api.RetrofitTypeOfContractorApi;
 import com.warehouse_accounting.services.interfaces.TypeOfContractorService;
 import lombok.extern.log4j.Log4j2;
