@@ -7,7 +7,6 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.warehouse_accounting.components.movements.MovementView;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,11 +15,9 @@ import java.util.List;
 @PageTitle("Контрагенты")
 public class ContragentsSubMenuView extends VerticalLayout {
 
-    private final MovementView movementView;
     private final Div pageContent = new Div();
 
-    public ContragentsSubMenuView(MovementView movementView) {
-        this.movementView = movementView;
+    public ContragentsSubMenuView() {
         pageContent.setSizeFull();
         add(initSubMenu(), pageContent);
     }
