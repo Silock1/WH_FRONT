@@ -4,8 +4,8 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -77,11 +77,15 @@ public class AppView extends AppLayout {
         Icon iconBell = new Icon(VaadinIcon.BELL_O);
         iconBell.setColor("white");
         iconBell.setSize("18px");
+
+
         rightSideNavBar.add(iconHelp);
         rightSideNavBar.add(iconBell);
         rightSideNavBar.setMinHeight("58");
         rightSideNavBar.setId("rightSideNavBar");
         rightSideNavBar.setWidthFull();
+
+
 
         StreamResource resource = new StreamResource("logo_main.svg", () -> getImageInputStream(LOGO_PNG)); // Если icons будут в виде svg файлов в static лежать
         Image logo = new Image(resource, "logo_main");
