@@ -117,6 +117,12 @@ public class AppView extends AppLayout {
             case "Производство":
                 subMenuView = "production";
                 break;
+            case "Продажи":
+                subMenuView = "sales";
+                break;
+            case "Закупки":
+                subMenuView = "purchases";
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + name);
         }
