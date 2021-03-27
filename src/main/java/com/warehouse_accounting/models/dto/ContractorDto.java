@@ -1,5 +1,6 @@
 package com.warehouse_accounting.models.dto;
 
+import com.warehouse_accounting.models.dto.TypeOfContractorDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
