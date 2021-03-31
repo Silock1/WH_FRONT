@@ -19,10 +19,10 @@ public class MoneySubMenuView extends VerticalLayout {
 
     public MoneySubMenuView() {
         pageContent.setSizeFull();
-        add(initSubMeny(), pageContent);
+        add(initSubMenu(), pageContent);
     }
 
-    private Tabs initSubMeny() {
+    private Tabs initSubMenu() {
         List<String> moneyMenuItems = Arrays.asList("Платежи",
                 "Движение денежных средств",
                 "Прибыли и убытки",
@@ -36,29 +36,29 @@ public class MoneySubMenuView extends VerticalLayout {
             subMenuTabs.add(tab);
         }
         subMenuTabs.addSelectedChangeListener(event -> {
-        switch (event.getSelectedTab().getLabel()) {
-        case "Платежи":
-        pageContent.removeAll();
-        pageContent.add(new Span("Платежи"));
-        break;
-        case "Движение денежных средств":
-        pageContent.removeAll();
-        pageContent.add(new Span("Движение денежных средств"));
-        break;
-        case "Прибыли и убытки":
-            pageContent.removeAll();
-            pageContent.add(new Span("Прибыли и убытки"));
-        break;
-        case "Взаиморасчеты":
-            pageContent.removeAll();
-            pageContent.add(new Span("Взаиморасчеты"));
-        break;
-        case "Корректировки":
-            pageContent.removeAll();
-            pageContent.add(new Span("Корректировки"));
-        break;
-        }
+            switch (event.getSelectedTab().getLabel()) {
+                case "Платежи":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Платежи"));
+                    break;
+                case "Движение денежных средств":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Движение денежных средств"));
+                    break;
+                case "Прибыли и убытки":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Прибыли и убытки"));
+                    break;
+                case "Взаиморасчеты":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Взаиморасчеты"));
+                    break;
+                case "Корректировки":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Корректировки"));
+                    break;
+            }
         });
         return subMenuTabs;
-        }
+    }
 }
