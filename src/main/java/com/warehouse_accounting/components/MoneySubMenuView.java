@@ -49,11 +49,11 @@ import java.util.List;
 //        }
 @Route(value = "money", layout = AppView.class)
 @PageTitle("Деньги")
-public class Money extends VerticalLayout {
+public class MoneySubMenuView extends VerticalLayout {
 
     private final Div pageContent = new Div();
 
-    public Money() {
+    public MoneySubMenuView() {
         pageContent.setSizeFull();
         add(initSubMeny(), pageContent);
     }
