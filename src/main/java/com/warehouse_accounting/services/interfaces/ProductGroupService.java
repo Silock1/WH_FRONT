@@ -15,4 +15,6 @@ public interface ProductGroupService {
     void update(ProductGroupDto productGroupDto);
 
     void deleteById(Long id);
+
+    List<ProductGroupDto> getAllByParentGroupId(Long id);
 }

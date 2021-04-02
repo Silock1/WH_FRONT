@@ -6,26 +6,29 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
+import com.warehouse_accounting.components.goods.GoodsAndServiceView;
 import com.warehouse_accounting.components.movements.MovementView;
-import com.warehouse_accounting.components.goods.GoodsAndService;
 
+import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
-@Route(value = "goods", layout = AppView.class)
 @PageTitle("Товары")
+@Route(value = "goods", layout = AppView.class)
 public class GoodsSubMenuView extends VerticalLayout {
 
     private final MovementView movementView;
+    private final GoodsAndServiceView goodsAndService;
     private final Div pageContent = new Div();
-    private GoodsAndService goodsAndService;
 
-    public GoodsSubMenuView(MovementView movementView) {
+    public GoodsSubMenuView(MovementView movementView, GoodsAndServiceView goodsAndService) {
         this.movementView = movementView;
+        this.goodsAndService = goodsAndService;
+        this.pageContent.removeAll();
+        pageContent.add(goodsAndService);
         pageContent.setSizeFull();
-        pageContent.add(initGoodsAndService(pageContent));
         add(initSubMenu(), pageContent);
     }
 
@@ -50,7 +53,7 @@ public class GoodsSubMenuView extends VerticalLayout {
             switch (event.getSelectedTab().getLabel()) {
                 case "Товары и услуги":
                     pageContent.removeAll();
-                    pageContent.add(initGoodsAndService(pageContent));
+                    pageContent.add(goodsAndService);
                     break;
                 case "Оприходования":
                     pageContent.removeAll();
@@ -89,10 +92,8 @@ public class GoodsSubMenuView extends VerticalLayout {
         return subMenuTabs;
     }
 
-    private GoodsAndService initGoodsAndService(Div pageContent){
-        if (Objects.isNull(goodsAndService)) {
-            goodsAndService = new GoodsAndService(pageContent);
-        }
-        return goodsAndService;
+    @PostConstruct
+    public void setMainDiv(){
+        goodsAndService.setMainDiv(pageContent);
     }
 }

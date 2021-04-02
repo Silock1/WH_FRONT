@@ -32,4 +32,8 @@ public interface ProductGroupApi {
     @Headers("Accept: application/json")
     @DELETE("{url}/{id}")
     Call<Void> deleteById(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
+
+    @Headers("Accept: application/json")
+    @GET("{url}/{id}")
+    Call<List<ProductGroupDto>> getAllByParentId(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
 }
