@@ -5,6 +5,7 @@ import com.warehouse_accounting.models.dto.BankAccountDto;
 import java.util.List;
 
 public interface BankAccountService {
+
     List<BankAccountDto> getAll();
 
     BankAccountDto getById(Long id);

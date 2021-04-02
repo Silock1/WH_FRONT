@@ -13,6 +13,7 @@ import retrofit2.http.Path;
 import java.util.List;
 
 public interface LegalDetailApi {
+
     @Headers("Accept: application/json")
     @GET("{url}")
     Call<List<LegalDetailDto>> getAll(@Path(value = "url", encoded = true) String url);

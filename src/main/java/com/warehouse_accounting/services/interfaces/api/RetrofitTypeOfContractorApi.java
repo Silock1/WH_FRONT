@@ -2,7 +2,12 @@ package com.warehouse_accounting.services.interfaces.api;
 
 import com.warehouse_accounting.models.dto.TypeOfContractorDto;
 import retrofit2.Call;
-import retrofit2.http.*;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
+import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
 
 import java.util.List;
 
@@ -27,5 +32,4 @@ public interface RetrofitTypeOfContractorApi {
     @Headers("Accept: application/json")
     @PUT("{url}")
     Call<Void> create(@Path(value = "url", encoded = true) String url, @Body TypeOfContractorDto dto);
-
 }

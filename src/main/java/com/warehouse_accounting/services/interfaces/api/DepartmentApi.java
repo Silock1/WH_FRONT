@@ -13,6 +13,7 @@ import retrofit2.http.Path;
 import java.util.List;
 
 public interface DepartmentApi {
+
     @Headers("Accept: application/json")
     @GET("{url}")
     Call<List<DepartmentDto>> getAll(@Path(value = "url", encoded = true) String url);
@@ -32,5 +33,4 @@ public interface DepartmentApi {
     @Headers("Accept: application/json")
     @DELETE("{url}/{id}")
     Call<Void> deleteById(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
-
 }

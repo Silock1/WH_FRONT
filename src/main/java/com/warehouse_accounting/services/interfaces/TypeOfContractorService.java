@@ -4,7 +4,8 @@ import com.warehouse_accounting.models.dto.TypeOfContractorDto;
 
 import java.util.List;
 
-public interface TypeOfContractorService{
+public interface TypeOfContractorService {
+
     List<TypeOfContractorDto> getAll();
 
     TypeOfContractorDto getById(Long id);
@@ -13,7 +14,7 @@ public interface TypeOfContractorService{
 
     void deleteById(Long Id);
 
-    void update(TypeOfContractorDto typeOfContractorDto) ;
+    void update(TypeOfContractorDto typeOfContractorDto);
 }
 
 

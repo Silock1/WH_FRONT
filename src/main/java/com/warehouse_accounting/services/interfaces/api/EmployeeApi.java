@@ -13,6 +13,7 @@ import retrofit2.http.Path;
 import java.util.List;
 
 public interface EmployeeApi {
+
     @Headers("Accept: application/json")
     @GET("{url}")
     Call<List<EmployeeDto>> getAll(@Path(value = "url", encoded = true) String url);
@@ -31,5 +32,5 @@ public interface EmployeeApi {
 
     @Headers("Accept: application/json")
     @DELETE("{url}/{id}")
-    Call<Void> deleteById(@Path(value = "url",encoded = true) String url, @Path("id") Long id);
+    Call<Void> deleteById(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
 }

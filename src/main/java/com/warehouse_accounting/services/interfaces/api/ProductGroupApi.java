@@ -13,6 +13,7 @@ import retrofit2.http.Path;
 import java.util.List;
 
 public interface ProductGroupApi {
+
     @Headers("Accept: application/json")
     @GET("{url}")
     Call<List<ProductGroupDto>> getAll(@Path(value = "url", encoded = true) String url);

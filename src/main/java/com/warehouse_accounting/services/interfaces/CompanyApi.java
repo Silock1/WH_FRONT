@@ -1,7 +1,6 @@
 package com.warehouse_accounting.services.interfaces;
 
 import com.warehouse_accounting.models.dto.CompanyDto;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
