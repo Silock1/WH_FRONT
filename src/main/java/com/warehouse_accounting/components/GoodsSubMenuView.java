@@ -3,10 +3,8 @@ package com.warehouse_accounting.components;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.goods.GoodsAndServiceView;
 import com.warehouse_accounting.components.movements.MovementView;
@@ -14,6 +12,9 @@ import com.warehouse_accounting.components.movements.MovementView;
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.warehouse_accounting.components.UtilView.subMenuTabs;
+
 
 @PageTitle("Товары")
 @Route(value = "goods", layout = AppView.class)
@@ -42,13 +43,8 @@ public class GoodsSubMenuView extends VerticalLayout {
                 "Прайс-листы",
                 "Остатки",
                 "Обороты");
-        Tabs subMenuTabs = new Tabs();
-        for (String item : goodsMenuItems) {
-            Tab tab = new Tab();
-            tab.addClassName("subMenuItem");
-            tab.add(item);
-            subMenuTabs.add(tab);
-        }
+        Tabs subMenuTabs = subMenuTabs(goodsMenuItems);
+
         subMenuTabs.addSelectedChangeListener(event -> {
             switch (event.getSelectedTab().getLabel()) {
                 case "Товары и услуги":

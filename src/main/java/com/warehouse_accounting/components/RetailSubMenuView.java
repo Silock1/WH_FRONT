@@ -2,13 +2,14 @@ package com.warehouse_accounting.components;
 
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static com.warehouse_accounting.components.UtilView.subMenuTabs;
 
 @Route(value = "retail", layout = AppView.class)
 @PageTitle("Розница")
@@ -31,14 +32,6 @@ public class RetailSubMenuView extends VerticalLayout {
                 "Предоплаты",
                 "Возвраты предоплат",
                 "Очередь облачных чеков");
-        Tabs subMenuTabs = new Tabs();
-        for (String item : retailMenuItems) {
-            Tab tab = new Tab();
-            tab.addClassName("subMenuItem");
-            tab.add(item);
-            subMenuTabs.add(tab);
-        }
-
-        return subMenuTabs;
+      return subMenuTabs(retailMenuItems);
     }
 }

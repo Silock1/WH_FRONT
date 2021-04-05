@@ -3,13 +3,14 @@ package com.warehouse_accounting.components;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static com.warehouse_accounting.components.UtilView.subMenuTabs;
 
 @Route(value = "contragents", layout = AppView.class)
 @PageTitle("Контрагенты")
@@ -26,13 +27,8 @@ public class ContragentsSubMenuView extends VerticalLayout {
         List<String> goodsMenuItems = Arrays.asList("Контрагенты",
                 "Договоры",
                 "Звонки");
-        Tabs subMenuTabs = new Tabs();
-        for (String item : goodsMenuItems) {
-            Tab tab = new Tab();
-            tab.addClassName("subMenuItem");
-            tab.add(item);
-            subMenuTabs.add(tab);
-        }
+        Tabs subMenuTabs = subMenuTabs(goodsMenuItems);
+
         subMenuTabs.addSelectedChangeListener(event -> {
             switch (event.getSelectedTab().getLabel()) {
                 case "Контрагенты":
