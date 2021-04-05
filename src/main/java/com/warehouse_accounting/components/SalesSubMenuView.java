@@ -3,7 +3,6 @@ package com.warehouse_accounting.components;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -12,6 +11,8 @@ import com.warehouse_accounting.components.sales.CustomerOrders;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
+import static com.warehouse_accounting.components.UtilView.subMenuTabs;
 
 @Route(value = "sales", layout = AppView.class)
 @PageTitle("Продажи")
@@ -36,13 +37,8 @@ public class SalesSubMenuView extends VerticalLayout {
                 "Прибыльность",
                 "Товары на реализации",
                 "Воронка продаж");
-        Tabs subMenuTabs = new Tabs();
-        for (String item : saleMenuItems) {
-            Tab tab = new Tab();
-            tab.addClassName("subMenuItem");
-            tab.add(item);
-            subMenuTabs.add(tab);
-        }
+        Tabs subMenuTabs = subMenuTabs(saleMenuItems);
+
         subMenuTabs.addSelectedChangeListener(event -> {
             switch (event.getSelectedTab().getLabel()) {
                 case "Заказы покупателей":
