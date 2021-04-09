@@ -5,6 +5,7 @@ import com.warehouse_accounting.models.dto.ContractorDto;
 import java.util.List;
 
 public interface ContractorService {
+
     List<ContractorDto> getAll();
 
     ContractorDto getById(Long id);

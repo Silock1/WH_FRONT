@@ -24,7 +24,7 @@ public interface CurrencyApi {
 
     @Headers("Accept: application/json")
     @POST("{url}")
-    Call <Void> create(@Path(value = "url", encoded = true) String url, @Body CurrencyDto dto);
+    Call<Void> create(@Path(value = "url", encoded = true) String url, @Body CurrencyDto dto);
 
     @Headers("Accept: application/json")
     @PUT("{url}")
