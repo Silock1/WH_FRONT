@@ -27,3 +27,4 @@ retrofit:
     bankAccount_url: api/bankAccounts
     movement_url: api/movements
     project_url: api/projects
+    country_url: api/countries
