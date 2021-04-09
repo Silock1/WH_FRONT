@@ -1,10 +1,8 @@
 package com.warehouse_accounting.services.impl;
 
 import com.warehouse_accounting.models.dto.CallDto;
-import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.services.interfaces.CallService;
 import com.warehouse_accounting.services.interfaces.api.CallApi;
-import com.warehouse_accounting.services.interfaces.api.ContractorApi;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,7 +21,7 @@ public class CallServiceImpl implements CallService {
     private final CallApi callApi;
     private final String callUrl;
 
-    public CallServiceImpl(@Value("${retrofit.restServices.contractor_url}") String callUrl, Retrofit retrofit) {
+    public CallServiceImpl(@Value("${retrofit.restServices.call_url}") String callUrl, Retrofit retrofit) {
         this.callUrl = callUrl;
         this.callApi = retrofit.create(CallApi.class);
     }
@@ -100,12 +98,12 @@ public class CallServiceImpl implements CallService {
         try {
             Response<Void> response = call.execute();
             if (response.isSuccessful()) {
-                log.info("Успешно выполнен запрос на удаление ContractorDto");
+                log.info("Успешно выполнен запрос на удаление CallDto");
             } else {
-                log.error("Произошла ошибка {} при выполнении запроса на удаление ContractorDto", response.code());
+                log.error("Произошла ошибка {} при выполнении запроса на удаление CallDto", response.code());
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на удаление ContractorDto по id", e);
+            log.error("Произошла ошибка при выполнении запроса на удаление CallDto по id", e);
         }
     }
 }
