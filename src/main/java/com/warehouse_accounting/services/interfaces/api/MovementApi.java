@@ -14,6 +14,7 @@ import retrofit2.http.Path;
 import java.util.List;
 
 public interface MovementApi {
+
     @Headers("Accept: application/json")
     @GET("{url}")
     Call<List<MovementDto>> getAll(@Path(value = "url", encoded = true) String url);

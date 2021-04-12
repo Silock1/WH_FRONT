@@ -5,6 +5,7 @@ import com.warehouse_accounting.models.dto.TaxSystemDto;
 import java.util.List;
 
 public interface TaxSystemService {
+
     List<TaxSystemDto> getAll();
 
     TaxSystemDto getById(Long id);

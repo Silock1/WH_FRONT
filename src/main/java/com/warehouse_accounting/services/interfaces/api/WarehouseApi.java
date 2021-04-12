@@ -13,6 +13,7 @@ import retrofit2.http.Path;
 import java.util.List;
 
 public interface WarehouseApi {
+
     @Headers("Accept: application/json")
     @GET("{url}")
     Call<List<WarehouseDto>> getAll(@Path(value = "url", encoded = true) String url);

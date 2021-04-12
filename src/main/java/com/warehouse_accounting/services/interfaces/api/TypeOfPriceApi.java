@@ -13,6 +13,7 @@ import retrofit2.http.Path;
 import java.util.List;
 
 public interface TypeOfPriceApi {
+
     @Headers("Accept: application/json")
     @GET("{url}")
     Call<List<TypeOfPriceDto>> getAll(@Path(value = "url", encoded = true) String url);

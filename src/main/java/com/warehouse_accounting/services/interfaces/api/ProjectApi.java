@@ -13,6 +13,7 @@ import retrofit2.http.Path;
 import java.util.List;
 
 public interface ProjectApi {
+
     @Headers("Accept: application/json")
     @GET("{url}")
     Call<List<ProjectDto>> getAll(@Path(value = "url", encoded = true) String url);
@@ -23,7 +24,7 @@ public interface ProjectApi {
 
     @Headers("Accept: application/json")
     @POST("{url}")
-    Call <Void> create(@Path(value = "url", encoded = true) String url, @Body ProjectDto dto);
+    Call<Void> create(@Path(value = "url", encoded = true) String url, @Body ProjectDto dto);
 
     @Headers("Accept: application/json")
     @PUT("{url}")
