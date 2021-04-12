@@ -1,4 +1,4 @@
-package com.warehouse_accounting.services.interfaces;
+package com.warehouse_accounting.services.interfaces.api;
 
 import com.warehouse_accounting.models.dto.CompanyDto;
 import retrofit2.Call;

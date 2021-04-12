@@ -1,7 +1,7 @@
 package com.warehouse_accounting.services.impl;
 
 import com.warehouse_accounting.models.dto.CompanyDto;
-import com.warehouse_accounting.services.interfaces.CompanyApi;
+import com.warehouse_accounting.services.interfaces.api.CompanyApi;
 import com.warehouse_accounting.services.interfaces.CompanyService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
