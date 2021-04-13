@@ -29,3 +29,6 @@ retrofit:
     project_url: api/projects
     call_url: api/calls
     country_url: api/countries
+    invoice_url: api/invoices
+    invoice_edit_url: api/invoice_edits
+    invoice_product_url: api/invoice_products
