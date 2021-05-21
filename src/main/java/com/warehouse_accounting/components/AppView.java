@@ -1,12 +1,16 @@
 package com.warehouse_accounting.components;
 
 import com.vaadin.flow.component.applayout.AppLayout;
+import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -30,6 +34,7 @@ import java.util.stream.Stream;
 @CssImport(value = "./css/my-app-layout.css")
 public class AppView extends AppLayout {
     private final String LOGO_PNG = "logo_main.svg";
+    private final String AVATAR_PNG = "avatar-placeholder.svg";
 
     public AppView() {
         prepareNavBarTabs();
@@ -85,14 +90,33 @@ public class AppView extends AppLayout {
         rightSideNavBar.setId("rightSideNavBar");
         rightSideNavBar.setWidthFull();
 
-
-
         StreamResource resource = new StreamResource("logo_main.svg", () -> getImageInputStream(LOGO_PNG)); // Если icons будут в виде svg файлов в static лежать
         Image logo = new Image(resource, "logo_main");
         logo.setId("logo_main");
         logo.setHeight("19px");
         logo.setWidth("58px");
-        addToNavbar(logo, navBarTabs, rightSideNavBar);
+
+        MenuBar userNavBar = new MenuBar();
+        userNavBar.setOpenOnHover(true);
+        MenuItem profile = userNavBar.addItem("Пользователь");
+        SubMenu userSubMenu = profile.getSubMenu();
+        userSubMenu.addItem("Настройки пользователя", event -> profile.getUI().ifPresent(ui -> ui.navigate("profile/settings")));
+        userSubMenu.addItem("Настройки", event -> profile.getUI().ifPresent(ui -> ui.navigate("profile")));
+        profile.getSubMenu().add(new Hr());
+        userSubMenu.addItem("Новости", event -> profile.getUI().ifPresent(ui -> ui.navigate("news")));
+        userSubMenu.addItem("Спецпредожения", event -> profile.getUI().ifPresent(ui -> ui.navigate("specialOffers")));
+        userSubMenu.addItem("Приложения", event -> profile.getUI().ifPresent(ui -> ui.navigate("applications")));
+        userSubMenu.addItem("Подписка", event -> profile.getUI().ifPresent(ui -> ui.navigate("subscription")));
+        profile.getSubMenu().add(new Hr());
+        userSubMenu.addItem("Выход", event -> profile.getUI().ifPresent(ui -> ui.navigate("logout")));
+
+        StreamResource res = new StreamResource("avatar-placeholder.svg", () -> getImageInputStream(AVATAR_PNG));
+        Image image = new Image(res, "avatar-placeholder");
+        image.setId("avatar-placeholder");
+        image.setSizeFull();
+        profile.addComponentAsFirst(image);
+
+        addToNavbar(logo, navBarTabs, rightSideNavBar, userNavBar);
     }
 
     public static InputStream getImageInputStream(String svgIconName) {
@@ -129,7 +153,7 @@ public class AppView extends AppLayout {
             case "Розница":
                 subMenuView = "retail";
                 break;
-             case "Показатели":
+            case "Показатели":
                 subMenuView = "indicators";
                 break;
             default:
