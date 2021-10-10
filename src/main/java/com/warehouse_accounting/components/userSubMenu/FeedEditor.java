@@ -15,7 +15,10 @@ import com.warehouse_accounting.services.interfaces.FeedService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 
-
+/*
+Класс для теста CRUD операция над новостями
+Удалить его и все с ним связанное в классе FeedView после корректного вывода новостей
+ */
 @SpringComponent
 @UIScope
 public class FeedEditor extends VerticalLayout implements KeyNotifier {

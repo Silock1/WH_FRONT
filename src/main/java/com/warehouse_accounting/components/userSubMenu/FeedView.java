@@ -25,6 +25,15 @@ public class FeedView extends VerticalLayout {
         this.feedService = feedService;
         this.editor = editor;
         this.grid = new Grid<>(FeedDto.class);
+
+        //Следующие элементы должны быть установлены по вертикали. Не работает!
+        VerticalLayout layout = new VerticalLayout();
+        layout.add("Item 1");
+        layout.add("Item 2");
+        layout.add("Item 3");
+        layout.add("Item 4");
+
+        add(layout);
         add(addNewBtn, grid, editor);
 
         grid.asSingleSelect().addValueChangeListener(e -> {
