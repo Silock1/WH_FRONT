@@ -1,8 +1,10 @@
 package com.warehouse_accounting.components.userSubMenu;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -18,38 +20,34 @@ import java.util.List;
 
 @Route(value = "feed", layout = AppView.class)
 @PageTitle("Новости")
-public class FeedView extends VerticalLayout {
+@CssImport(value = "./css/feed.css")
+public class FeedView extends HorizontalLayout {
 
     private final FeedService feedService;
     private final Grid<FeedDto> grid = new Grid<>();
 
-    private final Button addNewBtn = new Button("Add new");
-    private final FeedEditor editor;
-    private final HorizontalLayout toolBar = new HorizontalLayout(addNewBtn);
-
-    public FeedView(FeedService feedService, FeedEditor editor) {
+    public FeedView(FeedService feedService) {
         this.feedService = feedService;
-        this.editor = editor;
 
-        VerticalLayout column = new VerticalLayout();
+        setHeightFull();
+
+        VerticalLayout leftColumn = new VerticalLayout();
+        leftColumn.addClassName("leftColumn");
+
+        VerticalLayout middleColumn = new VerticalLayout();
         Span header = new Span("Новости");
-        column.setWidth("40%");
-        column.add(header, grid);
+        header.addClassName("news");
+        middleColumn.setWidth("2700px");
+        middleColumn.add(header, new Hr(), grid);
+        middleColumn.setAlignItems(Alignment.CENTER);
+        middleColumn.addClassName("middleColumn");
 
-        grid.asSingleSelect().addValueChangeListener(e -> {
-            editor.editFeed(e.getValue());
-        });
-
-        addNewBtn.addClickListener(e -> editor.editFeed(new FeedDto()));
-
-        editor.setChangeHandler(() -> {
-            editor.setVisible(false);
-            grid.setItems(feedService.getAll());
-        });
+        VerticalLayout rightColumn = new VerticalLayout();
+        rightColumn.addClassName("rightColumn");
 
         listFeed();
 
-        add(column, addNewBtn, editor);
+        add(leftColumn, middleColumn, rightColumn);
     }
 
     private void listFeed() {
@@ -58,8 +56,7 @@ public class FeedView extends VerticalLayout {
                               GridVariant.LUMO_NO_ROW_BORDERS);
         grid.addComponentColumn(feedDto -> createCard(feedDto));
 
-        List<FeedDto> news = feedService.getAll();
-        grid.setItems(news);
+        grid.setItems(feedService.getAll());
     }
 
     private HorizontalLayout createCard(FeedDto feedDto) {
@@ -90,7 +87,7 @@ public class FeedView extends VerticalLayout {
         date.addClassName("date");
         footer.add(date);
 
-        description.add(header, post, footer);
+        description.add(header, post, footer, new Hr());
         card.add(description);
 
         return card;
