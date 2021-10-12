@@ -1,4 +1,4 @@
-package com.warehouse_accounting.components.userSubMenu;
+package com.warehouse_accounting.components.user;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
