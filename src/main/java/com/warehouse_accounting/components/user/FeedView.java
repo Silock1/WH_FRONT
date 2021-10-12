@@ -1,6 +1,5 @@
 package com.warehouse_accounting.components.user;
 
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -9,15 +8,12 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.AppView;
 import com.warehouse_accounting.models.dto.FeedDto;
 import com.warehouse_accounting.services.interfaces.FeedService;
 
-import java.util.List;
 
 @Route(value = "feed", layout = AppView.class)
 @PageTitle("Новости")
@@ -66,8 +62,8 @@ public class FeedView extends HorizontalLayout {
         card.setSpacing(false);
         card.getThemeList().add("spacing-s");
 
-        Image newsImage = new Image("feed/news_default.svg", "Image not found");
-        newsImage.addClassName("image");
+        Image image = new Image("icons/news.svg","Image not found");
+        image.addClassName("image");
         VerticalLayout description = new VerticalLayout();
         description.addClassName("description");
         description.setSpacing(false);
@@ -91,7 +87,7 @@ public class FeedView extends HorizontalLayout {
         footer.add(date);
 
         description.add(header, post, footer, new Hr());
-        card.add(newsImage, description);
+        card.add(image, description);
 
         return card;
     }

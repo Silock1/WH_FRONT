@@ -28,3 +28,9 @@
     margin-top: 10px;
     font-size: smaller;
 }
+
+.image {
+    margin-right: -30px;
+    margin-left: -10px;
+    margin-bottom: auto;
+}
