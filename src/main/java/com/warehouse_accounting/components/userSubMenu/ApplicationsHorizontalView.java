@@ -3,6 +3,7 @@ package com.warehouse_accounting.components.userSubMenu;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
@@ -14,6 +15,7 @@ import com.warehouse_accounting.models.dto.ApplicationDto;
 import java.util.ArrayList;
 import java.util.List;
 
+@CssImport(value = "./css/application.css")
 public class ApplicationsHorizontalView extends HorizontalLayout {
 
     public static List<HorizontalLayout> horizontalDivFill(List<ApplicationDto> listDto) {
