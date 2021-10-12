@@ -11,6 +11,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.AppView;
 import com.warehouse_accounting.models.dto.FeedDto;
@@ -65,6 +66,8 @@ public class FeedView extends HorizontalLayout {
         card.setSpacing(false);
         card.getThemeList().add("spacing-s");
 
+        Image newsImage = new Image("feed/news_default.svg", "Image not found");
+        newsImage.addClassName("image");
         VerticalLayout description = new VerticalLayout();
         description.addClassName("description");
         description.setSpacing(false);
@@ -88,7 +91,7 @@ public class FeedView extends HorizontalLayout {
         footer.add(date);
 
         description.add(header, post, footer, new Hr());
-        card.add(description);
+        card.add(newsImage, description);
 
         return card;
     }
