@@ -33,3 +33,4 @@ retrofit:
     invoice_edit_url: api/invoice_edits
     invoice_product_url: api/invoice_products
     feed_url: api/feed
+    acceptance_url: api/acceptances
