@@ -32,3 +32,6 @@ retrofit:
     invoice_url: api/invoices
     invoice_edit_url: api/invoice_edits
     invoice_product_url: api/invoice_products
+    payments_url: api/payments
+    recycleBin_url: api/recycle_bin
+
