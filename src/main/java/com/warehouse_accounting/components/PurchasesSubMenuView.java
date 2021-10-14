@@ -10,6 +10,7 @@ import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.purchases.Acceptances;
 import com.warehouse_accounting.components.purchases.AccountsPayable;
 import com.warehouse_accounting.components.purchases.PurchasesOrders;
+import com.warehouse_accounting.components.purchases.Return;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,13 +26,13 @@ public class PurchasesSubMenuView extends VerticalLayout {
     private PurchasesOrders purchasesOrders;
     private AccountsPayable accountsPayable;
     private Acceptances acceptances;
+    private Return returns;
 
     public PurchasesSubMenuView() {
         pageContent.setSizeFull();
         pageContent.add(initPurchasesOrders(pageContent));
         add(initSubMenu(), pageContent);
     }
-
 
 
     private Tabs initSubMenu() {
@@ -59,7 +60,7 @@ public class PurchasesSubMenuView extends VerticalLayout {
                     break;
                 case "Возвраты поставщикам":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Возвраты поставщикам"));
+                    pageContent.add(initReturn(pageContent));
                     break;
                 case "Счета-фактуры полученные":
                     pageContent.removeAll();
@@ -97,6 +98,13 @@ public class PurchasesSubMenuView extends VerticalLayout {
             acceptances = new Acceptances(pageContent);
         }
         return acceptances;
+    }
+
+    private Return initReturn(Div pageContent){
+        if (Objects.isNull(returns)) {
+            returns = new Return(pageContent);
+        }
+        return returns;
     }
 }
 
