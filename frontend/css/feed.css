@@ -1,0 +1,36 @@
+.leftColumn, .rightColumn {
+    background-color: #f5f6f7;
+}
+
+.news {
+    font-size: x-large;
+    font-weight: bold;
+    padding-top: 10px;
+    margin-bottom: 10px;
+}
+
+.description {
+    margin-left: 40px;
+    margin-bottom: -9px;
+}
+
+.title {
+    font-size: large;
+    font-weight: bold;
+}
+
+.post {
+    margin-top: 10px;
+    font-size: medium;
+}
+
+.date {
+    margin-top: 10px;
+    font-size: smaller;
+}
+
+.image {
+    margin-right: -30px;
+    margin-left: -10px;
+    margin-bottom: auto;
+}
