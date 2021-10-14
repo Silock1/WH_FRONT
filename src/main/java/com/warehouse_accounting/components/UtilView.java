@@ -7,11 +7,11 @@ import java.util.List;
 
 //Утилитный класс для методов, которые создают элементы страницы (таблицы, табы, окна и т.д.)
 
-class UtilView {
+public class UtilView {
 
 // Метод  для создания набора табов из переданного листа.
 //
-    static Tabs subMenuTabs(List<String> menuItems) {
+    public static Tabs subMenuTabs(List<String> menuItems) {
         Tabs subMenuTabs = new Tabs();
         for (String item : menuItems) {
             Tab tab = new Tab();
