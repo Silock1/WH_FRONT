@@ -7,9 +7,9 @@ import com.vaadin.flow.router.Route;
 
 @PageTitle("Настройки компании")
 @Route(value = "companysettings", layout = SettingsView.class)
-public class CompanySettings extends VerticalLayout {
+public class CompanySettingsView extends VerticalLayout {
 
-    public CompanySettings() {
+    public CompanySettingsView() {
         VerticalLayout verticalLayout = new VerticalLayout();
         Span title = new Span("Настройки компании!");
         verticalLayout.add(title);

@@ -101,7 +101,7 @@ public class AppView extends AppLayout {
         MenuItem profile = userNavBar.addItem("Пользователь");
         SubMenu userSubMenu = profile.getSubMenu();
         userSubMenu.addItem("Настройки пользователя", event -> profile.getUI().ifPresent(ui -> ui.navigate("profile/settings")));
-        userSubMenu.addItem("Настройки", event -> profile.getUI().ifPresent(ui -> ui.navigate("profile")));
+        userSubMenu.addItem("Настройки", event -> profile.getUI().ifPresent(ui -> ui.navigate("companysettings")));
         profile.getSubMenu().add(new Hr());
         userSubMenu.addItem("Новости", event -> profile.getUI().ifPresent(ui -> ui.navigate("feed")));
         userSubMenu.addItem("Спецпредожения", event -> profile.getUI().ifPresent(ui -> ui.navigate("specialOffers")));
