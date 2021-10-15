@@ -15,7 +15,9 @@ import com.vaadin.flow.router.RouterLink;
 import com.warehouse_accounting.components.AppView;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.warehouse_accounting.components.UtilView.subMenuTabs;
 
@@ -35,6 +37,8 @@ public class SettingsView extends AppLayout {
         for (String name : settingsList) {
             HorizontalLayout layout = new HorizontalLayout();
             layout.addClassName("layout");
+            layout.addClickListener(event ->
+                    layout.getUI().ifPresent(ui -> ui.navigate(getUrlByName(name))));
             Span span = new Span(name);
             span.addClassName("span");
             layout.add(span);
@@ -51,6 +55,8 @@ public class SettingsView extends AppLayout {
         for (String name : imExList) {
             HorizontalLayout layout = new HorizontalLayout();
             layout.addClassName("layout");
+            layout.addClickListener(event ->
+                    layout.getUI().ifPresent(ui -> ui.navigate(getUrlByName(name))));
             Span span = new Span(name);
             span.addClassName("span");
             layout.add(span);
@@ -61,14 +67,16 @@ public class SettingsView extends AppLayout {
         importExportTabs.setSelectedIndex(-1);
 
         List<String> catalogList = Arrays.asList("Юр. лица", "Сотрудники", "Склады", "Каналы продаж",
-                                                 "Валюты", "Проекты", "Страны", "Единицы измерения");
+                "Валюты", "Проекты", "Страны", "Единицы измерения");
         Tabs catalogTabs = new Tabs();
         catalogTabs.setOrientation(Tabs.Orientation.VERTICAL);
-        Span catalogTitle= new Span("СПРАВОЧНИКИ");
+        Span catalogTitle = new Span("СПРАВОЧНИКИ");
         catalogTitle.addClassName("catalogTitle");
         for (String name : catalogList) {
             HorizontalLayout layout = new HorizontalLayout();
             layout.addClassName("layout");
+            layout.addClickListener(event ->
+                    layout.getUI().ifPresent(ui -> ui.navigate(getUrlByName(name))));
             Span span = new Span(name);
             span.addClassName("span");
             layout.add(span);
@@ -80,11 +88,37 @@ public class SettingsView extends AppLayout {
 
         addToNavbar(new AppView());
         addToDrawer(settingsTitle,
-                    settingsTabs,
-                    importExportTitle,
-                    importExportTabs,
-                    catalogTitle,
-                    catalogTabs);
+                settingsTabs,
+                importExportTitle,
+                importExportTabs,
+                catalogTitle,
+                catalogTabs);
+    }
+
+    String getUrlByName(String name) {
+        if (tabsList.containsKey(name)) {
+            return tabsList.get(name);
+        } else {
+            throw new IllegalStateException("Unexpected value: " + name);
+        }
+    }
+    Map<String, String> tabsList = new HashMap<>();
+    {
+        tabsList.put("Настройки компании", "companysettings");
+        tabsList.put("Сценарии", "scripttemplate");
+        tabsList.put("Скидки", "discount");
+        tabsList.put("Импорт", "import");
+        tabsList.put("Экспорт", "export");
+        tabsList.put("Интернет-магазины", "connectorsettings");
+        tabsList.put("Токены", "token");
+        tabsList.put("Юр. лица", "mycompany");
+        tabsList.put("Сотрудники", "employee");
+        tabsList.put("Склады", "warehouse");
+        tabsList.put("Каналы продаж", "saleschannel");
+        tabsList.put("Валюты", "currency");
+        tabsList.put("Проекты", "project");
+        tabsList.put("Страны", "country");
+        tabsList.put("Единицы измерения", "uom");
     }
 
 }
