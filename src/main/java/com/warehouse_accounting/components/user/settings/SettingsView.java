@@ -34,37 +34,14 @@ public class SettingsView extends AppLayout {
         settingsTabs.setOrientation(Tabs.Orientation.VERTICAL);
         Span settingsTitle = new Span("НАСТРОЙКИ");
         settingsTitle.addClassName("settingsTitle");
-        for (String name : settingsList) {
-            HorizontalLayout layout = new HorizontalLayout();
-            layout.addClassName("layout");
-            layout.addClickListener(event ->
-                    layout.getUI().ifPresent(ui -> ui.navigate(getUrlByName(name))));
-            Span span = new Span(name);
-            span.addClassName("span");
-            layout.add(span);
-            Tab tab = new Tab(layout);
-            tab.addClassName("tab");
-            settingsTabs.add(tab);
-        }
+        createSubPanel(settingsList, settingsTabs);
 
         List<String> imExList = Arrays.asList("Импорт", "Экспорт", "Интернет-магазины", "Токены");
         Tabs importExportTabs = new Tabs();
         importExportTabs.setOrientation(Tabs.Orientation.VERTICAL);
         Span importExportTitle = new Span("ОБМЕН ДАННЫМИ");
         importExportTitle.addClassName("importExportTitle");
-        for (String name : imExList) {
-            HorizontalLayout layout = new HorizontalLayout();
-            layout.addClassName("layout");
-            layout.addClickListener(event ->
-                    layout.getUI().ifPresent(ui -> ui.navigate(getUrlByName(name))));
-            Span span = new Span(name);
-            span.addClassName("span");
-            layout.add(span);
-            Tab tab = new Tab(layout);
-            tab.addClassName("tab");
-            importExportTabs.add(tab);
-        }
-        importExportTabs.setSelectedIndex(-1);
+        createSubPanel(imExList, importExportTabs);
 
         List<String> catalogList = Arrays.asList("Юр. лица", "Сотрудники", "Склады", "Каналы продаж",
                 "Валюты", "Проекты", "Страны", "Единицы измерения");
@@ -72,19 +49,7 @@ public class SettingsView extends AppLayout {
         catalogTabs.setOrientation(Tabs.Orientation.VERTICAL);
         Span catalogTitle = new Span("СПРАВОЧНИКИ");
         catalogTitle.addClassName("catalogTitle");
-        for (String name : catalogList) {
-            HorizontalLayout layout = new HorizontalLayout();
-            layout.addClassName("layout");
-            layout.addClickListener(event ->
-                    layout.getUI().ifPresent(ui -> ui.navigate(getUrlByName(name))));
-            Span span = new Span(name);
-            span.addClassName("span");
-            layout.add(span);
-            Tab tab = new Tab(layout);
-            tab.addClassName("tab");
-            catalogTabs.add(tab);
-        }
-        catalogTabs.setSelectedIndex(-1);
+        createSubPanel(catalogList, catalogTabs);
 
         addToNavbar(new AppView());
         addToDrawer(settingsTitle,
@@ -93,6 +58,22 @@ public class SettingsView extends AppLayout {
                 importExportTabs,
                 catalogTitle,
                 catalogTabs);
+    }
+
+
+    void createSubPanel(List<String> list, Tabs tabs) {
+        for (String name : list) {
+            HorizontalLayout layout = new HorizontalLayout();
+            layout.addClassName("layout");
+            layout.addClickListener(event ->
+                    layout.getUI().ifPresent(ui -> ui.navigate(getUrlByName(name))));
+            Span span = new Span(name);
+            span.addClassName("span");
+            layout.add(span);
+            Tab tab = new Tab(layout);
+            tab.addClassName("tab");
+            tabs.add(tab);
+        }
     }
 
     String getUrlByName(String name) {
