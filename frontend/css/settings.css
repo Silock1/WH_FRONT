@@ -1,0 +1,34 @@
+#drawer {
+    width: 288px;
+    font-size: 12px;
+    padding-top: 21px;
+}
+
+vaadin-tabs[orientation="vertical"] {
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+.tab {
+    height: 37px;
+}
+
+.layout {
+    margin-left: 30px;
+}
+
+.settingsTitle, .importExportTitle, .catalogTitle {
+    margin-left: 38px;
+    font-weight: bold;
+    color: #cc420c;
+}
+
+.span {
+    color: #104c6e;
+    font: 13px "Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+}
+
+
+
+
+
