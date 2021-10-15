@@ -24,7 +24,6 @@ public class Return extends VerticalLayout{
     private final Div parentLayer;
 
     public Return (Div parentLayer) {
-        System.out.printf("kdhgfk");
         this.parentLayer = parentLayer;
         this.returnGridLayout = new ReturnGridLayout(textField);
         Div pageContent = new Div();
