@@ -34,4 +34,6 @@ retrofit:
     invoice_product_url: api/invoice_products
     feed_url: api/feed
     acceptance_url: api/acceptances
+    payments_url: api/payments
+    recycleBin_url: api/recycle_bin
     return_url: api/returns

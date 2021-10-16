@@ -1,10 +1,12 @@
 package com.warehouse_accounting.components;
 
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.warehouse_accounting.components.indiCators.grids.RecycleBinGridLayout;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,21 +17,49 @@ import static com.warehouse_accounting.components.UtilView.subMenuTabs;
 @PageTitle("Показатели")
 
 public class IndicatorsSubMenuView extends VerticalLayout {
-    private final Div pageContent = new Div();
 
-    public IndicatorsSubMenuView() {
+    private final Div pageContent = new Div();
+    private RecycleBinGridLayout recycleBinGridLayout;
+
+    public IndicatorsSubMenuView(RecycleBinGridLayout recycleBinGridLayout) {
+        this.recycleBinGridLayout = recycleBinGridLayout;
+        this.pageContent.removeAll();
         pageContent.setSizeFull();
         add(initSubMenu(), pageContent);
     }
 
     private Tabs initSubMenu() {
-        List<String> indicatorsMenuItems = Arrays.asList("Показатели",
+        List<String> indicatorsSubMenuItems = Arrays.asList("Показатели",
                 "Документы",
                 "Корзина",
                 "Аудит",
                 "Файлы");
-//        Этот метод дублируется для восьми вкладок, я вынес его в отдельный
-//        утилитный класс UtilView
-       return subMenuTabs(indicatorsMenuItems);
+        Tabs subMenuTabs = subMenuTabs(indicatorsSubMenuItems);
+
+        subMenuTabs.addSelectedChangeListener(event -> {
+            switch (event.getSelectedTab().getLabel()) {
+                case "Показатели":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Показатели"));
+                    break;
+                case "Документы":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Документы"));
+                    break;
+                case "Корзина":
+                    pageContent.removeAll();
+                    pageContent.add(recycleBinGridLayout);
+                    break;
+                case "Аудит":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Аудит"));
+                    break;
+                case "Файлы":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Файлы"));
+                    break;
+            }
+        });
+        return subMenuTabs;
     }
 }
