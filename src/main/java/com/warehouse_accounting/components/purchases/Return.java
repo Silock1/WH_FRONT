@@ -1,5 +1,4 @@
 package com.warehouse_accounting.components.purchases;
-
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -15,54 +14,40 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
-import com.warehouse_accounting.components.purchases.grids.AcceptancesGridLayout;
+import com.warehouse_accounting.components.purchases.grids.ReturnGridLayout;
 
+//        "Возвраты поставщикам"
 
-//Класс "Приемки"
-public class Acceptances extends VerticalLayout {
-    private AcceptancesGridLayout acceptancesGridLayout;
+public class Return extends VerticalLayout{
+    private ReturnGridLayout returnGridLayout;
     private final TextField textField = new TextField();
     private final Div parentLayer;
 
-    public Acceptances(Div parentLayer) {
+    public Return (Div parentLayer) {
         this.parentLayer = parentLayer;
-        this.acceptancesGridLayout = new AcceptancesGridLayout(textField);
+        this.returnGridLayout = new ReturnGridLayout(textField);
         Div pageContent = new Div();
-        pageContent.add(acceptancesGridLayout);
+        pageContent.add(returnGridLayout);
         pageContent.setSizeFull();
         add(getGroupButtons(), pageContent);
     }
-
     private HorizontalLayout getGroupButtons() {
         HorizontalLayout groupControl = new HorizontalLayout();
-
         Button helpButton = new Button(new Icon(VaadinIcon.QUESTION_CIRCLE));
         helpButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
         helpButton.addClickListener(e->{
-            Notification.show("Приемки позволяют учитывать закупки товаров. Приемку создают, когда покупают новый товар. Если товар уже лежит у вас на складе или вы не хотите указывать поставщиков, лучше воспользоваться оприходованием.\n" +
-                    "\n" +
-                    "В результате приемки увеличиваются остатки товаров в разделе Товары → Остатки и фиксируется долг перед поставщиком в разделе Деньги → Взаиморасчеты. Также на основе приемки формируется себестоимость товара.\n" +
-                    "\n" +
-                    "Приемку можно создать вручную или импортировать, в том числе из систем ЭДО.\n" +
-                    "\n" +
-                    "Читать инструкцию: Приемка товаров\n" +
-                    "\n" +
-                    "\n" +
-                    "Видео:\n" +
-                    "\n" +
-                    "    Приемка\n" +
-                    "    Цены в МоемСкладе\n" +
-                    "    Закупка и продажа товаров\n" +
+            Notification.show("Возврат поставщику можно создать на основе приемки или вручную." +
+                    "Читать инструкцию: Возврат поставщику\n" +
                     "\n", 5000, Notification.Position.TOP_START);
         });
 
         Label textProducts = new Label();
-        textProducts.setText("Приемки");
+        textProducts.setText("Возвраты поставщикам");
 
         Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH));
         refreshButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
 
-        Button addOrderButton = new Button("Приемка", new Icon(VaadinIcon.PLUS));
+        Button addOrderButton = new Button("Возврат", new Icon(VaadinIcon.PLUS));
         addOrderButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
         Button addFilterButton = new Button("Фильтр");
@@ -105,7 +90,7 @@ public class Acceptances extends VerticalLayout {
 
         MenuItem editMenu = editMenuBar.addItem(editItem);
         editMenu.getSubMenu().addItem("Удалить", menuItemClickEvent -> {
-            int selected = acceptancesGridLayout.getAcceptancesDtoGrid().asMultiSelect().getSelectedItems().size();
+            int selected = returnGridLayout.getReturnDtoGrid().asMultiSelect().getSelectedItems().size();
             Notification notification = new Notification(String.format("Выделено для удаления %d", selected),
                     3000, Notification.Position.MIDDLE);
             notification.open();
@@ -176,23 +161,14 @@ public class Acceptances extends VerticalLayout {
         horizontalLayout.setAlignItems(Alignment.CENTER);
 
         MenuItem createItem = createMenuBar.addItem(horizontalLayout);
-        createItem.getSubMenu().addItem("Счет поставщика", e -> {
-
-        });
-        createItem.getSubMenu().addItem("Счет-фактура полученный", e -> {
+        createItem.getSubMenu().addItem("Счет-фактура выданный", e -> {
 
         });
 
-        createItem.getSubMenu().addItem("Исходящий платеж", e -> {
+        createItem.getSubMenu().addItem("Входящий платеж", e -> {
 
         });
-        createItem.getSubMenu().addItem("Расходный ордер", e -> {
-
-        });
-        createItem.getSubMenu().addItem("Возврат поставщику", e -> {
-
-        });
-        createItem.getSubMenu().addItem("Отмена", e -> {
+        createItem.getSubMenu().addItem("Приходный ордер", e -> {
 
         });
 
@@ -202,6 +178,7 @@ public class Acceptances extends VerticalLayout {
         groupCreate.setAlignItems(Alignment.CENTER);
         return groupCreate;
     }
+
 
     private HorizontalLayout getPrintMenuBar() {
         MenuBar printMenuBar = new MenuBar();
@@ -215,13 +192,13 @@ public class Acceptances extends VerticalLayout {
         printItem.setAlignItems(Alignment.CENTER);
         MenuItem print = printMenuBar.addItem(printItem);
 
-        print.getSubMenu().addItem("Список приемок", e -> {
+        print.getSubMenu().addItem("Список возвратов", e -> {
 
         });
-        print.getSubMenu().addItem("М-4", e -> {
+        print.getSubMenu().addItem("Возврат поставщику", e -> {
 
         });
-        print.getSubMenu().addItem("Приходная накладная", e -> {
+        print.getSubMenu().addItem("ТОРГ-12", e -> {
 
         });
         print.getSubMenu().addItem("Комплект", e -> {
@@ -237,5 +214,4 @@ public class Acceptances extends VerticalLayout {
         groupPrint.setAlignItems(Alignment.CENTER);
         return groupPrint;
     }
-
 }
