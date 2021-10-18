@@ -5,7 +5,6 @@ retrofit:
   baseUrl: http://localhost:4446/
 
   restServices:
-    application_url: api/applications
     role_url: api/roles
     position_url: api/positions
     attribute_of_calculation_object_url: api/attribute_of_calculation_objects
@@ -33,6 +32,8 @@ retrofit:
     invoice_url: api/invoices
     invoice_edit_url: api/invoice_edits
     invoice_product_url: api/invoice_products
+    feed_url: api/feed
+    acceptance_url: api/acceptances
     payments_url: api/payments
     recycleBin_url: api/recycle_bin
-
+    return_url: api/returns
