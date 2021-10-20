@@ -1,45 +1,41 @@
 package com.warehouse_accounting.components.contractors.grids;
 
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.models.dto.CallDto;
-import com.warehouse_accounting.models.dto.CustomerOrdersDto;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+@SpringComponent
+@UIScope
 public class ContractorsGridLayout extends HorizontalLayout {
 
-    private final TextField selectedTextField;
+    private Button settingButton = new Button(new Icon(VaadinIcon.COG_O));
     private final Grid<CallDto> callDtoGrid = new Grid<>(CallDto.class, false);
 
-    public ContractorsGridLayout(TextField selectedTextField) {
-        this.selectedTextField = selectedTextField;
-        add(initGrid());
+    public ContractorsGridLayout() {
+        add(initGrid(), settingButton);
+        setSizeFull();
     }
 
     private Grid<CallDto> initGrid() {
         callDtoGrid.setColumns(getVisibleColumn().keySet().toArray(String[]::new));
-//        customerOrdersDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI);
 
         getVisibleColumn().forEach((key, value) -> callDtoGrid.getColumnByKey(key).setHeader(value));
-//        customerOrdersDtoGrid.asMultiSelect().addSelectionListener(listener -> {
-//            int selectSize = listener.getAllSelectedItems().size();
-//            selectedTextField.setValue(String.valueOf(selectSize));
-//        });
+
         callDtoGrid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_ROW_STRIPES);
         return callDtoGrid;
     }
 
-//    public Grid<CallDto> getProductGrid() {
-//        return callDtoGrid;
-//    }
-
     private HashMap<String, String> getVisibleColumn() {
         HashMap<String, String> fieldNameColumnName = new LinkedHashMap<>();
-//        fieldNameColumnName.put("id", "Id");
         fieldNameColumnName.put("callTime", "Время");
         fieldNameColumnName.put("type", "Тип");
         fieldNameColumnName.put("number", "Номер");

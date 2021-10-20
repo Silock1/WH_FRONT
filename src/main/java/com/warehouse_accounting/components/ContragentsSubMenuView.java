@@ -10,7 +10,6 @@ import com.warehouse_accounting.components.contractors.ContractorsOrders;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import static com.warehouse_accounting.components.UtilView.subMenuTabs;
 
@@ -20,11 +19,12 @@ import static com.warehouse_accounting.components.UtilView.subMenuTabs;
 public class ContragentsSubMenuView extends VerticalLayout {
 
     private final Div pageContent = new Div();
-    private ContractorsOrders contractorsOrders;
+    private final ContractorsOrders contractorsOrders;
 
-    public ContragentsSubMenuView() {
+    public ContragentsSubMenuView(ContractorsOrders contractorsOrders) {
+        this.contractorsOrders = contractorsOrders;
         pageContent.setSizeFull();
-        pageContent.add(initContractorOrders(pageContent));
+        pageContent.add(new Span("Контрагенты"));
         add(initSubMenu(), pageContent);
     }
 
@@ -46,16 +46,10 @@ public class ContragentsSubMenuView extends VerticalLayout {
                     break;
                 case "Звонки":
                     pageContent.removeAll();
-                    pageContent.add(initContractorOrders(pageContent));
+                    pageContent.add(contractorsOrders);
                     break;
             }
         });
         return subMenuTabs;
-    }
-    private ContractorsOrders initContractorOrders(Div pageContent){
-        if (Objects.isNull(contractorsOrders)) {
-            contractorsOrders = new ContractorsOrders(pageContent);
-        }
-        return contractorsOrders;
     }
 }
