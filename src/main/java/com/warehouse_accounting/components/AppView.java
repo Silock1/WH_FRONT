@@ -17,6 +17,7 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
+import com.warehouse_accounting.components.help.HelpButton;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.DataInputStream;
@@ -79,6 +80,13 @@ public class AppView extends AppLayout {
         Icon iconHelp = new Icon(VaadinIcon.QUESTION_CIRCLE_O);
         iconHelp.setColor("white");
         iconHelp.setSize("18px");
+        Div helpDiv = new Div();
+        helpDiv.setVisible(false);
+        HelpButton helpButton = new HelpButton(helpDiv);
+        helpDiv.add(helpButton.helpDivInit());
+        iconHelp.addClickListener(iconClickEvent -> {
+            helpDiv.setVisible(helpButton.helpDivVisible());
+        });
         Icon iconBell = new Icon(VaadinIcon.BELL_O);
         iconBell.setColor("white");
         iconBell.setSize("18px");
@@ -101,9 +109,9 @@ public class AppView extends AppLayout {
         MenuItem profile = userNavBar.addItem("Пользователь");
         SubMenu userSubMenu = profile.getSubMenu();
         userSubMenu.addItem("Настройки пользователя", event -> profile.getUI().ifPresent(ui -> ui.navigate("profile/settings")));
-        userSubMenu.addItem("Настройки", event -> profile.getUI().ifPresent(ui -> ui.navigate("profile")));
+        userSubMenu.addItem("Настройки", event -> profile.getUI().ifPresent(ui -> ui.navigate("companysettings")));
         profile.getSubMenu().add(new Hr());
-        userSubMenu.addItem("Новости", event -> profile.getUI().ifPresent(ui -> ui.navigate("news")));
+        userSubMenu.addItem("Новости", event -> profile.getUI().ifPresent(ui -> ui.navigate("feed")));
         userSubMenu.addItem("Спецпредожения", event -> profile.getUI().ifPresent(ui -> ui.navigate("specialOffers")));
         userSubMenu.addItem("Приложения", event -> profile.getUI().ifPresent(ui -> ui.navigate("applications")));
         userSubMenu.addItem("Подписка", event -> profile.getUI().ifPresent(ui -> ui.navigate("subscription")));
@@ -116,7 +124,7 @@ public class AppView extends AppLayout {
         image.setSizeFull();
         profile.addComponentAsFirst(image);
 
-        addToNavbar(logo, navBarTabs, rightSideNavBar, userNavBar);
+        addToNavbar(logo, navBarTabs, rightSideNavBar, userNavBar, helpDiv);
     }
 
     public static InputStream getImageInputStream(String svgIconName) {
