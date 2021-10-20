@@ -6,6 +6,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.warehouse_accounting.components.adjustments.AdjustmentsView;
 import com.warehouse_accounting.components.payments.PaymentsView;
 
 import java.util.Arrays;
@@ -19,9 +20,11 @@ public class MoneySubMenuView extends VerticalLayout {
 
     private final Div pageContent = new Div();
     private final PaymentsView paymentsView;
+    private final AdjustmentsView adjustmentsView;
 
-    public MoneySubMenuView(PaymentsView paymentsView) {
+    public MoneySubMenuView(PaymentsView paymentsView ,AdjustmentsView adjustmentsView) {
         this.paymentsView = paymentsView;
+        this.adjustmentsView = adjustmentsView;
         pageContent.setSizeFull();
         add(initSubMenu(), pageContent);
     }
@@ -55,7 +58,7 @@ public class MoneySubMenuView extends VerticalLayout {
                     break;
                 case "Корректировки":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Корректировки"));
+                    pageContent.add(adjustmentsView);
                     break;
             }
         });
