@@ -121,7 +121,7 @@ public class HelpButton extends VerticalLayout {
             backLayer.addClassName("backLayer");
             backLayer.addClassName("backLayerFocused"); // if (предыдущий урок не пройден)
             Div tab = new Div(); // eventButton
-            tab.addClassName("tab");
+            tab.addClassName("managerTab");
             tab.add(backLayer, layout);
             tabs.add(tab);
         }
@@ -135,7 +135,7 @@ public class HelpButton extends VerticalLayout {
         head.addClassName("text1");
 
         HorizontalLayout layout = new HorizontalLayout();
-        layout.addClassName("layout");
+        layout.addClassName("managerLayout");
 
         StreamResource res = new StreamResource("helpAvatar.jpeg",
                 () -> AppView.getImageInputStream("helpAvatar.jpeg"));
