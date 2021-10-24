@@ -131,7 +131,7 @@
     border: solid 1px #eeeded;
 }
 
-.tab {
+.managerTab {
     border-radius: 10px;
     text-align: center;
     position: relative;
@@ -146,7 +146,7 @@
     width: 100%;
     margin-left: -11px;
     display: flex;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .managerDiv {
@@ -197,7 +197,7 @@
     text-decoration: none;
 }
 
-.layout {
+.managerLayout {
     margin-top: 15px;
 }
 
