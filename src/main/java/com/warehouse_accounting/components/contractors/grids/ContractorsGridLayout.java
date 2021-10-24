@@ -5,7 +5,6 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.warehouse_accounting.models.dto.CallDto;
-import com.warehouse_accounting.models.dto.CustomerOrdersDto;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
