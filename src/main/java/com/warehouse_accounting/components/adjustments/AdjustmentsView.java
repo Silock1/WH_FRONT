@@ -4,7 +4,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
-import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -17,7 +17,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
-import com.warehouse_accounting.models.dto.AdjustmentsDto;
+import com.warehouse_accounting.components.adjustments.adjustmentButton.AccountBalances;
+import com.warehouse_accounting.components.adjustments.grids.AdjustmentsGridsLayout;
 import com.warehouse_accounting.services.interfaces.AdjustmentsService;
 import org.springframework.stereotype.Component;
 
@@ -27,33 +28,21 @@ import org.springframework.stereotype.Component;
 public class AdjustmentsView extends VerticalLayout{
 
     private HorizontalLayout horizontalToolPanelLayout = new HorizontalLayout();
-    private Grid<AdjustmentsDto> adjustmentsDtoGrid = new Grid<>(AdjustmentsDto.class);
-    private AdjustmentsService adjustmentsService;
+    private AdjustmentsGridsLayout adjustmentsGridsLayout;
+    private Div mainDiv = new Div();
 
-    public AdjustmentsView(AdjustmentsService adjustmentsService ) {
-        this.adjustmentsService = adjustmentsService;
-        horizontalToolPanelLayout.setAlignItems(Alignment.CENTER);
-
-        adjustmentsDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI);
-        adjustmentsDtoGrid.setItems(adjustmentsService.getAll());
-        adjustmentsDtoGrid.setColumnOrder(adjustmentsDtoGrid.getColumnByKey("number").setHeader("№"),
-                adjustmentsDtoGrid.getColumnByKey("dateTimeAdjustment").setHeader("Время"),
-                adjustmentsDtoGrid.getColumnByKey("company").setHeader("Организация"),
-                adjustmentsDtoGrid.getColumnByKey("contractor").setHeader("Контрагент"),
-                adjustmentsDtoGrid.getColumnByKey("currentBalance").setHeader("Счет"),
-                adjustmentsDtoGrid.getColumnByKey("totalBalance").setHeader("Касса"),
-                adjustmentsDtoGrid.getColumnByKey("adjustmentAmount").setHeader("Сумма корректировки"),
-                adjustmentsDtoGrid.getColumnByKey("comment").setHeader("Комментарий"),
-                adjustmentsDtoGrid.getColumnByKey("whenChanged").setHeader("Когда изменен"),
-                adjustmentsDtoGrid.getColumnByKey("type").setHeader("Кто изменил"));
-        configToolPanel();
-
-        add(horizontalToolPanelLayout);
-        add(adjustmentsDtoGrid);
+    public AdjustmentsView(AdjustmentsService adjustmentsService) {
+        adjustmentsGridsLayout = new AdjustmentsGridsLayout(adjustmentsService, this);
+        mainDiv.setSizeFull();
+        mainDiv.add(adjustmentsGridsLayout);
+        add(configToolPanel(), mainDiv);
     }
 
     // Здесь настройка панели инструментов
-    private void configToolPanel() {
+    private HorizontalLayout configToolPanel() {
+
+        HorizontalLayout groupControl = new HorizontalLayout();
+        horizontalToolPanelLayout.setAlignItems(Alignment.CENTER);
         Button helpButton = new Button(new Icon(VaadinIcon.QUESTION_CIRCLE));
         helpButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
         helpButton.addClickListener(e->{
@@ -77,7 +66,27 @@ public class AdjustmentsView extends VerticalLayout{
             //TODO повод поработать этот функционал
         });
 
-        Button addPaymentsButton = new Button("Корректировки", new Icon(VaadinIcon.PLUS), event -> {
+        MenuBar adjustments = new MenuBar();
+
+        MenuItem addAdjustmentsButton = adjustments.addItem(new Icon(VaadinIcon.PLUS));
+        addAdjustmentsButton.add("Корректировки");
+        addAdjustmentsButton.add(new Icon(VaadinIcon.CARET_DOWN));
+
+        SubMenu addAdjustmentsButtonList = addAdjustmentsButton.getSubMenu();
+        MenuItem accountBalance = addAdjustmentsButtonList.addItem("Остаток на счете");
+        accountBalance.addClickListener(event -> {
+            AccountBalances accountBalances = new AccountBalances(mainDiv, this);
+            mainDiv.removeAll();
+            mainDiv.add(accountBalances);
+        });
+
+        MenuItem cashBalance = addAdjustmentsButtonList.addItem("Остаток в кассе");
+        cashBalance.addClickListener(event -> {
+            //TODO повод поработать этот функционал
+        });
+
+        MenuItem contragentsBalance = addAdjustmentsButtonList.addItem("Баланс контрагента");
+        contragentsBalance.addClickListener(event -> {
             //TODO повод поработать этот функционал
         });
 
@@ -90,7 +99,7 @@ public class AdjustmentsView extends VerticalLayout{
         searchField.setMinWidth("170px");
 
         NumberField numberField = new NumberField();
-        adjustmentsDtoGrid.addSelectionListener(event -> numberField.setValue((double) (adjustmentsDtoGrid.getSelectedItems().size())));
+        //adjustmentsGridsLayout.addClickListener(event -> numberField.setValue((double) (adjustmentsGridsLayout.getElement().getThemeList()));
         numberField.setValue(0d);
         numberField.setWidth("40px");
 
@@ -143,6 +152,8 @@ public class AdjustmentsView extends VerticalLayout{
             //TODO повод поработать этот функционал
         });
 
-        horizontalToolPanelLayout.add(helpButton, text, refreshButton, addPaymentsButton, filterButton, searchField, numberField, menuBar, settingsButton);
+        horizontalToolPanelLayout.add(helpButton, text, refreshButton, addAdjustmentsButton, adjustments, filterButton, searchField, numberField, menuBar, settingsButton);
+        add(horizontalToolPanelLayout);
+        return groupControl;
     }
 }
