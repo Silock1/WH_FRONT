@@ -37,3 +37,5 @@ retrofit:
     payments_url: api/payments
     recycleBin_url: api/recycle_bin
     return_url: api/returns
+    application_url: api/applications
+    subscription_url: api/subscription
