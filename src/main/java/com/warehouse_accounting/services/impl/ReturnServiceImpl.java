@@ -20,7 +20,7 @@ public class ReturnServiceImpl implements ReturnService {
     private final ReturnApi returnApi;
     private final String returnUrl;
 
-    public ReturnServiceImpl(@Value("${retrofit.restServices.acceptance_url}") String returnUrl, Retrofit retrofit) {
+    public ReturnServiceImpl(@Value("${retrofit.restServices.return_url}") String returnUrl, Retrofit retrofit) {
         this.returnUrl = returnUrl;
         this.returnApi = retrofit.create(ReturnApi.class);
     }
