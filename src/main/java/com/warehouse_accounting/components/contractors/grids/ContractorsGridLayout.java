@@ -9,6 +9,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.models.dto.CallDto;
+import com.warehouse_accounting.services.interfaces.CallService;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -16,11 +17,13 @@ import java.util.LinkedHashMap;
 @SpringComponent
 @UIScope
 public class ContractorsGridLayout extends HorizontalLayout {
-
+    private final CallService service;
     private Button settingButton = new Button(new Icon(VaadinIcon.COG_O));
     private final Grid<CallDto> callDtoGrid = new Grid<>(CallDto.class, false);
 
-    public ContractorsGridLayout() {
+    public ContractorsGridLayout(CallService service) {
+        this.service = service;
+        callDtoGrid.setItems(service.getAll());
         add(initGrid(), settingButton);
         setSizeFull();
     }
