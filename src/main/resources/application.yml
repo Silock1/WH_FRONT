@@ -36,5 +36,6 @@ retrofit:
     acceptance_url: api/acceptances
     payments_url: api/payments
     recycleBin_url: api/recycle_bin
+    adjustments_url: api/adjustments
     return_url: api/returns
     application_url: api/applications
