@@ -12,6 +12,11 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.AppView;
 
+/*
+    Заказы покупателей
+    Не настроен внешний вид и таблица с товарами т.к. страница добавления товаров не реализована
+ */
+
 @Route(value = "customerorder/new", layout = AppView.class)
 @PageTitle("Заказы покупателей")
 public class CustomerOrdersNewView extends VerticalLayout {
