@@ -39,3 +39,4 @@ retrofit:
     adjustments_url: api/adjustments
     return_url: api/returns
     application_url: api/applications
+    units_of_measure_url: api/measure
