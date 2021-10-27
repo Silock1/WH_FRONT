@@ -40,4 +40,6 @@ public class EmployeeDto {
 
     private ImageDto image;
 
+    private Set<TariffDto> tariff;
+
 }

@@ -19,7 +19,6 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import com.warehouse_accounting.components.help.HelpButton;
 import lombok.extern.log4j.Log4j2;
-
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
