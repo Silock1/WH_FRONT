@@ -18,6 +18,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
 import com.warehouse_accounting.components.adjustments.adjustmentButton.AccountBalances;
+import com.warehouse_accounting.components.adjustments.adjustmentButton.CashBalance;
 import com.warehouse_accounting.components.adjustments.grids.AdjustmentsGridsLayout;
 import com.warehouse_accounting.services.interfaces.AdjustmentsService;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,7 @@ public class AdjustmentsView extends VerticalLayout{
 
     private HorizontalLayout horizontalToolPanelLayout = new HorizontalLayout();
     private AdjustmentsGridsLayout adjustmentsGridsLayout;
+    private AdjustmentsService adjustmentsService;
     private Div mainDiv = new Div();
 
     public AdjustmentsView(AdjustmentsService adjustmentsService) {
@@ -82,7 +84,9 @@ public class AdjustmentsView extends VerticalLayout{
 
         MenuItem cashBalance = addAdjustmentsButtonList.addItem("Остаток в кассе");
         cashBalance.addClickListener(event -> {
-            //TODO повод поработать этот функционал
+            CashBalance cashBalance1 = new CashBalance(mainDiv,this);
+            mainDiv.removeAll();
+            mainDiv.add(cashBalance1);
         });
 
         MenuItem contragentsBalance = addAdjustmentsButtonList.addItem("Баланс контрагента");
