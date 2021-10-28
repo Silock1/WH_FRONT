@@ -1,4 +1,4 @@
-package com.warehouse_accounting.components.contractors.grids;
+package com.warehouse_accounting.components.contragents.grids;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -16,12 +16,12 @@ import java.util.LinkedHashMap;
 
 @SpringComponent
 @UIScope
-public class ContractorsGridLayout extends HorizontalLayout {
+public class CallsGridLayout extends HorizontalLayout {
     private final CallService service;
     private Button settingButton = new Button(new Icon(VaadinIcon.COG_O));
     private final Grid<CallDto> callDtoGrid = new Grid<>(CallDto.class, false);
 
-    public ContractorsGridLayout(CallService service) {
+    public CallsGridLayout(CallService service) {
         this.service = service;
         callDtoGrid.setItems(service.getAll());
         add(initGrid(), settingButton);
