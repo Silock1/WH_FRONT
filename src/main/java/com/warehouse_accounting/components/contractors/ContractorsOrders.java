@@ -19,6 +19,7 @@ import com.vaadin.flow.component.textfield.TextFieldVariant;
 
 import com.warehouse_accounting.components.contractors.grids.ContractorsGridLayout;
 import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
+import com.warehouse_accounting.services.interfaces.CallService;
 
 public class ContractorsOrders extends VerticalLayout {
 
@@ -28,7 +29,7 @@ public class ContractorsOrders extends VerticalLayout {
 
     public ContractorsOrders(Div parentLayer) {
         this.parentLayer = parentLayer;
-        contractorsGridLayout = new ContractorsGridLayout(textFieldGridSelected);
+        contractorsGridLayout = new ContractorsGridLayout((CallService) textFieldGridSelected);
         Div pageContent = new Div();
         pageContent.add(contractorsGridLayout);
         pageContent.setSizeFull();
