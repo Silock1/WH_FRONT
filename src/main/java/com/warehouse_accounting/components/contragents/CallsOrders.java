@@ -1,4 +1,4 @@
-package com.warehouse_accounting.components.contractors;
+package com.warehouse_accounting.components.contragents;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -12,22 +12,22 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import com.warehouse_accounting.components.contractors.grids.ContractorsFilterLayout;
-import com.warehouse_accounting.components.contractors.grids.ContractorsGridLayout;
+import com.warehouse_accounting.components.contragents.grids.CallsFilterLayout;
+import com.warehouse_accounting.components.contragents.grids.CallsGridLayout;
 
 @SpringComponent
 @UIScope
-public class ContractorsOrders extends VerticalLayout{
+public class CallsOrders extends VerticalLayout{
 
-    private final ContractorsGridLayout contractorsGridLayout;
-    private final ContractorsFilterLayout filterLayout;
+    private final CallsGridLayout gridLayout;
+    private final CallsFilterLayout filterLayout;
 
 
-    public ContractorsOrders(ContractorsGridLayout contractorsGridLayout, ContractorsFilterLayout filterLayout) {
-        this.contractorsGridLayout = contractorsGridLayout;
+    public CallsOrders(CallsGridLayout gridLayout, CallsFilterLayout filterLayout) {
+        this.gridLayout = gridLayout;
         this.filterLayout = filterLayout;
 
-        add(getGroupButtons(), this.filterLayout, this.contractorsGridLayout);
+        add(getGroupButtons(), filterLayout, gridLayout);
     }
 
 

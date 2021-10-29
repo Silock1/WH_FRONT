@@ -1,4 +1,4 @@
-package com.warehouse_accounting.components.contractors.grids;
+package com.warehouse_accounting.components.contragents.grids;
 
 import com.vaadin.flow.component.KeyNotifier;
 import com.vaadin.flow.component.button.Button;
@@ -12,7 +12,7 @@ import com.vaadin.flow.spring.annotation.UIScope;
 
 @SpringComponent
 @UIScope
-public class ContractorsFilterLayout extends HorizontalLayout implements KeyNotifier {
+public class CallsFilterLayout extends HorizontalLayout implements KeyNotifier {
 
     Button find = new Button("Найти");
     Button clear = new Button("Очистить");
@@ -28,7 +28,7 @@ public class ContractorsFilterLayout extends HorizontalLayout implements KeyNoti
     Select<String> type = new Select<>();
     Select<String> employee = new Select<>();
 
-    public ContractorsFilterLayout() {
+    public CallsFilterLayout() {
         contragent.setLabel("Контрагент");
         contragent.setItems("ООО Покупатель", "ООО Поставщик", "Розничный покупатель");
         type.setLabel("Тип");

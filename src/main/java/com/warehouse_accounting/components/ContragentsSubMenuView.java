@@ -6,7 +6,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.warehouse_accounting.components.contractors.ContractorsOrders;
+import com.warehouse_accounting.components.contragents.CallsOrders;
+import com.warehouse_accounting.components.contragents.ContractsOrder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,10 +20,12 @@ import static com.warehouse_accounting.components.UtilView.subMenuTabs;
 public class ContragentsSubMenuView extends VerticalLayout {
 
     private final Div pageContent = new Div();
-    private final ContractorsOrders contractorsOrders;
+    private final CallsOrders callsOrder;
+    private final ContractsOrder contractsOrder;
 
-    public ContragentsSubMenuView(ContractorsOrders contractorsOrders) {
-        this.contractorsOrders = contractorsOrders;
+    public ContragentsSubMenuView(CallsOrders contractorsOrders, ContractsOrder contractsOrder) {
+        this.callsOrder = contractorsOrders;
+        this.contractsOrder = contractsOrder;
         pageContent.setSizeFull();
         pageContent.add(new Span("Контрагенты"));
         add(initSubMenu(), pageContent);
@@ -42,11 +45,11 @@ public class ContragentsSubMenuView extends VerticalLayout {
                     break;
                 case "Договоры":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Договоры"));
+                    pageContent.add(contractsOrder);
                     break;
                 case "Звонки":
                     pageContent.removeAll();
-                    pageContent.add(contractorsOrders);
+                    pageContent.add(callsOrder);
                     break;
             }
         });
