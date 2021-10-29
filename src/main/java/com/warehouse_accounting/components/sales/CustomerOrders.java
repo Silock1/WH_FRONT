@@ -18,7 +18,9 @@ import com.vaadin.flow.component.textfield.TextFieldVariant;
 
 
 import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
-
+/*
+Эта страница должна быть главной страницей Продаж, а не CustomerOrder
+ */
 public class CustomerOrders extends VerticalLayout {
 
     private SalesGridLayout salesGridLayout;
