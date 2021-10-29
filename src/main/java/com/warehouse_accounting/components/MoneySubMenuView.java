@@ -3,21 +3,28 @@ package com.warehouse_accounting.components;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.warehouse_accounting.components.adjustments.AdjustmentsView;
+import com.warehouse_accounting.components.payments.PaymentsView;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static com.warehouse_accounting.components.UtilView.subMenuTabs;
+
 @Route(value = "money", layout = AppView.class)
-@PageTitle("Деньги")
+@PageTitle("Платежи")
 public class MoneySubMenuView extends VerticalLayout {
 
     private final Div pageContent = new Div();
+    private final PaymentsView paymentsView;
+    private final AdjustmentsView adjustmentsView;
 
-    public MoneySubMenuView() {
+    public MoneySubMenuView(PaymentsView paymentsView ,AdjustmentsView adjustmentsView) {
+        this.paymentsView = paymentsView;
+        this.adjustmentsView = adjustmentsView;
         pageContent.setSizeFull();
         add(initSubMenu(), pageContent);
     }
@@ -28,18 +35,14 @@ public class MoneySubMenuView extends VerticalLayout {
                 "Прибыли и убытки",
                 "Взаиморасчеты",
                 "Корректировки");
-        Tabs subMenuTabs = new Tabs();
-        for (String item : moneyMenuItems) {
-            Tab tab = new Tab();
-            tab.addClassName("subMenuItem");
-            tab.add(item);
-            subMenuTabs.add(tab);
-        }
+
+        Tabs subMenuTabs = subMenuTabs(moneyMenuItems);
+
         subMenuTabs.addSelectedChangeListener(event -> {
             switch (event.getSelectedTab().getLabel()) {
                 case "Платежи":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Платежи"));
+                    pageContent.add(paymentsView);
                     break;
                 case "Движение денежных средств":
                     pageContent.removeAll();
@@ -55,7 +58,7 @@ public class MoneySubMenuView extends VerticalLayout {
                     break;
                 case "Корректировки":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Корректировки"));
+                    pageContent.add(adjustmentsView);
                     break;
             }
         });

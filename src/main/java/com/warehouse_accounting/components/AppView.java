@@ -17,8 +17,8 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
+import com.warehouse_accounting.components.help.HelpButton;
 import lombok.extern.log4j.Log4j2;
-
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -79,6 +79,13 @@ public class AppView extends AppLayout {
         Icon iconHelp = new Icon(VaadinIcon.QUESTION_CIRCLE_O);
         iconHelp.setColor("white");
         iconHelp.setSize("18px");
+        Div helpDiv = new Div();
+        helpDiv.setVisible(false);
+        HelpButton helpButton = new HelpButton(helpDiv);
+        helpDiv.add(helpButton.helpDivInit());
+        iconHelp.addClickListener(iconClickEvent -> {
+            helpDiv.setVisible(helpButton.helpDivVisible());
+        });
         Icon iconBell = new Icon(VaadinIcon.BELL_O);
         iconBell.setColor("white");
         iconBell.setSize("18px");
@@ -116,7 +123,7 @@ public class AppView extends AppLayout {
         image.setSizeFull();
         profile.addComponentAsFirst(image);
 
-        addToNavbar(logo, navBarTabs, rightSideNavBar, userNavBar);
+        addToNavbar(logo, navBarTabs, rightSideNavBar, userNavBar, helpDiv);
     }
 
     public static InputStream getImageInputStream(String svgIconName) {
