@@ -7,17 +7,21 @@ html, body, td, .gwt-TextArea, textarea {
     background: #1f75a8;
     vertical-align: middle;
     /*border-color: inherit;*/
-    height: 58px;
+    height: 64px;
     width: 100%;
 }
 
 #navBarText {
     color: rgb(198, 221, 234);
     display: block;
-    text-align: center;
+    text-align: end;
     text-decoration: none;
     margin: 5px 0 0 0;
-    font: 11px "“Helvetica Neue”", Helvetica, Arial, "“Lucida Grande”", sans-serif;
+    font: 12px "“Helvetica Neue”", Helvetica, Arial, "“Lucida Grande”", sans-serif;
+}
+
+#navBarIcon {
+    margin: 25px 0 0 0;
 }
 
 #rightSideNavBar {
@@ -34,6 +38,7 @@ html, body, td, .gwt-TextArea, textarea {
 
 #logo_main {
     padding-left: 16px;
+    padding-right: 4px;
     align-self: center;
 }
 
@@ -53,10 +58,10 @@ html, body, td, .gwt-TextArea, textarea {
     width: calc(100vw - 21px);
 }
 
-vaadin-tab {
+#vaadinTab {
     align-self: center;
-    padding-left: 8px;
-    padding-right: 8px;
+    padding-left: 4px;
+    padding-right: 4px;
     height: 100%;
 }
 
