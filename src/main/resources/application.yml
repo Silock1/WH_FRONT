@@ -41,3 +41,4 @@ retrofit:
     subscription_url: api/subscription
     application_url: api/applications
     units_of_measure_url: api/measure
+    customer_order_url: api/customer_orders

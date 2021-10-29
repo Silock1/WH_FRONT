@@ -15,6 +15,7 @@ import com.warehouse_accounting.components.AppView;
 /*
     Заказы покупателей
     Не настроен внешний вид и таблица с товарами т.к. страница добавления товаров не реализована
+    Нет ссылки на эту страницу
  */
 
 @Route(value = "customerorder/new", layout = AppView.class)
