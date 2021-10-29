@@ -45,7 +45,7 @@ public class AppView extends AppLayout {
         List<String> tabNames = Arrays.asList("Показатели", "Закупки", "Продажи", "Товары",
                 "Контрагенты", "Деньги", "Розница", "Производство", "Задачи", "Приложения");
         List<VaadinIcon> streamResources = Stream.of(
-                VaadinIcon.BAR_CHART,
+                VaadinIcon.SPLINE_CHART,
                 VaadinIcon.STOCK,
                 VaadinIcon.SUITCASE,
                 VaadinIcon.CART_O,
@@ -61,6 +61,7 @@ public class AppView extends AppLayout {
             Icon icon = new Icon(streamResources.get(i));
             icon.setSize("18px");
             icon.setColor("white");
+            icon.setId("navBarIcon");
             Span tabName = new Span(tabNames.get(i));
             tabName.setId("navBarText");
             verticalLayout.add(icon, tabName);
@@ -70,6 +71,7 @@ public class AppView extends AppLayout {
             verticalLayout.addClickListener(event ->
                     verticalLayout.getUI().ifPresent(ui -> ui.navigate(resolveSubMenuView(name))));
             Tab tab = new Tab(verticalLayout);
+            tab.setId("vaadinTab");
             Tab separatorTab = new Tab();
             separatorTab.setId("separator_tab");
             navBarTabs.add(tab, separatorTab);
@@ -79,6 +81,7 @@ public class AppView extends AppLayout {
         Icon iconHelp = new Icon(VaadinIcon.QUESTION_CIRCLE_O);
         iconHelp.setColor("white");
         iconHelp.setSize("18px");
+        iconHelp.setSize("22px");
         Div helpDiv = new Div();
         helpDiv.setVisible(false);
         HelpButton helpButton = new HelpButton(helpDiv);
@@ -88,7 +91,7 @@ public class AppView extends AppLayout {
         });
         Icon iconBell = new Icon(VaadinIcon.BELL_O);
         iconBell.setColor("white");
-        iconBell.setSize("18px");
+        iconBell.setSize("22px");
 
 
         rightSideNavBar.add(iconHelp);
@@ -100,7 +103,7 @@ public class AppView extends AppLayout {
         StreamResource resource = new StreamResource("logo_main.svg", () -> getImageInputStream(LOGO_PNG)); // Если icons будут в виде svg файлов в static лежать
         Image logo = new Image(resource, "logo_main");
         logo.setId("logo_main");
-        logo.setHeight("19px");
+        logo.setHeight("21px");
         logo.setWidth("58px");
 
         MenuBar userNavBar = new MenuBar();
@@ -121,9 +124,12 @@ public class AppView extends AppLayout {
         Image image = new Image(res, "avatar-placeholder");
         image.setId("avatar-placeholder");
         image.setSizeFull();
-        profile.addComponentAsFirst(image);
 
-        addToNavbar(logo, navBarTabs, rightSideNavBar, userNavBar, helpDiv);
+        Tab userMenu = new Tab(userNavBar);
+        userMenu.getStyle().set("width", "220px");
+        userMenu.add(image);
+
+        addToNavbar(logo, navBarTabs, rightSideNavBar, userMenu, helpDiv);
     }
 
     public static InputStream getImageInputStream(String svgIconName) {
@@ -169,3 +175,4 @@ public class AppView extends AppLayout {
         return subMenuView;
     }
 }
+
