@@ -18,7 +18,9 @@ import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.warehouse_accounting.components.purchases.grids.AcceptancesGridLayout;
 
 
-//Класс "Приемки"
+/*
+Класс "Приемки"
+ */
 public class Acceptances extends VerticalLayout {
     private AcceptancesGridLayout acceptancesGridLayout;
     private final TextField textField = new TextField();

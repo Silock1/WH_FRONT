@@ -16,7 +16,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.warehouse_accounting.components.purchases.grids.PurchasesGridLayout;
-
+/*
+Заказы поставщикам
+ */
 public class PurchasesOrders extends VerticalLayout {
 
     private PurchasesGridLayout purchaesGridLayout;
