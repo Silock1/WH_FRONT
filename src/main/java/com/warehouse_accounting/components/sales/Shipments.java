@@ -8,6 +8,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.notification.Notification;
@@ -16,6 +17,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
+
 
 public class Shipments extends VerticalLayout {
 
@@ -83,6 +85,7 @@ public class Shipments extends VerticalLayout {
         editItem.setAlignItems(Alignment.CENTER);
 
         MenuItem editMenu = editMenuBar.addItem(editItem);
+
         editMenu.getSubMenu().addItem("Удалить", menuItemClickEvent -> {
             int selected = salesGridLayout.getProductGrid().asMultiSelect().getSelectedItems().size();
             Notification notification = new Notification(String.format("Выделено для удаления %d", selected),
