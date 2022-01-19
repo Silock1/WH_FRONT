@@ -16,6 +16,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.warehouse_accounting.components.sales.grids.SalesFilterLayout;
 import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
 
 
@@ -25,8 +26,10 @@ public class Shipments extends VerticalLayout {
     private final TextField textFieldGridSelected = new TextField();
     private final Div parentLayer;
 
+
     public Shipments(Div parentLayer) {
         this.parentLayer = parentLayer;
+
         salesGridLayout = new SalesGridLayout(textFieldGridSelected);
         Div pageContent = new Div();
         pageContent.add(salesGridLayout);
