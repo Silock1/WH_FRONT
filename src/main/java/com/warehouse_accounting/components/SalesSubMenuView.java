@@ -8,6 +8,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.sales.CustomerOrders;
 import com.warehouse_accounting.components.sales.Shipments;
+import com.warehouse_accounting.components.sales.grids.SalesFilterLayout;
 
 import java.util.Arrays;
 import java.util.List;
@@ -53,7 +54,7 @@ public class SalesSubMenuView extends VerticalLayout {
                     break;
                 case "Отгрузки":
                     pageContent.removeAll();
-                    pageContent.add(new Span(initShipments(pageContent)));
+                    pageContent.add(initShipments(pageContent));
                     break;
                 case "Отчеты комиссионера":
                     pageContent.removeAll();
