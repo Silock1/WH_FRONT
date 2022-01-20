@@ -27,7 +27,7 @@ public class ProductionSubMenuView extends VerticalLayout {
     private Tabs initSubMenu() {
         List<String> goodsMenuItems = Arrays.asList("Тех. карты",
                 "Заказы на производство",
-                "Тех. операции");
+                "Тех. операции", "Производственные задания", "Техпроцессы", "Этапы");
         Tabs subMenuTabs = subMenuTabs(goodsMenuItems);
         subMenuTabs.addSelectedChangeListener(event -> {
             switch (event.getSelectedTab().getLabel()) {
@@ -42,6 +42,18 @@ public class ProductionSubMenuView extends VerticalLayout {
                 case "Тех. операции":
                     pageContent.removeAll();
                     pageContent.add(new Span("Тех. операции"));
+                    break;
+                case "Производственные задания":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Производственные задания"));
+                    break;
+                case "Техпроцессы":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Техпроцессы"));
+                    break;
+                case "Этапы":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Этапы"));
                     break;
             }
         });
