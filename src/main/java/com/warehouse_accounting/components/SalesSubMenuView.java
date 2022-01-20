@@ -6,7 +6,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.warehouse_accounting.components.sales.CustomerGoodsToRealize;
 import com.warehouse_accounting.components.sales.CustomerOrders;
+import com.warehouse_accounting.components.sales.grids.CustomerGoodsToRealizeFilter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,9 +22,12 @@ public class SalesSubMenuView extends VerticalLayout {
 
     private final Div pageContent = new Div();
     private CustomerOrders customerOrders;
+    private CustomerGoodsToRealize customerGoodsToRealize;
+    private final CustomerGoodsToRealizeFilter filterLayout;
 
-    public SalesSubMenuView() {
+    public SalesSubMenuView(CustomerGoodsToRealizeFilter filterLayout) {
         pageContent.setSizeFull();
+        this.filterLayout = filterLayout;
         pageContent.add(initCustomerOrders(pageContent));
         add(initSubMenu(), pageContent);
     }
@@ -71,7 +76,7 @@ public class SalesSubMenuView extends VerticalLayout {
                     break;
                 case "Товары на реализации":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Товары на реализации"));
+                    pageContent.add(initCustomerGoodsToRealize(filterLayout));
                     break;
                 case "Воронка продаж":
                     pageContent.removeAll();
@@ -86,5 +91,12 @@ public class SalesSubMenuView extends VerticalLayout {
             customerOrders = new CustomerOrders(pageContent);
         }
         return customerOrders;
+    }
+
+    private CustomerGoodsToRealize initCustomerGoodsToRealize(CustomerGoodsToRealizeFilter filterLayout){
+        if (Objects.isNull(customerGoodsToRealize)) {
+            customerGoodsToRealize = new CustomerGoodsToRealize(filterLayout);
+        }
+        return customerGoodsToRealize;
     }
 }
