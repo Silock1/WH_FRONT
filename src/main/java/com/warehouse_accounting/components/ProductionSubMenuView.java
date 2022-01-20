@@ -6,6 +6,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.warehouse_accounting.components.production.ProductionTasks;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,8 +19,10 @@ public class ProductionSubMenuView extends VerticalLayout {
 
 
     private final Div pageContent = new Div();
+    private final ProductionTasks productionTasks;
 
-    public ProductionSubMenuView() {
+    public ProductionSubMenuView(ProductionTasks productionTasks) {
+        this.productionTasks = productionTasks;
         pageContent.setSizeFull();
         add(initSubMenu(), pageContent);
     }
@@ -45,7 +48,7 @@ public class ProductionSubMenuView extends VerticalLayout {
                     break;
                 case "Производственные задания":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Производственные задания"));
+                    pageContent.add(productionTasks);
                     break;
                 case "Техпроцессы":
                     pageContent.removeAll();
