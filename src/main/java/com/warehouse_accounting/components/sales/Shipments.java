@@ -15,7 +15,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
-import com.warehouse_accounting.components.sales.grids.SalesFilterLayout;
 import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
 
 
@@ -46,14 +45,13 @@ public class Shipments extends VerticalLayout {
         Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH));
         refreshButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
 
+        //
         Button addOrderButton = new Button("Отгрузка", new Icon(VaadinIcon.PLUS));
         addOrderButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
+
         Button addFilterButton = new Button("Фильтр");
         addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-
-
-
 
         TextField searchField = new TextField();
         searchField.setPlaceholder("Номер или комментарий");
