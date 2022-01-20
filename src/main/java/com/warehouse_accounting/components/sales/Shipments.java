@@ -178,25 +178,6 @@ public class Shipments extends VerticalLayout {
         horizontalLayout.setSpacing(false);
         horizontalLayout.setAlignItems(Alignment.CENTER);
 
-//        MenuItem createItem = createMenuBar.addItem(horizontalLayout);
-//        createItem.getSubMenu().addItem("Заказ поставщикам", e -> {
-//
-//        });
-//        createItem.getSubMenu().addItem("Заказ поставщикам (с учетом «доступно»)", e -> {
-//
-//        });
-//        createItem.getSubMenu().addItem("Отгрузки", e -> {
-//
-//        });
-//        createItem.getSubMenu().addItem("Приходные ордеры", e -> {
-//
-//        });
-//        createItem.getSubMenu().addItem("Входящие платежи", e -> {
-//
-//        });
-//        createItem.getSubMenu().addItem("Сбор заказа", e -> {
-//
-//        });
 
         HorizontalLayout groupCreate = new HorizontalLayout();
         groupCreate.add(createMenuBar);
