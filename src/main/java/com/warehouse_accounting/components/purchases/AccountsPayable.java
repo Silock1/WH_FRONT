@@ -15,7 +15,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
-//import com.warehouse_accounting.components.goods.forms.MyForm;
 import com.warehouse_accounting.components.goods.forms.InvoiceForm;
 import com.warehouse_accounting.components.purchases.grids.AccountsPayableGridLayout;
 
@@ -65,15 +64,7 @@ public class AccountsPayable extends VerticalLayout {
             InvoiceForm invoiceForm = new InvoiceForm(parentLayer, this);
             parentLayer.removeAll();
             parentLayer.add(invoiceForm);
-
-            System.out.println("Моя кнопка Счет - нажата!");
         });
-
-//        if(addOrderButton.isEnabled()){
-//
-//            System.out.println("Моя кнопка Счет - нажата!");
-//
-//        }
 
         Button addFilterButton = new Button("Фильтр");
         addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
