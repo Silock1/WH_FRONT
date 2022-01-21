@@ -110,7 +110,8 @@ public class ProductionTasks extends VerticalLayout {
         Icon printIcon = new Icon(VaadinIcon.PRINT);
         printIcon.setSize("13px");
         HorizontalLayout printVision = new HorizontalLayout(new Text("Печать"), printIcon, caretDownPrint);
-        statusVision.setSpacing(false);
+        printVision.setSpacing(false);
+
         MenuItem print = menuBar.addItem(printVision);
         SubMenu printSubMenu = print.getSubMenu();
         printSubMenu.addItem("Список производственных заданий");
@@ -118,9 +119,12 @@ public class ProductionTasks extends VerticalLayout {
         printSubMenu.addItem("Комплект").onEnabledStateChanged(false);
         printSubMenu.addItem("Настроить");
 
+        Button setting = new Button(new Icon(VaadinIcon.COG));
+        setting.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 
-        horizontalLayout.add(helpButton, productionTasks, refreshButton, exercise, filter, textField, menuBar
-                );
+
+        horizontalLayout.add(helpButton, productionTasks, refreshButton, exercise, filter, textField, menuBar,
+                setting);
 
         return horizontalLayout;
     }
