@@ -43,7 +43,6 @@ public class ProductionTasksFilterLayout extends VerticalLayout {
     Select<String> product_warehouse = new Select<>();
     Select<String> carried_out = new Select<>(); // Проведено
     Select<String> sent = new Select<>();
-    Select<String> groupContragent = new Select<>();
     Select<String> organization = new Select<>();
     Select<String> status = new Select<>();
     Select<String> printed = new Select<>();
@@ -104,8 +103,10 @@ public class ProductionTasksFilterLayout extends VerticalLayout {
         HorizontalLayout layout_one = new HorizontalLayout(find, clear, settingFilter, bookmarks, period_start_date,
                 period_end_date, plan_date_start_production, plan_date_end_production, start_production, end_production,
                 completion_start_production, completion_end_production, warehouse);
-        HorizontalLayout layout_two = new HorizontalLayout(product_warehouse, organization, status, carried_out, printed, sent);
-        HorizontalLayout layout_three = new HorizontalLayout( owner_employee, owner_department, access, when_start_date, when_end_date, who_changed);
+        HorizontalLayout layout_two = new HorizontalLayout(product_warehouse, organization, status, carried_out,
+                printed, sent);
+        HorizontalLayout layout_three = new HorizontalLayout( owner_employee, owner_department, access, when_start_date,
+                when_end_date, who_changed);
 
         add(layout_one, layout_two, layout_three);
 
