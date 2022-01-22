@@ -9,29 +9,15 @@ vaadin-tabs[orientation="vertical"] {
     margin-top: 10px;
 }
 
-.tab {
-    height: 37px;
-}
 
-.layout {
-    margin-left: 30px;
-    width: 288px;
-    height: 37px;
-}
-
-.settingsTitle, .importExportTitle, .catalogTitle {
+.tableTitle {
     margin-left: 38px;
     font-weight: bold;
     color: #cc420c;
 }
 
-.span {
+span {
     color: #104c6e;
     font: 13px "Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
     padding-top: 11px;
 }
-
-
-
-
-

@@ -17,7 +17,9 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.warehouse_accounting.components.goods.forms.InvoiceForm;
 import com.warehouse_accounting.components.purchases.grids.AccountsPayableGridLayout;
-
+/*
+Счета поставщиков
+ */
 public class AccountsPayable extends VerticalLayout {
 
     private AccountsPayableGridLayout accountsPayableGridLayout;
