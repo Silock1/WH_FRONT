@@ -1,13 +1,29 @@
 package com.warehouse_accounting.components.goods.forms;
 
+import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.contextmenu.HasMenuItems;
+import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.menubar.MenuBarVariant;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+
+import java.util.List;
 
 public class InvoiceForm extends VerticalLayout {
 
@@ -17,29 +33,27 @@ public class InvoiceForm extends VerticalLayout {
     public InvoiceForm(Div parentLayer, Component returnLayer) {
         this.parentLayer = parentLayer;
         this.returnLayer = returnLayer;
-        VerticalLayout forms = initForms();
-        add(forms);
+        VerticalLayout initTopButtons = initTopButtons();
+        VerticalLayout initForms = initAllForms();
+        add(initTopButtons,initForms);
+        /////////////
+
+        Grid<VerticalLayout> grid = new Grid<>(VerticalLayout.class, false);
+
+        grid.addColumn(VerticalLayout::getClassName).setHeader("AAA");
+        grid.addColumn(VerticalLayout::getClassName).setHeader("AAA");
+        grid.addColumn(VerticalLayout::getClassName).setHeader("AAA");
+
+        grid.addThemeVariants(GridVariant.LUMO_COLUMN_BORDERS);
+        //grid.addThemeVariants(GridVariant.LUMO_NO_ROW_BORDERS);
+
+
+        grid.setItems(initTopButtons);
+        add(grid);
     }
 
-    private VerticalLayout initForms() {
+    private VerticalLayout initAllForms() {
         VerticalLayout verticalLayout = new VerticalLayout();
-
-        //Buttons
-        Button save = new Button("Сохранить", e -> {
-            //Создание и сохранение сущьности
-            parentLayer.removeAll();
-            parentLayer.add(returnLayer);
-        });
-
-        Button close = new Button("Закрыть", e -> {
-            parentLayer.removeAll();
-            parentLayer.add(returnLayer);
-        });
-
-        HorizontalLayout groupButton = new HorizontalLayout();
-        groupButton.setHeightFull();
-        groupButton.add(save, close);
-        verticalLayout.add(groupButton);
 
         //Forms
         HorizontalLayout formGroups = new HorizontalLayout();
@@ -109,4 +123,64 @@ public class InvoiceForm extends VerticalLayout {
         return verticalLayout;
     }
 
+    private VerticalLayout initTopButtons(){
+        VerticalLayout verticalLayout = new VerticalLayout();
+
+        //Buttons
+        Button save = new Button("Сохранить", e -> {
+            //Создание и сохранение сущьности
+            parentLayer.removeAll();
+            parentLayer.add(returnLayer);
+        });
+        save.getStyle().set("marginTop","-0.1%");
+        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS,ButtonVariant.LUMO_SMALL);
+
+        Button close = new Button("Закрыть", e -> {
+            parentLayer.removeAll();
+            parentLayer.add(returnLayer);
+        });
+        close.getStyle().set("marginTop","-0.1%");
+        close.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
+
+        MenuBar change = new MenuBar();
+        change.addThemeVariants(MenuBarVariant.LUMO_CONTRAST,MenuBarVariant.LUMO_SMALL);
+        MenuItem moveChange = change.addItem("Изменить");
+        SubMenu subMenuChange = moveChange.getSubMenu();
+        subMenuChange.addItem("Удалить");
+        subMenuChange.addItem("Копировать");
+
+        MenuBar create = new MenuBar();
+        create.addThemeVariants(MenuBarVariant.LUMO_CONTRAST,MenuBarVariant.LUMO_SMALL);
+        MenuItem moveCreate = create.addItem("Создать документ");
+        SubMenu subMenuCreate = moveCreate.getSubMenu();
+        subMenuCreate.addItem("Приемка");
+        subMenuCreate.addItem("Исходящий платеж");
+        subMenuCreate.addItem("Расходный ордер");
+
+        MenuBar print = new MenuBar();
+        print.addThemeVariants(MenuBarVariant.LUMO_CONTRAST,MenuBarVariant.LUMO_SMALL);
+        MenuItem itemPrint = print.addItem(new Icon(VaadinIcon.PRINT));
+        itemPrint.add(new Text("Печать"));
+        SubMenu subMenuPrint = itemPrint.getSubMenu();
+        subMenuPrint.addItem("Счет поставщика");
+        subMenuPrint.addItem("Ценник (70х49,5 мм)");
+        subMenuPrint.addItem("Термоэтикетка (58х40 мм)");
+        subMenuPrint.addItem("Комплект...");
+        subMenuPrint.addItem("Настроить...");
+
+        MenuBar send = new MenuBar();
+        send.addThemeVariants(MenuBarVariant.LUMO_CONTRAST,MenuBarVariant.LUMO_SMALL);
+        MenuItem itemSend = send.addItem(new Icon(VaadinIcon.SHARE));
+        itemSend.add(new Text("Отправить"));
+        SubMenu subMenuSend = itemSend.getSubMenu();
+        subMenuSend.addItem("Счет поставщика");
+        subMenuSend.addItem("Комплект...");
+
+        HorizontalLayout groupButton = new HorizontalLayout();
+        groupButton.add(save,close,change,create,print,send);
+
+        verticalLayout.add(groupButton);
+
+        return verticalLayout;
+    }
 }
