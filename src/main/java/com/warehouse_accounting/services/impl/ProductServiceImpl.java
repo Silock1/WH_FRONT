@@ -13,7 +13,6 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -109,29 +108,5 @@ public class ProductServiceImpl implements ProductService {
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на удаление ProductDto по id", e);
         }
-    }
-
-    @PostConstruct
-    public void testMethod() {
-        System.out.println("******************************************************************");
-        getAll().stream().forEach(dto -> System.out.println(dto.toString()));
-        System.out.println("******************************************************************");
-        getAll().stream().forEach(dto -> System.out.println(getById(dto.getId())));
-        System.out.println("******************************************************************");
-        ProductDto productDto = new ProductDto();
-        productDto.setName("TestDTOcreate");
-        create(productDto);
-        System.out.println(getAll().stream().filter(dto -> dto.getName().compareTo("TestDTOcreate")==0).findFirst().get().toString());
-        System.out.println("******************************************************************");
-        productDto = getAll().stream().filter(dto -> dto.getName().compareTo("TestDTOcreate")==0).findFirst().get();
-        productDto.setName("TestDTOupdate");
-        System.out.println(productDto.toString());
-        update(productDto);
-        System.out.println(getAll().stream().filter(dto -> dto.getName().compareTo("TestDTOupdate")==0).findFirst().get().toString());
-        System.out.println("******************************************************************");
-        deleteById(getAll().stream().filter(dto -> dto.getName().compareTo("TestDTOupdate")==0).findFirst().get().getId());
-        System.out.println("******************************************************************");
-        getAll().stream().forEach(dto -> System.out.println(dto.toString()));
-        System.out.println("******************************************************************");
     }
 }
