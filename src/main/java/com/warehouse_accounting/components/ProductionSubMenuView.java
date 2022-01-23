@@ -23,6 +23,7 @@ public class ProductionSubMenuView extends VerticalLayout {
 
     public ProductionSubMenuView(ProductionTasks productionTasks) {
         this.productionTasks = productionTasks;
+
         pageContent.setSizeFull();
         add(initSubMenu(), pageContent);
     }

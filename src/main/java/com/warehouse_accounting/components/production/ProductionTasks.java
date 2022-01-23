@@ -19,10 +19,6 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.production.grids.ProductionTasksFilterLayout;
 
-import javax.net.ssl.HostnameVerifier;
-import java.awt.*;
-
-
 @SpringComponent
 @UIScope
 public class ProductionTasks extends VerticalLayout {
@@ -31,6 +27,7 @@ public class ProductionTasks extends VerticalLayout {
 
     public ProductionTasks(ProductionTasksFilterLayout productionTasksFilterLayout) {
         this.productionTasksFilterLayout = productionTasksFilterLayout;
+
         add(getGroupButton(), productionTasksFilterLayout);
     }
 
@@ -119,7 +116,7 @@ public class ProductionTasks extends VerticalLayout {
         printSubMenu.addItem("Комплект").onEnabledStateChanged(false);
         printSubMenu.addItem("Настроить");
 
-        Button setting = new Button(new Icon(VaadinIcon.COG));
+        Button setting = new Button(new Icon(VaadinIcon.COG)); // Настройки
         setting.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 
 
