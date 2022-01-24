@@ -15,6 +15,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.warehouse_accounting.components.goods.forms.InvoiceForm;
 import com.warehouse_accounting.components.purchases.grids.AccountsPayableGridLayout;
 /*
 Счета поставщиков
@@ -24,6 +25,7 @@ public class AccountsPayable extends VerticalLayout {
     private AccountsPayableGridLayout accountsPayableGridLayout;
     private final TextField textField = new TextField();
     private final Div parentLayer;
+
 
     public  AccountsPayable (Div parentLayer){
         this.parentLayer = parentLayer;
@@ -57,6 +59,14 @@ public class AccountsPayable extends VerticalLayout {
 
         Button addOrderButton = new Button("Счет", new Icon(VaadinIcon.PLUS));
         addOrderButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+
+        //--------- Реализация кнопки Счет - временно здесь ----------------//
+        addOrderButton.addClickListener(event -> {
+
+            InvoiceForm invoiceForm = new InvoiceForm(parentLayer, this);
+            parentLayer.removeAll();
+            parentLayer.add(invoiceForm);
+        });
 
         Button addFilterButton = new Button("Фильтр");
         addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
