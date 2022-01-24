@@ -21,8 +21,9 @@ public class CompanySettingsView extends VerticalLayout {
     public CompanySettingsView() {
 
         VerticalLayout verticalLayout = new VerticalLayout();
-        Span title = new Span("Настройки компании");
+        HorizontalLayout oneHorizontalLayout = new HorizontalLayout();
 
+        Span title = new Span("Настройки компании");
         Span numDocument = new Span("Нумеровать документы");
         Span backResult = new Span("Адрес для ответа при отправке документов по почте");
 
@@ -34,8 +35,12 @@ public class CompanySettingsView extends VerticalLayout {
         buttonSave.addThemeVariants(ButtonVariant.LUMO_LARGE);
         Button editButton = new Button("Изменения:");
 
+        oneHorizontalLayout.add(backResult, helpButton);
+        add(oneHorizontalLayout);
+
         verticalLayout.add(title, numDocument);
         add(verticalLayout);
+
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.add(buttonSave, editButton);
         add(horizontalLayout);
@@ -62,7 +67,7 @@ public class CompanySettingsView extends VerticalLayout {
                 "Перемещать удаленные документы на 7 дней в корзину");
         multiListSelector.select("Перемещать удаленные документы на 7 дней в корзину");
 
-        add(verticalLayout, listBox, backResult, listBackResult, emailField, multiListSelector, helpButton);
+        add(verticalLayout, listBox, oneHorizontalLayout, listBackResult, emailField, multiListSelector);
 
 
 
