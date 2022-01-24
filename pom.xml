@@ -99,7 +99,7 @@
                 <configuration>
                     <excludes>
                         <exclude>
-                            <groupId>org.projectlombok</groupId>
+                            <groupId>org.project-lombok</groupId>
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
@@ -138,7 +138,7 @@
     <repositories>
         <repository>
             <id>vaadin-addons</id>
-            <url>http://maven.vaadin.com/vaadin-addons</url>
+            <url>https://maven.vaadin.com/vaadin-addons</url>
         </repository>
     </repositories>
 
