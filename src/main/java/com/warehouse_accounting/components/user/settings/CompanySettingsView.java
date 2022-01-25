@@ -16,8 +16,12 @@ import com.vaadin.flow.component.page.History;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.component.textfield.EmailField;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @PageTitle("Настройки компании")
 @Route(value = "companysettings", layout = SettingsView.class)
@@ -46,12 +50,11 @@ public class CompanySettingsView extends VerticalLayout {
         add(horizontalLayout);
 
         EmailField emailField = new EmailField();
-        emailField.setLabel("Email address");
         emailField.getElement().setAttribute("name", "email");
-        emailField.setPlaceholder("username@example.com");
-        emailField.setErrorMessage("Please enter a valid example.com email address");
+        emailField.setPlaceholder("Другой, name@site.ru");
+        emailField.setErrorMessage("Введите валидный example.ru email адрес");
         emailField.setClearButtonVisible(true);
-        emailField.setPattern("^.+@example\\.com$");
+        emailField.setPattern("^.+@example\\.ru$");
 
 
         RadioButtonGroup<String> radioButtonGroup = new RadioButtonGroup<>();
@@ -59,7 +62,6 @@ public class CompanySettingsView extends VerticalLayout {
         radioButtonGroup.setLabel("Адрес для ответа при отправке документов по почте");
         radioButtonGroup.setItems("Адрес сотрудника, который отправляет документ", "Другой, укажите в форме ниже");
         radioButtonGroup.setValue("Адрес сотрудника, который отправляет документ");
-
 
 
         RadioButtonGroup<String> radioButton = new RadioButtonGroup<>();
