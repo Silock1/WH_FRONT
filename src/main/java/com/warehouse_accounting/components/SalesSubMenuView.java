@@ -6,6 +6,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.warehouse_accounting.components.sales.CustomerInvoices;
 import com.warehouse_accounting.components.sales.CustomerOrders;
 import com.warehouse_accounting.components.sales.Shipments;
 
@@ -21,6 +22,7 @@ public class SalesSubMenuView extends VerticalLayout {
 
     private final Div pageContent = new Div();
     private CustomerOrders customerOrders;
+    private CustomerInvoices customerInvoices;
     private Shipments shipments;
 
     public SalesSubMenuView() {
@@ -49,7 +51,7 @@ public class SalesSubMenuView extends VerticalLayout {
                     break;
                 case "Счета покупателям":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Счета покупателям"));
+                    pageContent.add(initCustomerInvoices(pageContent));
                     break;
                 case "Отгрузки":
                     pageContent.removeAll();
@@ -95,5 +97,11 @@ public class SalesSubMenuView extends VerticalLayout {
             shipments = new Shipments(pageContent);
         }
         return shipments;
+    }
+    private CustomerInvoices initCustomerInvoices(Div pageContent){
+        if (Objects.isNull(customerInvoices)) {
+            customerInvoices = new CustomerInvoices(pageContent);
+        }
+        return customerInvoices;
     }
 }
