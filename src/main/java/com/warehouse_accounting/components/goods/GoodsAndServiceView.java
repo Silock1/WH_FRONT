@@ -27,6 +27,7 @@ import com.warehouse_accounting.components.goods.grids.GoodsGridLayout;
 import com.warehouse_accounting.models.dto.ProductDto;
 import com.warehouse_accounting.models.dto.ProductGroupDto;
 import com.warehouse_accounting.services.interfaces.ProductGroupService;
+import com.warehouse_accounting.services.interfaces.ProductService;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -36,6 +37,7 @@ import java.util.Optional;
 @Route(value = "goodsAndServiceView", layout = AppView.class)
 public class GoodsAndServiceView extends VerticalLayout {
     private final ProductGroupService productGroupService;
+    private final ProductService productService;
     private final TreeGrid<ProductGroupDto> treeGrid = new TreeGrid<>();
     private final TextField textFieldGridSelected = new TextField();
     private final Grid<ProductDto> productDtoGrid = new Grid<>(ProductDto.class, false);
