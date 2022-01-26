@@ -6053,3 +6053,4 @@ Caused by: java.net.ConnectException: Connection refused: connect
 	at okhttp3.internal.platform.Platform.connectSocket(Platform.java:130) ~[okhttp-3.14.9.jar:?]
 	at okhttp3.internal.connection.RealConnection.connectSocket(RealConnection.java:263) ~[okhttp-3.14.9.jar:?]
 	... 139 more
+[ERROR] 2022-01-26 13:18:50.292 [http-nio-4447-exec-10] RecycleBinServiceImpl - Произошла ошибка 404 при выполнении запроса на получение списка RecycleBinDto
