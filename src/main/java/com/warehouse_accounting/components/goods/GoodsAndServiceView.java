@@ -45,9 +45,10 @@ public class GoodsAndServiceView extends VerticalLayout {
     private GoodsGridLayout goodsGridLayout;
     private Long rootGroupId = 1L; //TODO переопределить для текущего пользователя
 
-    public GoodsAndServiceView(ProductGroupService productGroupService) {
+    public GoodsAndServiceView(ProductGroupService productGroupService, ProductService productService) {
         this.productGroupService = productGroupService;
-        goodsGridLayout = new GoodsGridLayout(productGroupService, this);
+        this.productService = productService;
+        goodsGridLayout = new GoodsGridLayout(productGroupService, productService, this);
         Div pageContent = new Div();
         pageContent.setSizeFull();
         pageContent.add(goodsGridLayout);

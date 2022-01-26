@@ -20,6 +20,7 @@ import com.warehouse_accounting.models.dto.ProductDto;
 import com.warehouse_accounting.models.dto.ProductGroupDto;
 import com.warehouse_accounting.models.dto.TaxSystemDto;
 import com.warehouse_accounting.services.interfaces.ProductGroupService;
+import com.warehouse_accounting.services.interfaces.ProductService;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -35,6 +36,7 @@ import java.util.Objects;
 @Route(value = "goodsGridLayout", layout = AppView.class)
 public class GoodsGridLayout extends HorizontalLayout {
     private final ProductGroupService productGroupService;
+    private final ProductService productService;
     private final Div leftThreeGridDiv = new Div();
     private final Div gridDiv = new Div();
     private final String widthLeftTreeGrid = "25%";
@@ -44,8 +46,11 @@ public class GoodsGridLayout extends HorizontalLayout {
     private Grid<ProductDto> productDtoGrid;
     private GoodsAndServiceView parentLayer;
 
-    public GoodsGridLayout(ProductGroupService productGroupService, GoodsAndServiceView parentLayer) {
+    public GoodsGridLayout(ProductGroupService productGroupService,
+                           ProductService productService,
+                           GoodsAndServiceView parentLayer) {
         this.productGroupService = productGroupService;
+        this.productService = productService;
         this.parentLayer = parentLayer;
         this.treeGrid = parentLayer.getTreeGrid();
         this.selectedTextField = parentLayer.getTextFieldGridSelected();
@@ -109,9 +114,13 @@ public class GoodsGridLayout extends HorizontalLayout {
     }
 
     public void initGrid(Long groupId) {
+        System.out.println("TEST0");
         productDtoGrid.setColumns(getVisibleColumn().keySet().toArray(String[]::new));
         productDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI);
-        productDtoGrid.setItems(getTestProductDtos(groupId));
+//        productService.getAll().stream().forEach( product -> System.out.println(product));
+//        productDtoGrid.setItems(getTestProductDtos(groupId));
+        productDtoGrid.setItems(productService.getAll());
+        System.out.println("TEST1");
         getVisibleColumn().forEach((key, value) -> productDtoGrid.getColumnByKey(key).setHeader(value));
         productDtoGrid.asMultiSelect().addSelectionListener(listener -> {
             int selectSize = listener.getAllSelectedItems().size();
@@ -139,7 +148,7 @@ public class GoodsGridLayout extends HorizontalLayout {
         fieldNameColumnName.put("contractor.name", "Подрядчик");
         fieldNameColumnName.put("taxSystem.name", "Налоговая система");
         fieldNameColumnName.put("productGroup.name", "Группа");
-        fieldNameColumnName.put("attributeOfCalculationObject.name", "Объекта расчета");
+        fieldNameColumnName.put("attributeOfCalculationObject.name", "Объект расчетов");
         return fieldNameColumnName;
     }
 
@@ -173,9 +182,10 @@ public class GoodsGridLayout extends HorizontalLayout {
                 .volume(new BigDecimal("50.02"))
                 .purchasePrice(new BigDecimal("660.00"))
                 .description("Описание2")
-                .contractor(ContractorDto.builder()
-                        .name("ООО \"Рога и Копыта\"")
-                        .build())
+                .contractor(new ContractorDto())
+//                .contractor(ContractorDto.builder()
+//                        .name("ООО \"Рога и Копыта\"")
+//                        .build())
                 .taxSystem(TaxSystemDto.builder()
                         .name("Учетная система")
                         .build())

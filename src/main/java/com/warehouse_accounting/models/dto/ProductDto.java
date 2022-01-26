@@ -26,17 +26,25 @@ public class ProductDto {
 
     private String description;
 
-    private UnitDto unit;
-
     private Boolean archive = false;
 
-    private ContractorDto contractor;
-
-    private TaxSystemDto taxSystem;
 
     private List<ImageDto> images;
 
-    private ProductGroupDto productGroup;
+    /*
+        Коррекция вызвана NPE которые возникают когда Ваадин получает объект в котором не инициализированы все поля.
+        Поля содержащие ДТО объекты. Для этого я инициализирую поля ДТО созданными конструкторами по умолчанию.
+        Довольно странно что здесь ДТО я меняю противоположным образом тому как я менял ДТО в Back там я убирал
+        инициализацию полей объектами ДТО по умолчанию здесь добавляю... Если добавить обработчик ситуации по месту,
+        то изменяя объект ДТО нам придется изменять и обработчик, а если обработчиков будет несколько?
+    */
+    private UnitDto unit = new UnitDto();
 
-    private AttributeOfCalculationObjectDto attributeOfCalculationObject;
+    private ContractorDto contractor = new ContractorDto();
+
+    private TaxSystemDto taxSystem = new TaxSystemDto();
+
+    private ProductGroupDto productGroup = new ProductGroupDto();
+
+    private AttributeOfCalculationObjectDto attributeOfCalculationObject = new AttributeOfCalculationObjectDto();
 }
