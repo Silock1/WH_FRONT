@@ -116,7 +116,7 @@ public class InvoiceForm extends VerticalLayout {
 
         Button save = new Button("Сохранить", e -> {
             //Создание и сохранение сущности
-            parentLayer.add(returnLayer);
+            //System.out.println("Нажата кнопка Сохранить!");
         });
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS,ButtonVariant.LUMO_SMALL);
 
@@ -218,7 +218,7 @@ public class InvoiceForm extends VerticalLayout {
         taskAccordion.add("Задачи", taskVerticalLayout);
 
         Button buttonTask = new Button("Задача", e -> {
-            parentLayer.add(returnLayer);
+
         });
         buttonTask.setIcon(new Icon(VaadinIcon.PLUS_CIRCLE));
         buttonTask.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -233,7 +233,7 @@ public class InvoiceForm extends VerticalLayout {
         fileAccordion.add("Файлы", fileVerticalLayout);
 
         Button buttonFile = new Button("Файл", e -> {
-            parentLayer.add(returnLayer);
+
         });
         buttonFile.setIcon(new Icon(VaadinIcon.PLUS_CIRCLE));
         buttonFile.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -298,7 +298,7 @@ public class InvoiceForm extends VerticalLayout {
         subMenuPrice.addItem("Сохранить цены");
 
         Button buttonDiscount = new Button("Скидка", e -> {
-            parentLayer.add(returnLayer);
+
         });
         buttonDiscount.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
 
@@ -309,12 +309,12 @@ public class InvoiceForm extends VerticalLayout {
         formAdd.add(fieldAdd);
 
         Button buttonAdd = new Button("Добавить из справочника", e -> {
-            parentLayer.add(returnLayer);
+
         });
         buttonAdd.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
 
         Button buttonCheck = new Button("Проверить комплектацию", e -> {
-            parentLayer.add(returnLayer);
+
         });
         buttonCheck.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
 
@@ -342,7 +342,7 @@ public class InvoiceForm extends VerticalLayout {
 
         HorizontalLayout line1 = new HorizontalLayout();
         for(int i=0; i<343; i++){
-           line1.add("-");
+            line1.add("-");
         }
         horizontalLayout1.setAlignItems(Alignment.CENTER);
 
