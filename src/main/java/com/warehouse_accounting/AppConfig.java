@@ -1,5 +1,6 @@
 package com.warehouse_accounting;
 
+import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +13,8 @@ public class AppConfig {
     public Retrofit retrofit(@Value("${retrofit.baseUrl}") String baseUrl) {
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
+                //anyway it doesn't works :(
+                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().serializeNulls().create()))
                 .build();
     }
 }

@@ -32,9 +32,6 @@ public class ProductDto {
 
     private ContractorDto contractor;
 
-//    @OneToMany(fetch = FetchType.LAZY)
-//    private List<TypeOfPrice> typeOfPrices;
-
     private TaxSystemDto taxSystem;
 
     private List<ImageDto> images;
