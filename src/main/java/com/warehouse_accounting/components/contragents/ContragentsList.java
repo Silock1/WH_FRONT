@@ -56,6 +56,11 @@ public class ContragentsList extends VerticalLayout {
         textField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         textField.setWidth("210px");
 
+        Button mailingLists = new Button("Рассылки");
+        Button importButton = new Button("Импорт");
+        Button exportButton = new Button("Экспорт");
+
+
         MenuBar menuBar = new MenuBar();
         menuBar.addThemeVariants(MenuBarVariant.LUMO_ICON, MenuBarVariant.LUMO_CONTRAST);
         TextField count = new TextField();
@@ -86,12 +91,12 @@ public class ContragentsList extends VerticalLayout {
         statusVision.setSpacing(false);
         MenuItem status = menuBar.addItem(statusVision);
         SubMenu statusSubMenu = status.getSubMenu();
-        statusSubMenu.addItem("Настроить...");
         statusSubMenu.addItem("Новый");
         statusSubMenu.addItem("Выслано предложение");
         statusSubMenu.addItem("Переговоры");
         statusSubMenu.addItem("Сделка заключена");
         statusSubMenu.addItem("Сделка не заключена");
+        statusSubMenu.addItem("Настроить...");
 
         HorizontalLayout printVision = new HorizontalLayout(new Text("Печать"),caretDownPrint);
         printVision.setSpacing(false);
@@ -100,7 +105,8 @@ public class ContragentsList extends VerticalLayout {
         printSubMenu.addItem("Список контрагентов");
         printSubMenu.addItem("Настроить");
 
-        controlButton.add(textLabel, refreshButton, addContragent, filter, textField, menuBar);
+        controlButton.add(textLabel, refreshButton, addContragent, filter, textField,
+                menuBar, mailingLists, importButton, exportButton);
         setSizeFull();
         return controlButton;
     }

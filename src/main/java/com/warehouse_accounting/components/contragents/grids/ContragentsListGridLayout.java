@@ -51,18 +51,18 @@ public class ContragentsListGridLayout extends HorizontalLayout {
         fieldNameColumnName.put("fax", "Факс");
         fieldNameColumnName.put("email", "Email");
 //        fieldNameColumnName.put("", "Статус");
-//        fieldNameColumnName.put("", "Дисконтная карта");
+        fieldNameColumnName.put("numberDiscountCard", "Дисконтная карта");
 //        fieldNameColumnName.put("", "Фактический адрес");
         fieldNameColumnName.put("comment", "Комментарий");
-        fieldNameColumnName.put("contractorGroup", "Группы");
-        fieldNameColumnName.put("typeOfContractor", "Тип контрагента");
+        fieldNameColumnName.put("contractorGroupName", "Группы");
+        fieldNameColumnName.put("legalDetailTypeOfContractorName", "Тип контрагента");
 //        fieldNameColumnName.put("", "Полное наименование");
         fieldNameColumnName.put("address", "Юридический адрес");
-        fieldNameColumnName.put("inn", "ИНН");
-//        fieldNameColumnName.put("", "КПП");
+        fieldNameColumnName.put("legalDetailInn", "ИНН");
+        fieldNameColumnName.put("legalDetailKpp", "КПП");
 //        fieldNameColumnName.put("", "Банк");
 //        fieldNameColumnName.put("", "Расчетный счет");
-//        fieldNameColumnName.put("", "Цены");
+        fieldNameColumnName.put("typeOfPriceName", "Цены");
 //        fieldNameColumnName.put("", "Общий доступ");
 //        fieldNameColumnName.put("", "Владелец-отдел");
 //        fieldNameColumnName.put("", "Владелец-сотрудник");
@@ -79,8 +79,8 @@ public class ContragentsListGridLayout extends HorizontalLayout {
 //        fieldNameColumnName.put("", "Дата события (последнее)");
 //        fieldNameColumnName.put("", "Текст события (последнее)");
 //        fieldNameColumnName.put("", "Текст события (последнее)");
-//        fieldNameColumnName.put("whenChanged", "Когда изменен");
-//        fieldNameColumnName.put("employeeWhoChangedName", "Кто изменил");
+//        fieldNameColumnName.put("", "Когда изменен");
+//        fieldNameColumnName.put("", "Кто изменил");
 
         return fieldNameColumnName;
         }

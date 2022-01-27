@@ -18,8 +18,9 @@ public class ContractorDto {
 
     private String name;
 
-    private String inn;
-
+    private String legalDetailInn;
+    private String legalDetailKpp;
+    private String contractorGroupName;
     private String sortNumber;
 
     private String phone;
@@ -33,10 +34,13 @@ public class ContractorDto {
     private String commentToAddress;
 
     private String comment;
+    private String typeOfPriceName;
+    private String numberDiscountCard;
+    private String legalDetailTypeOfContractorName;
 
     private ContractorGroupDto contractorGroup;
 
-    private TypeOfContractorDto typeOfContractor;
+//    private TypeOfContractorDto typeOfContractor;
 
     private TypeOfPriceDto typeOfPrice;
 
