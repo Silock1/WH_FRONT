@@ -14,24 +14,30 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.textfield.TextFieldVariant;
-import com.warehouse_accounting.components.contragents.grids.ContractsFilterLayout;
-import com.warehouse_accounting.components.sales.grids.CustomerGoodsToRealizeFilter;
-import com.warehouse_accounting.components.sales.grids.SalesGridGoodsToRealizeGet;
-import com.warehouse_accounting.components.sales.grids.SalesGridGoodsToRealizeGive;
-import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.components.sales.grids.GoodsToRealizeFilter;
+import com.warehouse_accounting.components.sales.grids.GoodsToRealizeGetSalesGrid;
+import com.warehouse_accounting.components.sales.grids.GoodsToRealizeGiveSalesGrid;
+import com.warehouse_accounting.services.interfaces.GoodsToRealizeGetService;
+import com.warehouse_accounting.services.interfaces.GoodsToRealizeGiveService;
 
-
+@SpringComponent
+@UIScope
 public class CustomerGoodsToRealize extends VerticalLayout {
 
     private HorizontalLayout salesGridLayout;
-    private final CustomerGoodsToRealizeFilter filterLayout;
-    private final TextField textFieldGridSelected = new TextField();
+    private GoodsToRealizeGetService goodsToRealizeGetService;
+    private GoodsToRealizeGiveService goodsToRealizeGiveService;
+    private final GoodsToRealizeFilter filterLayout;
+
     private final Div pageContent;
 
-    public CustomerGoodsToRealize(CustomerGoodsToRealizeFilter filterLayout) {
+    public CustomerGoodsToRealize(GoodsToRealizeFilter filterLayout, GoodsToRealizeGetService goodsToRealizeGetService, GoodsToRealizeGiveService goodsToRealizeGiveService) {
         this.filterLayout = filterLayout;
-        salesGridLayout = new SalesGridGoodsToRealizeGet(textFieldGridSelected);
+        this.goodsToRealizeGetService = goodsToRealizeGetService;
+        this.goodsToRealizeGiveService = goodsToRealizeGiveService;
+        salesGridLayout = new GoodsToRealizeGetSalesGrid(goodsToRealizeGetService);
         Div pageContent = new Div();
         pageContent.add(salesGridLayout);
         pageContent.setSizeFull();
@@ -72,7 +78,7 @@ public class CustomerGoodsToRealize extends VerticalLayout {
         Button buttonGet = new Button("Принятые");
         buttonGet.addThemeVariants(ButtonVariant.LUMO_SMALL);
         buttonGet.addClickListener(clickEvent -> {
-            salesGridLayout = new SalesGridGoodsToRealizeGet(textFieldGridSelected);
+            salesGridLayout = new GoodsToRealizeGetSalesGrid(goodsToRealizeGetService);
             pageContent.removeAll();
             pageContent.add(salesGridLayout);
             pageContent.setSizeFull();
@@ -89,7 +95,7 @@ public class CustomerGoodsToRealize extends VerticalLayout {
         Button buttonGive = new Button("Переданные");
         buttonGive.addThemeVariants(ButtonVariant.LUMO_SMALL);
         buttonGive.addClickListener(clickEvent -> {
-            salesGridLayout = new SalesGridGoodsToRealizeGive(textFieldGridSelected);
+            salesGridLayout = new GoodsToRealizeGiveSalesGrid(goodsToRealizeGiveService);
             pageContent.removeAll();
             pageContent.add(salesGridLayout);
             pageContent.setSizeFull();

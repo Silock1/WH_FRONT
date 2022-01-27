@@ -42,3 +42,5 @@ retrofit:
     application_url: api/applications
     units_of_measure_url: api/measure
     customer_order_url: api/customer_orders
+    goods_to_realize_get_url: api/goodstorealizeget
+    goods_to_realize_give_url: api/goodstorealizegive

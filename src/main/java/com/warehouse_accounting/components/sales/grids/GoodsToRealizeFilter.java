@@ -13,7 +13,7 @@ import com.vaadin.flow.spring.annotation.UIScope;
 
 @SpringComponent
 @UIScope
-public class CustomerGoodsToRealizeFilter extends VerticalLayout {
+public class GoodsToRealizeFilter extends VerticalLayout {
 
     Button find = new Button("Найти");
     Button clear = new Button("Очистить");
@@ -31,7 +31,7 @@ public class CustomerGoodsToRealizeFilter extends VerticalLayout {
 
 
 
-    public CustomerGoodsToRealizeFilter() {
+    public GoodsToRealizeFilter() {
         find.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
         find.setWidth("100px");
         clear.addThemeVariants(ButtonVariant.LUMO_CONTRAST);

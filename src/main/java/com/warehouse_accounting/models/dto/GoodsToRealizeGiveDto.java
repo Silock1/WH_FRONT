@@ -6,9 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static lombok.AccessLevel.PRIVATE;
 /*
 РЕАЛИЗОВАТЬ КОНСТРУКТОР и получение данных
@@ -19,23 +16,22 @@ import static lombok.AccessLevel.PRIVATE;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = PRIVATE)
-public class CustomerGoodsToRealizeGetDto {
+public class GoodsToRealizeGiveDto {
 
     Long id;
-    Long ProductDtoId;
-    String ProductDtoName;
-//    int number; //это поле должно быть также в ProductDto но пока оно отсутствует
+
+    Long productDtoId;
+    String productDtoName;
+    //    int number; //это поле должно быть также в ProductDto но пока оно отсутствует
 //    String article; //это поле должно быть также в ProductDto но пока оно отсутствует
-    UnitDto ProductDtoUnit;
-    int getGoods;
+    Long unitId;
+    String unitName;
+    int giveGoods;
     int quantity;
     int amount;
     int arrive;
     int remains;
-    int quantity_report;
-    int amount_report;
-    int quantity_Noreport;
-    int amount_Noreport;
+
 
 
 }
