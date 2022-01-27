@@ -10,31 +10,36 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.components.goods.forms.GoodsForm;
+import com.warehouse_accounting.components.sales.forms.InvoiceForm;
+import com.warehouse_accounting.components.sales.grids.SalesInvoicesGridLayout;
+import org.springframework.stereotype.Component;
 
-
-import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
 /*
-Эта страница должна быть главной страницей Продаж, а не CustomerOrder
+Продажи / счета клиентам
  */
-public class CustomerOrders extends VerticalLayout {
 
-    private SalesGridLayout salesGridLayout;
+public class CustomerInvoices extends VerticalLayout {
+
+    private SalesInvoicesGridLayout salesInvoicesGridLayout;
     private final TextField textFieldGridSelected = new TextField();
     private final Div parentLayer;
 
-    public CustomerOrders(Div parentLayer) {
+    public CustomerInvoices(Div parentLayer) {
         this.parentLayer = parentLayer;
-        salesGridLayout = new SalesGridLayout(textFieldGridSelected);
+        salesInvoicesGridLayout = new SalesInvoicesGridLayout(textFieldGridSelected);
         Div pageContent = new Div();
-        pageContent.add(salesGridLayout);
+        pageContent.add(salesInvoicesGridLayout);
         pageContent.setSizeFull();
         add(getGroupButtons(), pageContent);
     }
+
+
 
     private HorizontalLayout getGroupButtons() {
         HorizontalLayout groupControl = new HorizontalLayout();
@@ -43,13 +48,22 @@ public class CustomerOrders extends VerticalLayout {
         helpButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
 
         Label textProducts = new Label();
-        textProducts.setText("Заказы покупателей");
+        textProducts.setText("Счета покупателям");
 
         Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH));
         refreshButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
 
-        Button addOrderButton = new Button("Заказ", new Icon(VaadinIcon.PLUS));
+        Button addOrderButton = new Button("Счет", new Icon(VaadinIcon.PLUS));
         addOrderButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+
+        addOrderButton.addClickListener(buttonClickEvent -> {
+            InvoiceForm invoiceForm = new InvoiceForm(parentLayer, this);
+            parentLayer.removeAll();
+            parentLayer.add(invoiceForm);
+
+        });
+
+
 
         Button addFilterButton = new Button("Фильтр");
         addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -88,34 +102,24 @@ public class CustomerOrders extends VerticalLayout {
 
         MenuItem editMenu = editMenuBar.addItem(editItem);
         editMenu.getSubMenu().addItem("Удалить", menuItemClickEvent -> {
-            int selected = salesGridLayout.getProductGrid().asMultiSelect().getSelectedItems().size();
-            Notification notification = new Notification(String.format("Выделено для удаления %d", selected),
-                    3000, Notification.Position.MIDDLE);
-            notification.open();
-        });
+        }).getElement().setAttribute("disabled", true);
 
         editMenu.getSubMenu().addItem("Копировать", menuItemClickEvent -> {
 
-        });
+        }).getElement().setAttribute("disabled", true);
 
         editMenu.getSubMenu().addItem("Массовое редактирование", menuItemClickEvent -> {
 
         });
         editMenu.getSubMenu().addItem("Провести", menuItemClickEvent -> {
 
-        });
+        }).getElement().setAttribute("disabled", true);
         editMenu.getSubMenu().addItem("Снять проведение", menuItemClickEvent -> {
 
-        });
+        }).getElement().setAttribute("disabled", true);
         editMenu.getSubMenu().addItem("Объединить", menuItemClickEvent -> {
 
-        });
-        editMenu.getSubMenu().addItem("Зарезервировать", menuItemClickEvent -> {
-
-        });
-        editMenu.getSubMenu().addItem("Очистить резерв", menuItemClickEvent -> {
-
-        });
+        }).getElement().setAttribute("disabled", true);
 
         HorizontalLayout groupEdit = new HorizontalLayout();
         groupEdit.add(textFieldGridSelected, editMenuBar);
@@ -138,27 +142,7 @@ public class CustomerOrders extends VerticalLayout {
         horizontalLayout.setAlignItems(Alignment.CENTER);
 
         MenuItem statusItem = statusMenuBar.addItem(horizontalLayout);
-        statusItem.getSubMenu().addItem("Новый", e -> {
 
-        });
-        statusItem.getSubMenu().addItem("Подтвeржден", e -> {
-
-        });
-        statusItem.getSubMenu().addItem("Собран", e -> {
-
-        });
-        statusItem.getSubMenu().addItem("Отгружен", e -> {
-
-        });
-        statusItem.getSubMenu().addItem("Доставлен", e -> {
-
-        });
-        statusItem.getSubMenu().addItem("Возврат", e -> {
-
-        });
-        statusItem.getSubMenu().addItem("Отменен", e -> {
-
-        });
         statusItem.getSubMenu().addItem("Настроить...", e -> {
 
         });
@@ -183,25 +167,7 @@ public class CustomerOrders extends VerticalLayout {
         horizontalLayout.setSpacing(false);
         horizontalLayout.setAlignItems(Alignment.CENTER);
 
-        MenuItem createItem = createMenuBar.addItem(horizontalLayout);
-        createItem.getSubMenu().addItem("Заказ поставщикам", e -> {
-
-        });
-        createItem.getSubMenu().addItem("Заказ поставщикам (с учетом «доступно»)", e -> {
-
-        });
-        createItem.getSubMenu().addItem("Отгрузки", e -> {
-
-        });
-        createItem.getSubMenu().addItem("Приходные ордеры", e -> {
-
-        });
-        createItem.getSubMenu().addItem("Входящие платежи", e -> {
-
-        });
-        createItem.getSubMenu().addItem("Сбор заказа", e -> {
-
-        });
+//        MenuItem createItem = createMenuBar.addItem(horizontalLayout);
 
         HorizontalLayout groupCreate = new HorizontalLayout();
         groupCreate.add(createMenuBar);
@@ -222,15 +188,23 @@ public class CustomerOrders extends VerticalLayout {
         printItem.setAlignItems(Alignment.CENTER);
         MenuItem print = printMenuBar.addItem(printItem);
 
-        print.getSubMenu().addItem("Список заказов", e -> {
+        print.getSubMenu().addItem("Список счетов", e -> {
 
         });
         print.getSubMenu().addItem("Заказ", e -> {
 
         });
+        print.getSubMenu().addItem("Счет покупателю с печатью и подписью", e -> {
+
+        });
+        print.getSubMenu().addItem("Счет покупателю", e -> {
+
+        });
+
         print.getSubMenu().addItem("Комплект...", e -> {
 
         });
+
         print.getSubMenu().addItem("Настроить...", e -> {
 
         });
