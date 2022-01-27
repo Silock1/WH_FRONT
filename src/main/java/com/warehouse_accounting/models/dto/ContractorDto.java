@@ -37,6 +37,7 @@ public class ContractorDto {
     private String typeOfPriceName;
     private String numberDiscountCard;
     private String legalDetailTypeOfContractorName;
+    private String legalDetailAddress;
 
     private ContractorGroupDto contractorGroup;
 

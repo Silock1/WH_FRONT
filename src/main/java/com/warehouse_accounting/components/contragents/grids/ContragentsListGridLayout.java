@@ -41,6 +41,9 @@ public class ContragentsListGridLayout extends HorizontalLayout {
         contractorDtoGrid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_ROW_STRIPES);
         return contractorDtoGrid;
     }
+/*
+Данные для закоментированных полей пока не реализованы.
+ */
 
     private HashMap<String, String> getVisibleColumn() {
         HashMap<String, String> fieldNameColumnName = new LinkedHashMap<>();
@@ -56,7 +59,7 @@ public class ContragentsListGridLayout extends HorizontalLayout {
         fieldNameColumnName.put("comment", "Комментарий");
         fieldNameColumnName.put("contractorGroupName", "Группы");
         fieldNameColumnName.put("legalDetailTypeOfContractorName", "Тип контрагента");
-//        fieldNameColumnName.put("", "Полное наименование");
+        fieldNameColumnName.put("legalDetailAddress", "Полное наименование");
         fieldNameColumnName.put("address", "Юридический адрес");
         fieldNameColumnName.put("legalDetailInn", "ИНН");
         fieldNameColumnName.put("legalDetailKpp", "КПП");
