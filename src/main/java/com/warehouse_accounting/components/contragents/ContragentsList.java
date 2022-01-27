@@ -28,13 +28,10 @@ import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
 public class ContragentsList extends VerticalLayout {
 
     private ContragentsListGridLayout contragentsListGridLayout;
-//    private final TextField textFieldGridSelected = new TextField();
 
     public ContragentsList(ContragentsListGridLayout contragentsListGridLayout) {
         this.contragentsListGridLayout=contragentsListGridLayout;
-
-        add(getGroupButtons());
-
+        add(getGroupButtons(), contragentsListGridLayout);
     }
 
     private HorizontalLayout getGroupButtons() {
@@ -71,6 +68,8 @@ public class ContragentsList extends VerticalLayout {
         caretDownEdit.setSize("13px");
         Icon caretDownStatus = new Icon(VaadinIcon.CARET_DOWN);
         caretDownStatus.setSize("13px");
+        Icon caretDownPrint = new Icon(VaadinIcon.CARET_DOWN);
+        caretDownPrint.setSize("13px");
 
         HorizontalLayout editVision = new HorizontalLayout(new Text("Изменить"), caretDownEdit);
         editVision.setSpacing(false);
@@ -83,7 +82,25 @@ public class ContragentsList extends VerticalLayout {
         editSubMenu.addItem("Извлечь из архива").onEnabledStateChanged(false);
 
 
-        controlButton.add(textLabel, refreshButton, addContragent, filter, textField);
+        HorizontalLayout statusVision = new HorizontalLayout(new Text("Статус"), caretDownStatus);
+        statusVision.setSpacing(false);
+        MenuItem status = menuBar.addItem(statusVision);
+        SubMenu statusSubMenu = status.getSubMenu();
+        statusSubMenu.addItem("Настроить...");
+        statusSubMenu.addItem("Новый");
+        statusSubMenu.addItem("Выслано предложение");
+        statusSubMenu.addItem("Переговоры");
+        statusSubMenu.addItem("Сделка заключена");
+        statusSubMenu.addItem("Сделка не заключена");
+
+        HorizontalLayout printVision = new HorizontalLayout(new Text("Печать"),caretDownPrint);
+        printVision.setSpacing(false);
+        MenuItem print = menuBar.addItem(printVision);
+        SubMenu printSubMenu = print.getSubMenu();
+        printSubMenu.addItem("Список контрагентов");
+        printSubMenu.addItem("Настроить");
+
+        controlButton.add(textLabel, refreshButton, addContragent, filter, textField, menuBar);
         setSizeFull();
         return controlButton;
     }
