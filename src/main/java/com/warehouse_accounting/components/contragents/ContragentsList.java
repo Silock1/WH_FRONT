@@ -5,7 +5,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -17,8 +16,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.components.contragents.grids.ContragentsFilterLayout;
 import com.warehouse_accounting.components.contragents.grids.ContragentsListGridLayout;
-import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
 
 /*
 Контрагенты
@@ -28,10 +27,12 @@ import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
 public class ContragentsList extends VerticalLayout {
 
     private ContragentsListGridLayout contragentsListGridLayout;
+    private ContragentsFilterLayout contragentsFilterLayout;
 
-    public ContragentsList(ContragentsListGridLayout contragentsListGridLayout) {
+    public ContragentsList(ContragentsListGridLayout contragentsListGridLayout, ContragentsFilterLayout contragentsFilterLayout) {
         this.contragentsListGridLayout=contragentsListGridLayout;
-        add(getGroupButtons(), contragentsListGridLayout);
+        this.contragentsFilterLayout = contragentsFilterLayout;
+        add(getGroupButtons(), contragentsFilterLayout, contragentsListGridLayout);
     }
 
     private HorizontalLayout getGroupButtons() {
@@ -48,8 +49,16 @@ public class ContragentsList extends VerticalLayout {
 
         Button addContragent = new Button(("Контрагент"), new Icon(VaadinIcon.PLUS));
         addContragent.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
         Button filter = new Button("Фильтр");
         filter.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        filter.addClickListener(e->{
+            if (contragentsFilterLayout.isVisible()) {
+                contragentsFilterLayout.setVisible(false);
+            } else {
+                contragentsFilterLayout.setVisible(true);
+            }
+        });
 
         TextField textField = new TextField();
         textField.setPlaceholder("Наим, тел, email, событие, коммент");
