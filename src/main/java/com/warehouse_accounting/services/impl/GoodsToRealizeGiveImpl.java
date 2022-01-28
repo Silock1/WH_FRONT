@@ -33,12 +33,12 @@ public class GoodsToRealizeGiveImpl implements GoodsToRealizeGiveService {
             Response<List<GoodsToRealizeGiveDto>> response = goodsToRealizeGetApiAll.execute();
             if (response.isSuccessful()) {
                 goodsToRealizeGiveDtos = response.body();
-                log.info("Успешно выполнен запрос на получение списка CallDto");
+                log.info("Успешно выполнен запрос на получение списка GoodsToRealizeGiveDto");
             } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение списка CallDto", response.code());
+                log.error("Произошла ошибка {} при выполнении запроса на получение списка GoodsToRealizeGiveDto", response.code());
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение списка CallDto", e);
+            log.error("Произошла ошибка при выполнении запроса на получение списка GoodsToRealizeGiveDto", e);
         }
         return goodsToRealizeGiveDtos;
     }
@@ -51,12 +51,12 @@ public class GoodsToRealizeGiveImpl implements GoodsToRealizeGiveService {
             Response<GoodsToRealizeGiveDto> response = goodsToRealizeGetSync.execute();
             if (response.isSuccessful()) {
                 goodsToRealizeGiveDto = response.body();
-                log.info("Успешно выполнен запрос на получение CallDto по id: {}", id);
+                log.info("Успешно выполнен запрос на получение GoodsToRealizeGiveDto по id: {}", id);
             } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение CallDto по id {}", response.code(), id);
+                log.error("Произошла ошибка {} при выполнении запроса на получение GoodsToRealizeGiveDto по id {}", response.code(), id);
             }
         } catch (Exception e) {
-            log.error("Произошла ошибка при выполнении запроса на получение CallDto по id", e);
+            log.error("Произошла ошибка при выполнении запроса на получение GoodsToRealizeGiveDto по id", e);
         }
         return goodsToRealizeGiveDto;
     }
@@ -64,16 +64,46 @@ public class GoodsToRealizeGiveImpl implements GoodsToRealizeGiveService {
 
     @Override
     public void create(GoodsToRealizeGiveDto dto) {
-
+        Call<Void> goodsToRealizeGive = goodsToRealizeGiveApi.create(goods_to_realize_give_url, dto);
+        try {
+            Response<Void> response = goodsToRealizeGive.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на создание GoodsToRealizeGiveDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на создании GoodsToRealizeGiveDto", response.code());
+            }
+        } catch (IOException e) {
+            log.error("Произошла ошибка при выполнении запроса на создании GoodsToRealizeGiveDto", e);
+        }
     }
 
     @Override
     public void update(GoodsToRealizeGiveDto dto) {
-
+        Call<Void> goodsToRealizeGive = goodsToRealizeGiveApi.update(goods_to_realize_give_url, dto);
+        try {
+            Response<Void> response = goodsToRealizeGive.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на изменение GoodsToRealizeGiveDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на изменении GoodsToRealizeGiveDto", response.code());
+            }
+        } catch (IOException e) {
+            log.error("Произошла ошибка при выполнении запроса на изменении GoodsToRealizeGiveDto", e);
+        }
     }
 
     @Override
     public void deleteById(Long id) {
-
+        Call<Void> goodsToRealizeGive = goodsToRealizeGiveApi.deleteById(goods_to_realize_give_url, id);
+        try {
+            Response<Void> response = goodsToRealizeGive.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на удаление GoodsToRealizeGiveDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на удалении GoodsToRealizeGiveDto", response.code());
+            }
+        } catch (IOException e) {
+            log.error("Произошла ошибка при выполнении запроса на удалении GoodsToRealizeGiveDto", e);
+        }
     }
 }

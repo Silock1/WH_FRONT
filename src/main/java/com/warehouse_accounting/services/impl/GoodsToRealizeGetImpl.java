@@ -34,12 +34,12 @@ public class GoodsToRealizeGetImpl implements GoodsToRealizeGetService {
             Response<List<GoodsToRealizeGetDto>> response = goodsToRealizeGetApiAll.execute();
             if (response.isSuccessful()) {
                 goodsToRealizeGetDtos = response.body();
-                log.info("Успешно выполнен запрос на получение списка CallDto");
+                log.info("Успешно выполнен запрос на получение списка GoodsToRealizeGetDto");
             } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение списка CallDto", response.code());
+                log.error("Произошла ошибка {} при выполнении запроса на получение списка GoodsToRealizeGetDto", response.code());
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение списка CallDto", e);
+            log.error("Произошла ошибка при выполнении запроса на получение списка GoodsToRealizeGetDto", e);
         }
         return goodsToRealizeGetDtos;
     }
@@ -52,28 +52,58 @@ public class GoodsToRealizeGetImpl implements GoodsToRealizeGetService {
             Response<GoodsToRealizeGetDto> response = goodsToRealizeGetSync.execute();
             if (response.isSuccessful()) {
                 goodsToRealizeGetDto = response.body();
-                log.info("Успешно выполнен запрос на получение CallDto по id: {}", id);
+                log.info("Успешно выполнен запрос на получение GoodsToRealizeGetDto по id: {}", id);
             } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение CallDto по id {}", response.code(), id);
+                log.error("Произошла ошибка {} при выполнении запроса на получение GoodsToRealizeGetDto по id {}", response.code(), id);
             }
         } catch (Exception e) {
-            log.error("Произошла ошибка при выполнении запроса на получение CallDto по id", e);
+            log.error("Произошла ошибка при выполнении запроса на получение GoodsToRealizeGetDto по id", e);
         }
         return goodsToRealizeGetDto;
     }
 
     @Override
     public void create(GoodsToRealizeGetDto dto) {
-
+        Call<Void> goodsToRealizeGet = goodsToRealizeGetApi.create(goods_to_realize_get_url, dto);
+        try {
+            Response<Void> response = goodsToRealizeGet.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на создание GoodsToRealizeGetDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на создании GoodsToRealizeGetDto", response.code());
+            }
+        } catch (IOException e) {
+            log.error("Произошла ошибка при выполнении запроса на создании GoodsToRealizeGetDto", e);
+        }
     }
 
     @Override
     public void update(GoodsToRealizeGetDto dto) {
-
+        Call<Void> goodsToRealizeGet = goodsToRealizeGetApi.update(goods_to_realize_get_url, dto);
+        try {
+            Response<Void> response = goodsToRealizeGet.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на изменение GoodsToRealizeGetDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на изменении GoodsToRealizeGetDto", response.code());
+            }
+        } catch (IOException e) {
+            log.error("Произошла ошибка при выполнении запроса на изменении GoodsToRealizeGetDto", e);
+        }
     }
 
     @Override
     public void deleteById(Long id) {
-
+        Call<Void> goodsToRealizeGet = goodsToRealizeGetApi.deleteById(goods_to_realize_get_url, id);
+        try {
+            Response<Void> response = goodsToRealizeGet.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на удаление GoodsToRealizeGetDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на удалении GoodsToRealizeGetDto", response.code());
+            }
+        } catch (IOException e) {
+            log.error("Произошла ошибка при выполнении запроса на удалении GoodsToRealizeGetDto", e);
+        }
     }
 }

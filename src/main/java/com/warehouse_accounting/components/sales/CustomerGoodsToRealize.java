@@ -13,7 +13,6 @@ import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.sales.grids.GoodsToRealizeFilter;
@@ -27,8 +26,8 @@ import com.warehouse_accounting.services.interfaces.GoodsToRealizeGiveService;
 public class CustomerGoodsToRealize extends VerticalLayout {
 
     private HorizontalLayout salesGridLayout;
-    private GoodsToRealizeGetService goodsToRealizeGetService;
-    private GoodsToRealizeGiveService goodsToRealizeGiveService;
+    private final GoodsToRealizeGetService goodsToRealizeGetService;
+    private final GoodsToRealizeGiveService goodsToRealizeGiveService;
     private final GoodsToRealizeFilter filterLayout;
 
     private final Div pageContent;
@@ -71,10 +70,10 @@ public class CustomerGoodsToRealize extends VerticalLayout {
     }
 
 
-
-
-    private HorizontalLayout getGridMenuGet(){
+    private HorizontalLayout getGridMenuGet() {
         HorizontalLayout groupControl = new HorizontalLayout();
+
+
         Button buttonGet = new Button("Принятые");
         buttonGet.addThemeVariants(ButtonVariant.LUMO_SMALL);
         buttonGet.addClickListener(clickEvent -> {
@@ -90,7 +89,7 @@ public class CustomerGoodsToRealize extends VerticalLayout {
 
     }
 
-    private HorizontalLayout getGridMenuGive(){
+    private HorizontalLayout getGridMenuGive() {
         HorizontalLayout groupControl = new HorizontalLayout();
         Button buttonGive = new Button("Переданные");
         buttonGive.addThemeVariants(ButtonVariant.LUMO_SMALL);

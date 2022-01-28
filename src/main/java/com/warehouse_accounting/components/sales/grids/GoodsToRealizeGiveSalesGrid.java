@@ -3,7 +3,6 @@ package com.warehouse_accounting.components.sales.grids;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.models.dto.GoodsToRealizeGiveDto;
@@ -31,14 +30,14 @@ public class GoodsToRealizeGiveSalesGrid extends HorizontalLayout {
         customerGoodsToRealizeDtoGrid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_ROW_STRIPES);
         return customerGoodsToRealizeDtoGrid;
     }
+
     private HashMap<String, String> getVisibleColumn() {
         HashMap<String, String> fieldNameColumnName = new LinkedHashMap<>();
-        fieldNameColumnName.put("id", "id");
-        fieldNameColumnName.put("productDtoId", "Товар_id");
         fieldNameColumnName.put("productDtoName", "Наименование");
-        fieldNameColumnName.put("unitId", "Код_id");
+        //   fieldNameColumnName.put("number", "Код"); //это поле должно быть также в ProductDto но пока оно отсутствует
+        //   fieldNameColumnName.put("article", "Артикул"); //это поле должно быть также в ProductDto но пока оно отсутствует
         fieldNameColumnName.put("unitName", "Ед. изм.");
-        fieldNameColumnName.put("giveGoods", "Принято");
+        fieldNameColumnName.put("giveGoods", "Передано");
         fieldNameColumnName.put("quantity", "Кол-во");
         fieldNameColumnName.put("amount", "Сумма");
         fieldNameColumnName.put("arrive", "Вернули");
