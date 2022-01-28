@@ -81,7 +81,6 @@ public class ContragentsListGridLayout extends HorizontalLayout {
 //        fieldNameColumnName.put("", "Прибыль");
 //        fieldNameColumnName.put("", "Дата события (последнее)");
 //        fieldNameColumnName.put("", "Текст события (последнее)");
-//        fieldNameColumnName.put("", "Текст события (последнее)");
 //        fieldNameColumnName.put("", "Когда изменен");
 //        fieldNameColumnName.put("", "Кто изменил");
 
