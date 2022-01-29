@@ -17,6 +17,8 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -24,11 +26,14 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.warehouse_accounting.models.dto.SupplierInvoiceDto;
+import com.warehouse_accounting.services.impl.SupplierInvoiceServiceImpl;
+import com.warehouse_accounting.services.interfaces.SupplierInvoiceService;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-
 
 public class InvoiceForm extends VerticalLayout {
 
@@ -37,6 +42,24 @@ public class InvoiceForm extends VerticalLayout {
     private Tab main = new Tab("Главная");
     private Tab related_documents = new Tab("Связанные документы");
     private VerticalLayout documentPage = new VerticalLayout();
+    private Notification notification;
+
+    private TextField fieldInvoiceNumber; //Input формы Номер счета поставщика
+    private DatePicker datePickerInvoiceNumber; //Input datePicker Счет поставщика от
+    private Checkbox checkboxProdused; //Input c чек-бокса Счет поставщика
+    private ComboBox<String> formOrganization; //Input формы Организация
+    private ComboBox<String> formWareHouse; //Input формы Склад
+    private ComboBox<String> formContrAgent; //Input формы Контрагент
+    private ComboBox<String> formContract;  //Input формы Договор
+    private DatePicker datePickerPay; //Input datePicker Дата оплаты
+    private ComboBox<String> formProject; //Input Проект
+    private ComboBox<String> formIncomingNumber; //Input Входящий номер
+    private DatePicker dateIncomingNumber; //Input даты входящего номера
+    private Checkbox checkboxName; //Input c чек-бокса Наименование
+    private TextField fieldAdd; //Input формы Добавить позицию
+    private TextArea textArea; //Input формы Комментарий
+    private Checkbox checkboxNDS; //Input c чек-бокса НДС
+    private Checkbox checkboxOnNDS; //Input c чек-бокса Цена включает НДС
 
     public InvoiceForm(Div parentLayer, Component returnLayer) {
         this.parentLayer = parentLayer;
@@ -54,12 +77,13 @@ public class InvoiceForm extends VerticalLayout {
         List<String> listOrganization = new ArrayList<>();
         listOrganization.add("Рога и копыта");
         listOrganization.add("ИП Аленушка");
-        ComboBox<String> formOrganization = new ComboBox<>();
+        listOrganization.add("АО Baba Yaga");
+        formOrganization = new ComboBox<>();
         formOrganization.setItems(listOrganization);
 
         List<String> listWareHouse = new ArrayList<>();
         listWareHouse.add("Основной склад");
-        ComboBox<String> formWareHouse= new ComboBox<>();
+        formWareHouse= new ComboBox<>();
         formWareHouse.setItems(listWareHouse);
 
         formGroups1.add(spaceGenerator(1));
@@ -73,10 +97,13 @@ public class InvoiceForm extends VerticalLayout {
         listContrAgent.add("ООО Покупатель");
         listContrAgent.add("ООО Поставщик");
         listContrAgent.add("Розничный покупатель");
-        ComboBox<String> formContrAgent = new ComboBox<>();
+        formContrAgent = new ComboBox<>();
         formContrAgent.setItems(listContrAgent);
 
-        ComboBox<String> formContract = new ComboBox<>();
+        List<String> listContract = new ArrayList<>();
+        listContract.add("Бумажный");
+        formContract = new ComboBox<>();
+        formContract.setItems(listContract);
 
         formGroups2.add(spaceGenerator(1));
         formGroups2.add(new Text("Контрагент"),spaceGenerator(3),formContrAgent,spaceGenerator(9),
@@ -85,20 +112,30 @@ public class InvoiceForm extends VerticalLayout {
 
         HorizontalLayout formGroups3 = new HorizontalLayout(); // Третья строка с формами
 
-        DatePicker datePickerPay = new DatePicker();
+        datePickerPay = new DatePicker();
 
-        ComboBox<String> formProgect= new ComboBox<>();
+        List<String> listProject = new ArrayList<>();
+        listProject.add("Буратино");
+        listProject.add("Осьминожка");
+        listProject.add("Паутина");
+        formProject = new ComboBox<>();
+        formProject.setItems(listProject);
 
         formGroups3.add(spaceGenerator(1));
         formGroups3.add(new Text("Дата оплаты"),spaceGenerator(2),datePickerPay,spaceGenerator(9),
-                new Text("Проект"),spaceGenerator(1),formProgect);
+                new Text("Проект"),spaceGenerator(1),formProject);
         formGroups3.setAlignItems(FlexComponent.Alignment.CENTER);
 
         HorizontalLayout formGroups4 = new HorizontalLayout(); // Четвертая строка с формами
 
-        ComboBox<String> formIncomingNumber = new ComboBox<>();
+        List<String> listIncomingNumber = new ArrayList<>();
+        listIncomingNumber.add("123");
+        listIncomingNumber.add("1234");
+        listIncomingNumber.add("12345");
+        formIncomingNumber = new ComboBox<>();
+        formIncomingNumber.setItems(listIncomingNumber);
 
-        DatePicker dateIncomingNumber = new DatePicker();
+        dateIncomingNumber = new DatePicker();
         dateIncomingNumber.setWidth("23rem");
 
         formGroups4.add(spaceGenerator(1));
@@ -114,9 +151,51 @@ public class InvoiceForm extends VerticalLayout {
     private VerticalLayout initTopButtons(){
         VerticalLayout verticalLayout = new VerticalLayout();
 
-        Button save = new Button("Сохранить", e -> {
-            //Создание и сохранение сущности
-            //System.out.println("Нажата кнопка Сохранить!");
+        Button save = new Button("Сохранить", e -> { //Создание и сохранение сущности
+            try {
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("http://localhost:4446")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+
+                SupplierInvoiceService supplierInvoiceService = new SupplierInvoiceServiceImpl("/api/supplier_invoices",retrofit);
+                SupplierInvoiceDto supplierInvoiceDto = new SupplierInvoiceDto();
+
+                supplierInvoiceDto.setInvoiceNumber(fieldInvoiceNumber.getValue());
+                if(datePickerInvoiceNumber.getValue() != null){
+                    supplierInvoiceDto.setDateInvoiceNumber(datePickerInvoiceNumber.getValue().toString());
+                }
+                supplierInvoiceDto.setCheckboxProd(checkboxProdused.getValue());
+                supplierInvoiceDto.setOrganization(formOrganization.getValue());
+                supplierInvoiceDto.setWarehouse(formWareHouse.getValue());
+                supplierInvoiceDto.setContrAgent(formContrAgent.getValue());
+                supplierInvoiceDto.setContract(formContract.getValue());
+                if(datePickerPay.getValue() != null){
+                    supplierInvoiceDto.setDatePay(datePickerPay.getValue().toString());
+                }
+                supplierInvoiceDto.setProject(formProject.getValue());
+                supplierInvoiceDto.setIncomingNumber(formIncomingNumber.getValue());
+                if(dateIncomingNumber.getValue() != null){
+                    supplierInvoiceDto.setDateIncomingNumber(dateIncomingNumber.getValue().toString());
+                }
+                supplierInvoiceDto.setCheckboxName(checkboxName.getValue());
+                supplierInvoiceDto.setCheckboxNDS(checkboxNDS.getValue());
+                supplierInvoiceDto.setCheckboxOnNDS(checkboxOnNDS.getValue());
+                supplierInvoiceDto.setAddPosition(fieldAdd.getValue());
+                supplierInvoiceDto.setAddComment(textArea.getValue());
+
+                supplierInvoiceService.create(supplierInvoiceDto);
+
+                notification = Notification.show("Счет поставщика создан");
+                notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                notification.setPosition(Notification.Position.BOTTOM_STRETCH);
+            }catch (Exception ex){
+                notification = Notification.show("Ошибка создания счета");
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                notification.setPosition(Notification.Position.BOTTOM_STRETCH);
+            }
+            parentLayer.removeAll();
+            parentLayer.add(returnLayer);
         });
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS,ButtonVariant.LUMO_SMALL);
 
@@ -168,6 +247,7 @@ public class InvoiceForm extends VerticalLayout {
 
         return verticalLayout;
     }
+
     // Метод создает строку с формами для счетов поставщика
     private HorizontalLayout initInvoiceNumber(){
         HorizontalLayout horizontalLayout = new HorizontalLayout();
@@ -175,14 +255,13 @@ public class InvoiceForm extends VerticalLayout {
         Text invoiceText = new Text("Счет поставщика №");
 
         FormLayout formInvoiceNumber = new FormLayout();
-        TextField fieldInvoiceNumber = new TextField();
+        fieldInvoiceNumber = new TextField();
         formInvoiceNumber.add(fieldInvoiceNumber);
         formInvoiceNumber.setWidth("4rem");
 
         Text byText = new Text("от");
 
-        DatePicker datePicker = new DatePicker();
-        datePicker.setLocale(Locale.ENGLISH);
+        datePickerInvoiceNumber = new DatePicker();
 
         MenuBar status = new MenuBar();
         status.addThemeVariants(MenuBarVariant.LUMO_CONTRAST,MenuBarVariant.LUMO_SMALL);
@@ -190,10 +269,10 @@ public class InvoiceForm extends VerticalLayout {
         SubMenu subMenuStatus = moveStatus.getSubMenu();
         subMenuStatus.addItem("Настроить...");
 
-        Checkbox checkboxProdused = new Checkbox();
+        checkboxProdused = new Checkbox();
         checkboxProdused.setLabel("Произведено");
 
-        horizontalLayout.add(spaceGenerator(3),invoiceText,formInvoiceNumber,spaceGenerator(1),byText,datePicker);
+        horizontalLayout.add(spaceGenerator(3),invoiceText,formInvoiceNumber,spaceGenerator(1),byText,datePickerInvoiceNumber);
         horizontalLayout.add(status,spaceGenerator(2),checkboxProdused);
         horizontalLayout.setAlignItems(FlexComponent.Alignment.CENTER);
 
@@ -278,7 +357,7 @@ public class InvoiceForm extends VerticalLayout {
     private VerticalLayout mainPage(){
         VerticalLayout verticalLayout = new VerticalLayout();
 
-        Checkbox checkbox = new Checkbox();
+        checkboxName = new Checkbox();
 
         MenuBar name = new MenuBar();
         name.addThemeVariants(MenuBarVariant.LUMO_CONTRAST,MenuBarVariant.LUMO_SMALL);
@@ -303,7 +382,7 @@ public class InvoiceForm extends VerticalLayout {
         buttonDiscount.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
 
         FormLayout formAdd = new FormLayout();
-        TextField fieldAdd = new TextField();
+        fieldAdd = new TextField();
         fieldAdd.setPlaceholder("Добавить позицию - введите наименование, код, штрихкод или артикул");
         formAdd.setWidth("75rem");
         formAdd.add(fieldAdd);
@@ -325,7 +404,7 @@ public class InvoiceForm extends VerticalLayout {
         subMenuImport.addItem("Импортировать (старый)");
         subMenuImport.addItem("Импортировать");
 
-        TextArea textArea = new TextArea();
+        textArea = new TextArea();
         textArea.setWidth("44rem");
         textArea.setPlaceholder("Комметарий");
         add(textArea);
@@ -333,7 +412,7 @@ public class InvoiceForm extends VerticalLayout {
         //Layers
         HorizontalLayout horizontalLayout1 = new HorizontalLayout();  // Первая строка
 
-        horizontalLayout1.add(checkbox);
+        horizontalLayout1.add(checkboxName);
         horizontalLayout1.add(name);
 
         horizontalLayout1.add(spaceGenerator(25),new Text("Количество"),spaceGenerator(10),new Text("Доступно"));
@@ -366,12 +445,12 @@ public class InvoiceForm extends VerticalLayout {
         Label dataSubTotal1 = new Label();
         dataSubTotal1.add("   0,00");
 
-        Checkbox checkboxNDS = new Checkbox();
+        checkboxNDS = new Checkbox();
         checkboxNDS.setLabel("НДС:");
         Label dataSubTotal2 = new Label();
         dataSubTotal2.add("   0,00");
 
-        Checkbox checkboxOnNDS = new Checkbox();
+        checkboxOnNDS = new Checkbox();
         checkboxOnNDS.setLabel("Цена включает НДС:");
 
         Label subTotal4 = new Label();
