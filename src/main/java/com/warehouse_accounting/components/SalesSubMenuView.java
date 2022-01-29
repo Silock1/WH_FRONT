@@ -7,10 +7,12 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.sales.CustomerGoodsToRealize;
+import com.warehouse_accounting.components.sales.CustomerInvoices;
 import com.warehouse_accounting.components.sales.CustomerOrders;
 import com.warehouse_accounting.components.sales.grids.GoodsToRealizeFilter;
 import com.warehouse_accounting.services.interfaces.GoodsToRealizeGetService;
 import com.warehouse_accounting.services.interfaces.GoodsToRealizeGiveService;
+import com.warehouse_accounting.components.sales.Shipments;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +30,8 @@ public class SalesSubMenuView extends VerticalLayout {
     private final GoodsToRealizeFilter filterLayout;
     private GoodsToRealizeGiveService goodsToRealizeGiveService;
     private GoodsToRealizeGetService goodsToRealizeGetService;
+    private CustomerInvoices customerInvoices;
+    private Shipments shipments;
 
     public SalesSubMenuView(GoodsToRealizeFilter filterLayout, GoodsToRealizeGiveService goodsToRealizeGiveService, GoodsToRealizeGetService goodsToRealizeGetService) {
         pageContent.setSizeFull();
@@ -58,11 +62,11 @@ public class SalesSubMenuView extends VerticalLayout {
                     break;
                 case "Счета покупателям":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Счета покупателям"));
+                    pageContent.add(initCustomerInvoices(pageContent));
                     break;
                 case "Отгрузки":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Отгрузки"));
+                    pageContent.add(initShipments(pageContent));
                     break;
                 case "Отчеты комиссионера":
                     pageContent.removeAll();
@@ -104,5 +108,18 @@ public class SalesSubMenuView extends VerticalLayout {
             customerGoodsToRealize = new CustomerGoodsToRealize(filterLayout, goodsToRealizeGetService, goodsToRealizeGiveService);
         }
         return customerGoodsToRealize;
+    }
+
+    private Shipments initShipments(Div pageContent) {
+        if (Objects.isNull(shipments)) {
+            shipments = new Shipments(pageContent);
+        }
+        return shipments;
+    }
+    private CustomerInvoices initCustomerInvoices(Div pageContent){
+        if (Objects.isNull(customerInvoices)) {
+            customerInvoices = new CustomerInvoices(pageContent);
+        }
+        return customerInvoices;
     }
 }

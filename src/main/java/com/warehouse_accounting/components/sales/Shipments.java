@@ -1,4 +1,4 @@
-package com.warehouse_accounting.components.purchases;
+package com.warehouse_accounting.components.sales;
 
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
@@ -15,22 +15,20 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
-import com.warehouse_accounting.components.purchases.grids.AcceptancesGridLayout;
+import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
 
 
-/*
-Класс "Приемки"
- */
-public class Acceptances extends VerticalLayout {
-    private AcceptancesGridLayout acceptancesGridLayout;
-    private final TextField textField = new TextField();
+public class Shipments extends VerticalLayout {
+
+    private SalesGridLayout salesGridLayout;
+    private final TextField textFieldGridSelected = new TextField();
     private final Div parentLayer;
 
-    public Acceptances(Div parentLayer) {
+    public Shipments(Div parentLayer) {
         this.parentLayer = parentLayer;
-        this.acceptancesGridLayout = new AcceptancesGridLayout(textField);
+        salesGridLayout = new SalesGridLayout(textFieldGridSelected);
         Div pageContent = new Div();
-        pageContent.add(acceptancesGridLayout);
+        pageContent.add(salesGridLayout);
         pageContent.setSizeFull();
         add(getGroupButtons(), pageContent);
     }
@@ -40,32 +38,17 @@ public class Acceptances extends VerticalLayout {
 
         Button helpButton = new Button(new Icon(VaadinIcon.QUESTION_CIRCLE));
         helpButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
-        helpButton.addClickListener(e->{
-            Notification.show("Приемки позволяют учитывать закупки товаров. Приемку создают, когда покупают новый товар. Если товар уже лежит у вас на складе или вы не хотите указывать поставщиков, лучше воспользоваться оприходованием.\n" +
-                    "\n" +
-                    "В результате приемки увеличиваются остатки товаров в разделе Товары → Остатки и фиксируется долг перед поставщиком в разделе Деньги → Взаиморасчеты. Также на основе приемки формируется себестоимость товара.\n" +
-                    "\n" +
-                    "Приемку можно создать вручную или импортировать, в том числе из систем ЭДО.\n" +
-                    "\n" +
-                    "Читать инструкцию: Приемка товаров\n" +
-                    "\n" +
-                    "\n" +
-                    "Видео:\n" +
-                    "\n" +
-                    "    Приемка\n" +
-                    "    Цены в МоемСкладе\n" +
-                    "    Закупка и продажа товаров\n" +
-                    "\n", 5000, Notification.Position.TOP_START);
-        });
 
         Label textProducts = new Label();
-        textProducts.setText("Приемки");
+        textProducts.setText("Отгрузки");
 
         Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH));
         refreshButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
 
-        Button addOrderButton = new Button("Приемка", new Icon(VaadinIcon.PLUS));
+        //
+        Button addOrderButton = new Button("Отгрузка", new Icon(VaadinIcon.PLUS));
         addOrderButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+
 
         Button addFilterButton = new Button("Фильтр");
         addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -77,16 +60,13 @@ public class Acceptances extends VerticalLayout {
 
         });
 
-        Button settingButton = new Button(new Icon(VaadinIcon.COG));
-        refreshButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
-
         HorizontalLayout editMenuBar = getEditMenuBar();
         HorizontalLayout statusMenuBar = getStatusMenuBar();
         HorizontalLayout createMenuBar = getCreateMenuBar();
         HorizontalLayout printMenuBar = getPrintMenuBar();
 
         groupControl.add(helpButton, textProducts, refreshButton, addOrderButton,
-                addFilterButton, searchField, editMenuBar, statusMenuBar, createMenuBar, printMenuBar, settingButton);
+                addFilterButton, searchField, editMenuBar, statusMenuBar, createMenuBar, printMenuBar);
         setSizeFull();
         return groupControl;
     }
@@ -94,10 +74,10 @@ public class Acceptances extends VerticalLayout {
     private HorizontalLayout getEditMenuBar() {
         Icon caretDownIcon = new Icon(VaadinIcon.CARET_DOWN);
         caretDownIcon.setSize("12px");
-        textField.setReadOnly(true);
-        textField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        textField.setWidth("30px");
-        textField.setValue("0");
+        textFieldGridSelected.setReadOnly(true);
+        textFieldGridSelected.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        textFieldGridSelected.setWidth("30px");
+        textFieldGridSelected.setValue("0");
 
         MenuBar editMenuBar = new MenuBar();
         editMenuBar.addThemeVariants(MenuBarVariant.LUMO_SMALL);
@@ -106,8 +86,9 @@ public class Acceptances extends VerticalLayout {
         editItem.setAlignItems(Alignment.CENTER);
 
         MenuItem editMenu = editMenuBar.addItem(editItem);
+
         editMenu.getSubMenu().addItem("Удалить", menuItemClickEvent -> {
-            int selected = acceptancesGridLayout.getAcceptancesDtoGrid().asMultiSelect().getSelectedItems().size();
+            int selected = salesGridLayout.getProductGrid().asMultiSelect().getSelectedItems().size();
             Notification notification = new Notification(String.format("Выделено для удаления %d", selected),
                     3000, Notification.Position.MIDDLE);
             notification.open();
@@ -132,19 +113,18 @@ public class Acceptances extends VerticalLayout {
 
 
         HorizontalLayout groupEdit = new HorizontalLayout();
-        groupEdit.add(textField, editMenuBar);
+        groupEdit.add(textFieldGridSelected, editMenuBar);
         groupEdit.setSpacing(false);
         groupEdit.setAlignItems(Alignment.CENTER);
         return groupEdit;
     }
-
     private HorizontalLayout getStatusMenuBar() {
         Icon caretDownIcon = new Icon(VaadinIcon.CARET_DOWN);
         caretDownIcon.setSize("12px");
-        textField.setReadOnly(true);
-        textField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        textField.setWidth("30px");
-        textField.setValue("0");
+        textFieldGridSelected.setReadOnly(true);
+        textFieldGridSelected.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        textFieldGridSelected.setWidth("30px");
+        textFieldGridSelected.setValue("0");
 
         MenuBar statusMenuBar = new MenuBar();
         statusMenuBar.addThemeVariants(MenuBarVariant.LUMO_SMALL);
@@ -153,6 +133,27 @@ public class Acceptances extends VerticalLayout {
         horizontalLayout.setAlignItems(Alignment.CENTER);
 
         MenuItem statusItem = statusMenuBar.addItem(horizontalLayout);
+        statusItem.getSubMenu().addItem("Новый", e -> {
+
+        });
+        statusItem.getSubMenu().addItem("Подтвeржден", e -> {
+
+        });
+        statusItem.getSubMenu().addItem("Собран", e -> {
+
+        });
+        statusItem.getSubMenu().addItem("Отгружен", e -> {
+
+        });
+        statusItem.getSubMenu().addItem("Доставлен", e -> {
+
+        });
+        statusItem.getSubMenu().addItem("Возврат", e -> {
+
+        });
+        statusItem.getSubMenu().addItem("Отменен", e -> {
+
+        });
         statusItem.getSubMenu().addItem("Настроить...", e -> {
 
         });
@@ -166,10 +167,10 @@ public class Acceptances extends VerticalLayout {
     private HorizontalLayout getCreateMenuBar() {
         Icon caretDownIcon = new Icon(VaadinIcon.CARET_DOWN);
         caretDownIcon.setSize("12px");
-        textField.setReadOnly(true);
-        textField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
-        textField.setWidth("30px");
-        textField.setValue("0");
+        textFieldGridSelected.setReadOnly(true);
+        textFieldGridSelected.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        textFieldGridSelected.setWidth("30px");
+        textFieldGridSelected.setValue("0");
 
         MenuBar createMenuBar = new MenuBar();
         createMenuBar.addThemeVariants(MenuBarVariant.LUMO_SMALL);
@@ -177,26 +178,6 @@ public class Acceptances extends VerticalLayout {
         horizontalLayout.setSpacing(false);
         horizontalLayout.setAlignItems(Alignment.CENTER);
 
-        MenuItem createItem = createMenuBar.addItem(horizontalLayout);
-        createItem.getSubMenu().addItem("Счет поставщика", e -> {
-
-        });
-        createItem.getSubMenu().addItem("Счет-фактура полученный", e -> {
-
-        });
-
-        createItem.getSubMenu().addItem("Исходящий платеж", e -> {
-
-        });
-        createItem.getSubMenu().addItem("Расходный ордер", e -> {
-
-        });
-        createItem.getSubMenu().addItem("Возврат поставщику", e -> {
-
-        });
-        createItem.getSubMenu().addItem("Отмена", e -> {
-
-        });
 
         HorizontalLayout groupCreate = new HorizontalLayout();
         groupCreate.add(createMenuBar);
@@ -212,23 +193,56 @@ public class Acceptances extends VerticalLayout {
         printIcon.setSize("12px");
         Icon caretDownIcon = new Icon(VaadinIcon.CARET_DOWN);
         caretDownIcon.setSize("12px");
-        HorizontalLayout printItem = new HorizontalLayout(printIcon, new Text(" Печать"), caretDownIcon);
+        HorizontalLayout printItem = new HorizontalLayout(printIcon, new Text("  Печать"), caretDownIcon);
         printItem.setSpacing(false);
         printItem.setAlignItems(Alignment.CENTER);
         MenuItem print = printMenuBar.addItem(printItem);
 
-        print.getSubMenu().addItem("Список приемок", e -> {
+        print.getSubMenu().addItem("Список отгрузок", e -> {
 
         });
-        print.getSubMenu().addItem("М-4", e -> {
+        print.getSubMenu().addItem("УПД с прослеживаемостью", e-> {
 
         });
-        print.getSubMenu().addItem("Приходная накладная", e -> {
+        print.getSubMenu().addItem("УПД без прослеживаемости", e->{
 
         });
+
+        print.getSubMenu().addItem("Акт", e->{
+
+        });
+
+        print.getSubMenu().addItem("Товарный чек", e -> {
+
+        });
+        print.getSubMenu().addItem("ТОРГ-12", e -> {
+
+        });
+
+        print.getSubMenu().addItem("Расходная накладная", e -> {
+
+        });
+
+        print.getSubMenu().addItem("ТОРГ-12", e -> {
+
+        });
+
+        print.getSubMenu().addItem("Транспортная накладная", e -> {
+
+        });
+
+        print.getSubMenu().addItem("Коды маркировки: тег 1162", e -> {
+
+        });
+
+        print.getSubMenu().addItem("Сборочный лист", e -> {
+
+        });
+
         print.getSubMenu().addItem("Комплект", e -> {
 
         });
+
         print.getSubMenu().addItem("Настроить...", e -> {
 
         });
@@ -239,5 +253,4 @@ public class Acceptances extends VerticalLayout {
         groupPrint.setAlignItems(Alignment.CENTER);
         return groupPrint;
     }
-
 }
