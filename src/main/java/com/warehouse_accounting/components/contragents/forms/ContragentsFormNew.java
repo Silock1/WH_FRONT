@@ -2,6 +2,7 @@ package com.warehouse_accounting.components.contragents.forms;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -9,46 +10,81 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.models.dto.CountryDto;
 
 @SpringComponent
 @UIScope
 public class ContragentsFormNew extends VerticalLayout {
 
-    private final Div parentLayer;
-    private final Component returnLayer;
+//    private final Div parentLayer;
+//    private final Component returnLayer;
 
-    public ContragentsFormNew(Div parentLayer, Component returnLayer) {
-        this.parentLayer = parentLayer;
-        this.returnLayer = returnLayer;
+    public ContragentsFormNew() {
+//        this.parentLayer = parentLayer;
+//        this.returnLayer = returnLayer;
         VerticalLayout form = initForm();
         add(form);
     }
 
     private VerticalLayout initForm() {
         VerticalLayout verticalLayout = new VerticalLayout();
-        Button save = new Button("Сохранить");
-        Button close = new Button("Закрыть");
+        Button save = new Button("Сохранить", e->{
+
+        });
+        Button close = new Button("Закрыть", e-> {
+
+        });
 
         HorizontalLayout groupButton = new HorizontalLayout();
         groupButton.setHeightFull();
         groupButton.add(save, close);
 
-        FormLayout form = getFormLayout();
+        FormLayout formOne = getFormLayoutOne();
+        FormLayout formTwo = getFormLayoutTwo();
         HorizontalLayout groupForm = new HorizontalLayout();
-        groupForm.add(form);
+
+        groupForm.add(formOne, formTwo);
         verticalLayout.add(groupButton, groupForm);
 
         return verticalLayout;
     }
 
-    private FormLayout getFormLayout() {
+    private FormLayout getFormLayoutOne() {
         FormLayout form = new FormLayout();
-        TextField nameField = new TextField();
-        nameField.setLabel("Наименование");
 
-        form.add(nameField);
+        TextField nameField = new TextField("Наименование");
+
+        ComboBox statusComboBox = new ComboBox("Статус");
+        statusComboBox.setItems("Новый", "Выслано предложение", "Переговоры", "Сделка заключена", "Сделка не заключена", "Настроить");
+
+        ComboBox groupComboBox= new ComboBox("Группы");
+        groupComboBox.setItems("Первая группа");
+
+        TextField telTextField= new TextField("Телефон");
+        TextField faxTextField = new TextField("Факс");
+        TextField emailTextField = new TextField("Email");
+        TextField factAddress = new TextField("Фактический адрес"); // Добавить кнопку + со списком полей
+        TextField commentAddress = new TextField("Комменатрий к адресу");
+        TextField comment = new TextField("Комментарий");
+        TextField code = new TextField("Код");
+        TextField externalCode = new TextField("Внешний код");
+
+        form.add(nameField, statusComboBox, groupComboBox, telTextField, faxTextField, emailTextField, factAddress, commentAddress,
+                comment, code, externalCode);
+        form.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("25em", 1)
+        );
         return form;
     }
 
+
+    private FormLayout getFormLayoutTwo() {
+        FormLayout formTwo = new FormLayout();
+        TextField testField = new TextField("Тест");
+
+        formTwo.add(testField);
+
+        return formTwo;
+    }
 
 }

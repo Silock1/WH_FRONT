@@ -31,7 +31,8 @@ public class ContragentsList extends VerticalLayout {
     private ContragentsFilterLayout contragentsFilterLayout;
     private ContragentsFormNew contragentsFormNew;
 
-    public ContragentsList(ContragentsListGridLayout contragentsListGridLayout, ContragentsFilterLayout contragentsFilterLayout, ContragentsFormNew contragentsFormNew) {
+    public ContragentsList(ContragentsListGridLayout contragentsListGridLayout,
+                           ContragentsFilterLayout contragentsFilterLayout, ContragentsFormNew contragentsFormNew) {
         this.contragentsListGridLayout=contragentsListGridLayout;
         this.contragentsFilterLayout = contragentsFilterLayout;
         this.contragentsFormNew = contragentsFormNew;
@@ -56,8 +57,11 @@ public class ContragentsList extends VerticalLayout {
         addContragent.addClickListener(e->{
             if (contragentsFormNew.isVisible()) {
                 contragentsFormNew.setVisible(false);
+                contragentsFilterLayout.setVisible(false);
+                contragentsListGridLayout.setVisible(true);
             } else {
                 contragentsFormNew.setVisible(true);
+                contragentsListGridLayout.setVisible(false);
             }
         });
 
