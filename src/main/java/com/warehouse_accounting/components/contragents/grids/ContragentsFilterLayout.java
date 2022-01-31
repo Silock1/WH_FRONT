@@ -11,8 +11,6 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 
-import java.awt.*;
-
 @SpringComponent
 @UIScope
 public class ContragentsFilterLayout extends VerticalLayout {
