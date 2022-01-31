@@ -12,6 +12,8 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -33,25 +35,38 @@ public class ContragentsFormNew extends VerticalLayout {
 
     private VerticalLayout initForm() {
         VerticalLayout verticalLayout = new VerticalLayout();
+        HorizontalLayout horizontalLayoutGroup = new HorizontalLayout();
+
+        HorizontalLayout groupButton = new HorizontalLayout(); // Группа кнопок записать
         Button save = new Button("Сохранить", e->{
 
         });
         Button close = new Button("Закрыть", e-> {
 
         });
-
-        HorizontalLayout groupButton = new HorizontalLayout();
         groupButton.setHeightFull();
         groupButton.add(save, close);
 
-        VerticalLayout groupForm = new VerticalLayout();
+        VerticalLayout groupLeftForm = new VerticalLayout();
         FormLayout formOne = getFormLayoutOne();
         FormLayout formTwo = getFormLayoutTwo();
         FormLayout formThree = getFormLayoutThree();
         FormLayout formFour = getFormLayoutFour();
         FormLayout formFive = getFormLayoutFive();
-        groupForm.add(formOne, formTwo, formThree, formFour, formFive);
-        verticalLayout.add(groupButton, groupForm);
+        FormLayout formLayoutRight = getFormLayoutRight();
+
+        VerticalLayout groupRightForm = new VerticalLayout();
+
+
+
+        groupLeftForm.add(formOne, formTwo, formThree, formFour, formFive);
+        horizontalLayoutGroup.add(groupLeftForm, formLayoutRight);
+        verticalLayout.add(groupButton, horizontalLayoutGroup);
+
+
+
+
+
 
         return verticalLayout;
     }
@@ -147,5 +162,21 @@ public class ContragentsFormNew extends VerticalLayout {
         );
         return formFive;
     }
+
+    private FormLayout getFormLayoutRight() {
+        FormLayout formRight = new FormLayout();
+        Tab tabEvents = new Tab("События");
+        Tab tabTasks = new Tab("Задачи");
+        Tab tabDocuments = new Tab("Документы");
+        Tab tabFiles = new Tab("Файлы");
+
+        Tabs allTab = new Tabs(tabEvents, tabTasks, tabDocuments, tabFiles);
+        allTab.setSelectedTab(tabDocuments);
+        formRight.add(allTab);
+
+        return formRight;
+
+    }
+
 
 }
