@@ -1,10 +1,13 @@
 package com.warehouse_accounting.components.contragents.forms;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -39,18 +42,18 @@ public class ContragentsFormNew extends VerticalLayout {
         groupButton.setHeightFull();
         groupButton.add(save, close);
 
+        VerticalLayout groupForm = new VerticalLayout();
         FormLayout formOne = getFormLayoutOne();
         FormLayout formTwo = getFormLayoutTwo();
-        HorizontalLayout groupForm = new HorizontalLayout();
-
-        groupForm.add(formOne, formTwo);
+        FormLayout formThree = getFormLayoutThree();
+        groupForm.add(formOne, formTwo, formThree);
         verticalLayout.add(groupButton, groupForm);
 
         return verticalLayout;
     }
 
     private FormLayout getFormLayoutOne() {
-        FormLayout form = new FormLayout();
+        FormLayout form = new FormLayout(new Text("О контрагенте"));
 
         TextField nameField = new TextField("Наименование");
 
@@ -79,12 +82,33 @@ public class ContragentsFormNew extends VerticalLayout {
 
 
     private FormLayout getFormLayoutTwo() {
-        FormLayout formTwo = new FormLayout();
-        TextField testField = new TextField("Тест");
+        FormLayout formTwo = new FormLayout(new Text("Контактные лица"));
+        Button contactEmployee = new Button(("Контактное лицо"), new Icon(VaadinIcon.PLUS));
 
-        formTwo.add(testField);
+        formTwo.add(contactEmployee);
 
         return formTwo;
+    }
+
+    private FormLayout getFormLayoutThree() {
+        FormLayout formThree = new FormLayout(new Text("Реквизиты"));
+       ComboBox typeContragent = new ComboBox("Тип контрагента");
+       typeContragent.setItems("Юридическое лицо", "Индивидуальный предприниматель","Физическое лицо");
+       TextField innField = new TextField("ИНН");
+       TextField fullNameField = new TextField("Полное наименование");
+       TextField legalAddressField = new TextField("Юрридический адрес");
+       TextField commentAddressField = new TextField("Комментарий к адресу");
+       TextField kppField = new TextField("КПП");
+       TextField ogrnField = new TextField("ОГРН");
+       TextField okpoField = new TextField("ОКПО");
+
+
+
+
+        formThree.add(typeContragent, innField, fullNameField, legalAddressField, commentAddressField, kppField,
+                ogrnField, okpoField);
+        return formThree;
+
     }
 
 }
