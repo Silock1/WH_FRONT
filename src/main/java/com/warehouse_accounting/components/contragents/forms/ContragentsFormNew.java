@@ -3,9 +3,11 @@ package com.warehouse_accounting.components.contragents.forms;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -46,7 +48,9 @@ public class ContragentsFormNew extends VerticalLayout {
         FormLayout formOne = getFormLayoutOne();
         FormLayout formTwo = getFormLayoutTwo();
         FormLayout formThree = getFormLayoutThree();
-        groupForm.add(formOne, formTwo, formThree);
+        FormLayout formFour = getFormLayoutFour();
+        FormLayout formFive = getFormLayoutFive();
+        groupForm.add(formOne, formTwo, formThree, formFour, formFive);
         verticalLayout.add(groupButton, groupForm);
 
         return verticalLayout;
@@ -86,29 +90,62 @@ public class ContragentsFormNew extends VerticalLayout {
         Button contactEmployee = new Button(("Контактное лицо"), new Icon(VaadinIcon.PLUS));
 
         formTwo.add(contactEmployee);
-
+        formTwo.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("0", 1)
+        );
         return formTwo;
     }
 
     private FormLayout getFormLayoutThree() {
         FormLayout formThree = new FormLayout(new Text("Реквизиты"));
+
        ComboBox typeContragent = new ComboBox("Тип контрагента");
        typeContragent.setItems("Юридическое лицо", "Индивидуальный предприниматель","Физическое лицо");
        TextField innField = new TextField("ИНН");
        TextField fullNameField = new TextField("Полное наименование");
-       TextField legalAddressField = new TextField("Юрридический адрес");
+       TextField legalAddressField = new TextField("Юридический адрес");
        TextField commentAddressField = new TextField("Комментарий к адресу");
        TextField kppField = new TextField("КПП");
        TextField ogrnField = new TextField("ОГРН");
        TextField okpoField = new TextField("ОКПО");
-
-
-
+       Button paymentAccount = new Button(("Расчетный счёт"), new Icon(VaadinIcon.PLUS));
 
         formThree.add(typeContragent, innField, fullNameField, legalAddressField, commentAddressField, kppField,
-                ogrnField, okpoField);
-        return formThree;
+                ogrnField, okpoField, paymentAccount);
 
+        formThree.setResponsiveSteps(
+          new FormLayout.ResponsiveStep("0", 1)
+        );
+        return formThree;
+    }
+
+    private FormLayout getFormLayoutFour() {
+        FormLayout formFour = new FormLayout(new Text("Скидки и цены"));
+        ComboBox priceCombo = new ComboBox("Цены");
+        priceCombo.setItems("Цена продажи", "Еще цена");
+        TextField numberDiscountCard = new TextField("Номер диск карты");
+
+        formFour.add(priceCombo, numberDiscountCard);
+        formFour.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("0", 1)
+        );
+        return formFour;
+    }
+
+    private FormLayout getFormLayoutFive() {
+        FormLayout formFive = new FormLayout(new Text("Доступ"));
+        ComboBox employeeCombo = new ComboBox("Сотрудник");
+        employeeCombo.setItems("Петр", "Даша");
+        ComboBox departmentCombo = new ComboBox("Отдел");
+        departmentCombo.setItems("Основной", "Удаленный");
+        Checkbox generalAccess = new Checkbox("Общий доступ");
+
+
+        formFive.add(employeeCombo, departmentCombo, generalAccess);
+        formFive.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("0", 1)
+        );
+        return formFive;
     }
 
 }
