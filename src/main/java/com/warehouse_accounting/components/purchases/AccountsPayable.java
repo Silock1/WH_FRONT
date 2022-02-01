@@ -16,22 +16,18 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.warehouse_accounting.components.goods.forms.InvoiceForm;
-import com.warehouse_accounting.components.purchases.grids.AccountsPayableGridLayout;
+
 /*
 Счета поставщиков
  */
 public class AccountsPayable extends VerticalLayout {
 
-    private AccountsPayableGridLayout accountsPayableGridLayout;
     private final TextField textField = new TextField();
     private final Div parentLayer;
 
-
     public  AccountsPayable (Div parentLayer){
         this.parentLayer = parentLayer;
-        this.accountsPayableGridLayout = new AccountsPayableGridLayout(textField);
         Div pageContent = new Div();
-        pageContent.add(accountsPayableGridLayout);
         pageContent.setSizeFull();
         add(getGroupButtons(), pageContent);
     }
@@ -62,7 +58,8 @@ public class AccountsPayable extends VerticalLayout {
 
         //--------- Реализация кнопки Счет - временно здесь ----------------//
         addOrderButton.addClickListener(event -> {
-
+            removeAll();
+            add(getGroupButtons());
             InvoiceForm invoiceForm = new InvoiceForm(parentLayer, this);
             parentLayer.removeAll();
             parentLayer.add(invoiceForm);
@@ -108,10 +105,7 @@ public class AccountsPayable extends VerticalLayout {
 
         MenuItem editMenu = editMenuBar.addItem(editItem);
         editMenu.getSubMenu().addItem("Удалить", menuItemClickEvent -> {
-            int selected = accountsPayableGridLayout.getInvoiceAccountsPayableDtoGrid().asMultiSelect().getSelectedItems().size();
-            Notification notification = new Notification(String.format("Выделено для удаления %d", selected),
-                    3000, Notification.Position.MIDDLE);
-            notification.open();
+
         });
 
         editMenu.getSubMenu().addItem("Копировать", menuItemClickEvent -> {
@@ -130,7 +124,6 @@ public class AccountsPayable extends VerticalLayout {
         editMenu.getSubMenu().addItem("Объединить", menuItemClickEvent -> {
 
         });
-
 
         HorizontalLayout groupEdit = new HorizontalLayout();
         groupEdit.add(textField, editMenuBar);
@@ -224,5 +217,4 @@ public class AccountsPayable extends VerticalLayout {
         groupPrint.setAlignItems(Alignment.CENTER);
         return groupPrint;
     }
-
 }
