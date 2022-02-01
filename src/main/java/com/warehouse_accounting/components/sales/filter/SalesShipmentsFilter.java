@@ -26,6 +26,18 @@ public class SalesShipmentsFilter extends VerticalLayout {
     ComboBox<String> payment = new ComboBox<>("Оплата");
     ComboBox<String> itemOrGroup = new ComboBox<>("Товар или группа");
 
+    /*
+    Вторая строка
+     */
+    ComboBox<String> typeReturn = new ComboBox<>("Тип возврата");
+    ComboBox<String> warehouseCombo = new ComboBox<>("Склад");
+    ComboBox<String> projectCombo = new ComboBox<>("Проект");
+    ComboBox<String> contractorsCombo = new ComboBox<>("Контаргент");
+    ComboBox<String> groupContractors = new ComboBox<>("Группа контрагента");
+    /*
+    Третья строка
+     */
+
     public SalesShipmentsFilter() {
         find.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
         find.setWidth("100px");
@@ -39,6 +51,8 @@ public class SalesShipmentsFilter extends VerticalLayout {
         payment.setWidth("300px");
         itemOrGroup.setItems("Товар");
         itemOrGroup.setWidth("300px");
+
+
 
 
         HorizontalLayout horizontalLayoutOne = new HorizontalLayout(find, clear, bookmarks, settingButton, periodStart,

@@ -35,7 +35,8 @@ public class SalesSubMenuView extends VerticalLayout {
     private CustomerInvoices customerInvoices;
     private Shipments shipments;
 
-    public SalesSubMenuView(GoodsToRealizeFilter filterLayout, GoodsToRealizeGiveService goodsToRealizeGiveService, GoodsToRealizeGetService goodsToRealizeGetService) {
+    public SalesSubMenuView(GoodsToRealizeFilter filterLayout, GoodsToRealizeGiveService goodsToRealizeGiveService,
+                            GoodsToRealizeGetService goodsToRealizeGetService) {
 
         pageContent.setSizeFull();
         this.goodsToRealizeGetService = goodsToRealizeGetService;

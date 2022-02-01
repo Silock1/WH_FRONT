@@ -17,11 +17,13 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.warehouse_accounting.components.sales.filter.SalesShipmentsFilter;
 import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class Shipments extends VerticalLayout {
 
     private SalesGridLayout salesGridLayout;
+
     private SalesShipmentsFilter salesShipmentsFilter;
     private final TextField textFieldGridSelected = new TextField();
     private final Div parentLayer;
