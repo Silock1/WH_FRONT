@@ -52,7 +52,7 @@ public class ComissionerReportsGridLayout extends HorizontalLayout {
 
         dtoGrid.setSelectionMode(Grid.SelectionMode.MULTI);
 
-        Button menuButton = new Button(new Icon(VaadinIcon.COG));
+        Button menuButton = new Button(new Icon(VaadinIcon.COG_O));
         menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         ColumnToggleContextMenu columnToggleContextMenu = new ColumnToggleContextMenu(menuButton);
         columnToggleContextMenu.addColumnToggleItem("Тип документа", docTypeColumn);
@@ -85,15 +85,18 @@ public class ComissionerReportsGridLayout extends HorizontalLayout {
         columnToggleContextMenu.addColumnToggleItem("Кто изменил", whoChangedColumn);
 
 
-        Span title = new Span("Документы");
-        title.getStyle().set("font-weight", "bold");
+        dtoGrid.getColumns().forEach(col -> col.setAutoWidth(true));
+
+//        Span title = new Span("Документы");
+//        title.getStyle().set("font-weight", "bold");
         HorizontalLayout headerLayout = new HorizontalLayout(menuButton);
         headerLayout.setAlignItems(FlexComponent.Alignment.BASELINE);
-        headerLayout.setFlexGrow(1);
+        headerLayout.setFlexGrow(2);
         add(dtoGrid, headerLayout);
     }
 
     private static class ColumnToggleContextMenu extends ContextMenu {
+
         public ColumnToggleContextMenu(Component target) {
             super(target);
             setOpenOnClick(true);
