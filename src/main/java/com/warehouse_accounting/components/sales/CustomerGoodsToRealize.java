@@ -15,7 +15,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import com.warehouse_accounting.components.sales.grids.GoodsToRealizeFilter;
+import com.warehouse_accounting.components.sales.filter.GoodsToRealizeFilter;
 import com.warehouse_accounting.components.sales.grids.GoodsToRealizeGetSalesGrid;
 import com.warehouse_accounting.components.sales.grids.GoodsToRealizeGiveSalesGrid;
 import com.warehouse_accounting.services.interfaces.GoodsToRealizeGetService;
