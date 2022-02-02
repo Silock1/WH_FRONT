@@ -43,7 +43,7 @@ public class GoodsAndServiceView extends VerticalLayout {
     private final Grid<ProductDto> productDtoGrid = new Grid<>(ProductDto.class, false);
     private Div mainDiv;
     private GoodsGridLayout goodsGridLayout;
-    private Long rootGroupId = 1L; //TODO переопределить для текущего пользователя
+    private Long rootGroupId = 1L; //TODO а нужно ли это?
 
     public GoodsAndServiceView(ProductGroupService productGroupService, ProductService productService) {
         this.productGroupService = productGroupService;

@@ -14,17 +14,12 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
 import com.warehouse_accounting.components.goods.GoodsAndServiceView;
 import com.warehouse_accounting.components.goods.forms.GroupForm;
-import com.warehouse_accounting.models.dto.AttributeOfCalculationObjectDto;
-import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.models.dto.ProductDto;
 import com.warehouse_accounting.models.dto.ProductGroupDto;
-import com.warehouse_accounting.models.dto.TaxSystemDto;
 import com.warehouse_accounting.services.interfaces.ProductGroupService;
 import com.warehouse_accounting.services.interfaces.ProductService;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -114,13 +109,9 @@ public class GoodsGridLayout extends HorizontalLayout {
     }
 
     public void initGrid(Long groupId) {
-        System.out.println("TEST0");
         productDtoGrid.setColumns(getVisibleColumn().keySet().toArray(String[]::new));
         productDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI);
-//        productService.getAll().stream().forEach( product -> System.out.println(product));
-//        productDtoGrid.setItems(getTestProductDtos(groupId));
         productDtoGrid.setItems(productService.getAll());
-        System.out.println("TEST1");
         getVisibleColumn().forEach((key, value) -> productDtoGrid.getColumnByKey(key).setHeader(value));
         productDtoGrid.asMultiSelect().addSelectionListener(listener -> {
             int selectSize = listener.getAllSelectedItems().size();
@@ -143,7 +134,7 @@ public class GoodsGridLayout extends HorizontalLayout {
         fieldNameColumnName.put("volume", "Объем");
         fieldNameColumnName.put("purchasePrice", "Цена");
         fieldNameColumnName.put("description", "Описание");
-        fieldNameColumnName.put("unit", "Единица измерения");
+        fieldNameColumnName.put("unit.shortName", "Единица измерения");
         fieldNameColumnName.put("archive", "В архиве");
         fieldNameColumnName.put("contractor.name", "Подрядчик");
         fieldNameColumnName.put("taxSystem.name", "Налоговая система");
@@ -152,56 +143,7 @@ public class GoodsGridLayout extends HorizontalLayout {
         return fieldNameColumnName;
     }
 
-    private List<ProductDto> getTestProductDtos(Long groupId) {
-        List<ProductDto> productDtos = new ArrayList<>();
-        ProductDto productDto1 = ProductDto.builder()
-                .id(groupId)
-                .name("Test1")
-                .weight(new BigDecimal("100.01"))
-                .volume(new BigDecimal("20.02"))
-                .purchasePrice(new BigDecimal("30.03"))
-                .description("Описание1")
-                .contractor(ContractorDto.builder()
-                        .name("ООО \"Рога и Копыта\"")
-                        .build())
-                .taxSystem(TaxSystemDto.builder()
-                        .name("Учетная система")
-                        .build())
-                .productGroup(ProductGroupDto.builder()
-                        .name("Товары и услуги")
-                        .build())
-                .attributeOfCalculationObject(AttributeOfCalculationObjectDto.builder()
-                        .name("Что это?")
-                        .build())
-                .build();
-
-        ProductDto productDto2 = ProductDto.builder()
-                .id(++groupId)
-                .name("Test2")
-                .weight(new BigDecimal("121.01"))
-                .volume(new BigDecimal("50.02"))
-                .purchasePrice(new BigDecimal("660.00"))
-                .description("Описание2")
-                .contractor(new ContractorDto())
-//                .contractor(ContractorDto.builder()
-//                        .name("ООО \"Рога и Копыта\"")
-//                        .build())
-                .taxSystem(TaxSystemDto.builder()
-                        .name("Учетная система")
-                        .build())
-                .productGroup(ProductGroupDto.builder()
-                        .name("Подгруппа 1")
-                        .build())
-                .attributeOfCalculationObject(AttributeOfCalculationObjectDto.builder()
-                        .name("Что это?")
-                        .build())
-                .build();
-
-        productDtos.add(productDto1);
-        productDtos.add(productDto2);
-        return productDtos;
-    }
-
+    //TODO Что это и что мне с этим сделать?
     private void initRootProductGroup() {
         if (productGroupService.getAll().isEmpty()) {
             ProductGroupDto groupDto = ProductGroupDto.builder()

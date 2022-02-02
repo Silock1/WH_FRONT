@@ -28,7 +28,6 @@ public class ProductDto {
 
     private Boolean archive = false;
 
-
     private List<ImageDto> images;
 
     /*
