@@ -26,15 +26,15 @@ public class Shipments extends VerticalLayout {
 
     private SalesShipmentsFilter salesShipmentsFilter;
     private final TextField textFieldGridSelected = new TextField();
-    private final Div parentLayer;
 
-    public Shipments(Div parentLayer) {
-        this.parentLayer = parentLayer;
+    public Shipments(SalesShipmentsFilter salesShipmentsFilter) {
+
+        this.salesShipmentsFilter = salesShipmentsFilter;
         salesGridLayout = new SalesGridLayout(textFieldGridSelected);
         Div pageContent = new Div();
         pageContent.add(salesGridLayout);
         pageContent.setSizeFull();
-        add(getGroupButtons(), pageContent);
+        add(getGroupButtons(), salesShipmentsFilter, pageContent);
     }
 
     private HorizontalLayout getGroupButtons() {

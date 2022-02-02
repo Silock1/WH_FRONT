@@ -8,6 +8,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 
@@ -37,33 +38,39 @@ public class SalesShipmentsFilter extends VerticalLayout {
     /*
     Третья строка
      */
+    TextField counterPartyAccount = new TextField("Счёт контрагента");
+    ComboBox<String> treatyContractors = new ComboBox<>("Договор");
+
+    /*
+    Четвертая строка
+     */
+
 
     public SalesShipmentsFilter() {
         find.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
         find.setWidth("100px");
         clear.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         clear.setWidth("100px");
-        periodStart.setWidth("300px");
-        periodEnd.setWidth("300px");
+        periodStart.setWidth("100px");
+        periodEnd.setWidth("100px");
         consignee.setItems("Ромашка ООО", "Основной ООО");
-        consignee.setWidth("300px");
+        consignee.setWidth("150px");
         payment.setItems("Оплачено", "Частично оплачено", "Не оплачено");
-        payment.setWidth("300px");
+        payment.setWidth("150px");
         itemOrGroup.setItems("Товар");
-        itemOrGroup.setWidth("300px");
-
-
-
+        itemOrGroup.setWidth("150px");
 
         HorizontalLayout horizontalLayoutOne = new HorizontalLayout(find, clear, bookmarks, settingButton, periodStart,
                 periodEnd, consignee, payment, itemOrGroup);
-        HorizontalLayout horizontalLayoutTwo = new HorizontalLayout();
 
-        add(horizontalLayoutOne);
+        HorizontalLayout horizontalLayoutTwo = new HorizontalLayout(typeReturn, warehouseCombo, projectCombo,
+                contractorsCombo, groupContractors);
+
+        HorizontalLayout horizontalLayoutThree = new HorizontalLayout(counterPartyAccount, treatyContractors);
+
+        add(horizontalLayoutOne, horizontalLayoutTwo, horizontalLayoutThree);
 
         setVisible(false);
     }
-
-
 
 }
