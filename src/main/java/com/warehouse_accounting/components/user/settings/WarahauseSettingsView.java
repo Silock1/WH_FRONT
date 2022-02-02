@@ -39,7 +39,6 @@ public class WarahauseSettingsView extends VerticalLayout {
         HorizontalLayout groupButtons = getGroupButtons();
         add(groupButtons, formLayout);
         warehouseDtoGridSet();
-
     }
 
     private HorizontalLayout getGroupButtons() {
@@ -56,7 +55,6 @@ public class WarahauseSettingsView extends VerticalLayout {
 
         Button addtextWarehousButton = new Button("Склад", new Icon(VaadinIcon.PLUS));
         addtextWarehousButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-
 
         addtextWarehousButton.addClickListener(buttonClickEvent -> {
 //      Добавить вызов страницы с формой добавления складов
@@ -163,7 +161,6 @@ public class WarahauseSettingsView extends VerticalLayout {
         columnToggleContextMenu.addColumnToggleItem("Адрес", addressColumn);
         columnToggleContextMenu.addColumnToggleItem("Комментарии", commentToAddressColumn);
         columnToggleContextMenu.addColumnToggleItem("№", sortNumberColumn);
-
 
         List<WarehouseDto> warehouseDtos = warehouseService.getAll();
         warehouseDtoGrid.setItems(warehouseDtos);
