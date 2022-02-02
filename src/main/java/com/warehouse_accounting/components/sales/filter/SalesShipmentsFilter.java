@@ -12,9 +12,6 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 
-import java.nio.file.SecureDirectoryStream;
-
-
 @SpringComponent
 @UIScope
 public class SalesShipmentsFilter extends VerticalLayout {
@@ -55,31 +52,43 @@ public class SalesShipmentsFilter extends VerticalLayout {
     ComboBox<String> sentCombo = new ComboBox<>("Отправлено");
     ComboBox<String> salesChannel = new ComboBox<>("Канал продаж");
 
+    /*
+    Пятая строка
+     */
+    TextField deliveryAddress = new TextField("Адрес доставки");
+    TextField shippingAddressComment = new TextField("Комментарий к адресу доставки");
+    ComboBox<String> ownerEmployee = new ComboBox<>("Владелец-сотрудник");
+    ComboBox<String> departmentOwner = new ComboBox<>("Владелец-отдел");
+    ComboBox<String> generalAccess = new ComboBox<>("Общий доступ");
+
+    /*
+    Шестая строка
+     */
+    DatePicker whenChangedStart = new DatePicker("Когда изменен: от");
+    DatePicker whenChangedEnd = new DatePicker("до");
+    ComboBox<String> whoChanged = new ComboBox<>("Кто изменил");
 
     public SalesShipmentsFilter() {
         find.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
-        find.setWidth("100px");
         clear.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
-        clear.setWidth("100px");
-        periodStart.setWidth("100px");
-        periodEnd.setWidth("100px");
         consignee.setItems("Ромашка ООО", "Основной ООО");
-        consignee.setWidth("150px");
         payment.setItems("Оплачено", "Частично оплачено", "Не оплачено");
-        payment.setWidth("150px");
         itemOrGroup.setItems("Товар");
-        itemOrGroup.setWidth("150px");
+
 
         HorizontalLayout horizontalLayoutOne = new HorizontalLayout(find, clear, bookmarks, settingButton, periodStart,
                 periodEnd, consignee, payment, itemOrGroup);
-
         HorizontalLayout horizontalLayoutTwo = new HorizontalLayout(typeReturn, warehouseCombo, projectCombo,
                 contractorsCombo, groupContractors);
-
         HorizontalLayout horizontalLayoutThree = new HorizontalLayout(counterPartyAccount, treatyContractors,
                 counterPartyOwner, organization, organizationAccount);
-
-        add(horizontalLayoutOne, horizontalLayoutTwo, horizontalLayoutThree);
+        HorizontalLayout horizontalLayoutFour = new HorizontalLayout(statusCombo, carriedOutCombo, printedCombo,sentCombo,
+                salesChannel);
+        HorizontalLayout horizontalLayoutFive = new HorizontalLayout(deliveryAddress, shippingAddressComment,ownerEmployee,
+                departmentOwner, generalAccess);
+        HorizontalLayout horizontalLayoutSix = new HorizontalLayout(whenChangedStart, whenChangedEnd, whoChanged);
+        add(horizontalLayoutOne, horizontalLayoutTwo, horizontalLayoutThree, horizontalLayoutFour, horizontalLayoutFive,
+                horizontalLayoutSix);
 
         setVisible(false);
     }

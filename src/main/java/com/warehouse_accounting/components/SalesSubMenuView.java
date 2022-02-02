@@ -123,8 +123,6 @@ public class SalesSubMenuView extends VerticalLayout {
         return shipments;
     }
 
-
-
     private CustomerInvoices initCustomerInvoices(Div pageContent){
         if (Objects.isNull(customerInvoices)) {
             customerInvoices = new CustomerInvoices(pageContent);
