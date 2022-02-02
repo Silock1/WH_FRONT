@@ -42,7 +42,6 @@ public class WarahauseSettingsView extends VerticalLayout {
 
     }
 
-
     private HorizontalLayout getGroupButtons() {
         HorizontalLayout groupControl = new HorizontalLayout();
 
