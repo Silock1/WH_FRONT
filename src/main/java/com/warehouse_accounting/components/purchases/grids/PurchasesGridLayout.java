@@ -12,7 +12,6 @@ import java.util.LinkedHashMap;
 public class PurchasesGridLayout extends HorizontalLayout {
 
     private final TextField selectedTextField;
-    //  private final Grid<InvoiceDto> invoiceOrdersDtoGrid = new Grid<>(InvoiceDto.class, false);
     private final Grid<InvoiceProductDto> invoiceProductOrdersDtoGrid = new Grid<>(InvoiceProductDto.class, false);
 
     public PurchasesGridLayout(TextField selectedTextField) {
@@ -51,3 +50,4 @@ public class PurchasesGridLayout extends HorizontalLayout {
     }
 
 }
+
