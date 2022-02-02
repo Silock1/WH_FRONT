@@ -12,6 +12,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 
+import java.nio.file.SecureDirectoryStream;
+
 
 @SpringComponent
 @UIScope
@@ -40,10 +42,18 @@ public class SalesShipmentsFilter extends VerticalLayout {
      */
     TextField counterPartyAccount = new TextField("Счёт контрагента");
     ComboBox<String> treatyContractors = new ComboBox<>("Договор");
+    ComboBox<String> counterPartyOwner = new ComboBox<>("Владелец контрагента");
+    ComboBox<String> organization = new ComboBox<>("Организация");
+    TextField organizationAccount = new TextField("Счет организации");
 
     /*
     Четвертая строка
      */
+    ComboBox<String> statusCombo = new ComboBox<>("Статус");
+    ComboBox<String> carriedOutCombo = new ComboBox<>("Проведено");
+    ComboBox<String> printedCombo = new ComboBox<>("Напечатано");
+    ComboBox<String> sentCombo = new ComboBox<>("Отправлено");
+    ComboBox<String> salesChannel = new ComboBox<>("Канал продаж");
 
 
     public SalesShipmentsFilter() {
@@ -66,8 +76,8 @@ public class SalesShipmentsFilter extends VerticalLayout {
         HorizontalLayout horizontalLayoutTwo = new HorizontalLayout(typeReturn, warehouseCombo, projectCombo,
                 contractorsCombo, groupContractors);
 
-        HorizontalLayout horizontalLayoutThree = new HorizontalLayout(counterPartyAccount, treatyContractors
-                );
+        HorizontalLayout horizontalLayoutThree = new HorizontalLayout(counterPartyAccount, treatyContractors,
+                counterPartyOwner, organization, organizationAccount);
 
         add(horizontalLayoutOne, horizontalLayoutTwo, horizontalLayoutThree);
 
