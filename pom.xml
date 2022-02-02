@@ -16,6 +16,7 @@
     <properties>
         <java.version>11</java.version>
         <vaadin.version>14.4.6</vaadin.version>
+<!--        <vaadin.version>22.0.2</vaadin.version>-->
         <jackson.version>2.12.1</jackson.version>
     </properties>
     <dependencies>
@@ -78,6 +79,11 @@
             <artifactId>logging-interceptor</artifactId>
             <version>3.14.9</version>
         </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-board-flow</artifactId>
+            <version>14.8.1</version>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -99,7 +105,7 @@
                 <configuration>
                     <excludes>
                         <exclude>
-                            <groupId>org.projectlombok</groupId>
+                            <groupId>org.project-lombok</groupId>
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
@@ -138,7 +144,7 @@
     <repositories>
         <repository>
             <id>vaadin-addons</id>
-            <url>http://maven.vaadin.com/vaadin-addons</url>
+            <url>https://maven.vaadin.com/vaadin-addons</url>
         </repository>
     </repositories>
 

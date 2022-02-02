@@ -1,6 +1,5 @@
 package com.warehouse_accounting.components;
 
-
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -11,6 +10,7 @@ import com.warehouse_accounting.components.purchases.Acceptances;
 import com.warehouse_accounting.components.purchases.AccountsPayable;
 import com.warehouse_accounting.components.purchases.PurchasesOrders;
 import com.warehouse_accounting.components.purchases.Return;
+import com.warehouse_accounting.components.purchases.grids.SupplierInvoiceGridLayout;
 
 import java.util.Arrays;
 import java.util.List;
@@ -53,6 +53,7 @@ public class PurchasesSubMenuView extends VerticalLayout {
                 case "Счета поставщиков":
                     pageContent.removeAll();
                     pageContent.add(initAccountsPayable(pageContent));
+                    pageContent.add(SupplierInvoiceGridLayout.initSupplierInvoiceGrid());
                     break;
                 case "Приемки":
                     pageContent.removeAll();
