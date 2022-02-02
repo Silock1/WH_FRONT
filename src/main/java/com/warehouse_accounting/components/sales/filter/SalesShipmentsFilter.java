@@ -66,7 +66,8 @@ public class SalesShipmentsFilter extends VerticalLayout {
         HorizontalLayout horizontalLayoutTwo = new HorizontalLayout(typeReturn, warehouseCombo, projectCombo,
                 contractorsCombo, groupContractors);
 
-        HorizontalLayout horizontalLayoutThree = new HorizontalLayout(counterPartyAccount, treatyContractors);
+        HorizontalLayout horizontalLayoutThree = new HorizontalLayout(counterPartyAccount, treatyContractors
+                );
 
         add(horizontalLayoutOne, horizontalLayoutTwo, horizontalLayoutThree);
 
