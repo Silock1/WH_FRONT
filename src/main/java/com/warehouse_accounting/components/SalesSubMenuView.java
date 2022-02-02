@@ -6,7 +6,12 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.warehouse_accounting.components.sales.CustomerGoodsToRealize;
+import com.warehouse_accounting.components.sales.CustomerInvoices;
 import com.warehouse_accounting.components.sales.CustomerOrders;
+import com.warehouse_accounting.components.sales.grids.GoodsToRealizeFilter;
+import com.warehouse_accounting.services.interfaces.GoodsToRealizeGetService;
+import com.warehouse_accounting.services.interfaces.GoodsToRealizeGiveService;
 import com.warehouse_accounting.components.sales.Shipments;
 
 import java.util.Arrays;
@@ -21,10 +26,18 @@ public class SalesSubMenuView extends VerticalLayout {
 
     private final Div pageContent = new Div();
     private CustomerOrders customerOrders;
+    private CustomerGoodsToRealize customerGoodsToRealize;
+    private final GoodsToRealizeFilter filterLayout;
+    private GoodsToRealizeGiveService goodsToRealizeGiveService;
+    private GoodsToRealizeGetService goodsToRealizeGetService;
+    private CustomerInvoices customerInvoices;
     private Shipments shipments;
 
-    public SalesSubMenuView() {
+    public SalesSubMenuView(GoodsToRealizeFilter filterLayout, GoodsToRealizeGiveService goodsToRealizeGiveService, GoodsToRealizeGetService goodsToRealizeGetService) {
         pageContent.setSizeFull();
+        this.goodsToRealizeGetService = goodsToRealizeGetService;
+        this.goodsToRealizeGiveService = goodsToRealizeGiveService;
+        this.filterLayout = filterLayout;
         pageContent.add(initCustomerOrders(pageContent));
         add(initSubMenu(), pageContent);
     }
@@ -49,7 +62,7 @@ public class SalesSubMenuView extends VerticalLayout {
                     break;
                 case "Счета покупателям":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Счета покупателям"));
+                    pageContent.add(initCustomerInvoices(pageContent));
                     break;
                 case "Отгрузки":
                     pageContent.removeAll();
@@ -73,7 +86,7 @@ public class SalesSubMenuView extends VerticalLayout {
                     break;
                 case "Товары на реализации":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Товары на реализации"));
+                    pageContent.add(initCustomerGoodsToRealize(filterLayout, goodsToRealizeGetService, goodsToRealizeGiveService));
                     break;
                 case "Воронка продаж":
                     pageContent.removeAll();
@@ -90,10 +103,23 @@ public class SalesSubMenuView extends VerticalLayout {
         return customerOrders;
     }
 
+    private CustomerGoodsToRealize initCustomerGoodsToRealize(GoodsToRealizeFilter filterLayout, GoodsToRealizeGetService goodsToRealizeGetService, GoodsToRealizeGiveService goodsToRealizeGiveService){
+        if (Objects.isNull(customerGoodsToRealize)) {
+            customerGoodsToRealize = new CustomerGoodsToRealize(filterLayout, goodsToRealizeGetService, goodsToRealizeGiveService);
+        }
+        return customerGoodsToRealize;
+    }
+
     private Shipments initShipments(Div pageContent) {
         if (Objects.isNull(shipments)) {
             shipments = new Shipments(pageContent);
         }
         return shipments;
+    }
+    private CustomerInvoices initCustomerInvoices(Div pageContent){
+        if (Objects.isNull(customerInvoices)) {
+            customerInvoices = new CustomerInvoices(pageContent);
+        }
+        return customerInvoices;
     }
 }

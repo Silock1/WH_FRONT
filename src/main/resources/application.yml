@@ -37,9 +37,14 @@ retrofit:
     return_url: api/returns
     role_url: api/roles
     subscription_url: api/subscription
+    supplier_invoice_url: api/supplier_invoices
     tax_system_url: api/tax_systems
     type_of_contractor_url: api/tocs
     type_of_price_url: api/type_of_prices
     unit_url: api/units
     units_of_measure_url: api/measure
+    customer_order_url: api/customer_orders
+    goods_to_realize_get_url: api/goodstorealizeget
+    goods_to_realize_give_url: api/goodstorealizegive
+
     warehouse_url: api/warehouses
