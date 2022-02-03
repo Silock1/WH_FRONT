@@ -1,4 +1,4 @@
-package com.warehouse_accounting.components.sales.grids;
+package com.warehouse_accounting.components.sales.filter;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
