@@ -16,6 +16,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.components.contragents.form.FormNewContragent;
 import com.warehouse_accounting.components.contragents.grids.ContragentsFilterLayout;
 import com.warehouse_accounting.components.contragents.grids.ContragentsListGridLayout;
 
@@ -28,15 +29,17 @@ public class ContragentsList extends VerticalLayout {
 
     private ContragentsListGridLayout contragentsListGridLayout;
     private ContragentsFilterLayout contragentsFilterLayout;
+    private FormNewContragent formNewContragent;
 
 
     public ContragentsList(ContragentsListGridLayout contragentsListGridLayout,
-                           ContragentsFilterLayout contragentsFilterLayout) {
+                           ContragentsFilterLayout contragentsFilterLayout, FormNewContragent formNewContragent) {
         this.contragentsListGridLayout=contragentsListGridLayout;
         this.contragentsFilterLayout = contragentsFilterLayout;
+        this.formNewContragent = formNewContragent;
 
 
-        add(getGroupButtons(), contragentsFilterLayout, contragentsListGridLayout);
+        add(getGroupButtons(), contragentsFilterLayout, contragentsListGridLayout, formNewContragent);
     }
 
     private HorizontalLayout getGroupButtons() {
@@ -53,6 +56,14 @@ public class ContragentsList extends VerticalLayout {
 
         Button addContragent = new Button(("Контрагент"), new Icon(VaadinIcon.PLUS));
         addContragent.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        addContragent.addClickListener(e->{
+//            removeAll();
+            if (formNewContragent.isVisible()) {
+                formNewContragent.setVisible(false);
+            } else {
+                formNewContragent.setVisible(true);
+            }
+        });
 
         Button filter = new Button("Фильтр");
         filter.addThemeVariants(ButtonVariant.LUMO_SMALL);
