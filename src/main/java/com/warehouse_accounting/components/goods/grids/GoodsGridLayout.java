@@ -56,10 +56,12 @@ public class GoodsGridLayout extends HorizontalLayout {
     }
 
     public void initThreeGrid(Long groupId) {
-        initRootProductGroup();
         treeGrid.removeAllColumns();
+        /*Конструкция с rootGroup не соответствует дизайну сайта "Moy Sklad", но кода написано довольно много, возможно
+        * здесь была какая-то идея о которой я не знаю*/
         ProductGroupDto rootGroup = productGroupService.getById(groupId);
         if (Objects.nonNull(rootGroup)) {
+
             treeGrid.setItems(Collections.singleton(rootGroup), productGroupDto -> {
                 List<ProductGroupDto> allByParentGroupId = productGroupService.getAllByParentGroupId(productGroupDto.getId());
                 if (Objects.nonNull(allByParentGroupId)) {
@@ -143,14 +145,4 @@ public class GoodsGridLayout extends HorizontalLayout {
         return fieldNameColumnName;
     }
 
-    //TODO Что это и что мне с этим сделать?
-    private void initRootProductGroup() {
-        if (productGroupService.getAll().isEmpty()) {
-            ProductGroupDto groupDto = ProductGroupDto.builder()
-                    .name("Товары и услуги")
-                    .sortNumber("1")
-                    .build();
-            productGroupService.create(groupDto);
-        }
-    }
 }
