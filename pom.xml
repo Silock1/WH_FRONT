@@ -78,6 +78,11 @@
             <artifactId>logging-interceptor</artifactId>
             <version>3.14.9</version>
         </dependency>
+        <dependency>
+            <groupId>com.vaadin.componentfactory</groupId>
+            <artifactId>togglebutton</artifactId>
+            <version>1.0.1</version>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
