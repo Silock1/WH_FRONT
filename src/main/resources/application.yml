@@ -43,3 +43,4 @@ retrofit:
     unit_url: api/units
     units_of_measure_url: api/measure
     warehouse_url: api/warehouses
+    sales_channels_url: api/sales_channels
