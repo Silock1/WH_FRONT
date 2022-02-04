@@ -19,6 +19,7 @@ retrofit:
     country_url: api/countries
     currency_url: api/currencies
     department_url: api/departments
+    customer_order_url: api/customer_orders
     employee_url: api/employees
     feed_url: api/feed
     image_url: api/images
