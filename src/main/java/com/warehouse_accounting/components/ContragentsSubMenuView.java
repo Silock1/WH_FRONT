@@ -8,6 +8,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.contragents.CallsOrders;
 import com.warehouse_accounting.components.contragents.ContractsOrder;
+import com.warehouse_accounting.components.contragents.ContragentsList;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,12 +23,14 @@ public class ContragentsSubMenuView extends VerticalLayout {
     private final Div pageContent = new Div();
     private final CallsOrders callsOrder;
     private final ContractsOrder contractsOrder;
+    private final ContragentsList contragentsList;
 
-    public ContragentsSubMenuView(CallsOrders contractorsOrders, ContractsOrder contractsOrder) {
+    public ContragentsSubMenuView(CallsOrders contractorsOrders, ContractsOrder contractsOrder, ContragentsList contragentsList) {
         this.callsOrder = contractorsOrders;
         this.contractsOrder = contractsOrder;
+        this.contragentsList = contragentsList;
+        pageContent.add(contragentsList);
         pageContent.setSizeFull();
-        pageContent.add(new Span("Контрагенты"));
         add(initSubMenu(), pageContent);
     }
 
@@ -41,7 +44,7 @@ public class ContragentsSubMenuView extends VerticalLayout {
             switch (event.getSelectedTab().getLabel()) {
                 case "Контрагенты":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Контрагенты"));
+                    pageContent.add(contragentsList);
                     break;
                 case "Договоры":
                     pageContent.removeAll();

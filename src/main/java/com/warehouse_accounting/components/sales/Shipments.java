@@ -15,22 +15,26 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.warehouse_accounting.components.sales.filter.SalesShipmentsFilter;
 import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class Shipments extends VerticalLayout {
 
     private SalesGridLayout salesGridLayout;
-    private final TextField textFieldGridSelected = new TextField();
-    private final Div parentLayer;
 
-    public Shipments(Div parentLayer) {
-        this.parentLayer = parentLayer;
+    private SalesShipmentsFilter salesShipmentsFilter;
+    private final TextField textFieldGridSelected = new TextField();
+
+    public Shipments(SalesShipmentsFilter salesShipmentsFilter) {
+
+        this.salesShipmentsFilter = salesShipmentsFilter;
         salesGridLayout = new SalesGridLayout(textFieldGridSelected);
         Div pageContent = new Div();
         pageContent.add(salesGridLayout);
         pageContent.setSizeFull();
-        add(getGroupButtons(), pageContent);
+        add(getGroupButtons(), salesShipmentsFilter, pageContent);
     }
 
     private HorizontalLayout getGroupButtons() {
@@ -45,13 +49,16 @@ public class Shipments extends VerticalLayout {
         Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH));
         refreshButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
 
-        //
+
         Button addOrderButton = new Button("Отгрузка", new Icon(VaadinIcon.PLUS));
         addOrderButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
 
         Button addFilterButton = new Button("Фильтр");
         addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        addFilterButton.addClickListener(e->
+                salesShipmentsFilter.setVisible(!salesShipmentsFilter.isVisible())
+        );
 
         TextField searchField = new TextField();
         searchField.setPlaceholder("Номер или комментарий");
