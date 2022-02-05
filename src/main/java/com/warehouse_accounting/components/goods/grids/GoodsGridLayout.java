@@ -131,7 +131,7 @@ public class GoodsGridLayout extends HorizontalLayout {
     private HashMap<String, String> getVisibleColumn() {
         HashMap<String, String> fieldNameColumnName = new LinkedHashMap<>();
         fieldNameColumnName.put("id", "Id");
-        fieldNameColumnName.put("name", "Наименование");
+        fieldNameColumnName.put("name", "Наименование"); //TODO сделать поле ссылку для операции редактирования товара
         fieldNameColumnName.put("weight", "Масса");
         fieldNameColumnName.put("volume", "Объем");
         fieldNameColumnName.put("purchasePrice", "Цена");
