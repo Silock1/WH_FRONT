@@ -17,8 +17,13 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.warehouse_accounting.components.sales.filter.SalesShipmentsFilter;
 import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
-import org.springframework.beans.factory.annotation.Autowired;
-
+import com.warehouse_accounting.services.interfaces.CompanyService;
+import com.warehouse_accounting.services.interfaces.ContractService;
+import com.warehouse_accounting.services.interfaces.ContractorService;
+import com.warehouse_accounting.services.interfaces.DepartmentService;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
+import com.warehouse_accounting.services.interfaces.ProjectService;
+import com.warehouse_accounting.services.interfaces.WarehouseService;
 
 public class Shipments extends VerticalLayout {
 
@@ -26,10 +31,29 @@ public class Shipments extends VerticalLayout {
 
     private SalesShipmentsFilter salesShipmentsFilter;
     private final TextField textFieldGridSelected = new TextField();
+    private final Div parentLayer;
 
-    public Shipments(SalesShipmentsFilter salesShipmentsFilter) {
+    private CompanyService companyService;
+    private ContractorService contractorService;
+    private ContractService contractService;
+    private ProjectService projectService;
+    private WarehouseService warehouseService;
+    private DepartmentService departmentService;
+    private EmployeeService employeeService;
 
-        this.salesShipmentsFilter = salesShipmentsFilter;
+    public Shipments(Div parentLayer, CompanyService companyService, ContractorService contractorService,
+                     ContractService contractService, ProjectService projectService, WarehouseService warehouseService,
+                     DepartmentService departmentService, EmployeeService employeeService) {
+        this.companyService = companyService;
+        this.contractorService = contractorService;
+        this.contractService = contractService;
+        this.projectService = projectService;
+        this.warehouseService = warehouseService;
+        this.employeeService = employeeService;
+        this.departmentService = departmentService;
+        this.parentLayer = parentLayer;
+        this.salesShipmentsFilter = new SalesShipmentsFilter(companyService, contractorService, contractService,
+                        projectService, warehouseService, employeeService, departmentService);
         salesGridLayout = new SalesGridLayout(textFieldGridSelected);
         Div pageContent = new Div();
         pageContent.add(salesGridLayout);
@@ -46,12 +70,20 @@ public class Shipments extends VerticalLayout {
         Label textProducts = new Label();
         textProducts.setText("Отгрузки");
 
+
         Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH));
         refreshButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
 
 
         Button addOrderButton = new Button("Отгрузка", new Icon(VaadinIcon.PLUS));
         addOrderButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+
+        addOrderButton.addClickListener(buttonClickEvent -> {
+//            ShipmentsForm shipmentsForm = new ShipmentsForm(parentLayer, this);
+//            parentLayer.removeAll();
+//            parentLayer.add(shipmentsForm);
+
+        });
 
 
         Button addFilterButton = new Button("Фильтр");

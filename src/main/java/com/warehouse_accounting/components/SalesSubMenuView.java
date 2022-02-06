@@ -11,9 +11,17 @@ import com.warehouse_accounting.components.sales.CustomerInvoices;
 import com.warehouse_accounting.components.sales.CustomerOrders;
 import com.warehouse_accounting.components.sales.filter.GoodsToRealizeFilter;
 import com.warehouse_accounting.components.sales.filter.SalesShipmentsFilter;
+import com.warehouse_accounting.services.interfaces.CompanyService;
+import com.warehouse_accounting.services.interfaces.ContractService;
+import com.warehouse_accounting.services.interfaces.ContractorService;
+import com.warehouse_accounting.services.interfaces.DepartmentService;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.GoodsToRealizeGetService;
 import com.warehouse_accounting.services.interfaces.GoodsToRealizeGiveService;
 import com.warehouse_accounting.components.sales.Shipments;
+import com.warehouse_accounting.services.interfaces.ProjectService;
+import com.warehouse_accounting.services.interfaces.WarehouseService;
+import org.apache.http.annotation.Contract;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,8 +44,28 @@ public class SalesSubMenuView extends VerticalLayout {
     private CustomerInvoices customerInvoices;
     private Shipments shipments;
 
-    public SalesSubMenuView(GoodsToRealizeFilter filterLayout, SalesShipmentsFilter salesShipmentsFilter, GoodsToRealizeGiveService goodsToRealizeGiveService,
-                            GoodsToRealizeGetService goodsToRealizeGetService) {
+
+    private CompanyService companyService;
+    private ContractorService contractorService;
+    private ContractService contractService;
+    private ProjectService projectService;
+    private WarehouseService warehouseService;
+    private DepartmentService departmentService;
+    private EmployeeService employeeService;
+
+    public SalesSubMenuView(GoodsToRealizeFilter filterLayout, SalesShipmentsFilter salesShipmentsFilter,
+                            GoodsToRealizeGiveService goodsToRealizeGiveService,
+                            GoodsToRealizeGetService goodsToRealizeGetService, CompanyService companyService,
+                            ContractorService contractorService, ContractService contractService,ProjectService projectService,
+                            WarehouseService warehouseService, DepartmentService departmentService, EmployeeService employeeService) {
+        this.companyService = companyService;
+        this.contractorService = contractorService;
+        this.contractService = contractService;
+        this.projectService = projectService;
+        this.warehouseService = warehouseService;
+        this.employeeService = employeeService;
+        this.departmentService = departmentService;
+
         this.salesShipmentsFilter = salesShipmentsFilter;
 
         pageContent.setSizeFull();
@@ -72,7 +100,8 @@ public class SalesSubMenuView extends VerticalLayout {
                     break;
                 case "Отгрузки":
                     pageContent.removeAll();
-                    pageContent.add(initShipments(salesShipmentsFilter));
+                    pageContent.add(initShipments(pageContent, companyService, contractorService, contractService,
+                            projectService, warehouseService));
                     break;
                 case "Отчеты комиссионера":
                     pageContent.removeAll();
@@ -116,9 +145,12 @@ public class SalesSubMenuView extends VerticalLayout {
         return customerGoodsToRealize;
     }
 
-    private Shipments initShipments(SalesShipmentsFilter salesShipmentsFilter) {
+    private Shipments initShipments(Div pageContent, CompanyService companyService, ContractorService contractorService,
+                                    ContractService contractService,ProjectService projectService,
+                                    WarehouseService warehouseService) {
         if (Objects.isNull(shipments)) {
-        shipments = new Shipments(salesShipmentsFilter);
+        shipments = new Shipments(pageContent, companyService, contractorService, contractService,
+                projectService, warehouseService, departmentService, employeeService);
         }
         return shipments;
     }
