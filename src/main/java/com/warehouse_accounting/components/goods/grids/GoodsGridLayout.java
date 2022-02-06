@@ -13,6 +13,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
 import com.warehouse_accounting.components.goods.GoodsAndServiceView;
+import com.warehouse_accounting.components.goods.forms.GoodUpdateForm;
 import com.warehouse_accounting.components.goods.forms.GroupForm;
 import com.warehouse_accounting.models.dto.ProductDto;
 import com.warehouse_accounting.models.dto.ProductGroupDto;
@@ -120,6 +121,11 @@ public class GoodsGridLayout extends HorizontalLayout {
             selectedTextField.setValue(String.valueOf(selectSize));
         });
         productDtoGrid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_ROW_STRIPES);
+        productDtoGrid.addItemDoubleClickListener(event -> {
+            GoodUpdateForm goodUpdateForm = new GoodUpdateForm(parentLayer.getMainDiv(), parentLayer, productService, event.getItem());
+            parentLayer.getMainDiv().removeAll();
+            parentLayer.getMainDiv().add(goodUpdateForm);
+        });
         gridDiv.setWidth(widthGrid);
         gridDiv.add(productDtoGrid);
     }
@@ -131,7 +137,7 @@ public class GoodsGridLayout extends HorizontalLayout {
     private HashMap<String, String> getVisibleColumn() {
         HashMap<String, String> fieldNameColumnName = new LinkedHashMap<>();
         fieldNameColumnName.put("id", "Id");
-        fieldNameColumnName.put("name", "Наименование"); //TODO сделать поле ссылку для операции редактирования товара
+        fieldNameColumnName.put("name", "Наименование");
         fieldNameColumnName.put("weight", "Масса");
         fieldNameColumnName.put("volume", "Объем");
         fieldNameColumnName.put("purchasePrice", "Цена");
