@@ -95,14 +95,14 @@ public class SalesChannelsAddView extends VerticalLayout {
                 SalesChannelsService channelsService = new SalesChannelsServiceImpl("/api/sales_channels", retrofit);
                 SalesChannelDto channelDto = new SalesChannelDto();
 
-//                channelDto.setId(3L);
+                channelDto.setId(10L);
                 channelDto.setName(nameField.getValue());
                 channelDto.setType(typeField.getValue());
                 channelDto.setDescription(descrField.getValue());
                 channelDto.setGeneralAccessC(accessField.getValue());
                 channelDto.setOwnerDepartment(ownerDepartmentField.getValue());
                 channelDto.setOwnerEmployee(ownerEmployeeField.getValue());
-                channelDto.setWhenChanged(LocalDateTime.now());
+                channelDto.setWhenChanged(LocalDateTime.now().toString());
                 channelDto.setWhoChanged(whoChangedField.getValue());
 
                 channelsService.create(channelDto);

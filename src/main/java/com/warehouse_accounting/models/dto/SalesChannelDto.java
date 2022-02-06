@@ -19,7 +19,7 @@ public class SalesChannelDto {
     private String generalAccessC;
     private String ownerDepartment;
     private String ownerEmployee;
-    private LocalDateTime whenChanged;
+    private String whenChanged;
     private String whoChanged;
 
 }
