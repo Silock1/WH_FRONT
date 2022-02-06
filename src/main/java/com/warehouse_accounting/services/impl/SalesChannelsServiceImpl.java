@@ -10,6 +10,7 @@ package com.warehouse_accounting.services.impl;
     import retrofit2.Call;
     import retrofit2.Response;
     import retrofit2.Retrofit;
+    import retrofit2.converter.gson.GsonConverterFactory;
 
     import java.io.IOException;
     import java.util.Collections;
@@ -18,14 +19,15 @@ package com.warehouse_accounting.services.impl;
 @Log4j2
 @Service
 public class SalesChannelsServiceImpl implements SalesChannelsService {
-    private final SalesChannelsApi channelsApi;
-    private final String channelsUrl;
 
-    public SalesChannelsServiceImpl(@Value("${retrofit.restServices.sales_channels_url}") String channelsUrl, Retrofit retrofit) {
-        this.channelsApi = retrofit.create(SalesChannelsApi.class);
-        this.channelsUrl = channelsUrl;
+    private final String channelsUrl = "/api/sales_channels";
+    private final SalesChannelsApi channelsApi = buildRetrofit().create(SalesChannelsApi.class);
+
+    Retrofit buildRetrofit() {
+        return new Retrofit.Builder()
+            .baseUrl("http://localhost:4446")
+            .addConverterFactory(GsonConverterFactory.create()).build();
     }
-
 
     @Override
     public List<SalesChannelDto> getAll() {
@@ -66,7 +68,6 @@ public class SalesChannelsServiceImpl implements SalesChannelsService {
     @Override
     public void create(SalesChannelDto dto) {
         try {
-//            Response<Void> response = channelsApi.create(channelsUrl, dto).execute();
             Call<Void> voidCall = channelsApi.create(channelsUrl, dto);
             Response<Void> response = voidCall.execute();
             if (response.isSuccessful()) {

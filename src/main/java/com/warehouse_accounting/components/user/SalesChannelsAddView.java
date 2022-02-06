@@ -1,19 +1,15 @@
 package com.warehouse_accounting.components.user;
 
-
-import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.tabs.Tab;
-import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -22,9 +18,6 @@ import com.warehouse_accounting.components.user.settings.SettingsView;
 import com.warehouse_accounting.models.dto.SalesChannelDto;
 import com.warehouse_accounting.services.impl.SalesChannelsServiceImpl;
 import com.warehouse_accounting.services.interfaces.SalesChannelsService;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 
 import java.awt.*;
 import java.time.LocalDateTime;
@@ -33,8 +26,6 @@ import java.time.LocalDateTime;
 @Route(value = "add_channel", layout = SettingsView.class)
 public class SalesChannelsAddView extends VerticalLayout {
 
-    private final SalesChannelsService salesChannelsService;
-    private final Grid<SalesChannelDto> grid = new Grid<>();
     private Notification notification;
 
     private TextField nameField;
@@ -43,12 +34,9 @@ public class SalesChannelsAddView extends VerticalLayout {
     private TextField accessField;
     private TextField ownerDepartmentField;
     private TextField ownerEmployeeField;
-//    private LocalDateTime whenChangedField;
     private TextField whoChangedField;
 
-
-    public SalesChannelsAddView(SalesChannelsService salesChannelsService) {
-        this.salesChannelsService = salesChannelsService;
+    public SalesChannelsAddView() {
         AddForm();
     }
 
@@ -60,7 +48,6 @@ public class SalesChannelsAddView extends VerticalLayout {
         accessField = new TextField("Общий доступ");
         ownerDepartmentField = new TextField("Владелец-отдел");
         ownerEmployeeField = new TextField("Владелец-сотрудник");
-//        whenChangedField = new L("Когда изменён");
         whoChangedField = new TextField("Кто изменил");
 
         FormLayout formLayout = new FormLayout(
@@ -70,15 +57,10 @@ public class SalesChannelsAddView extends VerticalLayout {
             accessField,
             ownerDepartmentField,
             ownerEmployeeField,
-//            whenChangedField,
             whoChangedField
         );
 
-        HorizontalLayout buttonLayout = new HorizontalLayout(
-//            create,
-//            cancel
-            initButtons()
-        );
+        HorizontalLayout buttonLayout = new HorizontalLayout(initButtons());
         add(formLayout,buttonLayout);
     }
 
@@ -87,15 +69,9 @@ public class SalesChannelsAddView extends VerticalLayout {
 
         Button save = new Button("Сохранить", e -> {
             try {
-                Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://localhost:4446")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-
-                SalesChannelsService channelsService = new SalesChannelsServiceImpl("/api/sales_channels", retrofit);
+                SalesChannelsService channelsService = new SalesChannelsServiceImpl();
                 SalesChannelDto channelDto = new SalesChannelDto();
 
-                channelDto.setId(10L);
                 channelDto.setName(nameField.getValue());
                 channelDto.setType(typeField.getValue());
                 channelDto.setDescription(descrField.getValue());
@@ -107,16 +83,18 @@ public class SalesChannelsAddView extends VerticalLayout {
 
                 channelsService.create(channelDto);
 
-                notification = Notification.show("Канал продаж сохранён");
-                notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-                notification.setPosition(Notification.Position.BOTTOM_STRETCH);
             } catch (Exception exception) {
                 notification = Notification.show("Ошибка сохранения канала продаж");
                 notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-                notification.setPosition(Notification.Position.BOTTOM_STRETCH);
+                notification.setPosition(Notification.Position.BOTTOM_CENTER);
             }
-
         });
+        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        com.vaadin.flow.component.dialog.Dialog dialog = new Dialog();
+        dialog.add(new Text("Канал продаж сохранён"));
+        save.addClickListener(event -> dialog.open());
+        dialog.setHeight("60px");
+        dialog.setWidth("180px");
 
         Button close = new Button("Отменить", e -> {
 

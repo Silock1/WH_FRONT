@@ -19,14 +19,11 @@ import java.util.List;
 @Route(value = "saleschannel", layout = SettingsView.class)
 public class SalesChannelsView extends VerticalLayout {
 
-    private final SalesChannelsService salesChannelsService;
-
     public SalesChannelsView(SalesChannelsService salesChannelsService) {
-        this.salesChannelsService = salesChannelsService;
         H2 tableName = new H2("Каналы продаж");
-        Button addUnits = new Button("Добавить канал");
-        addUnits.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        addUnits.addClickListener(e-> UI.getCurrent().navigate(SalesChannelsAddView.class));
+        Button addChannels = new Button("Добавить канал");
+        addChannels.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        addChannels.addClickListener(e-> UI.getCurrent().navigate(SalesChannelsAddView.class));
         HorizontalLayout header = new HorizontalLayout(tableName);
         header.setAlignItems(FlexComponent.Alignment.CENTER);
         header.getThemeList().clear();
@@ -53,11 +50,11 @@ public class SalesChannelsView extends VerticalLayout {
 //            delete.setEnabled(size != 0);
 //        });
 
-        HorizontalLayout footer = new HorizontalLayout(addUnits, delete);
+        HorizontalLayout footer = new HorizontalLayout(addChannels, delete);
         footer.getStyle().set("flex-wrap", "wrap");
 
-        List<SalesChannelDto> people = salesChannelsService.getAll();
-        grid.setItems(people);
+        List<SalesChannelDto> channels = salesChannelsService.getAll();
+        grid.setItems(channels);
         setPadding(false);
         setAlignItems(Alignment.STRETCH);
         add(header, grid, footer);
