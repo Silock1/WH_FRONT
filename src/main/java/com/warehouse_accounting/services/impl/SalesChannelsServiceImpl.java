@@ -65,9 +65,10 @@ public class SalesChannelsServiceImpl implements SalesChannelsService {
 
     @Override
     public void create(SalesChannelDto dto) {
-        Call<Void> call = channelsApi.create(channelsUrl, dto);
         try {
-            Response<Void> response = call.execute();
+//            Response<Void> response = channelsApi.create(channelsUrl, dto).execute();
+            Call<Void> voidCall = channelsApi.create(channelsUrl, dto);
+            Response<Void> response = voidCall.execute();
             if (response.isSuccessful()) {
                 log.info("Успешно выполнен запрос на создание SalesChannelDto");
             } else {

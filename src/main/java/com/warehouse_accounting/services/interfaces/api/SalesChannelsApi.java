@@ -14,7 +14,6 @@ import java.util.List;
 
 public interface SalesChannelsApi {
 
-
     @Headers("Accept: application/json")
     @GET("{url}")
     Call<List<SalesChannelDto>> getAll(@Path(value = "url", encoded = true) String url);
@@ -24,8 +23,8 @@ public interface SalesChannelsApi {
     Call<SalesChannelDto> getById(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
 
     @Headers("Accept: application/json")
-    @POST
-    Call<Void> create(@Path(value = "url",encoded = true) String url, @Body SalesChannelDto dto);
+    @POST("{url}")
+    Call<Void> create(@Path(value = "url",encoded = true) String url, @Body SalesChannelDto salesChannelDto);
 
     @Headers("Accept: application/json")
     @PUT
@@ -35,3 +34,11 @@ public interface SalesChannelsApi {
     @DELETE
     Call<Void> deleteById(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
 }
+
+
+
+
+
+
+
+

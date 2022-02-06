@@ -23,7 +23,7 @@ public class SalesChannelsView extends VerticalLayout {
 
     public SalesChannelsView(SalesChannelsService salesChannelsService) {
         this.salesChannelsService = salesChannelsService;
-        H2 tableName = new H2("Каналы поставок");
+        H2 tableName = new H2("Каналы продаж");
         Button addUnits = new Button("Добавить канал");
         addUnits.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         addUnits.addClickListener(e-> UI.getCurrent().navigate(SalesChannelsAddView.class));
