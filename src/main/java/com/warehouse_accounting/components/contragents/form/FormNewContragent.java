@@ -27,9 +27,12 @@ import com.warehouse_accounting.services.interfaces.ContractorService;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+
+
 @SpringComponent
 @UIScope
 public class FormNewContragent extends VerticalLayout {
+    private TextField nameContragent;
 
     public FormNewContragent() {
         add(getGroupButton(), getNameContragent(), groupBlockLayout());
@@ -46,7 +49,7 @@ public class FormNewContragent extends VerticalLayout {
             ContractorService contractorService = new ContractorServiceImpl("/api/contractors", retrofit);
             ContractorDto contractorDto = new ContractorDto();
 
-            contractorDto.setName(getNameContragent().toString());
+            contractorDto.setName(nameContragent.getValue());
             contractorDto.setPhone("77777777777777777");
             contractorDto.setFax("5555555555555");
             contractorDto.setEmail("dfdf@1.ru");
@@ -58,7 +61,7 @@ public class FormNewContragent extends VerticalLayout {
             contractorDto.setLegalDetailKpp("3333333333");
             contractorDto.setLegalDetailTypeOfContractorName("Юридическое лицо");
             contractorDto.setContractorGroupName("Группа контр 1");
-            contractorDto.setLeg
+
             contractorDto.setContractorGroup(ContractorGroupDto.builder().build());
 
             System.out.println(contractorDto);
@@ -78,7 +81,7 @@ public class FormNewContragent extends VerticalLayout {
 
     private HorizontalLayout getNameContragent() {
         HorizontalLayout nameContragentLayout = new HorizontalLayout();
-        TextField nameContragent = new TextField("Наименование");
+        nameContragent = new TextField("Наименование");
         nameContragent.setWidth("550px");
         nameContragentLayout.add(nameContragent);
         return nameContragentLayout;
