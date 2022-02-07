@@ -20,6 +20,8 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 @SpringComponent
 @UIScope
@@ -31,7 +33,17 @@ public class FormNewContragent extends VerticalLayout {
 
     private HorizontalLayout getGroupButton() {
         HorizontalLayout controlGroupButton = new HorizontalLayout();
-        Button createButton = new Button("Сохранить");
+        Button createButton = new Button("Сохранить", e ->{
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("http://localhost:4446")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+        });
+
+
+
+
         Button closeButton = new Button("Закрыть");
         controlGroupButton.add(createButton, closeButton);
 
@@ -61,7 +73,9 @@ public class FormNewContragent extends VerticalLayout {
 
         Text textContragent = new Text("О контрагенте");
         ComboBox<String> statusContragent = new ComboBox<>();
+        statusContragent.setItems("Новый", "Выслано предложение");
         ComboBox<String> groupContragent = new ComboBox<>();
+        groupContragent.setItems("Основные", "Мелкий опт");
         TextField telTextField = new TextField();
         TextField faxTextField = new TextField();
         TextField emailTextField = new TextField();
@@ -85,6 +99,7 @@ public class FormNewContragent extends VerticalLayout {
         Text textRequisites = new Text("Реквизиты");
         FormLayout formRequisites = new FormLayout();
         ComboBox<String> typeEmployee = new ComboBox<>();
+        typeEmployee.setItems("Поставщик", "Покупатель");
         TextField innEmployee = new TextField();
         TextField fullNameEmployee = new TextField();
         TextField legalAddress = new TextField();
@@ -112,6 +127,7 @@ public class FormNewContragent extends VerticalLayout {
         Text saleAndPrice = new Text("Скидки и цены");
         FormLayout formSalePrice = new FormLayout();
         ComboBox<String> price = new ComboBox<>();
+        price.setItems("Оптовые", "Мелкооптовые");
         TextField discountCard = new TextField();
         formSalePrice.addFormItem(price, "Цены");
         formSalePrice.addFormItem(discountCard, "Дисконтная карта");
@@ -123,7 +139,9 @@ public class FormNewContragent extends VerticalLayout {
         Text access = new Text("Доступ");
         FormLayout accessForm = new FormLayout();
         ComboBox<String> employee = new ComboBox<>();
+        employee.setItems("Иванов Петр Сергеевич","Рогов Роман Романович");
         ComboBox<String> departmentEmployee = new ComboBox<>();
+        departmentEmployee.setItems("Центарльный офис","Удаленный филиал");
         Checkbox generalAccess = new Checkbox();
 
         accessForm.addFormItem(employee, "Сотрудник");
