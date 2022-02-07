@@ -22,6 +22,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.models.dto.WarehouseDto;
 import com.warehouse_accounting.services.impl.WarehouseServiceImpl;
+import com.warehouse_accounting.services.interfaces.WarehouseService;
 
 import java.util.List;
 
@@ -30,10 +31,10 @@ import java.util.List;
 public class WarahauseSettingsView extends VerticalLayout {
     private final TextField textField = new TextField();
     private final Grid<WarehouseDto> warehouseDtoGrid = new Grid<>(WarehouseDto.class, false);
-    private final WarehouseServiceImpl warehouseService;
+    private final WarehouseService warehouseService;
     private final HorizontalLayout formLayout;
 
-    public WarahauseSettingsView(WarehouseServiceImpl warehouseService) {
+    public WarahauseSettingsView(WarehouseService warehouseService) {
         this.warehouseService = warehouseService;
         this.formLayout = ctreateNewWarehouse();
         HorizontalLayout groupButtons = getGroupButtons();
