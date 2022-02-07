@@ -27,6 +27,7 @@ import com.warehouse_accounting.components.goods.grids.GoodsGridLayout;
 import com.warehouse_accounting.models.dto.ProductDto;
 import com.warehouse_accounting.models.dto.ProductGroupDto;
 import com.warehouse_accounting.services.interfaces.ProductGroupService;
+import com.warehouse_accounting.services.interfaces.ProductService;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -36,16 +37,18 @@ import java.util.Optional;
 @Route(value = "goodsAndServiceView", layout = AppView.class)
 public class GoodsAndServiceView extends VerticalLayout {
     private final ProductGroupService productGroupService;
+    private final ProductService productService;
     private final TreeGrid<ProductGroupDto> treeGrid = new TreeGrid<>();
     private final TextField textFieldGridSelected = new TextField();
     private final Grid<ProductDto> productDtoGrid = new Grid<>(ProductDto.class, false);
     private Div mainDiv;
     private GoodsGridLayout goodsGridLayout;
-    private Long rootGroupId = 1L; //TODO переопределить для текущего пользователя
+    private Long rootGroupId = 1L; //TODO а нужно ли это?
 
-    public GoodsAndServiceView(ProductGroupService productGroupService) {
+    public GoodsAndServiceView(ProductGroupService productGroupService, ProductService productService) {
         this.productGroupService = productGroupService;
-        goodsGridLayout = new GoodsGridLayout(productGroupService, this);
+        this.productService = productService;
+        goodsGridLayout = new GoodsGridLayout(productGroupService, productService, this);
         Div pageContent = new Div();
         pageContent.setSizeFull();
         pageContent.add(goodsGridLayout);
@@ -71,7 +74,7 @@ public class GoodsAndServiceView extends VerticalLayout {
         Button addProductButton = new Button("Товар", new Icon(VaadinIcon.PLUS));
         addProductButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         addProductButton.addClickListener(event -> {
-            GoodsForm goodsForm = new GoodsForm(mainDiv, this);
+            GoodsForm goodsForm = new GoodsForm(mainDiv, this, productService);
             mainDiv.removeAll();
             mainDiv.add(goodsForm);
         });
@@ -142,7 +145,15 @@ public class GoodsAndServiceView extends VerticalLayout {
             Notification notification = new Notification(String.format("Выделено для удаления %d", selected),
                     3000,
                     Notification.Position.MIDDLE);
-            notification.open();
+            notification.open(); //TODO реализовать форму подтверждения удаления товара
+            //TODO написать метод удаляющий группу продуктов одним запросом
+            goodsGridLayout .getProductGrid()
+                            .asMultiSelect()
+                            .getSelectedItems()
+                            .stream().forEach(productDto -> productService.deleteById(productDto.getId()));
+            goodsGridLayout.initGrid(rootGroupId); //FixMe TEST
+            goodsGridLayout.initThreeGrid(rootGroupId); //FixMe TEST
+
         });
         editMenu.getSubMenu().addItem("Массовое редактирование", menuItemClickEvent -> {
 
