@@ -84,6 +84,11 @@
             <artifactId>vaadin-board-flow</artifactId>
             <version>14.8.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-confirm-dialog-flow</artifactId>
+            <version>14.8.1</version>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
