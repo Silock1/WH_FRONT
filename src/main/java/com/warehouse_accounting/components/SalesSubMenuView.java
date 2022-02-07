@@ -6,6 +6,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.warehouse_accounting.components.sales.ComissionerReports;
 import com.warehouse_accounting.components.sales.CustomerGoodsToRealize;
 import com.warehouse_accounting.components.sales.CustomerInvoices;
 import com.warehouse_accounting.components.sales.CustomerOrders;
@@ -43,6 +44,7 @@ public class SalesSubMenuView extends VerticalLayout {
     private GoodsToRealizeGetService goodsToRealizeGetService;
     private CustomerInvoices customerInvoices;
     private Shipments shipments;
+    private ComissionerReports comissionerReports;
 
 
     private CompanyService companyService;
@@ -160,5 +162,12 @@ public class SalesSubMenuView extends VerticalLayout {
             customerInvoices = new CustomerInvoices(pageContent);
         }
         return customerInvoices;
+    }
+
+    private ComissionerReports initComissionerReports(/*Div pageContent*/){
+        if (Objects.isNull(comissionerReports)) {
+            comissionerReports = new ComissionerReports(/*pageContent*/);
+        }
+        return comissionerReports;
     }
 }
