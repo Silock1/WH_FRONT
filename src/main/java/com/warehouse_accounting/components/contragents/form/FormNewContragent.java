@@ -33,6 +33,24 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @UIScope
 public class FormNewContragent extends VerticalLayout {
     private TextField nameContragent;
+    private ComboBox<String> statusContragent;
+    private ComboBox<String> groupContragent;
+    private TextField telTextField;
+    private TextField faxTextField;
+    private TextField emailTextField;
+    private TextField actualAddress;
+    private ComboBox<String> typeEmployee;
+    private TextField innEmployee;
+    private TextField fullNameEmployee;
+    private TextField legalAddress;
+    private TextField commentToTheAddress;
+    private TextField kppEmployee;
+    private TextField ogrnEmployee;
+    private TextField okpoEmployee;
+    private ComboBox<String> price;
+    private TextField discountCard;
+    private ComboBox<String> employee;
+    private ComboBox<String> departmentEmployee;
 
     public FormNewContragent() {
         add(getGroupButton(), getNameContragent(), groupBlockLayout());
@@ -50,32 +68,23 @@ public class FormNewContragent extends VerticalLayout {
             ContractorDto contractorDto = new ContractorDto();
 
             contractorDto.setName(nameContragent.getValue());
-            contractorDto.setPhone("77777777777777777");
-            contractorDto.setFax("5555555555555");
-            contractorDto.setEmail("dfdf@1.ru");
-            contractorDto.setComment("Прекрасный вид");
-            contractorDto.setNumberDiscountCard("5745");
-
-            contractorDto.setLegalDetailAddress("РФ, Москва");
-            contractorDto.setLegalDetailInn("4554454545");
-            contractorDto.setLegalDetailKpp("3333333333");
-            contractorDto.setLegalDetailTypeOfContractorName("Юридическое лицо");
-            contractorDto.setContractorGroupName("Группа контр 1");
-
+            contractorDto.setPhone(telTextField.getValue());
+            contractorDto.setFax(faxTextField.getValue());
+            contractorDto.setEmail(emailTextField.getValue());
+            contractorDto.setComment(commentToTheAddress.getValue());
+            contractorDto.setNumberDiscountCard(discountCard.getValue());
+            contractorDto.setLegalDetailAddress(legalAddress.getValue());
+            contractorDto.setLegalDetailInn(innEmployee.getValue());
+            contractorDto.setLegalDetailKpp(kppEmployee.getValue());
+            contractorDto.setLegalDetailTypeOfContractorName(typeEmployee.getValue());
+            contractorDto.setContractorGroupName(groupContragent.getValue());
             contractorDto.setContractorGroup(ContractorGroupDto.builder().build());
 
-            System.out.println(contractorDto);
-
             contractorService.create(contractorDto);
-
         });
-
-
-
 
         Button closeButton = new Button("Закрыть");
         controlGroupButton.add(createButton, closeButton);
-
         return controlGroupButton;
     }
 
@@ -89,28 +98,24 @@ public class FormNewContragent extends VerticalLayout {
 
     private HorizontalLayout groupBlockLayout() {
         HorizontalLayout blockLayout = new HorizontalLayout();
-
         blockLayout.add(leftGroupButtonLayout(), rightGroupButtonLayout());
         return blockLayout;
     }
 
     private HorizontalLayout leftGroupButtonLayout() {
         HorizontalLayout leftLayout = new HorizontalLayout();
-
         VerticalLayout verticalLayout = new VerticalLayout();
         FormLayout formContragent = new FormLayout();
 
         Text textContragent = new Text("О контрагенте");
-        ComboBox<String> statusContragent = new ComboBox<>();
+        statusContragent = new ComboBox<>();
         statusContragent.setItems("Новый", "Выслано предложение");
-
-        ComboBox<String> groupContragent = new ComboBox<>();
+        groupContragent = new ComboBox<>();
         groupContragent.setItems("Основные", "Мелкий опт");
-
-        TextField telTextField = new TextField();
-        TextField faxTextField = new TextField();
-        TextField emailTextField = new TextField();
-        TextField actualAddress = new TextField();
+        telTextField = new TextField();
+        faxTextField = new TextField();
+        emailTextField = new TextField();
+        actualAddress = new TextField();
 
         formContragent.addFormItem(statusContragent, "Статус");
         formContragent.addFormItem(groupContragent, "Группы");
@@ -119,25 +124,30 @@ public class FormNewContragent extends VerticalLayout {
         formContragent.addFormItem(emailTextField,"E-mail");
         formContragent.addFormItem(actualAddress, "Фактический адрес");
         formContragent.setWidth("400px");
-
+        /*
+        Контактные лица
+         */
 
         Text textContactContragent = new Text("Контактные лица");
 
         FormLayout formLayout = new FormLayout();
         TextField revenue = new TextField();
         formLayout.addFormItem(revenue, "Смените тариф");
+        /*
+        Реквизиты
+         */
 
         Text textRequisites = new Text("Реквизиты");
         FormLayout formRequisites = new FormLayout();
-        ComboBox<String> typeEmployee = new ComboBox<>();
+        typeEmployee = new ComboBox<>();
         typeEmployee.setItems("Поставщик", "Покупатель");
-        TextField innEmployee = new TextField();
-        TextField fullNameEmployee = new TextField();
-        TextField legalAddress = new TextField();
-        TextField commentToTheAddress = new TextField();
-        TextField kppEmployee = new TextField();
-        TextField ogrnEmployee = new TextField();
-        TextField okpoEmployee = new TextField();
+        innEmployee = new TextField();
+        fullNameEmployee = new TextField();
+        legalAddress = new TextField();
+        commentToTheAddress = new TextField();
+        kppEmployee = new TextField();
+        ogrnEmployee = new TextField();
+        okpoEmployee = new TextField();
         Button paymentAccount = new Button(new Icon(VaadinIcon.PLUS));
         paymentAccount.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
@@ -157,21 +167,18 @@ public class FormNewContragent extends VerticalLayout {
          */
         Text saleAndPrice = new Text("Скидки и цены");
         FormLayout formSalePrice = new FormLayout();
-        ComboBox<String> price = new ComboBox<>();
+        price = new ComboBox<>();
         price.setItems("Оптовые", "Мелкооптовые");
-        TextField discountCard = new TextField();
+        discountCard = new TextField();
         formSalePrice.addFormItem(price, "Цены");
         formSalePrice.addFormItem(discountCard, "Дисконтная карта");
-//        formSalePrice.setResponsiveSteps(
-//                new FormLayout.ResponsiveStep("0", 1)
-//        );
         formSalePrice.setWidth("400px");
 
         Text access = new Text("Доступ");
         FormLayout accessForm = new FormLayout();
-        ComboBox<String> employee = new ComboBox<>();
+        employee = new ComboBox<>();
         employee.setItems("Иванов Петр Сергеевич","Рогов Роман Романович");
-        ComboBox<String> departmentEmployee = new ComboBox<>();
+        departmentEmployee = new ComboBox<>();
         departmentEmployee.setItems("Центарльный офис","Удаленный филиал");
         Checkbox generalAccess = new Checkbox();
 
@@ -182,12 +189,13 @@ public class FormNewContragent extends VerticalLayout {
 
         verticalLayout.add(textContragent, formContragent, textContactContragent, formLayout, textRequisites,
                 formRequisites, saleAndPrice,formSalePrice, access, accessForm);
-
-
         leftLayout.add(verticalLayout);
         return leftLayout;
     }
 
+    /*
+    Вкладка с Табами
+     */
     private VerticalLayout rightGroupButtonLayout() {
         VerticalLayout rightLayout = new VerticalLayout();
 
@@ -196,9 +204,7 @@ public class FormNewContragent extends VerticalLayout {
         Tab shipping = new Tab("Документы");
         Tab files = new Tab("Файлы");
         Tab indicators = new Tab("Показатели");
-
         Tabs tabs = new Tabs(details, payment, shipping, files, indicators);
-
         rightLayout.add(tabs);
         return rightLayout;
     }
