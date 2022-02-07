@@ -20,6 +20,10 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.models.dto.ContractorDto;
+import com.warehouse_accounting.models.dto.ContractorGroupDto;
+import com.warehouse_accounting.services.impl.ContractorServiceImpl;
+import com.warehouse_accounting.services.interfaces.ContractorService;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -38,6 +42,28 @@ public class FormNewContragent extends VerticalLayout {
                     .baseUrl("http://localhost:4446")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
+
+            ContractorService contractorService = new ContractorServiceImpl("/api/contractors", retrofit);
+            ContractorDto contractorDto = new ContractorDto();
+
+            contractorDto.setName(getNameContragent().toString());
+            contractorDto.setPhone("77777777777777777");
+            contractorDto.setFax("5555555555555");
+            contractorDto.setEmail("dfdf@1.ru");
+            contractorDto.setComment("Прекрасный вид");
+            contractorDto.setNumberDiscountCard("5745");
+
+            contractorDto.setLegalDetailAddress("РФ, Москва");
+            contractorDto.setLegalDetailInn("4554454545");
+            contractorDto.setLegalDetailKpp("3333333333");
+            contractorDto.setLegalDetailTypeOfContractorName("Юридическое лицо");
+            contractorDto.setContractorGroupName("Группа контр 1");
+            contractorDto.setLeg
+            contractorDto.setContractorGroup(ContractorGroupDto.builder().build());
+
+            System.out.println(contractorDto);
+
+            contractorService.create(contractorDto);
 
         });
 
@@ -74,8 +100,10 @@ public class FormNewContragent extends VerticalLayout {
         Text textContragent = new Text("О контрагенте");
         ComboBox<String> statusContragent = new ComboBox<>();
         statusContragent.setItems("Новый", "Выслано предложение");
+
         ComboBox<String> groupContragent = new ComboBox<>();
         groupContragent.setItems("Основные", "Мелкий опт");
+
         TextField telTextField = new TextField();
         TextField faxTextField = new TextField();
         TextField emailTextField = new TextField();
