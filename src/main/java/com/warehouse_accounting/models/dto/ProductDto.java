@@ -26,20 +26,24 @@ public class ProductDto {
 
     private String description;
 
-    private UnitDto unit;
-
     private Boolean archive = false;
-
-    private ContractorDto contractor;
-
-//    @OneToMany(fetch = FetchType.LAZY)
-//    private List<TypeOfPrice> typeOfPrices;
-
-    private TaxSystemDto taxSystem;
 
     private List<ImageDto> images;
 
-    private ProductGroupDto productGroup;
+    /*
+        Инициализация вызвана NPE которые возникают когда Ваадин получает объект в котором не инициализированы все поля.
+        NPE возникает поскольку Ваадин запрашивает getName(или что-то ещё) у несуществующего объекта в поле
+        содержащем ДТО объекты. Для этого я инициализирую поля ДТО созданными конструкторами по умолчанию.
+        Если добавить обработчик ситуации по месту,то изменяя объект ДТО нам придется изменять и обработчик,
+        а если обработчиков будет несколько?
+    */
+    private UnitDto unit = new UnitDto();
 
-    private AttributeOfCalculationObjectDto attributeOfCalculationObject;
+    private ContractorDto contractor = new ContractorDto();
+
+    private TaxSystemDto taxSystem = new TaxSystemDto();
+
+    private ProductGroupDto productGroup = new ProductGroupDto();
+
+    private AttributeOfCalculationObjectDto attributeOfCalculationObject = new AttributeOfCalculationObjectDto();
 }

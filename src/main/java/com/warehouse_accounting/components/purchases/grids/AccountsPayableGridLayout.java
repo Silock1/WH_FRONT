@@ -51,5 +51,4 @@ public class AccountsPayableGridLayout extends HorizontalLayout {
         fieldNameColumnName.put("invoiceDto.comment", "Комментарий");
         return fieldNameColumnName;
     }
-
 }

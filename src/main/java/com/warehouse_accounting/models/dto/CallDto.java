@@ -18,7 +18,7 @@ public class CallDto {
 
     private Date callTime;
 
-    private  String type;
+    private String type;
 
     private Long number;
 

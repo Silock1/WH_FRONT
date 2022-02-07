@@ -51,7 +51,7 @@ public class CustomerOrders extends VerticalLayout {
         Button addOrderButton = new Button("Заказ", new Icon(VaadinIcon.PLUS));
         addOrderButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
-        Button addFilterButton = new Button("Фильтр", new Icon(VaadinIcon.PLUS));
+        Button addFilterButton = new Button("Фильтр");
         addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
         TextField searchField = new TextField();
