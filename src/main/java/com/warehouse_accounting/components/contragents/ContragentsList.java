@@ -58,13 +58,6 @@ public class ContragentsList extends VerticalLayout {
         addContragent.addClickListener(e->{
             removeAll();
             add(formNewContragent);
-
-            // ---
-//            if (formNewContragent.isVisible()) {
-//                formNewContragent.setVisible(false);
-//            } else {
-//                formNewContragent.setVisible(true);
-//            }
         });
 
         Button filter = new Button("Фильтр");

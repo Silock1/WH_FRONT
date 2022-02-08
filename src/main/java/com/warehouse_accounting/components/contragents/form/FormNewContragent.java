@@ -90,6 +90,7 @@ public class FormNewContragent extends VerticalLayout {
         Button closeButton = new Button("Закрыть", e->{
             removeAll();
             add(contragentsListGridLayout);
+
         });
         controlGroupButton.add(createButton, closeButton);
         return controlGroupButton;
