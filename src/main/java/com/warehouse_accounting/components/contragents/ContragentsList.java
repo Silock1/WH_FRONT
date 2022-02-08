@@ -63,11 +63,7 @@ public class ContragentsList extends VerticalLayout {
         Button filter = new Button("Фильтр");
         filter.addThemeVariants(ButtonVariant.LUMO_SMALL);
         filter.addClickListener(e->{
-            if (contragentsFilterLayout.isVisible()) {
-                contragentsFilterLayout.setVisible(false);
-            } else {
-                contragentsFilterLayout.setVisible(true);
-            }
+            contragentsFilterLayout.setVisible(!contragentsFilterLayout.isVisible());
         });
 
         TextField textField = new TextField();
