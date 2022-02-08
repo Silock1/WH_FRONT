@@ -107,7 +107,7 @@ public class SalesSubMenuView extends VerticalLayout {
                     break;
                 case "Отчеты комиссионера":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Отчеты комиссионера"));
+                    pageContent.add(initComissionerReports(/*pageContent*/));
                     break;
                 case "Возвраты покупателей":
                     pageContent.removeAll();
