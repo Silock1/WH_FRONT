@@ -37,10 +37,9 @@ public class ContragentsList extends VerticalLayout {
         this.contragentsListGridLayout=contragentsListGridLayout;
         this.contragentsFilterLayout = contragentsFilterLayout;
         this.formNewContragent = formNewContragent;
-
-
         add(getGroupButtons(), contragentsFilterLayout, contragentsListGridLayout, formNewContragent);
     }
+
 
     private HorizontalLayout getGroupButtons() {
 
@@ -57,12 +56,15 @@ public class ContragentsList extends VerticalLayout {
         Button addContragent = new Button(("Контрагент"), new Icon(VaadinIcon.PLUS));
         addContragent.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         addContragent.addClickListener(e->{
-//            removeAll();
-            if (formNewContragent.isVisible()) {
-                formNewContragent.setVisible(false);
-            } else {
-                formNewContragent.setVisible(true);
-            }
+            removeAll();
+            add(formNewContragent);
+
+            // ---
+//            if (formNewContragent.isVisible()) {
+//                formNewContragent.setVisible(false);
+//            } else {
+//                formNewContragent.setVisible(true);
+//            }
         });
 
         Button filter = new Button("Фильтр");

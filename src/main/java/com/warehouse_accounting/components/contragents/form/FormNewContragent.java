@@ -1,18 +1,14 @@
 package com.warehouse_accounting.components.contragents.form;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.contextmenu.MenuItem;
-import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.Input;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.menubar.MenuBar;
-import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -20,6 +16,7 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.components.contragents.grids.ContragentsListGridLayout;
 import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.models.dto.ContractorGroupDto;
 import com.warehouse_accounting.services.impl.ContractorServiceImpl;
@@ -52,7 +49,11 @@ public class FormNewContragent extends VerticalLayout {
     private ComboBox<String> employee;
     private ComboBox<String> departmentEmployee;
 
-    public FormNewContragent() {
+    private final ContragentsListGridLayout contragentsListGridLayout;
+
+    public FormNewContragent(ContragentsListGridLayout contragentsListGridLayout) {
+        this.contragentsListGridLayout = contragentsListGridLayout;
+
         add(getGroupButton(), getNameContragent(), groupBlockLayout());
     }
 
@@ -81,9 +82,15 @@ public class FormNewContragent extends VerticalLayout {
             contractorDto.setContractorGroup(ContractorGroupDto.builder().build());
 
             contractorService.create(contractorDto);
+            removeAll();
+            add(contragentsListGridLayout);
+
         });
 
-        Button closeButton = new Button("Закрыть");
+        Button closeButton = new Button("Закрыть", e->{
+            removeAll();
+            add(contragentsListGridLayout);
+        });
         controlGroupButton.add(createButton, closeButton);
         return controlGroupButton;
     }
