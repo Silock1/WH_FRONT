@@ -14,6 +14,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.warehouse_accounting.models.dto.InvoiceDto;
+import com.warehouse_accounting.services.interfaces.InvoiceService;
 
 
 import java.util.HashMap;
