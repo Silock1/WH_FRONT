@@ -13,17 +13,14 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
 import com.warehouse_accounting.components.goods.GoodsAndServiceView;
+import com.warehouse_accounting.components.goods.forms.GoodUpdateForm;
 import com.warehouse_accounting.components.goods.forms.GroupForm;
-import com.warehouse_accounting.models.dto.AttributeOfCalculationObjectDto;
-import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.models.dto.ProductDto;
 import com.warehouse_accounting.models.dto.ProductGroupDto;
-import com.warehouse_accounting.models.dto.TaxSystemDto;
 import com.warehouse_accounting.services.interfaces.ProductGroupService;
+import com.warehouse_accounting.services.interfaces.ProductService;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -35,6 +32,7 @@ import java.util.Objects;
 @Route(value = "goodsGridLayout", layout = AppView.class)
 public class GoodsGridLayout extends HorizontalLayout {
     private final ProductGroupService productGroupService;
+    private final ProductService productService;
     private final Div leftThreeGridDiv = new Div();
     private final Div gridDiv = new Div();
     private final String widthLeftTreeGrid = "25%";
@@ -44,8 +42,11 @@ public class GoodsGridLayout extends HorizontalLayout {
     private Grid<ProductDto> productDtoGrid;
     private GoodsAndServiceView parentLayer;
 
-    public GoodsGridLayout(ProductGroupService productGroupService, GoodsAndServiceView parentLayer) {
+    public GoodsGridLayout(ProductGroupService productGroupService,
+                           ProductService productService,
+                           GoodsAndServiceView parentLayer) {
         this.productGroupService = productGroupService;
+        this.productService = productService;
         this.parentLayer = parentLayer;
         this.treeGrid = parentLayer.getTreeGrid();
         this.selectedTextField = parentLayer.getTextFieldGridSelected();
@@ -56,10 +57,12 @@ public class GoodsGridLayout extends HorizontalLayout {
     }
 
     public void initThreeGrid(Long groupId) {
-        initRootProductGroup();
         treeGrid.removeAllColumns();
+        /*Конструкция с rootGroup не соответствует дизайну сайта "Moy Sklad", но кода написано довольно много, возможно
+        * здесь была какая-то идея о которой я не знаю*/
         ProductGroupDto rootGroup = productGroupService.getById(groupId);
         if (Objects.nonNull(rootGroup)) {
+
             treeGrid.setItems(Collections.singleton(rootGroup), productGroupDto -> {
                 List<ProductGroupDto> allByParentGroupId = productGroupService.getAllByParentGroupId(productGroupDto.getId());
                 if (Objects.nonNull(allByParentGroupId)) {
@@ -111,13 +114,18 @@ public class GoodsGridLayout extends HorizontalLayout {
     public void initGrid(Long groupId) {
         productDtoGrid.setColumns(getVisibleColumn().keySet().toArray(String[]::new));
         productDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI);
-        productDtoGrid.setItems(getTestProductDtos(groupId));
+        productDtoGrid.setItems(productService.getAll());
         getVisibleColumn().forEach((key, value) -> productDtoGrid.getColumnByKey(key).setHeader(value));
         productDtoGrid.asMultiSelect().addSelectionListener(listener -> {
             int selectSize = listener.getAllSelectedItems().size();
             selectedTextField.setValue(String.valueOf(selectSize));
         });
         productDtoGrid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_ROW_STRIPES);
+        productDtoGrid.addItemDoubleClickListener(event -> {
+            GoodUpdateForm goodUpdateForm = new GoodUpdateForm(parentLayer.getMainDiv(), parentLayer, productService, event.getItem());
+            parentLayer.getMainDiv().removeAll();
+            parentLayer.getMainDiv().add(goodUpdateForm);
+        });
         gridDiv.setWidth(widthGrid);
         gridDiv.add(productDtoGrid);
     }
@@ -134,71 +142,13 @@ public class GoodsGridLayout extends HorizontalLayout {
         fieldNameColumnName.put("volume", "Объем");
         fieldNameColumnName.put("purchasePrice", "Цена");
         fieldNameColumnName.put("description", "Описание");
-        fieldNameColumnName.put("unit", "Единица измерения");
+        fieldNameColumnName.put("unit.shortName", "Единица измерения");
         fieldNameColumnName.put("archive", "В архиве");
         fieldNameColumnName.put("contractor.name", "Подрядчик");
         fieldNameColumnName.put("taxSystem.name", "Налоговая система");
         fieldNameColumnName.put("productGroup.name", "Группа");
-        fieldNameColumnName.put("attributeOfCalculationObject.name", "Объекта расчета");
+        fieldNameColumnName.put("attributeOfCalculationObject.name", "Объект расчетов");
         return fieldNameColumnName;
     }
 
-    private List<ProductDto> getTestProductDtos(Long groupId) {
-        List<ProductDto> productDtos = new ArrayList<>();
-        ProductDto productDto1 = ProductDto.builder()
-                .id(groupId)
-                .name("Test1")
-                .weight(new BigDecimal("100.01"))
-                .volume(new BigDecimal("20.02"))
-                .purchasePrice(new BigDecimal("30.03"))
-                .description("Описание1")
-                .contractor(ContractorDto.builder()
-                        .name("ООО \"Рога и Копыта\"")
-                        .build())
-                .taxSystem(TaxSystemDto.builder()
-                        .name("Учетная система")
-                        .build())
-                .productGroup(ProductGroupDto.builder()
-                        .name("Товары и услуги")
-                        .build())
-                .attributeOfCalculationObject(AttributeOfCalculationObjectDto.builder()
-                        .name("Что это?")
-                        .build())
-                .build();
-
-        ProductDto productDto2 = ProductDto.builder()
-                .id(++groupId)
-                .name("Test2")
-                .weight(new BigDecimal("121.01"))
-                .volume(new BigDecimal("50.02"))
-                .purchasePrice(new BigDecimal("660.00"))
-                .description("Описание2")
-                .contractor(ContractorDto.builder()
-                        .name("ООО \"Рога и Копыта\"")
-                        .build())
-                .taxSystem(TaxSystemDto.builder()
-                        .name("Учетная система")
-                        .build())
-                .productGroup(ProductGroupDto.builder()
-                        .name("Подгруппа 1")
-                        .build())
-                .attributeOfCalculationObject(AttributeOfCalculationObjectDto.builder()
-                        .name("Что это?")
-                        .build())
-                .build();
-
-        productDtos.add(productDto1);
-        productDtos.add(productDto2);
-        return productDtos;
-    }
-
-    private void initRootProductGroup() {
-        if (productGroupService.getAll().isEmpty()) {
-            ProductGroupDto groupDto = ProductGroupDto.builder()
-                    .name("Товары и услуги")
-                    .sortNumber("1")
-                    .build();
-            productGroupService.create(groupDto);
-        }
-    }
 }

@@ -17,7 +17,11 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 
 
+import com.warehouse_accounting.components.sales.filter.CustomerOrdersFilter;
+import com.warehouse_accounting.components.sales.filter.SalesShipmentsFilter;
 import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
+import com.warehouse_accounting.services.interfaces.*;
+
 /*
 Эта страница должна быть главной страницей Продаж, а не CustomerOrder
  */
@@ -26,15 +30,40 @@ public class CustomerOrders extends VerticalLayout {
     private SalesGridLayout salesGridLayout;
     private final TextField textFieldGridSelected = new TextField();
     private final Div parentLayer;
+    private final CustomerOrdersFilter customerOrdersFilter;
+    private CompanyService companyService;
+    private ContractorService contractorService;
+    private ContractService contractService;
+    private ProjectService projectService;
+    private WarehouseService warehouseService;
+    private EmployeeService employeeService;
+    private DepartmentService departmentService;
 
-    public CustomerOrders(Div parentLayer) {
+
+
+
+    public CustomerOrders(Div parentLayer, CompanyService companyService, ContractorService contractorService,
+                          ContractService contractService, ProjectService projectService, WarehouseService warehouseService,
+                          EmployeeService employeeService, DepartmentService departmentService) {
         this.parentLayer = parentLayer;
+        this.companyService = companyService;
+        this.contractorService = contractorService;
+        this.contractService = contractService;
+        this.projectService = projectService;
+        this.warehouseService = warehouseService;
+        this.employeeService = employeeService;
+        this.departmentService = departmentService;
+        this.customerOrdersFilter = new CustomerOrdersFilter(companyService, contractorService, contractService,
+                projectService, warehouseService, employeeService, departmentService);
         salesGridLayout = new SalesGridLayout(textFieldGridSelected);
+
         Div pageContent = new Div();
         pageContent.add(salesGridLayout);
+
         pageContent.setSizeFull();
-        add(getGroupButtons(), pageContent);
+        add(getGroupButtons(), customerOrdersFilter, pageContent);
     }
+
 
     private HorizontalLayout getGroupButtons() {
         HorizontalLayout groupControl = new HorizontalLayout();
@@ -53,6 +82,9 @@ public class CustomerOrders extends VerticalLayout {
 
         Button addFilterButton = new Button("Фильтр");
         addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        addFilterButton.addClickListener(e->
+                customerOrdersFilter.setVisible(!customerOrdersFilter.isVisible())
+        );
 
         TextField searchField = new TextField();
         searchField.setPlaceholder("Номер или комментарий");

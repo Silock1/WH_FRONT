@@ -4,6 +4,7 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
@@ -15,7 +16,17 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
-import com.warehouse_accounting.components.goods.forms.InvoiceForm;
+import com.warehouse_accounting.components.purchases.forms.CreateInvoiceForm;
+import com.warehouse_accounting.components.purchases.grids.SupplierInvoiceGridLayout;
+import com.warehouse_accounting.services.impl.SupplierInvoiceServiceImpl;
+import com.warehouse_accounting.services.interfaces.SupplierInvoiceService;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /*
 Счета поставщиков
@@ -25,8 +36,16 @@ public class AccountsPayable extends VerticalLayout {
     private final TextField textField = new TextField();
     private final Div parentLayer;
 
+    private Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl("http://localhost:4446")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+    private SupplierInvoiceService supplierInvoiceService = new SupplierInvoiceServiceImpl("/api/supplier_invoices",retrofit);
+
     public  AccountsPayable (Div parentLayer){
         this.parentLayer = parentLayer;
+        SupplierInvoiceGridLayout.parentLayer = parentLayer;
+        SupplierInvoiceGridLayout.returnLayer = this;
         Div pageContent = new Div();
         pageContent.setSizeFull();
         add(getGroupButtons(), pageContent);
@@ -60,7 +79,7 @@ public class AccountsPayable extends VerticalLayout {
         addOrderButton.addClickListener(event -> {
             removeAll();
             add(getGroupButtons());
-            InvoiceForm invoiceForm = new InvoiceForm(parentLayer, this);
+            CreateInvoiceForm invoiceForm = new CreateInvoiceForm(parentLayer, this);
             parentLayer.removeAll();
             parentLayer.add(invoiceForm);
         });
@@ -104,8 +123,9 @@ public class AccountsPayable extends VerticalLayout {
         editItem.setAlignItems(Alignment.CENTER);
 
         MenuItem editMenu = editMenuBar.addItem(editItem);
-        editMenu.getSubMenu().addItem("Удалить", menuItemClickEvent -> {
 
+        editMenu.getSubMenu().addItem("Удалить выбранные", menuItemClickEvent -> {
+            deleteSelected();
         });
 
         editMenu.getSubMenu().addItem("Копировать", menuItemClickEvent -> {
@@ -131,6 +151,42 @@ public class AccountsPayable extends VerticalLayout {
         groupEdit.setAlignItems(Alignment.CENTER);
         return groupEdit;
     }
+
+    private void deleteSelected(){ // Метод удаляет выбранные счета
+
+        Button delete = new Button("Удалить");
+        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        Button cancel = new Button("Отмена");
+        HorizontalLayout buttonLayout = new HorizontalLayout(cancel,delete);
+
+        Dialog dialog = new Dialog();
+        dialog.add("Подтвердите удаление");
+        dialog.add(new VerticalLayout());
+        dialog.add(buttonLayout);
+
+        dialog.open();
+
+        delete.addClickListener(event -> {
+            Set<Long> setId = new HashSet<>();
+            setId.addAll(SupplierInvoiceGridLayout.gridEntityId);
+            List<Long> listId = new ArrayList<>();
+            listId.addAll(setId);
+            SupplierInvoiceGridLayout.gridEntityId.removeAll(SupplierInvoiceGridLayout.gridEntityId);
+
+            for(int i=0; i<listId.size(); i++){
+                supplierInvoiceService.deleteById(listId.get(i));
+            }
+
+            parentLayer.removeAll();
+            parentLayer.add(this, SupplierInvoiceGridLayout.initSupplierInvoiceGrid());
+            dialog.close();
+        });
+
+        cancel.addClickListener(event -> {
+            dialog.close();
+        });
+    }
+
     private HorizontalLayout getStatusMenuBar() {
         Icon caretDownIcon = new Icon(VaadinIcon.CARET_DOWN);
         caretDownIcon.setSize("12px");
@@ -177,7 +233,6 @@ public class AccountsPayable extends VerticalLayout {
         createItem.getSubMenu().addItem("Расходные ордеры", e -> {
 
         });
-
 
         HorizontalLayout groupCreate = new HorizontalLayout();
         groupCreate.add(createMenuBar);

@@ -1,4 +1,4 @@
-package com.warehouse_accounting.components.goods.forms;
+package com.warehouse_accounting.components.purchases.forms;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
@@ -36,7 +36,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InvoiceForm extends VerticalLayout {
+public class CreateInvoiceForm extends VerticalLayout {
 
     private final Div parentLayer;
     private final Component returnLayer;
@@ -62,13 +62,14 @@ public class InvoiceForm extends VerticalLayout {
     private Checkbox checkboxNDS; //Input c чек-бокса НДС
     private Checkbox checkboxOnNDS; //Input c чек-бокса Цена включает НДС
 
-    public InvoiceForm(Div parentLayer, Component returnLayer) {
+    public CreateInvoiceForm(Div parentLayer, Component returnLayer) {
         this.parentLayer = parentLayer;
         this.returnLayer = returnLayer;
         documentPage.add(mainPage());
 
         add(initTopButtons(),initInvoiceNumber(),initForms(),initTabs());
     }
+
     // Метод создает формы в центре страницы
     private VerticalLayout initForms() {
         VerticalLayout verticalLayout = new VerticalLayout();

@@ -18,6 +18,7 @@ retrofit:
     contractor_url: api/contractors
     country_url: api/countries
     currency_url: api/currencies
+    customer_order_url: api/customer_orders
     department_url: api/departments
     employee_url: api/employees
     feed_url: api/feed
@@ -46,4 +47,4 @@ retrofit:
     goods_to_realize_give_url: api/goodstorealizegive
     tasks_url: api/tasks_employee
     warehouse_url: api/warehouses
-    customer_order_url: api/customer_orders
+    sales_channels_url: api/sales_channels
