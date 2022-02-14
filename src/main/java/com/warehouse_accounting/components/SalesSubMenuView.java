@@ -10,6 +10,7 @@ import com.warehouse_accounting.components.sales.ComissionerReports;
 import com.warehouse_accounting.components.sales.CustomerGoodsToRealize;
 import com.warehouse_accounting.components.sales.CustomerInvoices;
 import com.warehouse_accounting.components.sales.CustomerOrders;
+import com.warehouse_accounting.components.sales.filter.CustomerOrdersFilter;
 import com.warehouse_accounting.components.sales.filter.GoodsToRealizeFilter;
 import com.warehouse_accounting.components.sales.filter.SalesShipmentsFilter;
 import com.warehouse_accounting.services.interfaces.CompanyService;
@@ -22,7 +23,6 @@ import com.warehouse_accounting.services.interfaces.GoodsToRealizeGiveService;
 import com.warehouse_accounting.components.sales.Shipments;
 import com.warehouse_accounting.services.interfaces.ProjectService;
 import com.warehouse_accounting.services.interfaces.WarehouseService;
-import org.apache.http.annotation.Contract;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,6 +39,7 @@ public class SalesSubMenuView extends VerticalLayout {
     private CustomerGoodsToRealize customerGoodsToRealize;
     private final GoodsToRealizeFilter filterLayout;
     private final SalesShipmentsFilter salesShipmentsFilter;
+    private final CustomerOrdersFilter customerOrdersFilter;
 
     private GoodsToRealizeGiveService goodsToRealizeGiveService;
     private GoodsToRealizeGetService goodsToRealizeGetService;
@@ -56,10 +57,11 @@ public class SalesSubMenuView extends VerticalLayout {
     private EmployeeService employeeService;
 
     public SalesSubMenuView(GoodsToRealizeFilter filterLayout, SalesShipmentsFilter salesShipmentsFilter,
-                            GoodsToRealizeGiveService goodsToRealizeGiveService,
+                            CustomerOrdersFilter customerOrdersFilter, GoodsToRealizeGiveService goodsToRealizeGiveService,
                             GoodsToRealizeGetService goodsToRealizeGetService, CompanyService companyService,
-                            ContractorService contractorService, ContractService contractService,ProjectService projectService,
+                            ContractorService contractorService, ContractService contractService, ProjectService projectService,
                             WarehouseService warehouseService, DepartmentService departmentService, EmployeeService employeeService) {
+        this.customerOrdersFilter = customerOrdersFilter;
         this.companyService = companyService;
         this.contractorService = contractorService;
         this.contractService = contractService;
@@ -67,8 +69,8 @@ public class SalesSubMenuView extends VerticalLayout {
         this.warehouseService = warehouseService;
         this.employeeService = employeeService;
         this.departmentService = departmentService;
-
         this.salesShipmentsFilter = salesShipmentsFilter;
+
 
         pageContent.setSizeFull();
         this.goodsToRealizeGetService = goodsToRealizeGetService;
@@ -102,12 +104,11 @@ public class SalesSubMenuView extends VerticalLayout {
                     break;
                 case "Отгрузки":
                     pageContent.removeAll();
-                    pageContent.add(initShipments(pageContent, companyService, contractorService, contractService,
-                            projectService, warehouseService));
+                    pageContent.add(initShipments(pageContent));
                     break;
                 case "Отчеты комиссионера":
                     pageContent.removeAll();
-                    pageContent.add(initComissionerReports(/*pageContent*/));
+                    pageContent.add(new Span("Отчеты комиссионера"));
                     break;
                 case "Возвраты покупателей":
                     pageContent.removeAll();
@@ -135,7 +136,8 @@ public class SalesSubMenuView extends VerticalLayout {
     }
     private CustomerOrders initCustomerOrders(Div pageContent){
         if (Objects.isNull(customerOrders)) {
-            customerOrders = new CustomerOrders(pageContent);
+            customerOrders = new CustomerOrders(pageContent, companyService, contractorService, contractService,
+                    projectService, warehouseService, employeeService, departmentService);
         }
         return customerOrders;
     }
@@ -147,12 +149,10 @@ public class SalesSubMenuView extends VerticalLayout {
         return customerGoodsToRealize;
     }
 
-    private Shipments initShipments(Div pageContent, CompanyService companyService, ContractorService contractorService,
-                                    ContractService contractService,ProjectService projectService,
-                                    WarehouseService warehouseService) {
+    private Shipments initShipments(Div pageContent) {
         if (Objects.isNull(shipments)) {
-        shipments = new Shipments(pageContent, companyService, contractorService, contractService,
-                projectService, warehouseService, departmentService, employeeService);
+            shipments = new Shipments(pageContent, companyService, contractorService, contractService,
+                    projectService, warehouseService, departmentService, employeeService);
         }
         return shipments;
     }

@@ -145,6 +145,9 @@ public class AppView extends AppLayout {
     private String resolveSubMenuView(String name) {
         String subMenuView;
         switch (name) {
+            case "Задачи":
+                subMenuView = "tasks";
+                break;
             case "Товары":
                 subMenuView = "goods";
                 break;
