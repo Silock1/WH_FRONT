@@ -20,7 +20,7 @@ import java.util.List;
 @Service
 public class ComissionerReportsServiceImpl implements ComissionerReportsService {
 
-    private final String reportsUrl = "/api/sales_channels";
+    private final String reportsUrl = "/api/comissioner_reports";
     private final ComissionerReportsApi reportsApi = buildRetrofit().create(ComissionerReportsApi.class);
 
     Retrofit buildRetrofit() {
