@@ -32,7 +32,7 @@ public class ComissionerReports extends VerticalLayout {
 
     private final ComissionerReportsGridLayout reportsGridLayout;
 //    private final Div parentLayer;
-//    private ComissionerReportsService comissionerReportsService; // Его пока нет
+//    private ComissionerReportsService comissionerReportsService;
 
 
     public ComissionerReports(/*Div parentLayer*/) {

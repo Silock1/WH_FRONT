@@ -13,11 +13,15 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.warehouse_accounting.models.dto.ComissionerReportsDto;
-import com.warehouse_accounting.models.dto.InvoiceDto;
+
+import com.warehouse_accounting.services.interfaces.ComissionerReportsService;
+
+import java.util.List;
 
 public class ComissionerReportsGridLayout extends HorizontalLayout {
 
-    private final Grid<ComissionerReportsDto> dtoGrid = new Grid<>(ComissionerReportsDto.class, false);
+    private Grid<ComissionerReportsDto> dtoGrid = new Grid<>(ComissionerReportsDto.class, false);
+    private ComissionerReportsService comissionerReportsService;
 
     public ComissionerReportsGridLayout() {
 
@@ -86,6 +90,11 @@ public class ComissionerReportsGridLayout extends HorizontalLayout {
 
 
         dtoGrid.getColumns().forEach(col -> col.setAutoWidth(true));
+
+        List<ComissionerReportsDto> channels = comissionerReportsService.getAll();
+        dtoGrid.setItems(channels);
+        setPadding(false);
+        setAlignItems(Alignment.STRETCH);
 
 //        Span title = new Span("Документы");
 //        title.getStyle().set("font-weight", "bold");
