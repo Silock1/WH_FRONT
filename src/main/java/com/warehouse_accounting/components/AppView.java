@@ -16,9 +16,12 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.InitialPageSettings;
+import com.vaadin.flow.server.PageConfigurator;
 import com.vaadin.flow.server.StreamResource;
 import com.warehouse_accounting.components.help.HelpButton;
 import lombok.extern.log4j.Log4j2;
+
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -32,7 +35,7 @@ import java.util.stream.Stream;
 @Log4j2
 @CssImport(value = "./css/my-app-layout.css", themeFor = "vaadin-app-layout")
 @CssImport(value = "./css/my-app-layout.css")
-public class AppView extends AppLayout {
+public class AppView extends AppLayout implements PageConfigurator {
     private final String LOGO_PNG = "logo_main.svg";
     private final String AVATAR_PNG = "avatar-placeholder.svg";
 
@@ -176,6 +179,12 @@ public class AppView extends AppLayout {
                 throw new IllegalStateException("Unexpected value: " + name);
         }
         return subMenuView;
+    }
+
+    //favicon
+    @Override
+    public void configurePage(InitialPageSettings initialPageSettings) {
+        initialPageSettings.addFavIcon("icon", "icons/favicon.png", "16x16");
     }
 }
 
