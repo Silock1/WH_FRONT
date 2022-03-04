@@ -5,11 +5,13 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -30,6 +32,9 @@ public class ContragentsList extends VerticalLayout {
     private ContragentsListGridLayout contragentsListGridLayout;
     private ContragentsFilterLayout contragentsFilterLayout;
     private FormNewContragent formNewContragent;
+    private HorizontalLayout buttons;
+
+
 
 
     public ContragentsList(ContragentsListGridLayout contragentsListGridLayout,
@@ -37,7 +42,8 @@ public class ContragentsList extends VerticalLayout {
         this.contragentsListGridLayout=contragentsListGridLayout;
         this.contragentsFilterLayout = contragentsFilterLayout;
         this.formNewContragent = formNewContragent;
-        add(getGroupButtons(), contragentsFilterLayout, contragentsListGridLayout, formNewContragent);
+        buttons = getGroupButtons();
+        add(buttons, contragentsFilterLayout, contragentsListGridLayout);
     }
 
 
@@ -45,8 +51,14 @@ public class ContragentsList extends VerticalLayout {
 
         HorizontalLayout controlButton = new HorizontalLayout();
 
-        Button helpButton = new Button(new Icon(VaadinIcon.QUESTION_CIRCLE));
-        helpButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        Button helpButton = new Button(new Image("icons/helpApp.svg", "helpApp"));
+        helpButton.addThemeVariants(ButtonVariant.LUMO_LARGE, ButtonVariant.LUMO_TERTIARY);
+        helpButton.addClickListener(c-> Notification.show("В разделе представлен список ваших поставщиков и покупателей." +
+                                                                 " Для них можно настраивать индивидуальные цены и скидки, также можно им звонить и отправлять " +
+                                                                  "документы прямо из МоегоСклада.\n" +
+                                                                  "Список контрагентов можно импортировать и экспортировать.\n" +
+                                                                  "Читать инструкцию: Контрагенты\n"+
+                                                                  "Видео: Контрагенты",4000,Notification.Position.TOP_START));
 
         Label textLabel = new Label("Контрагенты");
 
@@ -56,8 +68,9 @@ public class ContragentsList extends VerticalLayout {
         Button addContragent = new Button(("Контрагент"), new Icon(VaadinIcon.PLUS));
         addContragent.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         addContragent.addClickListener(e->{
-            removeAll();
-            add(formNewContragent);
+             removeAll();
+             add(formNewContragent);
+
         });
 
         Button filter = new Button("Фильтр");
@@ -120,11 +133,12 @@ public class ContragentsList extends VerticalLayout {
         printSubMenu.addItem("Список контрагентов");
         printSubMenu.addItem("Настроить");
 
-        controlButton.add(textLabel, refreshButton, addContragent, filter, textField,
+        controlButton.add(helpButton, textLabel, refreshButton, addContragent, filter, textField,
                 menuBar, mailingLists, importButton, exportButton);
         setSizeFull();
         return controlButton;
     }
+
 
 
 }

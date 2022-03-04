@@ -15,11 +15,13 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.components.contragents.ContragentsList;
 import com.warehouse_accounting.components.contragents.grids.ContragentsListGridLayout;
 import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.models.dto.ContractorGroupDto;
 import com.warehouse_accounting.services.impl.ContractorServiceImpl;
 import com.warehouse_accounting.services.interfaces.ContractorService;
+import org.springframework.beans.factory.annotation.Autowired;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -49,11 +51,17 @@ public class FormNewContragent extends VerticalLayout {
     private ComboBox<String> departmentEmployee;
 
     private final ContragentsListGridLayout contragentsListGridLayout;
+    private Button closeButton;
+
+    public Button getCloseButton() {
+        return closeButton;
+    }
 
     public FormNewContragent(ContragentsListGridLayout contragentsListGridLayout) {
         this.contragentsListGridLayout = contragentsListGridLayout;
 
         add(getGroupButton(), getNameContragent(), groupBlockLayout());
+
     }
 
     private HorizontalLayout getGroupButton() {
@@ -82,13 +90,17 @@ public class FormNewContragent extends VerticalLayout {
 
             contractorService.create(contractorDto);
             removeAll();
-            add(contragentsListGridLayout);
+
+
+            //add(contragentsListGridLayout);
 
         });
 
-        Button closeButton = new Button("Закрыть", e->{
+            closeButton = new Button("Закрыть", e->{
             removeAll();
-            add(contragentsListGridLayout);
+
+    //       add(contragentsListGridLayout);
+
 
         });
         controlGroupButton.add(createButton, closeButton);
