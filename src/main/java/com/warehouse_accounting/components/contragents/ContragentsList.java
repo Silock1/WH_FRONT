@@ -18,9 +18,11 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.components.contragents.form.FormEditCotragent;
 import com.warehouse_accounting.components.contragents.form.FormNewContragent;
 import com.warehouse_accounting.components.contragents.grids.ContragentsFilterLayout;
 import com.warehouse_accounting.components.contragents.grids.ContragentsListGridLayout;
+import com.warehouse_accounting.models.dto.ContractorDto;
 
 /*
 Контрагенты
@@ -33,19 +35,23 @@ public class ContragentsList extends VerticalLayout {
     private ContragentsFilterLayout contragentsFilterLayout;
     private FormNewContragent formNewContragent;
     private HorizontalLayout buttons;
-
-
-
+    private FormEditCotragent formEditCotragent;
 
     public ContragentsList(ContragentsListGridLayout contragentsListGridLayout,
-                           ContragentsFilterLayout contragentsFilterLayout, FormNewContragent formNewContragent) {
+                           ContragentsFilterLayout contragentsFilterLayout,
+                           FormNewContragent formNewContragent,
+                            FormEditCotragent formEditCotragent ) {
+
         this.contragentsListGridLayout=contragentsListGridLayout;
         this.contragentsFilterLayout = contragentsFilterLayout;
         this.formNewContragent = formNewContragent;
-        buttons = getGroupButtons();
+        this.formEditCotragent = formEditCotragent;
+        this.buttons = getGroupButtons();
+        this.contragentsListGridLayout.setParent(this);
+        this.formEditCotragent.setParent(this);
+        this.formNewContragent.setContragentsList(this);
         add(buttons, contragentsFilterLayout, contragentsListGridLayout);
     }
-
 
     private HorizontalLayout getGroupButtons() {
 
@@ -61,16 +67,22 @@ public class ContragentsList extends VerticalLayout {
                                                                   "Видео: Контрагенты",4000,Notification.Position.TOP_START));
 
         Label textLabel = new Label("Контрагенты");
+        textLabel.setWidth("150px");
 
         Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH));
         refreshButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
-
+        refreshButton.addClickListener(e-> {
+            contragentsListGridLayout.refreshDate();
+        });
         Button addContragent = new Button(("Контрагент"), new Icon(VaadinIcon.PLUS));
         addContragent.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         addContragent.addClickListener(e->{
-             removeAll();
-             add(formNewContragent);
 
+             buttons.setVisible(false);
+             contragentsListGridLayout.setVisible(false);
+             contragentsFilterLayout.setVisible(false);
+             formNewContragent.refres();
+             add(formNewContragent);
         });
 
         Button filter = new Button("Фильтр");
@@ -87,7 +99,6 @@ public class ContragentsList extends VerticalLayout {
         Button mailingLists = new Button("Рассылки");
         Button importButton = new Button("Импорт");
         Button exportButton = new Button("Экспорт");
-
 
         MenuBar menuBar = new MenuBar();
         menuBar.addThemeVariants(MenuBarVariant.LUMO_ICON, MenuBarVariant.LUMO_CONTRAST);
@@ -138,7 +149,19 @@ public class ContragentsList extends VerticalLayout {
         setSizeFull();
         return controlButton;
     }
-
-
-
+    public void showButtonEndGrid(Boolean refreshGrid){
+        buttons.setVisible(true);
+        if(refreshGrid)contragentsListGridLayout.refreshDate();
+        contragentsListGridLayout.setVisible(true);
+    }
+    public void hideButtonEndGrid(){
+        buttons.setVisible(false);
+        contragentsListGridLayout.setVisible(false);
+        contragentsFilterLayout.setVisible(false);
+    }
+    public void editFormActivate(ContractorDto contractorDto){
+        formEditCotragent.bild(contractorDto);
+        hideButtonEndGrid();
+        add(formEditCotragent);
+    }
 }
