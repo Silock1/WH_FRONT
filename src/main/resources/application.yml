@@ -12,6 +12,7 @@ retrofit:
     bank_account_url: api/bank_accounts
     bankAccount_url: api/bankAccounts
     call_url: api/calls
+    city_url: api/cities
     company_url : api/companies
     comissioner_reports_url: api/comissioner_reports
     contract_url: api/contracts
@@ -37,8 +38,10 @@ retrofit:
     recycleBin_url: api/recycle_bin
     return_url: api/returns
     role_url: api/roles
+    street_url: api/streets
     subscription_url: api/subscription
     supplier_invoice_url: api/supplier_invoices
+    tasks_url: api/tasks
     tax_system_url: api/tax_systems
     type_of_contractor_url: api/tocs
     type_of_price_url: api/type_of_prices
@@ -50,3 +53,11 @@ retrofit:
 
     warehouse_url: api/warehouses
     sales_channels_url: api/sales_channels
+
+retrofit2:
+  baseUrl: https://suggestions.dadata.ru/suggestions/api/
+
+  restservices:
+    inn_request: 4_1/rs/suggest/party
+
+  token: Token 2d713421aa060556bee478b15c284a9cdf05a6e5
