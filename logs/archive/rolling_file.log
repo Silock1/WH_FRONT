@@ -1,1 +1,3 @@
-[INFO ] 2022-03-11 04:46:51.341 [http-nio-4447-exec-6] ContractorServiceImpl - Успешно выполнен запрос на создание ContractorDto
+[INFO ] 2022-03-11 16:35:31.271 [http-nio-4447-exec-8] DadataServiceImpl - ИНН/КПП/ОГРН: 7707083893/667102008/1027700132195
+[INFO ] 2022-03-11 16:35:31.288 [http-nio-4447-exec-8] DadataServiceImpl - Наименование: АБАКАНСКОЕ ОТДЕЛЕНИЕ №8602 ПАО СБЕРБАНК
+[INFO ] 2022-03-11 16:35:31.288 [http-nio-4447-exec-8] DadataServiceImpl - ИНН/КПП/ОГРН: 7707083893/190103001/1027700132195

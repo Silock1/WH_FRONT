@@ -1,7 +1,8 @@
 package com.warehouse_accounting.services.impl;
 
-import com.warehouse_accounting.models.dto.dadata.Example;
+import com.warehouse_accounting.models.dto.dadata.Example2;
 import com.warehouse_accounting.models.dto.dadata.Query;
+import com.warehouse_accounting.models.dto.dadata.Suggestion;
 import com.warehouse_accounting.services.interfaces.DadataService;
 import com.warehouse_accounting.services.interfaces.api.DadataApi;
 import lombok.extern.log4j.Log4j2;
@@ -21,7 +22,7 @@ public class DadataServiceImpl implements DadataService {
     private final String url;
     private final String authorization;
 
-    public DadataServiceImpl(@Value("${retrofit2.restservices.inn_request}") String url,
+    public DadataServiceImpl(@Value("${retrofit2.restServices.inn_request}") String url,
                              Retrofit retrofit2, @Value("${retrofit2.token}") String authorization) {
         this.url = url;
         this.api = retrofit2.create(DadataApi.class);
@@ -29,15 +30,23 @@ public class DadataServiceImpl implements DadataService {
     }
 
     @Override
-    public Example getExample(String inn) {
-        Example example = new Example();
+    public Example2 getExample(String inn) {
+        Example2 example = new Example2();
         Query queryInn = new Query(inn);
-        Call<Example> dadataApiGetExample = api.getExample(url, queryInn, authorization);
+        Call<Example2> dadataApiGetExample = api.getExample(url, queryInn, authorization);
         try {
-            Response<Example> response = dadataApiGetExample.execute();
+            Response<Example2> response = dadataApiGetExample.execute();
             if (response.isSuccessful()){
                 example = response.body();
                 log.info("Успешно выполнен запрос на получение данных по ИНН: " + inn);
+
+                System.out.println("---------------------");
+                example.getSuggestions().forEach(suggestion -> {
+                    log.info("Наименование: " + suggestion.getData().getName().getFullWithOpf());
+                    log.info("ИНН/КПП/ОГРН: " + inn + "/" + suggestion.getData().getKpp()
+                    + "/" + suggestion.getData().getOgrn());
+                    System.out.println("---------------------");
+                });
             } else {
                 log.error("Произошла ошибка {} при выполнении запроса на получение данных по ИНН", response.code());
             }

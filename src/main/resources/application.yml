@@ -4,6 +4,7 @@ server:
 retrofit:
   baseUrl: http://localhost:4446/
 
+
   restServices:
     acceptance_url: api/acceptances
     adjustments_url: api/adjustments
@@ -55,9 +56,9 @@ retrofit:
     sales_channels_url: api/sales_channels
 
 retrofit2:
-  baseUrl: https://suggestions.dadata.ru/suggestions/api/
+  baseUrl: https://suggestions.dadata.ru/suggestions/
 
-  restservices:
-    inn_request: 4_1/rs/suggest/party
+  restServices:
+    inn_request: api/4_1/rs/suggest/party
 
   token: Token 2d713421aa060556bee478b15c284a9cdf05a6e5

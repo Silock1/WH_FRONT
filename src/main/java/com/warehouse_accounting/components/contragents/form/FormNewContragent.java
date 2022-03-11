@@ -19,7 +19,7 @@ import com.warehouse_accounting.components.contragents.grids.ContragentsListGrid
 import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.models.dto.ContractorGroupDto;
 import com.warehouse_accounting.models.dto.LegalDetailDto;
-import com.warehouse_accounting.models.dto.dadata.Example;
+import com.warehouse_accounting.models.dto.dadata.Example2;
 import com.warehouse_accounting.services.impl.ContractorServiceImpl;
 import com.warehouse_accounting.services.interfaces.ContractorService;
 import com.warehouse_accounting.services.interfaces.DadataService;
@@ -129,13 +129,13 @@ public class FormNewContragent extends VerticalLayout {
 
         fillByInn = new Button("Заполнить по ИНН", buttonClickEvent -> {
             String inn = innEmployee.getValue();
-            Example example = dadataService.getExample(inn);
-            if (example.getSuggestions().size() == 1){
-                nameContragent.setValue(example.getSuggestions().get(0).getData().getName().getFull());
+            Example2 example = dadataService.getExample(inn);
+            if (example.getSuggestions().size() > 0){
+                nameContragent.setValue(example.getSuggestions().get(0).getData().getName().getShortWithOpf());
                 kppEmployee.setValue(example.getSuggestions().get(0).getData().getKpp());
                 actualAddress.setValue(example.getSuggestions().get(0).getData().getAddress().getData().getSource());
                 legalAddress.setValue(example.getSuggestions().get(0).getData().getAddress().getData().getSource());
-                fullNameEmployee.setValue(example.getSuggestions().get(0).getValue());
+                fullNameEmployee.setValue(example.getSuggestions().get(0).getData().getName().getFullWithOpf());
                 ogrnEmployee.setValue(example.getSuggestions().get(0).getData().getOgrn());
                 okpoEmployee.setValue(example.getSuggestions().get(0).getData().getOkpo());
             }

@@ -1,54 +1,43 @@
 
 package com.warehouse_accounting.models.dto.dadata;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
 import javax.annotation.Generated;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-    "value",
-    "unrestricted_value",
-    "data"
-})
 @Generated("jsonschema2pojo")
 public class Suggestion {
 
-    @JsonProperty("value")
+    @SerializedName("value")
+    @Expose
     private String value;
-    @JsonProperty("unrestricted_value")
+    @SerializedName("unrestricted_value")
+    @Expose
     private String unrestrictedValue;
-    @JsonProperty("data")
+    @SerializedName("data")
+    @Expose
     private Data data;
 
-    @JsonProperty("value")
     public String getValue() {
         return value;
     }
 
-    @JsonProperty("value")
     public void setValue(String value) {
         this.value = value;
     }
 
-    @JsonProperty("unrestricted_value")
     public String getUnrestrictedValue() {
         return unrestrictedValue;
     }
 
-    @JsonProperty("unrestricted_value")
     public void setUnrestrictedValue(String unrestrictedValue) {
         this.unrestrictedValue = unrestrictedValue;
     }
 
-    @JsonProperty("data")
     public Data getData() {
         return data;
     }
 
-    @JsonProperty("data")
     public void setData(Data data) {
         this.data = data;
     }
