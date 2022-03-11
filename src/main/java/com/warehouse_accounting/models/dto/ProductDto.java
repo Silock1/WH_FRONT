@@ -18,6 +18,18 @@ public class ProductDto {
 
     private String name;
 
+    private String group;
+
+    private String country;
+
+    private String articul;
+
+    private BigDecimal code;
+
+    private BigDecimal outCode;
+
+    private UnitsOfMeasureDto unitsOfMeasureDto;
+
     private BigDecimal weight;
 
     private BigDecimal volume;
