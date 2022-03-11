@@ -108,10 +108,11 @@ public class SalesSubMenuView extends VerticalLayout {
                     break;
                 case "Отчеты комиссионера":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Отчеты комиссионера"));
+                    pageContent.add(initComissionerReports(pageContent));
                     break;
                 case "Возвраты покупателей":
                     pageContent.removeAll();
+                    // Сделать и Добавить представление инициализации возврата покупателей
                     pageContent.add(new Span("Возвраты покупателей"));
                     break;
                 case "Счета-фактуры выданные":
@@ -164,9 +165,10 @@ public class SalesSubMenuView extends VerticalLayout {
         return customerInvoices;
     }
 
-    private ComissionerReports initComissionerReports(/*Div pageContent*/){
+    private ComissionerReports initComissionerReports(Div pageContent){
         if (Objects.isNull(comissionerReports)) {
-            comissionerReports = new ComissionerReports(/*pageContent*/);
+            comissionerReports = new ComissionerReports(pageContent, companyService, contractorService, contractService,
+                    projectService, warehouseService, departmentService, employeeService);
         }
         return comissionerReports;
     }

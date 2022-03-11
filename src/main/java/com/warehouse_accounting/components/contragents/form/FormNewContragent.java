@@ -1,5 +1,6 @@
 package com.warehouse_accounting.components.contragents.form;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -15,6 +16,7 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.components.contragents.ContragentsList;
 import com.warehouse_accounting.components.contragents.grids.ContragentsListGridLayout;
 import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.models.dto.ContractorGroupDto;
@@ -22,6 +24,7 @@ import com.warehouse_accounting.models.dto.LegalDetailDto;
 import com.warehouse_accounting.models.dto.dadata.Example2;
 import com.warehouse_accounting.services.impl.ContractorServiceImpl;
 import com.warehouse_accounting.services.interfaces.ContractorService;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.warehouse_accounting.services.interfaces.DadataService;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -52,22 +55,26 @@ public class FormNewContragent extends VerticalLayout {
     private ComboBox<String> employee;
     private ComboBox<String> departmentEmployee;
 
+
     private final DadataService dadataService;
     private final ContragentsListGridLayout contragentsListGridLayout;
     private final ContractorService contractorService;
 
+    private ContragentsList contragentsList;
     public FormNewContragent(DadataService dadataService, ContragentsListGridLayout contragentsListGridLayout, ContractorService contractorService) {
         this.dadataService = dadataService;
         this.contragentsListGridLayout = contragentsListGridLayout;
         this.contractorService = contractorService;
 
+    public FormNewContragent() {}
+
+    public void refres (){
+        removeAll();
         add(getGroupButton(), getNameContragent(), groupBlockLayout());
     }
-
     private HorizontalLayout getGroupButton() {
         HorizontalLayout controlGroupButton = new HorizontalLayout();
         Button createButton = new Button("Сохранить", e ->{
-
             ContractorDto contractorDto = new ContractorDto();
             LegalDetailDto legalDetailDto = new LegalDetailDto();
 
@@ -95,19 +102,15 @@ public class FormNewContragent extends VerticalLayout {
 
             contractorService.create(contractorDto);
             removeAll();
-            add(contragentsListGridLayout);
-
+            contragentsList.showButtonEndGrid(true);
         });
-
-        Button closeButton = new Button("Закрыть", e->{
+        Button closeButton = new Button("Закрыть", e -> {
             removeAll();
-            add(contragentsListGridLayout);
-
+            contragentsList.showButtonEndGrid(false);
         });
         controlGroupButton.add(createButton, closeButton);
         return controlGroupButton;
     }
-
     private HorizontalLayout getNameContragent() {
         HorizontalLayout nameContragentLayout = new HorizontalLayout();
         nameContragent = new TextField("Наименование");
@@ -115,13 +118,11 @@ public class FormNewContragent extends VerticalLayout {
         nameContragentLayout.add(nameContragent);
         return nameContragentLayout;
     }
-
     private HorizontalLayout groupBlockLayout() {
         HorizontalLayout blockLayout = new HorizontalLayout();
         blockLayout.add(leftGroupButtonLayout(), rightGroupButtonLayout());
         return blockLayout;
     }
-
     private HorizontalLayout leftGroupButtonLayout() {
         HorizontalLayout leftLayout = new HorizontalLayout();
         VerticalLayout verticalLayout = new VerticalLayout();
@@ -244,6 +245,8 @@ public class FormNewContragent extends VerticalLayout {
         rightLayout.add(tabs);
         return rightLayout;
     }
-
+    public void setContragentsList(ContragentsList contragentsList) {
+        this.contragentsList = contragentsList;
+    }
 
 }

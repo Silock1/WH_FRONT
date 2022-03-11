@@ -75,7 +75,7 @@ public class ContragentsFilterLayout extends VerticalLayout {
         HorizontalLayout horizontalLayout_four = new HorizontalLayout(ownerEmployeeCombo, departmentOwner,
                 generalAccessCombo, whenChangedStart, getWhenChangedEnd, whoChanged);
         add(horizontalLayout_one, horizontalLayout_two, horizontalLayout_tree, horizontalLayout_four);
-
+        setVisible(false);
 
     }
 
