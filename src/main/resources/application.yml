@@ -42,7 +42,6 @@ retrofit:
     street_url: api/streets
     subscription_url: api/subscription
     supplier_invoice_url: api/supplier_invoices
-    tasks_url: api/tasks
     tax_system_url: api/tax_systems
     type_of_contractor_url: api/tocs
     type_of_price_url: api/type_of_prices
@@ -50,7 +49,6 @@ retrofit:
     units_of_measure_url: api/measure
     goods_to_realize_get_url: api/goodstorealizeget
     goods_to_realize_give_url: api/goodstorealizegive
-    tasks_url: api/tasks
 #    customer_order_url: api/customer_orders
 
     tasks_url: api/tasks

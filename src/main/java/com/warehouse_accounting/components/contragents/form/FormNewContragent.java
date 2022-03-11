@@ -1,6 +1,5 @@
 package com.warehouse_accounting.components.contragents.form;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -22,12 +21,8 @@ import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.models.dto.ContractorGroupDto;
 import com.warehouse_accounting.models.dto.LegalDetailDto;
 import com.warehouse_accounting.models.dto.dadata.Example2;
-import com.warehouse_accounting.services.impl.ContractorServiceImpl;
 import com.warehouse_accounting.services.interfaces.ContractorService;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.warehouse_accounting.services.interfaces.DadataService;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 
@@ -61,12 +56,15 @@ public class FormNewContragent extends VerticalLayout {
     private final ContractorService contractorService;
 
     private ContragentsList contragentsList;
-    public FormNewContragent(DadataService dadataService, ContragentsListGridLayout contragentsListGridLayout, ContractorService contractorService) {
+
+    public FormNewContragent(DadataService dadataService,
+                             ContragentsListGridLayout contragentsListGridLayout,
+                             ContractorService contractorService) {
         this.dadataService = dadataService;
         this.contragentsListGridLayout = contragentsListGridLayout;
         this.contractorService = contractorService;
+    }
 
-    public FormNewContragent() {}
 
     public void refres (){
         removeAll();
