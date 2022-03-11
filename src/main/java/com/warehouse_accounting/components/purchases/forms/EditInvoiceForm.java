@@ -9,6 +9,8 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
@@ -17,8 +19,10 @@ import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -33,6 +37,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+@CssImport(value = "./css/invoiceForm.css")
 public class EditInvoiceForm extends VerticalLayout {
 
     private final Div parentLayer;
@@ -47,12 +52,12 @@ public class EditInvoiceForm extends VerticalLayout {
     private TextField fieldInvoiceNumber; //Input формы Номер счета поставщика
     private DatePicker datePickerInvoiceNumber; //Input datePicker Счет поставщика от
     private Checkbox checkboxProdused; //Input c чек-бокса Счет поставщика
-    private TextField formOrganization;  //Input формы Организация
-    private TextField formWareHouse; //Input формы Склад
-    private TextField formContrAgent; //Input формы Контрагент
-    private TextField formContract;  //Input формы Договор
+    private Select<String> formOrganization; //Input формы Организация
+    private Select<String> formWareHouse; //Input формы Склад
+    private Select<String> formContrAgent; //Input формы Контрагент
+    private Select<String> formContract;  //Input формы Договор
     private DatePicker datePickerPay; //Input datePicker Дата оплаты
-    private TextField formProject; //Input Проект
+    private Select<String> formProject; //Input Проект
     private TextField formIncomingNumber; //Input Входящий номер
     private DatePicker dateIncomingNumber; //Input даты входящего номера
     private Checkbox checkboxName; //Input c чек-бокса Наименование
@@ -84,45 +89,49 @@ public class EditInvoiceForm extends VerticalLayout {
     private VerticalLayout initForms() {
         VerticalLayout verticalLayout = new VerticalLayout();
 
-        HorizontalLayout formGroups1 = new HorizontalLayout(); // Первая строка с формами
+        FormLayout formLayout1 = new FormLayout(); // Первая строка с формами
 
-        formOrganization = new TextField();
-        formOrganization.setClearButtonVisible(true);
+        formOrganization = new Select<>();
+        formOrganization.setItems("Рога и копыта", "ИП Аленушка", "АО Baba Yaga");
+        formOrganization.setWidth("270px");
+
         if(supplierInvoiceDto.getOrganization() != null){
             formOrganization.setValue(supplierInvoiceDto.getOrganization());
         }
 
-        formWareHouse = new TextField();
-        formWareHouse.setClearButtonVisible(true);
+        formWareHouse = new Select<>();
+        formWareHouse.setItems("Основной склад");
+        formWareHouse.setWidth("270px");
+
         if(supplierInvoiceDto.getWarehouse() != null){
             formWareHouse.setValue(supplierInvoiceDto.getWarehouse());
         }
 
-        formGroups1.add(spaceGenerator(1));
-        formGroups1.add(new Text("Организация"),spaceGenerator(2),formOrganization,spaceGenerator(9),
-                new Text("Склад"),spaceGenerator(1),formWareHouse);
-        formGroups1.setAlignItems(Alignment.CENTER);
+        formLayout1.addFormItem(formOrganization, "Организация");
+        formLayout1.addFormItem(formWareHouse, "Склад");
+        formLayout1.addClassName("formLayout1");
 
-        HorizontalLayout formGroups2 = new HorizontalLayout(); // Вторая строка с формами
+        FormLayout formLayout2 = new FormLayout(); // Вторая строка с формами
 
-        formContrAgent = new TextField();
-        formContrAgent.setClearButtonVisible(true);
+        formContrAgent = new Select<>();
+        formContrAgent.setItems("ООО \"Покупатель\"", "ООО \"Поставщик\"", "Розничный покупатель");
+        formContrAgent.setWidth("270px");
         if(supplierInvoiceDto.getContrAgent() != null){
             formContrAgent.setValue(supplierInvoiceDto.getContrAgent());
         }
 
-        formContract = new TextField();
-        formContract.setClearButtonVisible(true);
+        formContract = new Select<>();
+        formContract.setItems("Нет данных");
+        formContract.setWidth("270px");
         if(supplierInvoiceDto.getContract() != null){
             formContract.setValue(supplierInvoiceDto.getContract());
         }
 
-        formGroups2.add(spaceGenerator(1));
-        formGroups2.add(new Text("Контрагент"),spaceGenerator(3),formContrAgent,spaceGenerator(9),
-                new Text("Договор"),formContract);
-        formGroups2.setAlignItems(Alignment.CENTER);
+        formLayout2.addFormItem(formContrAgent, "Котрагент");
+        formLayout2.addFormItem(formContract, "Договор");
+        formLayout2.addClassName("formLayout2");
 
-        HorizontalLayout formGroups3 = new HorizontalLayout(); // Третья строка с формами
+        FormLayout formLayout3 = new FormLayout(); // Третья строка с формами
 
         datePickerPay = new DatePicker();
         datePickerPay.setClearButtonVisible(true);
@@ -131,42 +140,43 @@ public class EditInvoiceForm extends VerticalLayout {
             datePickerPay.setValue(date);
         }
 
-        formProject = new TextField();
-        formProject.setClearButtonVisible(true);
+        formProject = new Select<>();
+        formProject.setItems("Буратино", "Осьминожка", "Паутина");
+        formProject.setWidth("270px");
         if(supplierInvoiceDto.getProject() != null){
             formProject.setValue(supplierInvoiceDto.getProject());
         }
 
-        formGroups3.add(spaceGenerator(1));
-        formGroups3.add(new Text("Дата оплаты"),spaceGenerator(2),datePickerPay,spaceGenerator(9),
-                new Text("Проект"),spaceGenerator(1),formProject);
-        formGroups3.setAlignItems(Alignment.CENTER);
+        formLayout3.addFormItem(datePickerPay, "План. дата оплаты");
+        formLayout3.addFormItem(formProject, "Проект");
+        formLayout3.addClassName("formLayout3");
 
-        HorizontalLayout formGroups4 = new HorizontalLayout(); // Четвертая строка с формами
+        HorizontalLayout horizontalLayout4 = new HorizontalLayout();  // Четвертая строка с формами
 
         formIncomingNumber = new TextField();
-        formIncomingNumber.setClearButtonVisible(true);
+        formIncomingNumber.setWidth("148,5px");
         if(supplierInvoiceDto.getIncomingNumber() != null){
             formIncomingNumber.setValue(supplierInvoiceDto.getIncomingNumber());
         }
 
         dateIncomingNumber = new DatePicker();
-        dateIncomingNumber.setWidth("23rem");
         dateIncomingNumber.setClearButtonVisible(true);
         if(supplierInvoiceDto.getDateIncomingNumber() != null){
             LocalDate date = LocalDate.parse(supplierInvoiceDto.getDateIncomingNumber(), formatter);
             dateIncomingNumber.setValue(date);
         }
 
-        formGroups4.add(spaceGenerator(1));
-        formGroups4.add(new Text("Входящий номер"),formIncomingNumber,spaceGenerator(1),
-                new Text("от"),dateIncomingNumber);
-        formGroups4.setAlignItems(Alignment.CENTER);
+        horizontalLayout4.add(spaceGenerator(1));
+        horizontalLayout4.add(new Text("Входящий номер"), formIncomingNumber, spaceGenerator(1),
+                new Text("от"), dateIncomingNumber);
+        horizontalLayout4.setAlignItems(FlexComponent.Alignment.CENTER);
+        horizontalLayout4.addClassName("horizontalLayout4");
 
-        verticalLayout.add(formGroups1,formGroups2,formGroups3,formGroups4); // Добавить формы
+        verticalLayout.add(formLayout1, formLayout2, formLayout3, horizontalLayout4); // Добавить формы
 
         return verticalLayout;
     }
+
     // Метод создает верхние кнопки
     private VerticalLayout initTopButtons(){
         VerticalLayout verticalLayout = new VerticalLayout();

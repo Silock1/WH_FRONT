@@ -66,15 +66,20 @@ public class AccountsPayableFilter extends VerticalLayout {
         clear.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 
         DatePicker periodStart = new DatePicker("Период");
+        periodStart.setWidth("100px");
         DatePicker periodEnd = new DatePicker("до");
+        periodEnd.setWidth("100px");
 
         TextField incomingNumber = new TextField("Входящий номер");
 
         DatePicker incomingDataStart = new DatePicker("Входящая дата");
+        incomingDataStart.setWidth("100px");
         DatePicker incomingDataEnd = new DatePicker("до");
+        incomingDataEnd.setWidth("100px");
 
         ComboBox<String> payment = new ComboBox<>("Оплата", "Оплачено",
                 "Частично оплачено", "Не оплачено", "Просрочено");
+        payment.setWidth("200px");
 
         horizontalLayout.add(find,clear,bookmarks,settingButton, periodStart,
                 periodEnd,incomingNumber,incomingDataStart,incomingDataEnd,payment);
@@ -84,23 +89,30 @@ public class AccountsPayableFilter extends VerticalLayout {
     private HorizontalLayout getHorizontalLayoutTwo(){
         var horizontalLayout = new HorizontalLayout();
         ComboBox<String> acceptance = new ComboBox<>("Приемка","Принято", "Частично принято", "Не принято");
+        acceptance.setWidth("200px");
+
         DatePicker periodStart = new DatePicker("План. дата оплаты");
+        periodStart.setWidth("100px");
         DatePicker periodEnd = new DatePicker("до");
+        periodEnd.setWidth("100px");
 
         List<ProductDto> productDtos = productService.getAll();
         ComboBox<ProductDto> productDtoComboBox = new ComboBox<>("Товар или группа");
         productDtoComboBox.setItems(productDtos);
         productDtoComboBox.setItemLabelGenerator(ProductDto::getName);
+        productDtoComboBox.setWidth("190px");
 
         List<WarehouseDto> warehouseDtos = warehouseService.getAll();
         ComboBox<WarehouseDto> warehouseDtoComboBox = new ComboBox<>("Склад");
         warehouseDtoComboBox.setItems(warehouseDtos);
         warehouseDtoComboBox.setItemLabelGenerator(WarehouseDto::getName);
+        warehouseDtoComboBox.setWidth("200px");
 
         List<ProjectDto> projectDtos = projectService.getAll();
         ComboBox<ProjectDto> projectDtoComboBox = new ComboBox<>("Проект");
         projectDtoComboBox.setItems(projectDtos);
         projectDtoComboBox.setItemLabelGenerator(ProjectDto::getName);
+        projectDtoComboBox.setWidth("200px");
 
         horizontalLayout.add(acceptance, periodStart, periodEnd, productDtoComboBox, warehouseDtoComboBox, projectDtoComboBox);
         return horizontalLayout;
@@ -113,20 +125,25 @@ public class AccountsPayableFilter extends VerticalLayout {
         ComboBox<ContractorDto> contractorDtoComboBox = new ComboBox<>("Контрагент");
         contractorDtoComboBox.setItems(contractorDtos);
         contractorDtoComboBox.setItemLabelGenerator(ContractorDto::getName);
+        contractorDtoComboBox.setWidth("200px");
 
         ComboBox<String> contractorGroupBox = new ComboBox<>("Группа контрагента");
+        contractorGroupBox.setWidth("200px");
 
         TextField contractorAccount = new TextField("Счет контрагента");
+        contractorAccount.setWidth("200px");
 
         List<ContractDto> contractDtos = contractService.getAll();
         ComboBox<ContractDto> contractDtoComboBox = new ComboBox<>("Договор");
         contractDtoComboBox.setItems(contractDtos);
         contractDtoComboBox.setItemLabelGenerator(ContractDto::getNumber);
+        contractDtoComboBox.setWidth("200px");
 
         List<EmployeeDto> employeeDtos = employeeService.getAll();
         ComboBox<EmployeeDto> employeeDtoComboBox = new ComboBox<>("Владелец контрагента");
         employeeDtoComboBox.setItems(employeeDtos);
         employeeDtoComboBox.setItemLabelGenerator(EmployeeDto::getLastName);
+        employeeDtoComboBox.setWidth("200px");
 
         horizontalLayout.add(contractorDtoComboBox, contractorGroupBox, contractorAccount, contractDtoComboBox, employeeDtoComboBox);
         return horizontalLayout;
@@ -144,14 +161,19 @@ public class AccountsPayableFilter extends VerticalLayout {
         ComboBox<CompanyDto> companyDtoComboBox = new ComboBox<>("Организация");
         companyDtoComboBox.setItems(companyDtos);
         companyDtoComboBox.setItemLabelGenerator(CompanyDto::getName);
+        companyDtoComboBox.setWidth("200px");
 
         TextField companyAccount = new TextField("Счет организации");
+        companyAccount.setWidth("200px");
 
         ComboBox<String> status = new ComboBox<>("Статус");
+        status.setWidth("200px");
 
         ComboBox<String> accountingEntry = new ComboBox<>("Проведено", "Да", "Нет");
+        accountingEntry.setWidth("200px");
 
         ComboBox<String> printed = new ComboBox<>("Напечатано", "Да", "Нет");
+        printed.setWidth("200px");
 
         horizontalLayout.add(companyDtoComboBox, companyAccount, status, accountingEntry, printed);
         return horizontalLayout;
@@ -161,21 +183,27 @@ public class AccountsPayableFilter extends VerticalLayout {
         var horizontalLayout = new HorizontalLayout();
 
         ComboBox<String> sent = new ComboBox<>("Отправлено", "Да", "Нет");
+        sent.setWidth("200px");
 
         List<EmployeeDto> employeeDtos = employeeService.getAll();
         ComboBox<EmployeeDto> employeeDtoComboBox = new ComboBox<>("Владелец-сотрудник");
         employeeDtoComboBox.setItems(employeeDtos);
         employeeDtoComboBox.setItemLabelGenerator(EmployeeDto::getLastName);
+        employeeDtoComboBox.setWidth("200px");
 
         List<DepartmentDto> departmentDtos = departmentService.getAll();
         ComboBox<DepartmentDto> departmentDtoComboBox = new ComboBox<>("Владелец-отдел");
         departmentDtoComboBox.setItems(departmentDtos);
         departmentDtoComboBox.setItemLabelGenerator(DepartmentDto::getName);
+        departmentDtoComboBox.setWidth("200px");
 
         ComboBox<String> generalAccess = new ComboBox<>("Общий доступ", "Да", "Нет");
+        generalAccess.setWidth("190px");
 
         DatePicker periodStart = new DatePicker("Когда изменен");
+        periodStart.setWidth("100px");
         DatePicker periodEnd = new DatePicker("до");
+        periodEnd.setWidth("100px");
 
         horizontalLayout.add(sent, employeeDtoComboBox, departmentDtoComboBox, generalAccess, periodStart, periodEnd);
         return horizontalLayout;
@@ -188,6 +216,7 @@ public class AccountsPayableFilter extends VerticalLayout {
         ComboBox<EmployeeDto> employeeDtoComboBox = new ComboBox<>("Кто изменил");
         employeeDtoComboBox.setItems(employeeDtos);
         employeeDtoComboBox.setItemLabelGenerator(EmployeeDto::getLastName);
+        employeeDtoComboBox.setWidth("200px");
 
         horizontalLayout.add(employeeDtoComboBox);
         return horizontalLayout;
