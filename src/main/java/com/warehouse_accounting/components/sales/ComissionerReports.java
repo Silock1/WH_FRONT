@@ -263,8 +263,10 @@ import com.vaadin.flow.component.Text;
         import com.vaadin.flow.component.orderedlayout.VerticalLayout;
         import com.vaadin.flow.component.textfield.TextField;
         import com.vaadin.flow.component.textfield.TextFieldVariant;
-        import com.warehouse_accounting.components.sales.filter.SalesShipmentsFilter;
-        import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
+import com.warehouse_accounting.components.sales.filter.SalesOrderComissionerFilter;
+import com.warehouse_accounting.components.sales.filter.SalesShipmentsFilter;
+import com.warehouse_accounting.components.sales.forms.ComissionerReportsAddForm;
+import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
         import com.warehouse_accounting.services.interfaces.CompanyService;
         import com.warehouse_accounting.services.interfaces.ContractService;
         import com.warehouse_accounting.services.interfaces.ContractorService;
@@ -277,10 +279,9 @@ public class ComissionerReports extends VerticalLayout {
 
     private SalesGridLayout salesGridLayout;
 
-    private SalesShipmentsFilter salesShipmentsFilter;
+    private SalesOrderComissionerFilter salesOrderComissionerFilter;
     private final TextField textFieldGridSelected = new TextField();
     private final Div parentLayer;
-
     private CompanyService companyService;
     private ContractorService contractorService;
     private ContractService contractService;
@@ -300,13 +301,13 @@ public class ComissionerReports extends VerticalLayout {
         this.employeeService = employeeService;
         this.departmentService = departmentService;
         this.parentLayer = parentLayer;
-        this.salesShipmentsFilter = new SalesShipmentsFilter(companyService, contractorService, contractService,
+        this.salesOrderComissionerFilter = new SalesOrderComissionerFilter(companyService, contractorService, contractService,
                 projectService, warehouseService, employeeService, departmentService);
         salesGridLayout = new SalesGridLayout(textFieldGridSelected);
         Div pageContent = new Div();
         pageContent.add(salesGridLayout);
         pageContent.setSizeFull();
-        add(getGroupButtons(), salesShipmentsFilter, pageContent);
+        add(getGroupButtons(), salesOrderComissionerFilter, pageContent);
     }
 
     private HorizontalLayout getGroupButtons() {
@@ -316,20 +317,20 @@ public class ComissionerReports extends VerticalLayout {
         helpButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
 
         Label textProducts = new Label();
-        textProducts.setText("Отгрузки");
+        textProducts.setText("Отчет комиссионера");
 
 
         Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH));
         refreshButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
 
+//ToDo кнопка комиссионеров. Не работает.
+        Button addReportComissionerButton = new Button("Отчет комиссионера", new Icon(VaadinIcon.PLUS));
+        addReportComissionerButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
-        Button addOrderButton = new Button("Отчет комиссионера", new Icon(VaadinIcon.PLUS));
-        addOrderButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-
-        addOrderButton.addClickListener(buttonClickEvent -> {
-//            ShipmentsForm shipmentsForm = new ShipmentsForm(parentLayer, this);
+        addReportComissionerButton.addClickListener(buttonClickEvent -> {
+//            ComissionerReportsAddForm comissionerReportsAddForm = new ComissionerReportsAddForm(parentLayer, this);
 //            parentLayer.removeAll();
-//            parentLayer.add(shipmentsForm);
+//            parentLayer.add(comissionerReportsAddForm);
 
         });
 
@@ -337,7 +338,7 @@ public class ComissionerReports extends VerticalLayout {
         Button addFilterButton = new Button("Фильтр");
         addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         addFilterButton.addClickListener(e->
-                salesShipmentsFilter.setVisible(!salesShipmentsFilter.isVisible())
+                salesOrderComissionerFilter.setVisible(!salesOrderComissionerFilter.isVisible())
         );
 
         TextField searchField = new TextField();
@@ -370,7 +371,7 @@ public class ComissionerReports extends VerticalLayout {
 //    }
 
 
-        groupControl.add(helpButton, textProducts, refreshButton, addOrderButton,
+        groupControl.add(helpButton, textProducts, refreshButton, addReportComissionerButton,
                 addFilterButton, searchField, editMenuBar, statusMenuBar, createMenuBar, printMenuBar, gearButton);
         setSizeFull();
         return groupControl;
