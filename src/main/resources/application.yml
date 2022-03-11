@@ -49,5 +49,7 @@ retrofit:
     tasks_url: api/tasks
 #    customer_order_url: api/customer_orders
 
+    tasks_url: api/tasks
+
     warehouse_url: api/warehouses
     sales_channels_url: api/sales_channels
