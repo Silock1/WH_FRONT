@@ -25,10 +25,10 @@ import java.util.stream.Collectors;
 @SpringComponent
 @UIScope
 public class TasksFilter extends VerticalLayout {
-   private TasksGrid tasksGrid;
-   private EmployeeService employeeService;
+    private TasksGrid tasksGrid;
+    private EmployeeService employeeService;
     @Setter
-   private Tasks tasks;
+    private Tasks tasks;
 
 
     Button find = new Button("Найти");
@@ -39,7 +39,8 @@ public class TasksFilter extends VerticalLayout {
 
 
     TextField description = new TextField();
-    DatePicker date = new DatePicker();
+    DatePicker dateBefore = new DatePicker();
+    DatePicker dateAfter = new DatePicker();
     Select<Boolean> isDone = new Select<>(true, false);
     Select<String> contragent = new Select<>(); //сделать
 
@@ -49,7 +50,8 @@ public class TasksFilter extends VerticalLayout {
         this.employeeService = employeeService;
 
         description.setLabel("Описание");
-        date.setLabel("Срок");
+        dateBefore.setLabel("Срок от");
+        dateAfter.setLabel("Срок до");
         isDone.setLabel("Выполнена");
         contragent.setLabel("Исполнитель");
 
@@ -57,7 +59,7 @@ public class TasksFilter extends VerticalLayout {
                 .map(employeeDto -> employeeDto.getFirstName()).collect(Collectors.toList())
         );
         HorizontalLayout layout_one = new HorizontalLayout(find, clear, settingFilter, bookmarks);
-        HorizontalLayout layout_two = new HorizontalLayout(description, date, isDone, contragent);
+        HorizontalLayout layout_two = new HorizontalLayout(description, dateBefore, dateAfter, isDone, contragent);
         add(layout_one, layout_two);
         activatedFindButton();
         clearFields();
@@ -67,14 +69,14 @@ public class TasksFilter extends VerticalLayout {
 
     public void activatedFindButton() {
         find.addClickListener(event -> {
-            filteringTasks(description.getValue(), date.getValue(), isDone.getValue(), contragent.getValue());
+            filteringTasks(description.getValue(), dateBefore.getValue(), dateAfter.getValue(), isDone.getValue(), contragent.getValue());
             tasks.hideTasksGrid(false);
 
         });
 
     }
 
-    public void filteringTasks(String description, LocalDate date, Boolean isDone, String contragent) {
+    public void filteringTasks(String description, LocalDate dateBefore, LocalDate dateAfter, Boolean isDone, String contragent) {
 
         List<TasksDto> temp =
                 tasksGrid.getTasksDto()
@@ -82,9 +84,13 @@ public class TasksFilter extends VerticalLayout {
                         .filter(tasksDto -> ((tasksDto.getDescription().toLowerCase().contains(description.toLowerCase())) || (tasksDto.getDescription().equals(""))))
                         .filter(tasksDto -> {
                             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-                            if (date == null) return true;
-                            else
-                                return (tasksDto.getDeadline().equals(dtf.format(date)));
+                            if (dateBefore == null && dateAfter == null) return true;
+                            else if (dateBefore == null) {
+                                return (tasksDto.getDeadline().compareTo(dtf.format(dateAfter)) <= 0);
+                            } else if (dateAfter == null) {
+                                return tasksDto.getDeadline().compareTo((dtf.format(dateBefore))) >= 0;
+                            } else
+                            return (tasksDto.getDeadline().compareTo((dtf.format(dateBefore))) >= 0 && tasksDto.getDeadline().compareTo(dtf.format(dateAfter)) <= 0);
                         })
                         .filter(tasksDto -> {
                             if (isDone == null) {
@@ -107,7 +113,8 @@ public class TasksFilter extends VerticalLayout {
     public void clearFields() {
         clear.addClickListener(event -> {
             description.clear();
-            date.clear();
+            dateBefore.clear();
+            dateAfter.clear();
             isDone.clear();
             contragent.clear();
         });
