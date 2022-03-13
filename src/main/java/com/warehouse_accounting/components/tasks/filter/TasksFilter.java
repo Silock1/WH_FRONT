@@ -25,10 +25,10 @@ import java.util.stream.Collectors;
 @SpringComponent
 @UIScope
 public class TasksFilter extends VerticalLayout {
-    TasksGrid tasksGrid;
-    EmployeeService employeeService;
+   private TasksGrid tasksGrid;
+   private EmployeeService employeeService;
     @Setter
-    Tasks tasks;
+   private Tasks tasks;
 
 
     Button find = new Button("Найти");

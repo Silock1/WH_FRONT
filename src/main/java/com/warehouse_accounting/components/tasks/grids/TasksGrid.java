@@ -29,7 +29,7 @@ public class TasksGrid extends HorizontalLayout {
         add(initGrid());
     }
 
-    public Grid<TasksDto> initGrid() {
+    private Grid<TasksDto> initGrid() {
         taskDtoGrid.setColumns(getVisibleColumn().keySet().toArray(String[]::new));
         getVisibleColumn().forEach((key, value) -> taskDtoGrid.getColumnByKey(key).setHeader(value));
         taskDtoGrid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_ROW_STRIPES);
