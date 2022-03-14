@@ -16,9 +16,9 @@ import com.warehouse_accounting.services.interfaces.*;
 
 import java.io.IOException;
 import java.util.List;
-/*
-Счета поставщиков - фильтр
- */
+
+//Счета поставщиков - фильтр
+
 @SpringComponent
 @UIScope
 public class AccountsPayableFilter extends VerticalLayout {
