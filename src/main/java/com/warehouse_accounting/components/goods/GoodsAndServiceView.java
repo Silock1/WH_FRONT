@@ -25,7 +25,6 @@ import com.warehouse_accounting.components.goods.forms.GoodsForm;
 import com.warehouse_accounting.components.goods.forms.GroupForm;
 import com.warehouse_accounting.components.goods.forms.ServiceForm;
 import com.warehouse_accounting.components.goods.grids.GoodsGridLayout;
-import com.warehouse_accounting.components.sales.forms.ComissionerReportSettingForm;
 import com.warehouse_accounting.models.dto.ProductDto;
 import com.warehouse_accounting.models.dto.ProductGroupDto;
 import com.warehouse_accounting.services.interfaces.ComissionerReportsService;
@@ -71,15 +70,6 @@ public class GoodsAndServiceView extends VerticalLayout {
         Label textProducts = new Label();
         textProducts.setText("Товары и услуги");
 
-
-        //ToDo Тестовая кнопка
-        Button testButton = new Button("Тест кнопка", new Icon(VaadinIcon.PLUS));
-        testButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        testButton.addClickListener(event -> {
-            ComissionerReportSettingForm comissionerReportSettingForm = new ComissionerReportSettingForm(mainDiv, this, comissionerReportsService);
-            mainDiv.removeAll();
-            mainDiv.add(comissionerReportSettingForm);
-        });
 
         Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH));
         refreshButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
@@ -141,7 +131,7 @@ public class GoodsAndServiceView extends VerticalLayout {
 
         HorizontalLayout exportMenuBar = getExportMenuBar();
 
-        groupControl.add(testButton, helpButton, textProducts, refreshButton, addProductButton, addServiceButton,
+        groupControl.add(helpButton, textProducts, refreshButton, addProductButton, addServiceButton,
                 addComplectButton, addGroupButton, addFilterButton, searchField, editMenuBar,
                 printMenuBar, importMenuBar, exportMenuBar);
         setSizeFull();
