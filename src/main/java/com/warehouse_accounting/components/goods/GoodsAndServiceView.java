@@ -20,7 +20,7 @@ import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
-import com.warehouse_accounting.components.goods.forms.ComplectForm;
+//import com.warehouse_accounting.components.goods.forms.ComplectForm;
 import com.warehouse_accounting.components.goods.forms.GoodsForm;
 import com.warehouse_accounting.components.goods.forms.GroupForm;
 import com.warehouse_accounting.components.goods.forms.ServiceForm;
@@ -91,13 +91,13 @@ public class GoodsAndServiceView extends VerticalLayout {
         });
 
         //TODO Моя кнопка для Компонента через Product
-        Button addComplectButton = new Button("Комплект", new Icon(VaadinIcon.PLUS));
-        addComplectButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        addComplectButton.addClickListener(event -> {
-            ComplectForm complectForm = new ComplectForm(mainDiv, this, productService);
-            mainDiv.removeAll();
-            mainDiv.add(complectForm);
-        });
+//        Button addComplectButton = new Button("Комплект", new Icon(VaadinIcon.PLUS));
+//        addComplectButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+//        addComplectButton.addClickListener(event -> {
+//            ComplectForm complectForm = new ComplectForm(mainDiv, this, productService);
+//            mainDiv.removeAll();
+//            mainDiv.add(complectForm);
+//        });
 
         Button addGroupButton = new Button("Группа", new Icon(VaadinIcon.PLUS));
         addGroupButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -128,7 +128,7 @@ public class GoodsAndServiceView extends VerticalLayout {
         HorizontalLayout exportMenuBar = getExportMenuBar();
 
         groupControl.add(helpButton, textProducts, refreshButton, addProductButton, addServiceButton,
-                addComplectButton, addGroupButton, addFilterButton, searchField, editMenuBar,
+                addGroupButton, addFilterButton, searchField, editMenuBar,
                 printMenuBar, importMenuBar, exportMenuBar);
         setSizeFull();
         return groupControl;
@@ -157,9 +157,9 @@ public class GoodsAndServiceView extends VerticalLayout {
             notification.open(); //TODO реализовать форму подтверждения удаления товара
             //TODO написать метод удаляющий группу продуктов одним запросом
             goodsGridLayout .getProductGrid()
-                    .asMultiSelect()
-                    .getSelectedItems()
-                    .stream().forEach(productDto -> productService.deleteById(productDto.getId()));
+                            .asMultiSelect()
+                            .getSelectedItems()
+                            .stream().forEach(productDto -> productService.deleteById(productDto.getId()));
             goodsGridLayout.initGrid(rootGroupId); //FixMe TEST
             goodsGridLayout.initThreeGrid(rootGroupId); //FixMe TEST
 
