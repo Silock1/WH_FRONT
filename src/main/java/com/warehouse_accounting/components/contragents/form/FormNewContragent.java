@@ -20,7 +20,7 @@ import com.warehouse_accounting.components.contragents.grids.ContragentsListGrid
 import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.models.dto.ContractorGroupDto;
 import com.warehouse_accounting.models.dto.LegalDetailDto;
-import com.warehouse_accounting.models.dto.dadata.Example2;
+import com.warehouse_accounting.models.dto.dadataDto.Example2;
 import com.warehouse_accounting.services.interfaces.ContractorService;
 import com.warehouse_accounting.services.interfaces.DadataService;
 

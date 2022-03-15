@@ -1,5 +1,5 @@
 
-package com.warehouse_accounting.models.dto.dadata;
+package com.warehouse_accounting.models.dto.dadataDto;
 
 import java.util.List;
 import javax.annotation.Generated;

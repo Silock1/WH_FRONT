@@ -1,8 +1,7 @@
 package com.warehouse_accounting.services.impl;
 
-import com.warehouse_accounting.models.dto.dadata.Example2;
-import com.warehouse_accounting.models.dto.dadata.Query;
-import com.warehouse_accounting.models.dto.dadata.Suggestion;
+import com.warehouse_accounting.models.dto.dadataDto.Example2;
+import com.warehouse_accounting.models.dto.dadataDto.Query;
 import com.warehouse_accounting.services.interfaces.DadataService;
 import com.warehouse_accounting.services.interfaces.api.DadataApi;
 import lombok.extern.log4j.Log4j2;

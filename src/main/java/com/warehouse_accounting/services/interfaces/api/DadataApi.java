@@ -1,7 +1,7 @@
 package com.warehouse_accounting.services.interfaces.api;
 
-import com.warehouse_accounting.models.dto.dadata.Example2 ;
-import com.warehouse_accounting.models.dto.dadata.Query;
+import com.warehouse_accounting.models.dto.dadataDto.Example2 ;
+import com.warehouse_accounting.models.dto.dadataDto.Query;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Header;

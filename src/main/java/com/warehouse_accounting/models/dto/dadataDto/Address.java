@@ -1,5 +1,5 @@
 
-package com.warehouse_accounting.models.dto.dadata;
+package com.warehouse_accounting.models.dto.dadataDto;
 
 import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 @Generated("jsonschema2pojo")
 public class Address {
+
 
     @SerializedName("value")
     @Expose
