@@ -1,5 +1,6 @@
 package com.warehouse_accounting.components.contragents.form;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -19,10 +20,11 @@ import com.warehouse_accounting.components.contragents.ContragentsList;
 import com.warehouse_accounting.components.contragents.grids.ContragentsListGridLayout;
 import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.models.dto.ContractorGroupDto;
-import com.warehouse_accounting.models.dto.LegalDetailDto;
-import com.warehouse_accounting.models.dto.dadataDto.Example2;
+import com.warehouse_accounting.services.impl.ContractorServiceImpl;
 import com.warehouse_accounting.services.interfaces.ContractorService;
-import com.warehouse_accounting.services.interfaces.DadataService;
+import org.springframework.beans.factory.annotation.Autowired;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 
@@ -38,7 +40,6 @@ public class FormNewContragent extends VerticalLayout {
     private TextField actualAddress;
     private ComboBox<String> typeEmployee;
     private TextField innEmployee;
-    private Button fillByInn;
     private TextField fullNameEmployee;
     private TextField legalAddress;
     private TextField commentToTheAddress;
@@ -51,20 +52,10 @@ public class FormNewContragent extends VerticalLayout {
     private ComboBox<String> departmentEmployee;
 
 
-    private final DadataService dadataService;
-    private final ContragentsListGridLayout contragentsListGridLayout;
-    private final ContractorService contractorService;
 
     private ContragentsList contragentsList;
 
-    public FormNewContragent(DadataService dadataService,
-                             ContragentsListGridLayout contragentsListGridLayout,
-                             ContractorService contractorService) {
-        this.dadataService = dadataService;
-        this.contragentsListGridLayout = contragentsListGridLayout;
-        this.contractorService = contractorService;
-    }
-
+    public FormNewContragent() {}
 
     public void refres (){
         removeAll();
@@ -73,28 +64,22 @@ public class FormNewContragent extends VerticalLayout {
     private HorizontalLayout getGroupButton() {
         HorizontalLayout controlGroupButton = new HorizontalLayout();
         Button createButton = new Button("Сохранить", e ->{
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("http://localhost:4446")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            ContractorService contractorService = new ContractorServiceImpl("/api/contractors", retrofit);
             ContractorDto contractorDto = new ContractorDto();
-            LegalDetailDto legalDetailDto = new LegalDetailDto();
-
             contractorDto.setName(nameContragent.getValue());
             contractorDto.setPhone(telTextField.getValue());
             contractorDto.setFax(faxTextField.getValue());
             contractorDto.setEmail(emailTextField.getValue());
-            contractorDto.setCommentToAddress(commentToTheAddress.getValue());
+            contractorDto.setComment(commentToTheAddress.getValue());
             contractorDto.setNumberDiscountCard(discountCard.getValue());
-
-//            contractorDto.setLegalDetailAddress(legalAddress.getValue());
-//            contractorDto.setLegalDetailInn(innEmployee.getValue());
-//            contractorDto.setLegalDetailKpp(kppEmployee.getValue());
-//            contractorDto.setLegalDetailTypeOfContractorName(typeEmployee.getValue());
-
-            legalDetailDto.setAddress(legalAddress.getValue());
-            legalDetailDto.setInn(innEmployee.getValue());
-            legalDetailDto.setOkpo(okpoEmployee.getValue());
-            contractorDto.setLegalDetail(legalDetailDto);
-
+            contractorDto.setLegalDetailAddress(legalAddress.getValue());
+            contractorDto.setLegalDetailInn(innEmployee.getValue());
+            contractorDto.setLegalDetailKpp(kppEmployee.getValue());
             contractorDto.setLegalDetailTypeOfContractorName(typeEmployee.getValue());
-
             contractorDto.setContractorGroupName(groupContragent.getValue());
             contractorDto.setContractorGroup(ContractorGroupDto.builder().build());
 
@@ -125,20 +110,6 @@ public class FormNewContragent extends VerticalLayout {
         HorizontalLayout leftLayout = new HorizontalLayout();
         VerticalLayout verticalLayout = new VerticalLayout();
         FormLayout formContragent = new FormLayout();
-
-        fillByInn = new Button("Заполнить по ИНН", buttonClickEvent -> {
-            String inn = innEmployee.getValue();
-            Example2 example = dadataService.getExample(inn);
-            if (example.getSuggestions().size() > 0){
-                nameContragent.setValue(example.getSuggestions().get(0).getData().getName().getShortWithOpf());
-                kppEmployee.setValue(example.getSuggestions().get(0).getData().getKpp());
-                actualAddress.setValue(example.getSuggestions().get(0).getData().getAddress().getData().getSource());
-                legalAddress.setValue(example.getSuggestions().get(0).getData().getAddress().getData().getSource());
-                fullNameEmployee.setValue(example.getSuggestions().get(0).getData().getName().getFullWithOpf());
-                ogrnEmployee.setValue(example.getSuggestions().get(0).getData().getOgrn());
-                okpoEmployee.setValue(example.getSuggestions().get(0).getData().getOkpo());
-            }
-        });
 
         Text textContragent = new Text("О контрагенте");
         statusContragent = new ComboBox<>();
@@ -186,7 +157,6 @@ public class FormNewContragent extends VerticalLayout {
 
         formRequisites.addFormItem(typeEmployee, "Тип контрагента");
         formRequisites.addFormItem(innEmployee, "ИНН");
-        formRequisites.addFormItem(fillByInn, "Заполнить по ИНН");
         formRequisites.addFormItem(fullNameEmployee, "Полное наименование");
         formRequisites.addFormItem(legalAddress, "Юридический адрес");
         formRequisites.addFormItem(commentToTheAddress,"Комментарий к адресу");
@@ -195,7 +165,6 @@ public class FormNewContragent extends VerticalLayout {
         formRequisites.addFormItem(okpoEmployee, "ОКПО");
         formRequisites.addFormItem(paymentAccount, "Расчетный счет");
         formRequisites.setWidth("400px");
-
 
         /*
         Скидки и цены
