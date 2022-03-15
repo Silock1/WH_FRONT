@@ -34,8 +34,13 @@ public class Tasks extends VerticalLayout {
         tasksGrid = new TasksGrid(tasksService);
         Div pageContent = new Div();
         pageContent.add(tasksGrid);
+        filterLayout.setTasks(this);//оно
         pageContent.setSizeFull();
         add(getGroupButtons(), filterLayout, pageContent);
+    }
+
+    public void hideTasksGrid(boolean filter) {
+        tasksGrid.setVisible(filter);
     }
 
     private HorizontalLayout getGroupButtons() {
