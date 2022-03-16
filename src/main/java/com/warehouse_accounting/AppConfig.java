@@ -17,4 +17,12 @@ public class AppConfig {
                 .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().serializeNulls().create()))
                 .build();
     }
+
+    @Bean
+    public Retrofit retrofit2(@Value("${retrofit2.baseUrl}") String baseUrl) {
+        return new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().serializeNulls().create()))
+                .build();
+    }
 }

@@ -27,7 +27,6 @@ import com.warehouse_accounting.components.goods.forms.ServiceForm;
 import com.warehouse_accounting.components.goods.grids.GoodsGridLayout;
 import com.warehouse_accounting.models.dto.ProductDto;
 import com.warehouse_accounting.models.dto.ProductGroupDto;
-import com.warehouse_accounting.services.interfaces.ComissionerReportsService;
 import com.warehouse_accounting.services.interfaces.ProductGroupService;
 import com.warehouse_accounting.services.interfaces.ProductService;
 import org.springframework.stereotype.Component;
@@ -46,9 +45,6 @@ public class GoodsAndServiceView extends VerticalLayout {
     private Div mainDiv;
     private GoodsGridLayout goodsGridLayout;
     private Long rootGroupId = 1L; //TODO а нужно ли это?
-
-    private /*final*/ ComissionerReportsService comissionerReportsService;
-
 
     public GoodsAndServiceView(ProductGroupService productGroupService, ProductService productService) {
         this.productGroupService = productGroupService;
@@ -69,7 +65,6 @@ public class GoodsAndServiceView extends VerticalLayout {
 
         Label textProducts = new Label();
         textProducts.setText("Товары и услуги");
-
 
         Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH));
         refreshButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
@@ -95,6 +90,7 @@ public class GoodsAndServiceView extends VerticalLayout {
             mainDiv.add(serviceForm);
         });
 
+        //TODO Моя кнопка для Компонента через Product
         Button addComplectButton = new Button("Комплект", new Icon(VaadinIcon.PLUS));
         addComplectButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         addComplectButton.addClickListener(event -> {
