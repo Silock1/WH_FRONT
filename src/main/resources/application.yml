@@ -36,6 +36,7 @@ retrofit:
     project_url: api/projects
     recycleBin_url: api/recycle_bin
     return_url: api/returns
+    retail_url: api/retail
     role_url: api/roles
     subscription_url: api/subscription
     supplier_invoice_url: api/supplier_invoices
@@ -48,8 +49,6 @@ retrofit:
     goods_to_realize_give_url: api/goodstorealizegive
     tasks_url: api/tasks
 #    customer_order_url: api/customer_orders
-
-    tasks_url: api/tasks
 
     warehouse_url: api/warehouses
     sales_channels_url: api/sales_channels
