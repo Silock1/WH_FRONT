@@ -16,10 +16,19 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.warehouse_accounting.components.purchases.filter.AccountsPayableFilter;
 import com.warehouse_accounting.components.purchases.forms.CreateInvoiceForm;
 import com.warehouse_accounting.components.purchases.grids.SupplierInvoiceGridLayout;
 import com.warehouse_accounting.services.impl.SupplierInvoiceServiceImpl;
+import com.warehouse_accounting.services.interfaces.CompanyService;
+import com.warehouse_accounting.services.interfaces.ContractService;
+import com.warehouse_accounting.services.interfaces.ContractorService;
+import com.warehouse_accounting.services.interfaces.DepartmentService;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
+import com.warehouse_accounting.services.interfaces.ProductService;
+import com.warehouse_accounting.services.interfaces.ProjectService;
 import com.warehouse_accounting.services.interfaces.SupplierInvoiceService;
+import com.warehouse_accounting.services.interfaces.WarehouseService;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -35,6 +44,15 @@ public class AccountsPayable extends VerticalLayout {
 
     private final TextField textField = new TextField();
     private final Div parentLayer;
+    private AccountsPayableFilter accountsPayableFilter;
+    private final WarehouseService warehouseService;
+    private final ContractService contractService;
+    private final ContractorService contractorService;
+    private final ProjectService projectService;
+    private final EmployeeService employeeService;
+    private final DepartmentService departmentService;
+    private final ProductService productService;
+    private final CompanyService companyService;
 
     private Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://localhost:4446")
@@ -42,14 +60,28 @@ public class AccountsPayable extends VerticalLayout {
             .build();
     private SupplierInvoiceService supplierInvoiceService = new SupplierInvoiceServiceImpl("/api/supplier_invoices",retrofit);
 
-    public  AccountsPayable (Div parentLayer){
+    public AccountsPayable(Div parentLayer, WarehouseService warehouseService, ContractService contractService,
+                           ContractorService contractorService, ProjectService projectService, EmployeeService employeeService,
+                           DepartmentService departmentService, ProductService productService, CompanyService companyService) {
         this.parentLayer = parentLayer;
+        this.warehouseService = warehouseService;
+        this.contractService = contractService;
+        this.contractorService = contractorService;
+        this.projectService = projectService;
+        this.employeeService = employeeService;
+        this.departmentService = departmentService;
+        this.productService = productService;
+        this.companyService = companyService;
+        this.accountsPayableFilter = new AccountsPayableFilter(warehouseService, contractService,
+                contractorService, projectService, employeeService, departmentService, productService, companyService);
         SupplierInvoiceGridLayout.parentLayer = parentLayer;
         SupplierInvoiceGridLayout.returnLayer = this;
         Div pageContent = new Div();
+
         pageContent.setSizeFull();
-        add(getGroupButtons(), pageContent);
+        add(getGroupButtons(), accountsPayableFilter, pageContent);
     }
+
 
     private HorizontalLayout getGroupButtons() {
         HorizontalLayout groupControl = new HorizontalLayout();
@@ -86,6 +118,9 @@ public class AccountsPayable extends VerticalLayout {
 
         Button addFilterButton = new Button("Фильтр");
         addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        addFilterButton.addClickListener(e->
+                accountsPayableFilter.setVisible(!accountsPayableFilter.isVisible())
+        );
 
         TextField searchField = new TextField();
         searchField.setPlaceholder("Номер или комментарий");
@@ -182,9 +217,7 @@ public class AccountsPayable extends VerticalLayout {
             dialog.close();
         });
 
-        cancel.addClickListener(event -> {
-            dialog.close();
-        });
+        cancel.addClickListener(event -> dialog.close());
     }
 
     private HorizontalLayout getStatusMenuBar() {
