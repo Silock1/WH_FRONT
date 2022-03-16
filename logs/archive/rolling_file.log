@@ -1,1 +1,5 @@
-[INFO ] 2022-03-14 17:32:43.135 [http-nio-4447-exec-8] EmployeeServiceImpl - Список EmployeeDto получен успешно
+[INFO ] 2022-03-16 17:23:53.759 [http-nio-4447-exec-2] EmployeeServiceImpl - Список EmployeeDto получен успешно
+[INFO ] 2022-03-16 17:23:53.764 [http-nio-4447-exec-2] CompanyServiceImpl - Успешно выполнен запрос на получение списка Company
+[INFO ] 2022-03-16 17:23:53.772 [http-nio-4447-exec-2] EmployeeServiceImpl - Список EmployeeDto получен успешно
+[INFO ] 2022-03-16 17:23:53.775 [http-nio-4447-exec-2] DepartmentServiceImpl - Успешно выполнен запрос на получение списка DepartmentDto
+[INFO ] 2022-03-16 17:23:53.781 [http-nio-4447-exec-2] EmployeeServiceImpl - Список EmployeeDto получен успешно
