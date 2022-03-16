@@ -114,7 +114,6 @@ public class SalesOrderComissionerFilter extends VerticalLayout {
      *
      * Это поле №2 - готово
      */
-
     private HorizontalLayout getHorizontalLayoutTwo(){
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         ComboBox<String> contractorGroup = new ComboBox<>("Группа контрагента");
@@ -154,8 +153,6 @@ public class SalesOrderComissionerFilter extends VerticalLayout {
         return horizontalLayout;
     }
 
-
-
     /**
      *
      * Это поле №4
@@ -169,7 +166,6 @@ public class SalesOrderComissionerFilter extends VerticalLayout {
         //ToDO Есть класс канал продаж нужно его подключить Не правильно сдела Делай как ниже в коментах
         ComboBox<String> salesChannel = new ComboBox<>("Канал продаж");
 
-        //ToDO Другой класс++++++++++++++++++++++ Не правильно сдела
 //        List<EmployeeDto> employeeDtos1 = employeeService.getAll();
 //        ComboBox<EmployeeDto> employeeDtoComboBox1 = new ComboBox<>("Канал-продаж");
 //        employeeDtoComboBox1.setItems(employeeDtos1);

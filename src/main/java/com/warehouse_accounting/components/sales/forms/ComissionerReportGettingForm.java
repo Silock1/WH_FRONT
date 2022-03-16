@@ -69,49 +69,25 @@ public class ComissionerReportGettingForm extends VerticalLayout {
     private FormLayout getFormLayout() {
         FormLayout form = new FormLayout();
 
+        //ToDo Код для примера оформления полей
         //Operations are grouped by fields : new field + something else + bind + form.add
-        TextField nameField = new TextField("*Наименование товара", "наименование товара");
-        nameField.setRequired(true);
-        productDtoBinder.forField(nameField).asRequired().bind(ProductDto::getName, ProductDto::setName);
-        form.add(nameField);
+//        TextField nameField = new TextField("*Наименование товара", "наименование товара");
+//        nameField.setRequired(true);
+//        productDtoBinder.forField(nameField).asRequired().bind(ProductDto::getName, ProductDto::setName);
+//        form.add(nameField);
+//
+//        TextField descriptionField = new TextField("Описание","описание товара");
+//        productDtoBinder.forField(descriptionField).bind(ProductDto::getDescription, ProductDto::setDescription);
+//        form.add(descriptionField);
+//
+//        BigDecimalField codeField = new BigDecimalField("Код", "введите код товара");
+//        productDtoBinder.forField(codeField).bind(ProductDto::getCode, ProductDto::setCode);
+//        form.add(codeField);
+//
+//        BigDecimalField purchasePriceField = new BigDecimalField("Цена закупки", "цена закупки товара");
+//        productDtoBinder.forField(purchasePriceField).bind(ProductDto::getPurchasePrice, ProductDto::setPurchasePrice);
+//        form.add(purchasePriceField);
 
-        TextField descriptionField = new TextField("Описание","описание товара");
-        productDtoBinder.forField(descriptionField).bind(ProductDto::getDescription, ProductDto::setDescription);
-        form.add(descriptionField);
-
-        TextField groupField = new TextField("Группа","введите группу товару");
-        productDtoBinder.forField(groupField).bind(ProductDto::getGroup, ProductDto::setGroup);
-        form.add(groupField);
-
-        TextField countryField = new TextField("Страна","");
-        productDtoBinder.forField(countryField).bind(ProductDto::getCountry, ProductDto::setCountry);
-        form.add(countryField);
-
-        TextField articulField = new TextField("Артикул","введите артикул");
-        productDtoBinder.forField(articulField).bind(ProductDto::getArticul, ProductDto::setArticul);
-        form.add(articulField);
-
-        BigDecimalField codeField = new BigDecimalField("Код", "введите код товара");
-        productDtoBinder.forField(codeField).bind(ProductDto::getCode, ProductDto::setCode);
-        form.add(codeField);
-
-        BigDecimalField outCodeField = new BigDecimalField("Внешний Код", "введите внешний код товара");
-        productDtoBinder.forField(outCodeField).bind(ProductDto::getOutCode, ProductDto::setOutCode);
-        form.add(outCodeField);
-
-        BigDecimalField weightField = new BigDecimalField("Вес", "вес единицы товара");
-        productDtoBinder.forField(weightField).bind(ProductDto::getWeight, ProductDto::setWeight);
-        form.add(weightField);
-
-        BigDecimalField volumeField = new BigDecimalField("Объём", "объём единицы товара");
-        productDtoBinder.forField(volumeField).bind(ProductDto::getVolume, ProductDto::setVolume);
-        form.add(volumeField);
-
-        BigDecimalField purchasePriceField = new BigDecimalField("Цена закупки", "цена закупки товара");
-        productDtoBinder.forField(purchasePriceField).bind(ProductDto::getPurchasePrice, ProductDto::setPurchasePrice);
-        form.add(purchasePriceField);
-
-        //TODO Добавить все недостающие поля для комплект
 
         form.setWidthFull();
         form.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1));

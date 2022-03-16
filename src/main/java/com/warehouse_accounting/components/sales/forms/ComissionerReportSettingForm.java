@@ -6,12 +6,7 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.BigDecimalField;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
-import com.warehouse_accounting.components.user.settings.SettingsView;
 import com.warehouse_accounting.models.dto.ProductDto;
 import com.warehouse_accounting.services.interfaces.ComissionerReportsService;
 import lombok.extern.log4j.Log4j2;
@@ -71,23 +66,17 @@ public class ComissionerReportSettingForm extends VerticalLayout {
     private FormLayout getFormLayout() {
         FormLayout form = new FormLayout();
 
+        //TODO в комментах код для заполнения полей
         //Operations are grouped by fields : new field + something else + bind + form.add
-        TextField nameField = new TextField("*Наименование товара", "наименование товара");
-        nameField.setRequired(true);
-        //productDtoBinder.forField(nameField).asRequired().bind(ProductDto::getName, ProductDto::setName);
-        //form.add(nameField);
+//        TextField nameField = new TextField("*Наименование товара", "наименование товара");
+//        nameField.setRequired(true);
+//        productDtoBinder.forField(nameField).asRequired().bind(ProductDto::getName, ProductDto::setName);
+//        form.add(nameField);
 //
 //        TextField descriptionField = new TextField("Описание","описание товара");
 //        productDtoBinder.forField(descriptionField).bind(ProductDto::getDescription, ProductDto::setDescription);
 //        form.add(descriptionField);
-//
-//        TextField groupField = new TextField("Группа","введите группу товару");
-//        productDtoBinder.forField(groupField).bind(ProductDto::getGroup, ProductDto::setGroup);
-//        form.add(groupField);
-//
-//        TextField countryField = new TextField("Страна","");
-//        productDtoBinder.forField(countryField).bind(ProductDto::getCountry, ProductDto::setCountry);
-//        form.add(countryField);
+
 //
 //        TextField articulField = new TextField("Артикул","введите артикул");
 //        productDtoBinder.forField(articulField).bind(ProductDto::getArticul, ProductDto::setArticul);
@@ -96,23 +85,6 @@ public class ComissionerReportSettingForm extends VerticalLayout {
 //        BigDecimalField codeField = new BigDecimalField("Код", "введите код товара");
 //        productDtoBinder.forField(codeField).bind(ProductDto::getCode, ProductDto::setCode);
 //        form.add(codeField);
-//
-//        BigDecimalField outCodeField = new BigDecimalField("Внешний Код", "введите внешний код товара");
-//        productDtoBinder.forField(outCodeField).bind(ProductDto::getOutCode, ProductDto::setOutCode);
-//        form.add(outCodeField);
-//
-//        BigDecimalField weightField = new BigDecimalField("Вес", "вес единицы товара");
-//        productDtoBinder.forField(weightField).bind(ProductDto::getWeight, ProductDto::setWeight);
-//        form.add(weightField);
-//
-//        BigDecimalField volumeField = new BigDecimalField("Объём", "объём единицы товара");
-//        productDtoBinder.forField(volumeField).bind(ProductDto::getVolume, ProductDto::setVolume);
-//        form.add(volumeField);
-//
-//        BigDecimalField purchasePriceField = new BigDecimalField("Цена закупки", "цена закупки товара");
-//        productDtoBinder.forField(purchasePriceField).bind(ProductDto::getPurchasePrice, ProductDto::setPurchasePrice);
-//        form.add(purchasePriceField);
-
 
         form.setWidthFull();
         form.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1));
