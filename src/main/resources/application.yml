@@ -51,7 +51,7 @@ retrofit:
     goods_to_realize_get_url: api/goodstorealizeget
     goods_to_realize_give_url: api/goodstorealizegive
     #    customer_order_url: api/customer_orders
-    tasks_url: api/tasks
+    tasks_url: api/tasks_employee
 
     warehouse_url: api/warehouses
     sales_channels_url: api/sales_channels
