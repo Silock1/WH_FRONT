@@ -24,6 +24,7 @@ import com.warehouse_accounting.components.sales.Shipments;
 import com.warehouse_accounting.services.interfaces.ProjectService;
 import com.warehouse_accounting.services.interfaces.WarehouseService;
 
+import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -110,6 +111,7 @@ public class SalesSubMenuView extends VerticalLayout {
                     pageContent.removeAll();
                     pageContent.add(initComissionerReports(pageContent));
                     break;
+
                 case "Возвраты покупателей":
                     pageContent.removeAll();
                     // Сделать и Добавить представление инициализации возврата покупателей
@@ -135,6 +137,9 @@ public class SalesSubMenuView extends VerticalLayout {
         });
         return subMenuTabs;
     }
+
+
+
     private CustomerOrders initCustomerOrders(Div pageContent){
         if (Objects.isNull(customerOrders)) {
             customerOrders = new CustomerOrders(pageContent, companyService, contractorService, contractService,
@@ -167,7 +172,7 @@ public class SalesSubMenuView extends VerticalLayout {
 
     private ComissionerReports initComissionerReports(Div pageContent){
         if (Objects.isNull(comissionerReports)) {
-            comissionerReports = new ComissionerReports(pageContent, companyService, contractorService, contractService,
+            comissionerReports = new ComissionerReports(/*pageContent,*/ companyService, contractorService, contractService,
                     projectService, warehouseService, departmentService, employeeService);
         }
         return comissionerReports;

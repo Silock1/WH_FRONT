@@ -394,7 +394,7 @@ public class CreateInvoiceForm extends VerticalLayout {
 
         textArea = new TextArea();
         textArea.setWidth("44rem");
-        textArea.setPlaceholder("Комметарий");
+        textArea.setPlaceholder("Комментарий");
         add(textArea);
 
         //Layers

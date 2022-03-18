@@ -77,12 +77,9 @@ public class ContragentsList extends VerticalLayout {
         Button addContragent = new Button(("Контрагент"), new Icon(VaadinIcon.PLUS));
         addContragent.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         addContragent.addClickListener(e->{
-
-             buttons.setVisible(false);
-             contragentsListGridLayout.setVisible(false);
-             contragentsFilterLayout.setVisible(false);
-             formNewContragent.refres();
-             add(formNewContragent);
+             hideButtonEndGrid();
+             formEditCotragent.bild(null);
+             add(formEditCotragent);
         });
 
         Button filter = new Button("Фильтр");
