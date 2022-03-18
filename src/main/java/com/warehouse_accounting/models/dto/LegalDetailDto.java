@@ -17,24 +17,15 @@ public class LegalDetailDto {
     private Long id;
 
     private String lastName;
-
     private String firstName;
-
     private String middleName;
-
     private String address;
-
     private String commentToAddress;
-
     private String inn;
-
     private String okpo;
-
     private String ogrnip;
-
+    private String kpp;
     private String numberOfTheCertificate;
-
     private LocalDate dateOfTheCertificate;
-
-    private TypeOfContractorDto typeOfContractorDto;
+    private String typeOfContractorName;
 }
