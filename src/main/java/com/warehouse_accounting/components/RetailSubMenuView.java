@@ -1,13 +1,16 @@
 package com.warehouse_accounting.components;
 
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.warehouse_accounting.components.retail.PointOfSales;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static com.warehouse_accounting.components.UtilView.subMenuTabs;
 
@@ -15,9 +18,11 @@ import static com.warehouse_accounting.components.UtilView.subMenuTabs;
 @PageTitle("Розница")
 public class RetailSubMenuView extends VerticalLayout {
     private final Div pageContent = new Div();
+    private PointOfSales pointOfSales;
 
     public RetailSubMenuView() {
         pageContent.setSizeFull();
+        pageContent.add(initPointOfSales(pageContent));
         add(initSubMenu(), pageContent);
     }
 
@@ -32,6 +37,63 @@ public class RetailSubMenuView extends VerticalLayout {
                 "Предоплаты",
                 "Возвраты предоплат",
                 "Очередь облачных чеков");
-      return subMenuTabs(retailMenuItems);
+        Tabs subMenuTabs = subMenuTabs(retailMenuItems);
+        subMenuTabs.addSelectedChangeListener(event -> {
+            switch (event.getSelectedTab().getLabel()) {
+                case "Точки продажи":
+                    pageContent.removeAll();
+                    pageContent.add(initPointOfSales(pageContent));
+                    break;
+                case "Смены":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Смены"));
+                    break;
+                case "Продажи":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Продажи"));
+                    break;
+                case "Возвраты":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Возвраты"));
+                    break;
+                case "Внесения":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Внесения"));
+                    break;
+                case "Выплаты":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Выплаты"));
+                    break;
+                case "Операции с баллами":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Операции с баллами"));
+                    break;
+                case "Предоплаты":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Предоплаты"));
+                    break;
+                case "Возвраты предоплат":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Возвраты предоплат"));
+                    break;
+                case "Очередь облачных чеков":
+                    pageContent.removeAll();
+                    pageContent.add(new Span("Очередь облачных чеков"));
+                    break;
+
+
+            }
+        });
+
+        return subMenuTabs;
     }
+
+    private PointOfSales initPointOfSales(Div pageContent) {
+        if (Objects.isNull(pointOfSales)) {
+            pointOfSales = new PointOfSales(pageContent);
+        }
+        return pointOfSales;
+    }
+
+
 }
