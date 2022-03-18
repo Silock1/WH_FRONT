@@ -24,7 +24,7 @@ public class ServiceForm extends VerticalLayout {
         VerticalLayout verticalLayout = new VerticalLayout();
 
         Button save = new Button("Сохранить", e -> {
-            //Создание и сохранение сущьности
+            //Создание и сохранение сущности
             parentLayer.removeAll();
             parentLayer.add(returnLayer);
         });
