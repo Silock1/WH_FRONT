@@ -24,10 +24,10 @@ public class UnitsOfMeasureView extends VerticalLayout {
 
     public UnitsOfMeasureView(UnitsOfMeasureService uomService) {
         this.uomService = uomService;
-        H2 tableName = new H2("Еденицы измерения");
-        Button addUnits = new Button("Добавить еденицу");
+        H2 tableName = new H2("Единицы измерения");
+        Button addUnits = new Button("Добавить единицу");
         addUnits.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        addUnits.addClickListener(e-> UI.getCurrent().navigate(UnitsOfMeasureAddView.class));
+        addUnits.addClickListener(e -> UI.getCurrent().navigate(UnitsOfMeasureAddView.class));
         HorizontalLayout header = new HorizontalLayout(tableName);
         header.setAlignItems(FlexComponent.Alignment.CENTER);
         header.getThemeList().clear();
@@ -40,7 +40,7 @@ public class UnitsOfMeasureView extends VerticalLayout {
         Grid<UnitsOfMeasureDto> grid = new Grid<>(UnitsOfMeasureDto.class, false);
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
         grid.addColumn(UnitsOfMeasureDto::getType).setHeader("Тип");
-        grid.addColumn(UnitsOfMeasureDto::getName).setHeader("Короткое наименование");
+        grid.addColumn(UnitsOfMeasureDto::getName).setHeader("Краткое наименование");
         grid.addColumn(UnitsOfMeasureDto::getFullName).setHeader("Полное наименование");
         grid.addColumn(UnitsOfMeasureDto::getCode).setHeader("Цифровой код");
         grid.addSelectionListener(selection -> {
@@ -48,6 +48,13 @@ public class UnitsOfMeasureView extends VerticalLayout {
             boolean isSingleSelection = size == 1;
 
             delete.setEnabled(size != 0);
+        });
+
+        delete.addClickListener(buttonClickEvent -> {
+            grid.getSelectedItems().forEach(selected -> {
+                uomService.deleteById(selected.getId());
+            });
+            grid.setItems(uomService.getAll());
         });
 
         HorizontalLayout footer = new HorizontalLayout(addUnits, delete);

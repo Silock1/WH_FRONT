@@ -23,14 +23,14 @@ public interface UnitsOfMeasureApi {
     Call<UnitsOfMeasureDto> getById(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
 
     @Headers("Accept: application/json")
-    @POST
-    Call<Void> create(@Path(value = "url",encoded = true) String url, @Body UnitsOfMeasureDto dto);
+    @POST("{url}")
+    Call<Void> create(@Path(value = "url", encoded = true) String url, @Body UnitsOfMeasureDto dto);
 
     @Headers("Accept: application/json")
-    @PUT
+    @POST("{url}")
     Call<Void> update(@Path(value = "url", encoded = true) String url, @Body UnitsOfMeasureDto dto);
 
     @Headers("Accept: application/json")
-    @DELETE
+    @DELETE("{url}/{id}")
     Call<Void> deleteById(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
 }
