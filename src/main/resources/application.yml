@@ -38,7 +38,7 @@ retrofit:
     project_url: api/projects
     recycleBin_url: api/recycle_bin   #404
     return_url: api/returns   # []
-      retail_url: api/retail
+    retail_url: api/retail
     role_url: api/roles
     street_url: api/streets   #404
     subscription_url: api/subscription

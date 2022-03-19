@@ -34,10 +34,10 @@ public class UnitsOfMeasureAddView extends VerticalLayout {
 
     private  void addForm(){
 
-        TextField typeField = new TextField("Тип", "Системный", "");
-        TextField nameField = new TextField("Краткое наименование", "Блок", "");
-        TextField fullNameField = new TextField("Полное наименование","Блок сигарет");
-        TextField codeField = new TextField("Цифровой код", "322");
+        TextField typeField = new TextField("Тип", "Пользовательский", "");
+        TextField nameField = new TextField("Краткое наименование", "", "Блок");
+        TextField fullNameField = new TextField("Полное наименование","", "Блок сигарет");
+        TextField codeField = new TextField("Цифровой код", "", "322");
         FormLayout formLayout = new FormLayout(typeField,
                                                 nameField,
                                                 fullNameField,
