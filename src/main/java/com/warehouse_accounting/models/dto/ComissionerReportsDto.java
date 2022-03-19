@@ -18,13 +18,13 @@ public class ComissionerReportsDto {
     private String docType;
     private Long number;
     private LocalDateTime time;
-    private String organization;
-    private Long organizationAccount;
-    private String contractor;
-    private Long contractorAccount;
+    private String organization; //CompanyDto companyDto
+    private Long organizationAccount; // BigDecimal accountCompany
+    private String contractor; //  ContractorDto contractorDto
+    private Long contractorAccount; //BigDecimal accountContractor
     private BigDecimal sum;
-    private String project;
-    private String contract;
+    private String project; //ProjectDto projectDto
+    private String contract; //ContractDto contractDto
     private BigDecimal sumOfReward;
     private BigDecimal sumOfCommittent;
     private BigDecimal paid;
@@ -33,7 +33,7 @@ public class ComissionerReportsDto {
     private String endOfPeriod;
     private Long incomingNumber;
     private String incomingDate;
-    private String salesChannel;
+    private String salesChannel; //SalesChannelDto salesChannelDto
     private String generalAccess;
     private String ownerDepartment;
     private String ownerEmployee;
