@@ -36,7 +36,7 @@ retrofit:
     product_group_url: api/product_groups
     product_url: api/products
     project_url: api/projects
-    recycleBin_url: api/recycle_bin   #404
+    recycleBin_url: api/recycle_bin
     return_url: api/returns   # []
     retail_url: api/retail
     role_url: api/roles
