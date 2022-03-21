@@ -15,7 +15,7 @@ retrofit:
     call_url: api/calls
     city_url: api/cities
     company_url : api/companies
-    comissioner_reports_url: api/comissioner_reports
+    comissioner_reports_url: api/commission_reports
     contract_url: api/contracts
     contractor_group_url: api/contractor_groups
     contractor_url: api/contractors
