@@ -6,48 +6,48 @@ retrofit:
 
 
   restServices:
-    acceptance_url: api/acceptances
+    acceptance_url: api/acceptances   #404
     adjustments_url: api/adjustments
     application_url: api/applications
-    attribute_of_calculation_object_url: api/attribute_of_calculation_objects
+    attribute_of_calculation_object_url: api/attribute_of_calculation_objects   #[]
     bank_account_url: api/bank_accounts
-    bankAccount_url: api/bankAccounts
+    bankAccount_url: api/bankAccounts   #404
     call_url: api/calls
-    city_url: api/cities
+    city_url: api/cities    #404
     company_url : api/companies
-    comissioner_reports_url: api/comissioner_reports
+    comissioner_reports_url: api/comissioner_reports    #404
     contract_url: api/contracts
     contractor_group_url: api/contractor_groups
     contractor_url: api/contractors
     country_url: api/countries
     currency_url: api/currencies
-    customer_order_url: api/customer_orders
+    customer_order_url: api/customer_orders   # []
     department_url: api/departments
     employee_url: api/employees
     feed_url: api/feed
     image_url: api/images
-    invoice_edit_url: api/invoice_edits
-    invoice_product_url: api/invoice_products
-    invoice_url: api/invoices
+    invoice_edit_url: api/invoice_edits   #404
+    invoice_product_url: api/invoice_products   # []
+    invoice_url: api/invoices   # []
     legal_detail_url: api/legal_details
-    movement_url: api/movements
-    payments_url: api/payments
+    movement_url: api/movements   # []
+    payments_url: api/payments    #todo проверить связь с taskDto
     position_url: api/positions
     product_group_url: api/product_groups
     product_url: api/products
     project_url: api/projects
-    recycleBin_url: api/recycle_bin
-    return_url: api/returns
+    recycleBin_url: api/recycle_bin   #404
+    return_url: api/returns   # []
     retail_url: api/retail
     role_url: api/roles
-    street_url: api/streets
+    street_url: api/streets   #404
     subscription_url: api/subscription
     supplier_invoice_url: api/supplier_invoices
     tax_system_url: api/tax_systems
     type_of_contractor_url: api/type_of_contractors
     type_of_price_url: api/type_of_prices
     unit_url: api/units
-    units_of_measure_url: api/measure
+    units_of_measure_url: api/unitsOfMeasure
     goods_to_realize_get_url: api/goodstorealizeget
     goods_to_realize_give_url: api/goodstorealizegive
     #    customer_order_url: api/customer_orders

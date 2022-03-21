@@ -19,6 +19,6 @@ public class UnitsOfMeasureDto {
 
     private  String fullName;
 
-    private Long code;
+    private String code;
 
 }
