@@ -35,8 +35,8 @@ public class GoodsGridLayout extends HorizontalLayout {
     private final ProductService productService;
     private final Div leftThreeGridDiv = new Div();
     private final Div gridDiv = new Div();
-    private final String widthLeftTreeGrid = "25%";
-    private final String widthGrid = "75%";
+    private final String widthLeftTreeGrid = "10%";
+    private final String widthGrid = "90%";
     private TreeGrid<ProductGroupDto> treeGrid;
     private TextField selectedTextField;
     private Grid<ProductDto> productDtoGrid;
@@ -59,7 +59,7 @@ public class GoodsGridLayout extends HorizontalLayout {
     public void initThreeGrid(Long groupId) {
         treeGrid.removeAllColumns();
         /*Конструкция с rootGroup не соответствует дизайну сайта "Moy Sklad", но кода написано довольно много, возможно
-        * здесь была какая-то идея о которой я не знаю*/
+         здесь была какая-то идея о которой я не знаю */
         ProductGroupDto rootGroup = productGroupService.getById(groupId);
         if (Objects.nonNull(rootGroup)) {
 
