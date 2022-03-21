@@ -66,14 +66,14 @@ public class RecycleBinGridLayout extends VerticalLayout {
         HashMap<String, String> fieldNameColumnName = new LinkedHashMap<>();
         fieldNameColumnName.put("documentType","Тип документа");
         fieldNameColumnName.put("number","№");
-      //  fieldNameColumnName.put("date","Время");
+        //  fieldNameColumnName.put("date","Время");  ошибка
         fieldNameColumnName.put("sum","Сумма");
-        fieldNameColumnName.put("warehouse","Со склада");
-      //  fieldNameColumnName.put("warehouse","На склад");
+        fieldNameColumnName.put("warehouseName","Со склада");
+        fieldNameColumnName.put("warehouseFrom","На склад");
         fieldNameColumnName.put("companyName","Организация");
         fieldNameColumnName.put("contractorName","Контрагент");
         fieldNameColumnName.put("status","Статус");
-        fieldNameColumnName.put("project","Проект");
+        fieldNameColumnName.put("projectName","Проект");
         fieldNameColumnName.put("shipped","Отправлено");
         fieldNameColumnName.put("printed","Напечатано");
         fieldNameColumnName.put("comment","Комментарий");
@@ -138,16 +138,16 @@ public class RecycleBinGridLayout extends VerticalLayout {
         });
 
         //модальное окно
-        Dialog dialog = new Dialog();
+      /*  Dialog dialog = new Dialog();
         dialog.getElement().setAttribute("aria-label", "Создание печатной формы");
         VerticalLayout dialogLayout = createDialogLayout(dialog);
-        dialog.add(dialogLayout);
+        dialog.add(dialogLayout);*/
 
         SubMenu printSubMenu = print.getSubMenu();
         MenuItem recycleBinList = printSubMenu.addItem("Список документов");
         recycleBinList.addClickListener(event -> {
 
-            dialog.open(); //
+         //   dialog.open(); //
 
             //TODO повод поработать этот функционал
         });
@@ -158,7 +158,7 @@ public class RecycleBinGridLayout extends VerticalLayout {
             //TODO повод поработать этот функционал
         });
 
-        PointOfSalesDto pointOfSalesDto = new PointOfSalesDto();
+      /*  PointOfSalesDto pointOfSalesDto = new PointOfSalesDto();
 
         //кнопка для скачивания, стоит отдельно
         Button button = new Button("Click to download");
@@ -168,14 +168,14 @@ public class RecycleBinGridLayout extends VerticalLayout {
         add(buttonWrapper);
         TextField textField = new TextField("Enter file contents");
         FileDownloadWrapper link = new FileDownloadWrapper("textfield.txt", () -> textField.getValue().getBytes());
-        link.setText("Download textfield.txt that has contents of the TextField");
+        link.setText("Download textfield.txt that has contents of the TextField");*/
 
 
 
         horizontalToolPanelLayout.add(helpButton,textProducts, refreshButton, addOrderButton, addFilterButton, searchField, numberField, menuBar);
     }
 
-    //модальное окно
+  /*  //модальное окно
     private static VerticalLayout createDialogLayout(Dialog dialog) {
         H2 headline = new H2("Создание печатной формы");
         headline.getStyle().set("margin", "var(--lumo-space-m) 0 0 0")
@@ -216,5 +216,8 @@ public class RecycleBinGridLayout extends VerticalLayout {
         dialogLayout.getStyle().set("width", "350px").set("max-width", "100%");
 
         return dialogLayout;
-    }
+    }*/
+
+
+
 }
