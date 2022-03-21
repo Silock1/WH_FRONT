@@ -7,27 +7,49 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.goods.GoodsAndServiceView;
+import com.warehouse_accounting.components.goods.filter.GoodsFilter;
 import com.warehouse_accounting.components.movements.MovementView;
+import com.warehouse_accounting.components.tasks.Tasks;
+import com.warehouse_accounting.services.interfaces.ContractorService;
+import com.warehouse_accounting.services.interfaces.DepartmentService;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
+import com.warehouse_accounting.services.interfaces.ProductGroupService;
+import com.warehouse_accounting.services.interfaces.ProductService;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static com.warehouse_accounting.components.UtilView.subMenuTabs;
 
 
-@PageTitle("Товары")
+
 @Route(value = "goods", layout = AppView.class)
+@PageTitle("Товары")
 public class GoodsSubMenuView extends VerticalLayout {
 
     private final MovementView movementView;
-    private final GoodsAndServiceView goodsAndService;
+    private GoodsAndServiceView goodsAndService;
     private final Div pageContent = new Div();
 
-    public GoodsSubMenuView(MovementView movementView, GoodsAndServiceView goodsAndService) {
+    private GoodsFilter goodsFilter;
+    private final ProductService productService;
+    private final EmployeeService employeeService;
+    private final DepartmentService departmentService;
+    private final ContractorService contractorService;
+    private final ProductGroupService productGroupService;
+
+
+    public GoodsSubMenuView(MovementView movementView, GoodsAndServiceView goodsAndService, GoodsFilter goodsFilter, ProductService productService, EmployeeService employeeService, DepartmentService departmentService, ContractorService contractorService, ProductGroupService productGroupService) {
         this.movementView = movementView;
         this.goodsAndService = goodsAndService;
-        this.pageContent.removeAll();
+        this.goodsFilter = goodsFilter;
+        this.productService = productService;
+        this.employeeService = employeeService;
+        this.departmentService = departmentService;
+        this.contractorService = contractorService;
+        this.productGroupService = productGroupService;
         pageContent.add(goodsAndService);
         pageContent.setSizeFull();
         add(initSubMenu(), pageContent);
@@ -92,4 +114,5 @@ public class GoodsSubMenuView extends VerticalLayout {
     public void setMainDiv(){
         goodsAndService.setMainDiv(pageContent);
     }
+
 }

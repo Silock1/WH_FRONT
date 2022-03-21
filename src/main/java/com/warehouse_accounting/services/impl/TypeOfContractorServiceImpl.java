@@ -2,7 +2,7 @@ package com.warehouse_accounting.services.impl;
 
 
 import com.warehouse_accounting.models.dto.TypeOfContractorDto;
-import com.warehouse_accounting.services.interfaces.api.RetrofitTypeOfContractorApi;
+import com.warehouse_accounting.services.interfaces.api.TypeOfContractorApi;
 import com.warehouse_accounting.services.interfaces.TypeOfContractorService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,11 +19,11 @@ import java.util.List;
 @Log4j2
 public class TypeOfContractorServiceImpl implements TypeOfContractorService {
 
-    private final RetrofitTypeOfContractorApi api;
+    private final TypeOfContractorApi api;
     private final String url;
 
     public TypeOfContractorServiceImpl(Retrofit retrofit, @Value("${retrofit.restServices.type_of_contractor_url}") String url) {
-        this.api = retrofit.create(RetrofitTypeOfContractorApi.class);
+        this.api = retrofit.create(TypeOfContractorApi.class);
         this.url = url;
     }
 
