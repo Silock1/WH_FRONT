@@ -6,10 +6,10 @@ import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
@@ -22,10 +22,12 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.purchases.grids.SupplierInvoiceGridLayout;
 import com.warehouse_accounting.models.dto.SupplierInvoiceDto;
 import com.warehouse_accounting.services.impl.SupplierInvoiceServiceImpl;
@@ -33,9 +35,9 @@ import com.warehouse_accounting.services.interfaces.SupplierInvoiceService;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
 
+@CssImport(value = "./css/invoiceForm.css")
 public class CreateInvoiceForm extends VerticalLayout {
 
     private final Div parentLayer;
@@ -48,13 +50,13 @@ public class CreateInvoiceForm extends VerticalLayout {
     private TextField fieldInvoiceNumber; //Input формы Номер счета поставщика
     private DatePicker datePickerInvoiceNumber; //Input datePicker Счет поставщика от
     private Checkbox checkboxProdused; //Input c чек-бокса Счет поставщика
-    private ComboBox<String> formOrganization; //Input формы Организация
-    private ComboBox<String> formWareHouse; //Input формы Склад
-    private ComboBox<String> formContrAgent; //Input формы Контрагент
-    private ComboBox<String> formContract;  //Input формы Договор
+    private Select<String> formOrganization; //Input формы Организация
+    private Select<String> formWareHouse; //Input формы Склад
+    private Select<String> formContrAgent; //Input формы Контрагент
+    private Select<String> formContract;  //Input формы Договор
     private DatePicker datePickerPay; //Input datePicker Дата оплаты
-    private ComboBox<String> formProject; //Input Проект
-    private ComboBox<String> formIncomingNumber; //Input Входящий номер
+    private Select<String> formProject; //Input Проект
+    private TextField formIncomingNumber; //Input Входящий номер
     private DatePicker dateIncomingNumber; //Input даты входящего номера
     private Checkbox checkboxName; //Input c чек-бокса Наименование
     private TextField fieldAdd; //Input формы Добавить позицию
@@ -67,90 +69,73 @@ public class CreateInvoiceForm extends VerticalLayout {
         this.returnLayer = returnLayer;
         documentPage.add(mainPage());
 
-        add(initTopButtons(),initInvoiceNumber(),initForms(),initTabs());
+        add(initTopButtons(), initInvoiceNumber(), initForms(), initTabs());
     }
 
     // Метод создает формы в центре страницы
     private VerticalLayout initForms() {
+
         VerticalLayout verticalLayout = new VerticalLayout();
 
-        HorizontalLayout formGroups1 = new HorizontalLayout(); // Первая строка с формами
+        FormLayout formLayout1 = new FormLayout(); // Первая строка с формами
 
-        List<String> listOrganization = new ArrayList<>();
-        listOrganization.add("Рога и копыта");
-        listOrganization.add("ИП Аленушка");
-        listOrganization.add("АО Baba Yaga");
-        formOrganization = new ComboBox<>();
-        formOrganization.setItems(listOrganization);
+        formOrganization = new Select<>();
+        formOrganization.setItems("Рога и копыта", "ИП Аленушка", "АО Baba Yaga");
+        formOrganization.setWidth("270px");
 
-        List<String> listWareHouse = new ArrayList<>();
-        listWareHouse.add("Основной склад");
-        formWareHouse= new ComboBox<>();
-        formWareHouse.setItems(listWareHouse);
+        formWareHouse = new Select<>();
+        formWareHouse.setItems("Основной склад");
+        formWareHouse.setWidth("270px");
 
-        formGroups1.add(spaceGenerator(1));
-        formGroups1.add(new Text("Организация"),spaceGenerator(2),formOrganization,spaceGenerator(9),
-                new Text("Склад"),spaceGenerator(1),formWareHouse);
-        formGroups1.setAlignItems(FlexComponent.Alignment.CENTER);
+        formLayout1.addFormItem(formOrganization, "Организация");
+        formLayout1.addFormItem(formWareHouse, "Склад");
+        formLayout1.addClassName("formLayout1");
 
-        HorizontalLayout formGroups2 = new HorizontalLayout(); // Вторая строка с формами
+        FormLayout formLayout2 = new FormLayout(); // Вторая строка с формами
 
-        List<String> listContrAgent = new ArrayList<>();
-        listContrAgent.add("ООО Покупатель");
-        listContrAgent.add("ООО Поставщик");
-        listContrAgent.add("Розничный покупатель");
-        formContrAgent = new ComboBox<>();
-        formContrAgent.setItems(listContrAgent);
+        formContrAgent = new Select<>();
+        formContrAgent.setItems("ООО \"Покупатель\"", "ООО \"Поставщик\"", "Розничный покупатель");
+        formContrAgent.setWidth("270px");
 
-        List<String> listContract = new ArrayList<>();
-        listContract.add("Бумажный");
-        formContract = new ComboBox<>();
-        formContract.setItems(listContract);
+        formContract = new Select<>();
+        formContract.setItems("Нет данных");
+        formContract.setWidth("270px");
 
-        formGroups2.add(spaceGenerator(1));
-        formGroups2.add(new Text("Контрагент"),spaceGenerator(3),formContrAgent,spaceGenerator(9),
-                new Text("Договор"),formContract);
-        formGroups2.setAlignItems(FlexComponent.Alignment.CENTER);
+        formLayout2.addFormItem(formContrAgent, "Котрагент");
+        formLayout2.addFormItem(formContract, "Договор");
+        formLayout2.addClassName("formLayout2");
 
-        HorizontalLayout formGroups3 = new HorizontalLayout(); // Третья строка с формами
+        FormLayout formLayout3 = new FormLayout(); // Третья строка с формами
 
         datePickerPay = new DatePicker();
+        formProject = new Select<>();
+        formProject.setItems("Буратино", "Осьминожка", "Паутина");
+        formProject.setWidth("270px");
 
-        List<String> listProject = new ArrayList<>();
-        listProject.add("Буратино");
-        listProject.add("Осьминожка");
-        listProject.add("Паутина");
-        formProject = new ComboBox<>();
-        formProject.setItems(listProject);
+        formLayout3.addFormItem(datePickerPay, "План. дата оплаты");
+        formLayout3.addFormItem(formProject, "Проект");
+        formLayout3.addClassName("formLayout3");
 
-        formGroups3.add(spaceGenerator(1));
-        formGroups3.add(new Text("Дата оплаты"),spaceGenerator(2),datePickerPay,spaceGenerator(9),
-                new Text("Проект"),spaceGenerator(1),formProject);
-        formGroups3.setAlignItems(FlexComponent.Alignment.CENTER);
+        HorizontalLayout horizontalLayout4 = new HorizontalLayout();  // Четвертая строка с формами
 
-        HorizontalLayout formGroups4 = new HorizontalLayout(); // Четвертая строка с формами
-
-        List<String> listIncomingNumber = new ArrayList<>();
-        listIncomingNumber.add("123");
-        listIncomingNumber.add("1234");
-        listIncomingNumber.add("12345");
-        formIncomingNumber = new ComboBox<>();
-        formIncomingNumber.setItems(listIncomingNumber);
+        formIncomingNumber = new TextField();
+        formIncomingNumber.setWidth("148,5px");
 
         dateIncomingNumber = new DatePicker();
-        dateIncomingNumber.setWidth("23rem");
 
-        formGroups4.add(spaceGenerator(1));
-        formGroups4.add(new Text("Входящий номер"),formIncomingNumber,spaceGenerator(1),
-                new Text("от"),dateIncomingNumber);
-        formGroups4.setAlignItems(FlexComponent.Alignment.CENTER);
+        horizontalLayout4.add(spaceGenerator(1));
+        horizontalLayout4.add(new Text("Входящий номер"), formIncomingNumber, spaceGenerator(1),
+                new Text("от"), dateIncomingNumber);
+        horizontalLayout4.setAlignItems(FlexComponent.Alignment.CENTER);
+        horizontalLayout4.addClassName("horizontalLayout4");
 
-        verticalLayout.add(formGroups1,formGroups2,formGroups3,formGroups4); // Добавить формы
+        verticalLayout.add(formLayout1, formLayout2, formLayout3, horizontalLayout4); // Добавить формы
 
         return verticalLayout;
     }
+
     // Метод создает верхние кнопки
-    private VerticalLayout initTopButtons(){
+    private VerticalLayout initTopButtons() {
         VerticalLayout verticalLayout = new VerticalLayout();
 
         Button save = new Button("Сохранить", e -> { //Создание и сохранение сущности
@@ -160,11 +145,11 @@ public class CreateInvoiceForm extends VerticalLayout {
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
 
-                SupplierInvoiceService supplierInvoiceService = new SupplierInvoiceServiceImpl("/api/supplier_invoices",retrofit);
+                SupplierInvoiceService supplierInvoiceService = new SupplierInvoiceServiceImpl("/api/supplier_invoices", retrofit);
                 SupplierInvoiceDto supplierInvoiceDto = new SupplierInvoiceDto();
 
                 supplierInvoiceDto.setInvoiceNumber(fieldInvoiceNumber.getValue());
-                if(datePickerInvoiceNumber.getValue() != null){
+                if (datePickerInvoiceNumber.getValue() != null) {
                     supplierInvoiceDto.setDateInvoiceNumber(datePickerInvoiceNumber.getValue().toString());
                 }
                 supplierInvoiceDto.setCheckboxProd(checkboxProdused.getValue());
@@ -172,12 +157,12 @@ public class CreateInvoiceForm extends VerticalLayout {
                 supplierInvoiceDto.setWarehouse(formWareHouse.getValue());
                 supplierInvoiceDto.setContrAgent(formContrAgent.getValue());
                 supplierInvoiceDto.setContract(formContract.getValue());
-                if(datePickerPay.getValue() != null){
+                if (datePickerPay.getValue() != null) {
                     supplierInvoiceDto.setDatePay(datePickerPay.getValue().toString());
                 }
                 supplierInvoiceDto.setProject(formProject.getValue());
                 supplierInvoiceDto.setIncomingNumber(formIncomingNumber.getValue());
-                if(dateIncomingNumber.getValue() != null){
+                if (dateIncomingNumber.getValue() != null) {
                     supplierInvoiceDto.setDateIncomingNumber(dateIncomingNumber.getValue().toString());
                 }
                 supplierInvoiceDto.setCheckboxName(checkboxName.getValue());
@@ -191,7 +176,7 @@ public class CreateInvoiceForm extends VerticalLayout {
                 notification = Notification.show("Счет поставщика создан");
                 notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                 notification.setPosition(Notification.Position.BOTTOM_STRETCH);
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 notification = Notification.show("Ошибка создания счета");
                 notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
                 notification.setPosition(Notification.Position.BOTTOM_STRETCH);
@@ -199,23 +184,23 @@ public class CreateInvoiceForm extends VerticalLayout {
             parentLayer.removeAll();
             parentLayer.add(returnLayer, SupplierInvoiceGridLayout.initSupplierInvoiceGrid());
         });
-        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS,ButtonVariant.LUMO_SMALL);
+        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_SMALL);
 
         Button close = new Button("Закрыть", e -> {
             parentLayer.removeAll();
             parentLayer.add(returnLayer, SupplierInvoiceGridLayout.initSupplierInvoiceGrid());
         });
-        close.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
+        close.addThemeVariants(ButtonVariant.LUMO_CONTRAST, ButtonVariant.LUMO_SMALL);
 
         MenuBar change = new MenuBar();
-        change.addThemeVariants(MenuBarVariant.LUMO_CONTRAST,MenuBarVariant.LUMO_SMALL);
+        change.addThemeVariants(MenuBarVariant.LUMO_CONTRAST, MenuBarVariant.LUMO_SMALL);
         MenuItem moveChange = change.addItem("Изменить");
         SubMenu subMenuChange = moveChange.getSubMenu();
         subMenuChange.addItem("Удалить");
         subMenuChange.addItem("Копировать");
 
         MenuBar create = new MenuBar();
-        create.addThemeVariants(MenuBarVariant.LUMO_CONTRAST,MenuBarVariant.LUMO_SMALL);
+        create.addThemeVariants(MenuBarVariant.LUMO_CONTRAST, MenuBarVariant.LUMO_SMALL);
         MenuItem moveCreate = create.addItem("Создать документ");
         SubMenu subMenuCreate = moveCreate.getSubMenu();
         subMenuCreate.addItem("Приемка");
@@ -223,7 +208,7 @@ public class CreateInvoiceForm extends VerticalLayout {
         subMenuCreate.addItem("Расходный ордер");
 
         MenuBar print = new MenuBar();
-        print.addThemeVariants(MenuBarVariant.LUMO_CONTRAST,MenuBarVariant.LUMO_SMALL);
+        print.addThemeVariants(MenuBarVariant.LUMO_CONTRAST, MenuBarVariant.LUMO_SMALL);
         MenuItem itemPrint = print.addItem(new Icon(VaadinIcon.PRINT));
         itemPrint.add(new Text("Печать"));
         SubMenu subMenuPrint = itemPrint.getSubMenu();
@@ -234,7 +219,7 @@ public class CreateInvoiceForm extends VerticalLayout {
         subMenuPrint.addItem("Настроить...");
 
         MenuBar send = new MenuBar();
-        send.addThemeVariants(MenuBarVariant.LUMO_CONTRAST,MenuBarVariant.LUMO_SMALL);
+        send.addThemeVariants(MenuBarVariant.LUMO_CONTRAST, MenuBarVariant.LUMO_SMALL);
         MenuItem itemSend = send.addItem(new Icon(VaadinIcon.SHARE));
         itemSend.add(new Text("Отправить"));
         SubMenu subMenuSend = itemSend.getSubMenu();
@@ -243,7 +228,7 @@ public class CreateInvoiceForm extends VerticalLayout {
 
         HorizontalLayout groupButton = new HorizontalLayout();
         groupButton.setAlignItems(FlexComponent.Alignment.CENTER);
-        groupButton.add(save,close,change,create,print,send);
+        groupButton.add(save, close, change, create, print, send);
 
         verticalLayout.add(groupButton); // Добавить кнопки
 
@@ -251,7 +236,7 @@ public class CreateInvoiceForm extends VerticalLayout {
     }
 
     // Метод создает строку с формами для счетов поставщика
-    private HorizontalLayout initInvoiceNumber(){
+    private HorizontalLayout initInvoiceNumber() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
 
         Text invoiceText = new Text("Счет поставщика №");
@@ -264,32 +249,33 @@ public class CreateInvoiceForm extends VerticalLayout {
         Text byText = new Text("от");
 
         datePickerInvoiceNumber = new DatePicker();
+        datePickerInvoiceNumber.setValue(LocalDate.now());
 
         MenuBar status = new MenuBar();
-        status.addThemeVariants(MenuBarVariant.LUMO_CONTRAST,MenuBarVariant.LUMO_SMALL);
+        status.addThemeVariants(MenuBarVariant.LUMO_CONTRAST, MenuBarVariant.LUMO_SMALL);
         MenuItem moveStatus = status.addItem("Статус");
         SubMenu subMenuStatus = moveStatus.getSubMenu();
         subMenuStatus.addItem("Настроить...");
 
         checkboxProdused = new Checkbox();
-        checkboxProdused.setLabel("Произведено");
+        checkboxProdused.setLabel("Проведено");
 
-        horizontalLayout.add(spaceGenerator(3),invoiceText,formInvoiceNumber,spaceGenerator(1),byText,datePickerInvoiceNumber);
-        horizontalLayout.add(status,spaceGenerator(2),checkboxProdused);
+        horizontalLayout.add(spaceGenerator(3), invoiceText, formInvoiceNumber, spaceGenerator(1), byText, datePickerInvoiceNumber);
+        horizontalLayout.add(status, spaceGenerator(2), checkboxProdused);
         horizontalLayout.setAlignItems(FlexComponent.Alignment.CENTER);
 
         return horizontalLayout;
     }
 
     // Метод создает таб: главная и связанные страницы
-    private VerticalLayout initTabs(){
+    private VerticalLayout initTabs() {
         VerticalLayout verticalLayout = new VerticalLayout();
 
         Tabs tabs = new Tabs(main, related_documents);
         tabs.addSelectedChangeListener(event ->
                 setContent(event.getSelectedTab())
         );
-        verticalLayout.add(tabs,documentPage);
+        verticalLayout.add(tabs, documentPage);
 
         Accordion taskAccordion = new Accordion();
         Text taskName = new Text("Нет задач");
@@ -305,7 +291,7 @@ public class CreateInvoiceForm extends VerticalLayout {
         buttonTask.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
         HorizontalLayout taskHorizontalLayout1 = new HorizontalLayout();
-        taskHorizontalLayout1.add(taskAccordion,buttonTask);
+        taskHorizontalLayout1.add(taskAccordion, buttonTask);
 
         Accordion fileAccordion = new Accordion();
         VerticalLayout fileVerticalLayout = new VerticalLayout();
@@ -320,7 +306,7 @@ public class CreateInvoiceForm extends VerticalLayout {
         buttonFile.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
         HorizontalLayout fileHorizontalLayout = new HorizontalLayout();
-        fileHorizontalLayout.add(fileAccordion,buttonFile);
+        fileHorizontalLayout.add(fileAccordion, buttonFile);
 
         Text textName = new Text("Наименование");
         Text textSize = new Text("Размер, МБ");
@@ -328,41 +314,41 @@ public class CreateInvoiceForm extends VerticalLayout {
         Text textEmployee = new Text("Сотрудник");
 
         HorizontalLayout horizontalLayoutName = new HorizontalLayout();
-        horizontalLayoutName.add(textName,spaceGenerator(15),textSize,spaceGenerator(3),
-                textDate,spaceGenerator(17),textEmployee);
+        horizontalLayoutName.add(textName, spaceGenerator(15), textSize, spaceGenerator(3),
+                textDate, spaceGenerator(17), textEmployee);
 
         String line = new String();
-        for (int i=0; i<350; i++){
-            line+="-";
+        for (int i = 0; i < 350; i++) {
+            line += "-";
         }
         Label textLine = new Label(line);
 
         HorizontalLayout horizontalLayoutLine = new HorizontalLayout();
         horizontalLayoutLine.add(textLine);
 
-        verticalLayout.add(taskHorizontalLayout1,fileHorizontalLayout,horizontalLayoutName,horizontalLayoutLine);
+        verticalLayout.add(taskHorizontalLayout1, fileHorizontalLayout, horizontalLayoutName, horizontalLayoutLine);
 
         return verticalLayout;
     }
 
     // Метод устанавливает контент в выбранный таб
     private void setContent(Tab selectedTab) {
-        if(selectedTab.equals(main)){
+        if (selectedTab.equals(main)) {
             documentPage.removeAll();
             documentPage.add(mainPage());
-        }else if(selectedTab.equals(related_documents)){
+        } else if (selectedTab.equals(related_documents)) {
             documentPage.removeAll();
         }
     }
 
     // Метод создает главную страницу в таб
-    private VerticalLayout mainPage(){
+    private VerticalLayout mainPage() {
         VerticalLayout verticalLayout = new VerticalLayout();
 
         checkboxName = new Checkbox();
 
         MenuBar name = new MenuBar();
-        name.addThemeVariants(MenuBarVariant.LUMO_CONTRAST,MenuBarVariant.LUMO_SMALL);
+        name.addThemeVariants(MenuBarVariant.LUMO_CONTRAST, MenuBarVariant.LUMO_SMALL);
         MenuItem moveName = name.addItem("Наименование");
         SubMenu subMenuName = moveName.getSubMenu();
         subMenuName.addItem("Сортировать по наименованию");
@@ -372,7 +358,7 @@ public class CreateInvoiceForm extends VerticalLayout {
         subMenuName.addItem(checkboxGroup);
 
         MenuBar price = new MenuBar();
-        price.addThemeVariants(MenuBarVariant.LUMO_CONTRAST,MenuBarVariant.LUMO_SMALL);
+        price.addThemeVariants(MenuBarVariant.LUMO_CONTRAST, MenuBarVariant.LUMO_SMALL);
         MenuItem movePrice = price.addItem("Цена");
         SubMenu subMenuPrice = movePrice.getSubMenu();
         subMenuPrice.addItem("Расценить");
@@ -381,7 +367,7 @@ public class CreateInvoiceForm extends VerticalLayout {
         Button buttonDiscount = new Button("Скидка", e -> {
 
         });
-        buttonDiscount.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
+        buttonDiscount.addThemeVariants(ButtonVariant.LUMO_CONTRAST, ButtonVariant.LUMO_SMALL);
 
         FormLayout formAdd = new FormLayout();
         fieldAdd = new TextField();
@@ -392,15 +378,15 @@ public class CreateInvoiceForm extends VerticalLayout {
         Button buttonAdd = new Button("Добавить из справочника", e -> {
 
         });
-        buttonAdd.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
+        buttonAdd.addThemeVariants(ButtonVariant.LUMO_CONTRAST, ButtonVariant.LUMO_SMALL);
 
         Button buttonCheck = new Button("Проверить комплектацию", e -> {
 
         });
-        buttonCheck.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
+        buttonCheck.addThemeVariants(ButtonVariant.LUMO_CONTRAST, ButtonVariant.LUMO_SMALL);
 
         MenuBar importMenuBar = new MenuBar();
-        importMenuBar.addThemeVariants(MenuBarVariant.LUMO_CONTRAST,MenuBarVariant.LUMO_SMALL);
+        importMenuBar.addThemeVariants(MenuBarVariant.LUMO_CONTRAST, MenuBarVariant.LUMO_SMALL);
         MenuItem moveImport = importMenuBar.addItem("Импорт");
         SubMenu subMenuImport = moveImport.getSubMenu();
         subMenuImport.addItem("Импортировать (старый)");
@@ -408,7 +394,7 @@ public class CreateInvoiceForm extends VerticalLayout {
 
         textArea = new TextArea();
         textArea.setWidth("44rem");
-        textArea.setPlaceholder("Комметарий");
+        textArea.setPlaceholder("Комментарий");
         add(textArea);
 
         //Layers
@@ -417,12 +403,12 @@ public class CreateInvoiceForm extends VerticalLayout {
         horizontalLayout1.add(checkboxName);
         horizontalLayout1.add(name);
 
-        horizontalLayout1.add(spaceGenerator(25),new Text("Количество"),spaceGenerator(10),new Text("Доступно"));
-        horizontalLayout1.add(price,spaceGenerator(5),new Text("НДС"),buttonDiscount,
-                spaceGenerator(10),new Text("Сумма"));
+        horizontalLayout1.add(spaceGenerator(25), new Text("Количество"), spaceGenerator(10), new Text("Доступно"));
+        horizontalLayout1.add(price, spaceGenerator(5), new Text("НДС"), buttonDiscount,
+                spaceGenerator(10), new Text("Сумма"));
 
         HorizontalLayout line1 = new HorizontalLayout();
-        for(int i=0; i<343; i++){
+        for (int i = 0; i < 343; i++) {
             line1.add("-");
         }
         horizontalLayout1.setAlignItems(Alignment.CENTER);
@@ -430,10 +416,10 @@ public class CreateInvoiceForm extends VerticalLayout {
         HorizontalLayout horizontalLayout2 = new HorizontalLayout(); // Вторая строка
 
 
-        horizontalLayout2.add(formAdd,buttonAdd,buttonCheck,spaceGenerator(5),importMenuBar);
+        horizontalLayout2.add(formAdd, buttonAdd, buttonCheck, spaceGenerator(5), importMenuBar);
 
         HorizontalLayout line2 = new HorizontalLayout();
-        for(int i=0; i<343; i++){
+        for (int i = 0; i < 343; i++) {
             line2.add("-");
         }
 
@@ -465,23 +451,23 @@ public class CreateInvoiceForm extends VerticalLayout {
         HorizontalLayout hLabel3 = new HorizontalLayout();
         HorizontalLayout hLabel4 = new HorizontalLayout();
 
-        hLabel1.add(spaceGenerator(10),subTotal1,spaceGenerator(5),dataSubTotal1);
-        hLabel2.add(spaceGenerator(10),checkboxNDS,spaceGenerator(10),dataSubTotal2);
-        hLabel3.add(spaceGenerator(10),checkboxOnNDS);
-        hLabel4.add(spaceGenerator(10),subTotal4,spaceGenerator(12),dataSubTotal4);
+        hLabel1.add(spaceGenerator(10), subTotal1, spaceGenerator(5), dataSubTotal1);
+        hLabel2.add(spaceGenerator(10), checkboxNDS, spaceGenerator(10), dataSubTotal2);
+        hLabel3.add(spaceGenerator(10), checkboxOnNDS);
+        hLabel4.add(spaceGenerator(10), subTotal4, spaceGenerator(12), dataSubTotal4);
 
-        textVerticalLayout.add(hLabel1,hLabel2,hLabel3,hLabel4);
+        textVerticalLayout.add(hLabel1, hLabel2, hLabel3, hLabel4);
 
         horizontalLayout3.add(textVerticalLayout);
 
-        verticalLayout.add(horizontalLayout1,line1,horizontalLayout2,line2,horizontalLayout3);
+        verticalLayout.add(horizontalLayout1, line1, horizontalLayout2, line2, horizontalLayout3);
 
         return verticalLayout;
     }
 
-    private HorizontalLayout spaceGenerator(int count){
+    private HorizontalLayout spaceGenerator(int count) {
         HorizontalLayout space = new HorizontalLayout();
-        for(int i=0; i<count; i++){
+        for (int i = 0; i < count; i++) {
             space.add(new HorizontalLayout());
         }
         return space;
