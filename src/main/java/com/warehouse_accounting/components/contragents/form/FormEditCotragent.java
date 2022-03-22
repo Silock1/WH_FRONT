@@ -132,8 +132,11 @@ public class FormEditCotragent extends VerticalLayout {
                 contractorDto.setCommentToAddress(commentToAddress.getValue());
                 contractorDto.setComment(comment.getValue());
                 contractorDto.setCode(code.getValue());
-                contractorDto.setOuterCode(outerCode.getValue());
-
+                if(outerCode.getValue().equals("")){
+                    contractorDto.setOuterCode("Generate");
+                }else {
+                    contractorDto.setOuterCode(outerCode.getValue());
+                }
                 // получение Данные LegalDetails
                 contractorDto.getLegalDetailDto().setLastName(lastName.getValue());
                 contractorDto.getLegalDetailDto().setFirstName(firstName.getValue());
@@ -146,7 +149,8 @@ public class FormEditCotragent extends VerticalLayout {
                 contractorDto.getLegalDetailDto().setKpp(kpp.getValue());
                 contractorDto.getLegalDetailDto().setNumberOfTheCertificate(numberOfTheCertificate.getValue());
                 contractorDto.getLegalDetailDto().setDateOfTheCertificate(dateOfTheCertificate.getValue());
-                contractorDto.getLegalDetailDto().setTypeOfContractorName((String) typeOfContractor.getValue());
+                contractorDto.getLegalDetailDto().setTypeOfContractorName(typeOfContractor.getValue());
+
 
                 BankAccountDto accountDto;
                 for(FormBankAccauntInner form : formsBankAccount){
@@ -280,6 +284,7 @@ public class FormEditCotragent extends VerticalLayout {
         Accordion accordion = new Accordion();
         AccordionPanel aboutContractor = accordion.add("O контрагенте", form);
         aboutContractor.addThemeVariants(DetailsVariant.FILLED);
+        aboutContractor.setOpened(true);
         return aboutContractor;
     }
     // Блок Контакты
@@ -303,6 +308,7 @@ public class FormEditCotragent extends VerticalLayout {
         Accordion accordion = new Accordion();
         AccordionPanel faceContacts = accordion.add("Контактные лица", faceContactsSpace);
         faceContacts.addThemeVariants(DetailsVariant.FILLED);
+        faceContacts.setOpened(true);
         return faceContacts;
     }
         //<Блок реквизиты
@@ -314,20 +320,20 @@ public class FormEditCotragent extends VerticalLayout {
         // НАстроить дефолтный фокус
         typeOfContractor = new Select<>();
         typeOfContractor.setWidth("350px");
-        typeOfContractor.setItems("Физическое лицo","Юридическое лицо", "Индивидуальный предприниматель");
+        typeOfContractor.setItems("Физическое лицо","Юридическое лицо", "Индивидуальный предприниматель");
         typeOfContractor.setEmptySelectionCaption("Тип контрагента");
 
         if (contractorDto.getLegalDetailDto().getTypeOfContractorName() !=null) {
-            forms.add(contractorDto.getLegalDetailDto().getTypeOfContractorName());
+            forms.add(getFormForContractorType(contractorDto.getLegalDetailDto().getTypeOfContractorName()));
             typeOfContractor.setValue(contractorDto.getLegalDetailDto().getTypeOfContractorName());
         }else {
             forms.add(getFormForContractorType("Юридическое лицо"));
             typeOfContractor.setValue("Юридическое лицо");
         }
         typeOfContractor.addFocusListener(e ->{
-           if(typeOfContractor.getValue().equals("Физическое лицo")){
+           if(typeOfContractor.getValue().equals("Физическое лицо")){
                forms.removeAll();
-               forms.add(getFormForContractorType("Физическое лицo"));
+               forms.add(getFormForContractorType("Физическое лицо"));
            }
            if (typeOfContractor.getValue().equals("Индивидуальный предприниматель")) {
                forms.removeAll();
@@ -343,7 +349,7 @@ public class FormEditCotragent extends VerticalLayout {
         Accordion accordion = new Accordion();
         AccordionPanel legailDetails = accordion.add("Реквезиты", main);
         legailDetails.addThemeVariants(DetailsVariant.FILLED);
-
+        legailDetails.setOpened(true);
         return legailDetails;
     }
     // Блок Скидки и цены
@@ -425,7 +431,7 @@ public class FormEditCotragent extends VerticalLayout {
             formLayout.addFormItem(dateOfTheCertificate, "Дата свидетельства");
             break;
 
-            case "Физическое лицo":
+            case "Физическое лицо":
             formLayout.addFormItem(inn, "ИНН");
             formLayout.addFormItem(lastName, "Фамилия");
             formLayout.addFormItem(firstName, "Имя");

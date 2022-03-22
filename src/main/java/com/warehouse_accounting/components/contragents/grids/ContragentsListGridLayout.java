@@ -49,16 +49,18 @@ public class ContragentsListGridLayout extends HorizontalLayout {
 
         contractorDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI);
         contractorDtoGrid.addColumn(ContractorDto::getName).setHeader("Наименование").setSortable(true).setAutoWidth(true);
-        contractorDtoGrid.addColumn(ContractorDto::getId).setHeader("Код").setSortable(true).setAutoWidth(true);
+        contractorDtoGrid.addColumn(ContractorDto::getCode).setHeader("Код").setSortable(true).setAutoWidth(true);
         contractorDtoGrid.addColumn(ContractorDto::getPhone).setHeader("Телефон").setSortable(true).setAutoWidth(true);
         contractorDtoGrid.addColumn(ContractorDto::getFax).setHeader("Факс").setSortable(true).setAutoWidth(true);
         contractorDtoGrid.addColumn(ContractorDto::getEmail).setHeader("Email").setSortable(true).setAutoWidth(true);
+        contractorDtoGrid.addColumn(ContractorDto::getStatus).setHeader("Статус").setSortable(true).setAutoWidth(true);
         contractorDtoGrid.addColumn(ContractorDto::getNumberDiscountCard).setHeader("Дисконтная карта").setSortable(true).setAutoWidth(true);
+        contractorDtoGrid.addColumn(ContractorDto::getAddress).setHeader("Фактический адрес").setSortable(true).setAutoWidth(true);
         contractorDtoGrid.addColumn(ContractorDto::getComment).setHeader("Комментарий").setSortable(true).setAutoWidth(true);
         contractorDtoGrid.addColumn(ContractorDto::getContractorGroupName).setHeader("Группы").setSortable(true).setAutoWidth(true);
         contractorDtoGrid.addColumn(ContractorDto::getLegalDetailTypeOfContractorName).setHeader("Тип Контрагента").setSortable(true).setAutoWidth(true);
-        contractorDtoGrid.addColumn(ContractorDto::getLegalDetailAddress).setHeader("Полное наименование").setSortable(true).setAutoWidth(true);
-        contractorDtoGrid.addColumn(ContractorDto::getAddress).setHeader("Юридический Адрес").setSortable(true).setAutoWidth(true);
+        contractorDtoGrid.addColumn(ContractorDto::getName).setHeader("Полное наименование").setSortable(true).setAutoWidth(true);
+        contractorDtoGrid.addColumn(ContractorDto::getLegalDetailAddress).setHeader("Юридический Адрес").setSortable(true).setAutoWidth(true);
         contractorDtoGrid.addColumn(ContractorDto::getLegalDetailInn).setHeader("ИНН").setSortable(true).setAutoWidth(true);
         contractorDtoGrid.addColumn(ContractorDto::getLegalDetailKpp).setHeader("КПП").setSortable(true).setAutoWidth(true);
         contractorDtoGrid.addColumn(ContractorDto::getTypeOfPriceName).setHeader("Цены").setSortable(true).setAutoWidth(true);
