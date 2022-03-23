@@ -98,9 +98,10 @@ public class GoodsGridLayout extends HorizontalLayout {
     }
 
     private static class ColumnToggleContextMenu extends ContextMenu {
+
         public ColumnToggleContextMenu(com.vaadin.flow.component.Component target) { //com.vaadin.flow.component.
             super(target);
-            setOpenOnClick(true);
+            setOpenOnClick(true); //Если true то принимает "click"
         }
 
         void addColumnToggleItem(String label, Grid.Column<ProductDto> column) {
@@ -189,22 +190,6 @@ public class GoodsGridLayout extends HorizontalLayout {
     public Grid<ProductDto> getProductGrid() {
         return productDtoGrid;
     }
-//
-//    private HashMap<String, String> getVisibleColumn() {
-//        HashMap<String, String> fieldNameColumnName = new LinkedHashMap<>();
-//        fieldNameColumnName.put("id", "Id");
-//        fieldNameColumnName.put("name", "Наименование");
-//        fieldNameColumnName.put("weight", "Масса");
-//        fieldNameColumnName.put("volume", "Объем");
-//        fieldNameColumnName.put("purchasePrice", "Цена");
-//        fieldNameColumnName.put("description", "Описание");
-//        fieldNameColumnName.put("unit.shortName", "Единица измерения");
-//        fieldNameColumnName.put("archive", "В архиве");
-//        fieldNameColumnName.put("contractor.name", "Подрядчик");
-//        fieldNameColumnName.put("taxSystem.name", "Налоговая система");
-//        fieldNameColumnName.put("productGroup.name", "Группа");
-//        fieldNameColumnName.put("attributeOfCalculationObject.name", "Объект расчетов");
-//        return fieldNameColumnName;
-//    }
+
 
 }
