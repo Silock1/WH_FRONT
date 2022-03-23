@@ -12,6 +12,10 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.details.DetailsVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
@@ -24,11 +28,12 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.contragents.ContragentsList;
 import com.warehouse_accounting.models.dto.BankAccountDto;
 import com.warehouse_accounting.models.dto.ContractorDto;
-
+import com.warehouse_accounting.models.dto.dadataDto.Example2;
 import com.warehouse_accounting.models.dto.ContractorFaceContactDto;
 import com.warehouse_accounting.models.dto.LegalDetailDto;
 import com.warehouse_accounting.services.interfaces.ContractorGroupService;
 import com.warehouse_accounting.services.interfaces.ContractorService;
+import com.warehouse_accounting.services.interfaces.DadataService;
 import com.warehouse_accounting.services.interfaces.TypeOfContractorService;
 
 import java.util.ArrayList;
@@ -44,6 +49,7 @@ public class FormEditCotragent extends VerticalLayout {
     private ContractorService contractorService;
     private ContragentsList parent;
     private ContractorDto contractorDto;
+    private DadataService dadata;
     private boolean newForm = false;
 
     private Button edit = new Button ("Изменить");
@@ -79,10 +85,11 @@ public class FormEditCotragent extends VerticalLayout {
     private List<FormBankAccauntInner> formsBankAccount;
     private List<FormForFaceContactInner> formsFacesContact;
 
-    public FormEditCotragent(ContractorService contractorService, TypeOfContractorService typeOfContractorService, ContractorGroupService contractorGroupService) {
+    public FormEditCotragent(ContractorService contractorService,DadataService dadata, TypeOfContractorService typeOfContractorService, ContractorGroupService contractorGroupService) {
         this.contractorService = contractorService;
         this.typeOfContractorService = typeOfContractorService;
         this.contractorGroupService = contractorGroupService;
+        this.dadata = dadata;
     }
     public void bild(ContractorDto contractorDto){
         removeAll();
@@ -450,18 +457,65 @@ public class FormEditCotragent extends VerticalLayout {
             formLayout.addFormItem(okpo, "ОКПО");
             break;
         }
-
         VerticalLayout buttins = new VerticalLayout();
         Button button = new Button("Запросить по ИНН");
+        button.addClickListener(e->{
+            Example2 example2 = dadata.getExample(inn.getValue());
+
+            if (example2.getSuggestions().size() == 0) {
+                showError("По данному ИНН ничего не найдено");
+            } else {
+                if (typeOfContractor.getValue().equals("Индивидуальный предприниматель")) {
+                    if (example2.getSuggestions().get(0).getData().getType().equals("LEGAL")) {
+                        showError("Для данного ИНН нужно выбрать тип: Юридическое лицо");
+                        contractorDto.getLegalDetailDto().setInn(inn.getValue());
+                    } else {
+                        lastName.setValue(example2.getSuggestions().get(0).getData().getFio().getSurname());
+                        firstName.setValue(example2.getSuggestions().get(0).getData().getFio().getName());
+                        middleName.setValue(example2.getSuggestions().get(0).getData().getFio().getPatronymic());
+                        addressLegal.setValue(example2.getSuggestions().get(0).getData().getAddress().getUnrestrictedValue());
+                        okpo.setValue(example2.getSuggestions().get(0).getData().getOkpo());
+                        ogrnip.setValue(example2.getSuggestions().get(0).getData().getOgrn());
+                    }
+                } else if (typeOfContractor.getValue().equals("Юридическое лицо")) {
+                    if (example2.getSuggestions().get(0).getData().getType().equals("INDIVIDUAL")) {
+                        showError("Для данного ИНН нужно выбрать тип: Индивидуальный предприниматель");
+                        contractorDto.getLegalDetailDto().setInn(inn.getValue());
+                    } else {
+                        firstName.setValue(example2.getSuggestions().get(0).getData().getName().getShortWithOpf());
+                        kpp.setValue(example2.getSuggestions().get(0).getData().getKpp());
+                        addressLegal.setValue(example2.getSuggestions().get(0).getData().getAddress().getUnrestrictedValue());
+                        ogrnip.setValue(example2.getSuggestions().get(0).getData().getOgrn());
+                        okpo.setValue(example2.getSuggestions().get(0).getData().getOkpo());
+                    }
+                } else {
+                    showError("Для физ. лиц функция недоступна.");
+                }
+            }
+        });
         Button button1 = new Button("Адреса");
         buttins.setWidth("100px");
         buttins.add(button, button1);
-
         main.add(formLayout,buttins);
         superMain.add(main);
         superMain.add(getBankAccountSpace());
-
         return superMain;
+    }
+
+    private void showError(String message){
+        Notification notification = new Notification();
+        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        Div text = new Div(new Text(message));
+        Button closeButton = new Button(new Icon("lumo", "cross"));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        closeButton.getElement().setAttribute("aria-label", "Close");
+        closeButton.addClickListener(event -> {
+            notification.close();
+        });
+        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
+        layout.setAlignItems(Alignment.CENTER);
+        notification.add(layout);
+        notification.open();
     }
     // Формы для банк Аккаунтов
     private VerticalLayout getBankAccountSpace(){
