@@ -34,12 +34,12 @@ public class RecycleBinServiceImpl implements RecycleBinService {
         List<RecycleBinDto> recycleBinDtoList = Collections.emptyList();
         Call<List<RecycleBinDto>> recycleBinAllCall = recycleBinApi.getAll(recycleBinUrl);
         try {
-            Response<List<RecycleBinDto>> respons = recycleBinAllCall.execute();
-            if (respons.isSuccessful()) {
-                recycleBinDtoList = respons.body();
+            Response<List<RecycleBinDto>> response = recycleBinAllCall.execute();
+            if (response.isSuccessful()) {
+                recycleBinDtoList = response.body();
                 log.info("Успешно выполнен запрос на получение списка RecycleBinDto");
             } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение списка RecycleBinDto", respons.code());
+                log.error("Произошла ошибка {} при выполнении запроса на получение списка RecycleBinDto", response.code());
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на получение списка RecycleBinDto", e);
@@ -52,12 +52,12 @@ public class RecycleBinServiceImpl implements RecycleBinService {
         RecycleBinDto recycleBinDto = null;
         Call<RecycleBinDto> callSync = recycleBinApi.getById(recycleBinUrl, id);
         try {
-            Response<RecycleBinDto> respons = callSync.execute();
-            if (respons.isSuccessful()) {
-                recycleBinDto = respons.body();
+            Response<RecycleBinDto> response = callSync.execute();
+            if (response.isSuccessful()) {
+                recycleBinDto = response.body();
                 log.info("Успешно выполнен запрос на получение RecycleBinDto по id: {}", id);
             } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение RecycleBinDto по id {}", respons.code(), id);
+                log.error("Произошла ошибка {} при выполнении запроса на получение RecycleBinDto по id {}", response.code(), id);
             }
         } catch (Exception e) {
             log.error("Произошла ошибка при выполнении запроса на получение RecycleBinDto по id", e);
@@ -91,7 +91,7 @@ public class RecycleBinServiceImpl implements RecycleBinService {
                 log.error("Произошла ошибка {} при выполнении запроса на изменение RecycleBinDto", response.code());
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на изменениие RecycleBinDto", e);
+            log.error("Произошла ошибка при выполнении запроса на изменение RecycleBinDto", e);
         }
     }
 
