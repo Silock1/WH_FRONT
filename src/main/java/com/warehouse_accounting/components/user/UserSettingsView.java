@@ -5,7 +5,9 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -14,6 +16,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.component.upload.UploadI18N;
+import com.vaadin.flow.component.upload.receivers.FileBuffer;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
@@ -23,14 +27,21 @@ import com.warehouse_accounting.components.AppView;
 
 import com.warehouse_accounting.components.util.QuestionButton;
 import com.warehouse_accounting.models.dto.EmployeeDto;
+import com.warehouse_accounting.models.dto.ImageDto;
 import com.warehouse_accounting.models.dto.NotificationsDto;
 import com.warehouse_accounting.models.dto.PositionDto;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
+import com.warehouse_accounting.services.interfaces.ImageService;
 import com.warehouse_accounting.services.interfaces.PositionService;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+
+import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 
 
 @PageTitle("Настройки пользователя")
@@ -55,8 +66,11 @@ public class UserSettingsView extends VerticalLayout {
 
     EmployeeService employeeService;
     PositionService positionService;
+    ImageService imageService;
     EmployeeDto employeeDto;
     PositionDto positionDto;
+    ImageDto imageDto;
+    FileBuffer buffer;
     TextField firstName = new TextField();
     TextField middleName = new TextField();
     TextField lastName = new TextField();
@@ -66,9 +80,10 @@ public class UserSettingsView extends VerticalLayout {
     TextField position = new TextField();
 
 
-    public UserSettingsView(EmployeeService employeeService, PositionService positionService) {
+    public UserSettingsView(EmployeeService employeeService, PositionService positionService, ImageService imageService) {
         this.employeeService = employeeService;
         this.positionService = positionService;
+        this.imageService = imageService;
         dsUserSettingsView();
     }
 
@@ -216,7 +231,6 @@ public class UserSettingsView extends VerticalLayout {
             employeeDto.setEmail(email.getValue());
             employeeDto.setPhone(phone.getValue());
             employeeDto.setInn(inn.getValue());
-
             positionDto.setName(position.getValue());
             employeeDto.setPosition(positionDto);
 
@@ -234,32 +248,39 @@ public class UserSettingsView extends VerticalLayout {
                 positionDto.setSortNumber(positionDto.getId().toString());
                 positionService.update(positionDto);
             }
-            employeeDto.setPosition(positionDto);
 
-            System.out.println(employeeService.getById(1L));
-            System.out.println(positionDto);
+            String filePath = "src/main/resources/static/avatars/" + new Date().getTime() + buffer.getFileName() ;
+            imageDto = new ImageDto(null, filePath, null);
+            imageService.create(imageDto);
+            imageDto = imageService.getAll().stream().filter(imageDto -> imageDto.getImageUrl().equals(filePath)).findFirst().get();
+            employeeDto.setImage(imageDto);
+            System.out.println(employeeDto);
+            employeeDto.setPosition(positionDto);
             employeeService.update(employeeDto);
+            //сохранение файла
+
+            File file = new File(filePath);
+            try {
+                copyInputStreamToFile(buffer.getInputStream(), file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
     }
 
     private VerticalLayout imagePortrait() {
-        MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
+        buffer = new FileBuffer();
         Upload upload = new Upload(buffer);
-
-        upload.addSucceededListener(event -> {
-            String fileName = event.getFileName();
-            InputStream inputStream = buffer.getInputStream(fileName);
-
-            // Do something with the file data
-            // processFile(inputStream, fileName);
-        });
-
+        upload.setDropAllowed(false);
+        Button uploadButton = new Button("+ Изображение");
+        upload.setUploadButton(uploadButton);
+        Div rightSection = new Div(upload);
+        FormLayout formLayout = new FormLayout(rightSection);
         VerticalLayout Portrait = new VerticalLayout();
         Label image = new Label("Изображение");
         image.getStyle().set("color", "red");
         image.getStyle().set("font-weight", "bold");
-        Button setImage = new Button("+ Изображение");
-        Portrait.add(image, setImage);
+        Portrait.add(image, formLayout);
         return Portrait;
     }
 
