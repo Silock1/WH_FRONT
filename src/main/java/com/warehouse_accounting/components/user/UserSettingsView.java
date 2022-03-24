@@ -13,6 +13,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -20,8 +22,13 @@ import com.warehouse_accounting.components.AppView;
 
 
 import com.warehouse_accounting.components.util.QuestionButton;
+import com.warehouse_accounting.models.dto.EmployeeDto;
 import com.warehouse_accounting.models.dto.NotificationsDto;
+import com.warehouse_accounting.models.dto.PositionDto;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
+import com.warehouse_accounting.services.interfaces.PositionService;
 
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,11 +39,9 @@ public class UserSettingsView extends VerticalLayout {
 
 
     VerticalLayout verticalLayout = new VerticalLayout();
-
     VerticalLayout mainLeftLayout = new VerticalLayout();
     VerticalLayout mainRightLayout = new VerticalLayout();
     VerticalLayout verticalLayout2 = new VerticalLayout();
-    private
     HorizontalLayout horizontalLayout = new HorizontalLayout();
     HorizontalLayout mainHorisontalLayout = new HorizontalLayout();
 
@@ -48,14 +53,32 @@ public class UserSettingsView extends VerticalLayout {
     Button buttonPass = new Button("Изменить пароль");
 
 
+    EmployeeService employeeService;
+    PositionService positionService;
+    EmployeeDto employeeDto;
+    PositionDto positionDto;
+    TextField firstName = new TextField();
+    TextField middleName = new TextField();
+    TextField lastName = new TextField();
+    TextField email = new TextField();
+    TextField phone = new TextField();
+    TextField inn = new TextField();
+    TextField position = new TextField();
 
-    public UserSettingsView() {
+
+    public UserSettingsView(EmployeeService employeeService, PositionService positionService) {
+        this.employeeService = employeeService;
+        this.positionService = positionService;
+        dsUserSettingsView();
+    }
+
+    public void dsUserSettingsView() {
 
         setSizeFull();
         horizontalLayout.add(createButton, closeButton, change, changeButtonPass);
-        verticalLayout.add(lablesRow("Имя"), lablesRow("Отчество"), lablesRow("Фамилия"),
-                lablesRow("E-mail"), lablesRow("Телефон"), lablesRow("Должность"),
-                lablesRow("ИНН"));
+        verticalLayout.add(textFieldrow("Имя", firstName), textFieldrow("Отчество", middleName), textFieldrow("Фамилия", lastName),
+                textFieldrow("E-mail", email), textFieldrow("Телефон", phone), textFieldrow("Должность", position),
+                textFieldrow("ИНН", inn));
         createButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
         changeButtonPass.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         verticalLayout2.add(imagePortrait());
@@ -63,7 +86,7 @@ public class UserSettingsView extends VerticalLayout {
         mainLeftLayout.add(horizontalLayout, verticalLayout);
 
 
-        mainRightLayout.add(textDefault(), textDefault("Организация",buttonPen()),
+        mainRightLayout.add(textDefault(), textDefault("Организация", buttonPen()),
                 textDefault("Склад", buttonPen()),
 
                 textDefault("Покупатель", buttonPlus()), textDefault("Поставщик", buttonPlus()),
@@ -82,7 +105,8 @@ public class UserSettingsView extends VerticalLayout {
         add(horizontalLayout, mainHorisontalLayout);
         verticalLayout.getStyle().set("margin-left", "var(--lumo-space-xl)");
         verticalLayout.getElement().getStyle().set("padding", "40px");
-
+        activatedCreateButton();
+        fillFields();
     }
 
 
@@ -114,7 +138,7 @@ public class UserSettingsView extends VerticalLayout {
 
     }
 
-    //    private Component addLoginInfo() {
+//    private Component addLoginInfo() {
 //        TextField login = new TextField();
 //        Label label = new Label("Логин");
 //        login.setValue(employeeService.getPrincipal().getEmail());
@@ -136,22 +160,27 @@ public class UserSettingsView extends VerticalLayout {
         return hLayout;
     }
 
-
-
-
-
-        private HorizontalLayout areaRow(String rowArea) {
-
-            HorizontalLayout areaLayout = new HorizontalLayout();
-            Label label = new Label(rowArea);
-            TextArea area = new TextArea();
-            areaLayout.add(label, area);
-            label.getStyle().set("width", "90px");
-            area.getStyle().set("width", "190px");
-
-        return areaLayout;
-
+    private HorizontalLayout textFieldrow(String lable, TextField field) {
+        HorizontalLayout hLayout = new HorizontalLayout();
+        Label label = new Label(lable);
+        hLayout.add(label, field);
+        label.getStyle().set("width", "90px");
+        field.getStyle().set("width", "190px");
+        return hLayout;
     }
+
+    //удалить в конце
+    private HorizontalLayout areaRow(String rowArea) {
+
+        HorizontalLayout areaLayout = new HorizontalLayout();
+        Label label = new Label(rowArea);
+        TextArea area = new TextArea();
+        areaLayout.add(label, area);
+        label.getStyle().set("width", "90px");
+        area.getStyle().set("width", "190px");
+        return areaLayout;
+    }
+
 
     private HorizontalLayout textDefault(String someBox, Button someButton) {
 
@@ -165,8 +194,66 @@ public class UserSettingsView extends VerticalLayout {
         return WH;
     }
 
+    private void fillFields() {
+//        employeeDto = employeeService.getById(employeeService.getPrincipal().getId()); раскоментировать когда будет security, а строчку ниже удалить
+        employeeDto = employeeService.getById(1L);
+        positionDto = employeeDto.getPosition();
+        firstName.setValue(employeeDto.getFirstName());
+        middleName.setValue(employeeDto.getMiddleName());
+        lastName.setValue(employeeDto.getMiddleName());
+        email.setValue(employeeDto.getEmail());
+        phone.setValue(employeeDto.getPhone());
+        inn.setValue(employeeDto.getInn());
+        position.setValue(positionDto.getName());
+    }
+
+    public void activatedCreateButton() {
+        createButton.addClickListener(event -> {
+
+            employeeDto.setFirstName(firstName.getValue());
+            employeeDto.setMiddleName(middleName.getValue());
+            employeeDto.setLastName(lastName.getValue());
+            employeeDto.setEmail(email.getValue());
+            employeeDto.setPhone(phone.getValue());
+            employeeDto.setInn(inn.getValue());
+
+            positionDto.setName(position.getValue());
+            employeeDto.setPosition(positionDto);
+
+            if (positionService.getAll().stream()
+                    .filter(positionDto -> positionDto.getName().toLowerCase().equals(position.getValue().toLowerCase()))
+                    .findFirst().isPresent()) {
+                positionDto = positionService.getAll().stream()
+                        .filter(positionDto -> positionDto.getName().toLowerCase().equals(position.getValue().toLowerCase()))
+                        .findFirst().get();
+            } else {
+                positionService.create(new PositionDto(null, position.getValue(), null));
+                positionDto = positionService.getAll().stream()
+                        .filter(positionDto -> positionDto.getName().toLowerCase().equals(position.getValue().toLowerCase()))
+                        .findFirst().get();
+                positionDto.setSortNumber(positionDto.getId().toString());
+                positionService.update(positionDto);
+            }
+            employeeDto.setPosition(positionDto);
+
+            System.out.println(employeeService.getById(1L));
+            System.out.println(positionDto);
+            employeeService.update(employeeDto);
+        });
+    }
 
     private VerticalLayout imagePortrait() {
+        MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
+        Upload upload = new Upload(buffer);
+
+        upload.addSucceededListener(event -> {
+            String fileName = event.getFileName();
+            InputStream inputStream = buffer.getInputStream(fileName);
+
+            // Do something with the file data
+            // processFile(inputStream, fileName);
+        });
+
         VerticalLayout Portrait = new VerticalLayout();
         Label image = new Label("Изображение");
         image.getStyle().set("color", "red");
@@ -223,7 +310,7 @@ public class UserSettingsView extends VerticalLayout {
         Label notifications = new Label("Уведомления");
         notifications.getStyle().set("color", "red");
         notifications.getStyle().set("font-weight", "bold");
-        notifications.getStyle().set("margin-top","8px");
+        notifications.getStyle().set("margin-top", "8px");
         notifLayout.add(buttonQuestion("Уведомления сообщают об изменениях в сервисе. " +
                 "Вы сами отмечаете, какие уведомления и как вы хотите получать. " +
                 "Переключатель синего цвета — уведомления включены, " +
@@ -234,7 +321,6 @@ public class UserSettingsView extends VerticalLayout {
         return notifLayout;
 
     }
-
 
 
     private Grid<NotificationsDto> createNotificationsGrid() {
@@ -249,7 +335,7 @@ public class UserSettingsView extends VerticalLayout {
         grid.addColumn(new ComponentRenderer<>(notificationsDto -> createLabel(notificationsDto.getLabel())))
                 .setAutoWidth(true);
 
-        grid.addColumn(new ComponentRenderer<>(notificationsDto ->toggleButton(notificationsDto.isEnabled())))
+        grid.addColumn(new ComponentRenderer<>(notificationsDto -> toggleButton(notificationsDto.isEnabled())))
                 .setWidth("30px");
 
         grid.addColumn(new ComponentRenderer<>(notificationsDto -> createStyleCheckBox(notificationsDto.isEmailProvided())))
@@ -273,7 +359,7 @@ public class UserSettingsView extends VerticalLayout {
 
         Label label1 = new Label(label);
 
-        label1.getStyle().set("margin-top","8px");
+        label1.getStyle().set("margin-top", "8px");
         return label1;
 
     }
@@ -285,14 +371,15 @@ public class UserSettingsView extends VerticalLayout {
         return checkbox;
 
     }
+
     private ToggleButton toggleButton(boolean value) {
         ToggleButton toggle = new ToggleButton();
         toggle.setValue(value);
         toggle.setLabel("");
-    return toggle;
-}
+        return toggle;
+    }
 
-    private List<NotificationsDto> getAll(){
+    private List<NotificationsDto> getAll() {
         return Arrays.asList(
                 createUser(1L, true, "Уведомления о создании и просрочке заказа покупателя.",
                         true, false, "Заказы покупателей"),
@@ -312,7 +399,6 @@ public class UserSettingsView extends VerticalLayout {
                         true, false, "Интернет-магазины"));
 
 
-
     }
 
     private NotificationsDto createUser(Long id, boolean isEnabled, String description, boolean isEmailProvided
@@ -328,7 +414,6 @@ public class UserSettingsView extends VerticalLayout {
 
         return notificationsDto;
     }
-
 
 }
 

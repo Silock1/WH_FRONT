@@ -32,7 +32,7 @@ public class EmployeeDto {
 
     private String password;
 
-    //private DepartmentDto department;
+    private DepartmentDto department;
 
     private PositionDto position;
 
