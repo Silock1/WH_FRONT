@@ -1,11 +1,16 @@
 package com.warehouse_accounting.components.goods.grids;
 
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.contextmenu.ContextMenu;
+import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.treegrid.TreeGrid;
@@ -22,8 +27,6 @@ import com.warehouse_accounting.services.interfaces.ProductService;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,7 +42,7 @@ public class GoodsGridLayout extends HorizontalLayout {
     private final String widthGrid = "90%";
     private TreeGrid<ProductGroupDto> treeGrid;
     private TextField selectedTextField;
-    private Grid<ProductDto> productDtoGrid;
+    private Grid<ProductDto> productDtoGrid = new Grid<>(ProductDto.class, false);
     private GoodsAndServiceView parentLayer;
 
     public GoodsGridLayout(ProductGroupService productGroupService,
@@ -54,6 +57,60 @@ public class GoodsGridLayout extends HorizontalLayout {
         initThreeGrid(parentLayer.getRootGroupId());
         setSizeFull();
         add(leftThreeGridDiv, gridDiv);
+
+        Grid.Column<ProductDto> idColumn = productDtoGrid.addColumn(ProductDto::getId).setHeader("Id");
+        Grid.Column<ProductDto> nameColumn = productDtoGrid.addColumn(ProductDto::getName).setHeader("Наименование");
+        Grid.Column<ProductDto> weightColumn = productDtoGrid.addColumn(ProductDto::getWeight).setHeader("Масса");
+        Grid.Column<ProductDto> volumeColumn = productDtoGrid.addColumn(ProductDto::getVolume).setHeader("Объем");
+        Grid.Column<ProductDto> descriptionColumn = productDtoGrid.addColumn(ProductDto::getDescription).setHeader("Описание");
+        Grid.Column<ProductDto> unitsOfMeasureColumn = productDtoGrid.addColumn(ProductDto::getUnitsOfMeasureDto).setHeader("Единица измерения");
+        Grid.Column<ProductDto> archiveColumn = productDtoGrid.addColumn(ProductDto::getArchive).setHeader("В архиве");
+        Grid.Column<ProductDto> contractorColumn = productDtoGrid.addColumn(ProductDto::getContractor).setHeader("Подрядчик");
+        Grid.Column<ProductDto> taxColumn = productDtoGrid.addColumn(ProductDto::getTaxSystem).setHeader("Налоговая система");
+        Grid.Column<ProductDto> purchasePriceColumn = productDtoGrid.addColumn(ProductDto::getPurchasePrice).setHeader("Цена");
+        Grid.Column<ProductDto> groupColumn = productDtoGrid.addColumn(ProductDto::getGroup).setHeader("Группа");
+        Grid.Column<ProductDto> attributeOfCalculationObjectColumn = productDtoGrid.addColumn(ProductDto::getAttributeOfCalculationObject).setHeader("Объект рассчетов");
+
+        productDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI);
+
+        Button menuButton = new Button(new Icon(VaadinIcon.COG));
+        menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        ColumnToggleContextMenu columnToggleContextMenu = new ColumnToggleContextMenu(menuButton);
+
+        columnToggleContextMenu.addColumnToggleItem("Id", idColumn);
+
+        columnToggleContextMenu.addColumnToggleItem("Наименование", nameColumn);
+        columnToggleContextMenu.addColumnToggleItem("Масса", weightColumn);
+        columnToggleContextMenu.addColumnToggleItem("Объем", volumeColumn);
+        columnToggleContextMenu.addColumnToggleItem("Описание", descriptionColumn);
+        columnToggleContextMenu.addColumnToggleItem("Единица измерения", unitsOfMeasureColumn);
+        columnToggleContextMenu.addColumnToggleItem("В архиве", archiveColumn);
+        columnToggleContextMenu.addColumnToggleItem("Подрядчик", contractorColumn);
+        columnToggleContextMenu.addColumnToggleItem("Налоговая система", taxColumn);
+        columnToggleContextMenu.addColumnToggleItem("Цена", purchasePriceColumn);
+        columnToggleContextMenu.addColumnToggleItem("Группа", groupColumn);
+        columnToggleContextMenu.addColumnToggleItem("Объект рассчетов", attributeOfCalculationObjectColumn);
+
+        HorizontalLayout headerLayout = new HorizontalLayout(menuButton);
+        headerLayout.setAlignItems(FlexComponent.Alignment.BASELINE);
+        headerLayout.setFlexGrow(1);
+        add(productDtoGrid, headerLayout);
+    }
+
+    private static class ColumnToggleContextMenu extends ContextMenu {
+
+        public ColumnToggleContextMenu(com.vaadin.flow.component.Component target) { //com.vaadin.flow.component.
+            super(target);
+            setOpenOnClick(true); //Если true то принимает "click"
+        }
+
+        void addColumnToggleItem(String label, Grid.Column<ProductDto> column) {
+            MenuItem menuItem = this.addItem(label, e -> {
+                column.setVisible(e.getSource().isChecked());
+            });
+            menuItem.setCheckable(true);
+            menuItem.setChecked(column.isVisible());
+        }
     }
 
     public void initThreeGrid(Long groupId) {
@@ -112,10 +169,10 @@ public class GoodsGridLayout extends HorizontalLayout {
     }
 
     public void initGrid(Long groupId) {
-        productDtoGrid.setColumns(getVisibleColumn().keySet().toArray(String[]::new));
+        //productDtoGrid.setColumns(getVisibleColumn().keySet().toArray(String[]::new));
         productDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI);
         productDtoGrid.setItems(productService.getAll());
-        getVisibleColumn().forEach((key, value) -> productDtoGrid.getColumnByKey(key).setHeader(value));
+        //getVisibleColumn().forEach((key, value) -> productDtoGrid.getColumnByKey(key).setHeader(value));
         productDtoGrid.asMultiSelect().addSelectionListener(listener -> {
             int selectSize = listener.getAllSelectedItems().size();
             selectedTextField.setValue(String.valueOf(selectSize));
@@ -134,21 +191,5 @@ public class GoodsGridLayout extends HorizontalLayout {
         return productDtoGrid;
     }
 
-    private HashMap<String, String> getVisibleColumn() {
-        HashMap<String, String> fieldNameColumnName = new LinkedHashMap<>();
-        fieldNameColumnName.put("id", "Id");
-        fieldNameColumnName.put("name", "Наименование");
-        fieldNameColumnName.put("weight", "Масса");
-        fieldNameColumnName.put("volume", "Объем");
-        fieldNameColumnName.put("purchasePrice", "Цена");
-        fieldNameColumnName.put("description", "Описание");
-        fieldNameColumnName.put("unit.shortName", "Единица измерения");
-        fieldNameColumnName.put("archive", "В архиве");
-        fieldNameColumnName.put("contractor.name", "Подрядчик");
-        fieldNameColumnName.put("taxSystem.name", "Налоговая система");
-        fieldNameColumnName.put("productGroup.name", "Группа");
-        fieldNameColumnName.put("attributeOfCalculationObject.name", "Объект расчетов");
-        return fieldNameColumnName;
-    }
 
 }
