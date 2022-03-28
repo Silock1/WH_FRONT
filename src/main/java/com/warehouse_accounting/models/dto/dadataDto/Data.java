@@ -14,6 +14,9 @@ public class Data {
     @SerializedName("capital")
     @Expose
     private Object capital;
+    @SerializedName("fio")
+    @Expose
+    private Fio fio;
     @SerializedName("management")
     @Expose
     private Management management;
@@ -113,6 +116,15 @@ public class Data {
     @SerializedName("employee_count")
     @Expose
     private Object employeeCount;
+
+
+    public Fio getFio() {
+        return fio;
+    }
+
+    public void setFio(Fio fio) {
+        this.fio = fio;
+    }
 
     public String getKpp() {
         return kpp;
