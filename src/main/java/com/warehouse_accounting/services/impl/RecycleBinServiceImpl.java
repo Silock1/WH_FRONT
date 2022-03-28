@@ -4,7 +4,6 @@ package com.warehouse_accounting.services.impl;
 import com.warehouse_accounting.models.dto.RecycleBinDto;
 import com.warehouse_accounting.services.interfaces.RecycleBinService;
 import com.warehouse_accounting.services.interfaces.api.RecycleBinApi;
-
 import lombok.extern.log4j.Log4j2;
 import okhttp3.ResponseBody;
 import org.springframework.beans.factory.annotation.Value;
@@ -127,4 +126,43 @@ public class RecycleBinServiceImpl implements RecycleBinService {
         }
         return responseBody;
     }
+
+
+    @Override
+    public ResponseBody getPDF() {
+        Call<ResponseBody> call = recycleBinApi.getPDF(recycleBinUrl + "/export/pdf");
+        ResponseBody responseBody = null;
+        try {
+            Response<ResponseBody> response = call.execute();
+            if (response.isSuccessful()) {
+                responseBody = response.body();
+                log.info("Успешно выполнен запрос на получение pdf RecycleBinDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на получение pdf RecycleBinDto", response.code());
+            }
+        } catch (IOException e) {
+            log.error("Произошла ошибка при выполнении запроса на получение pdf RecycleBinDto", e);
+        }
+        return responseBody;
+    }
+
+    @Override
+    public ResponseBody getTermsConditions() {
+        Call<ResponseBody> call = recycleBinApi.getTermsConditions(recycleBinUrl + "/terms-conditions");
+        ResponseBody responseBody = null;
+        try {
+            Response<ResponseBody> response = call.execute();
+            if (response.isSuccessful()) {
+                responseBody = response.body();
+                log.info("Успешно выполнен запрос на получение pdf RecycleBinDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на получение pdf RecycleBinDto", response.code());
+            }
+        } catch (IOException e) {
+            log.error("Произошла ошибка при выполнении запроса на получение pdf RecycleBinDto", e);
+        }
+        return responseBody;
+    }
+
+
 }

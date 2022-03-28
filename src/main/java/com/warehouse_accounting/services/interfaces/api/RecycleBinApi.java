@@ -37,4 +37,12 @@ public interface RecycleBinApi {
 
     @GET("{url}")
     Call<ResponseBody> getExcel(@Path(value = "url", encoded = true) String url);
+
+    @GET("{url}")
+    Call<ResponseBody> getPDF(@Path(value = "url", encoded = true) String url);
+
+    @GET("{url}")
+    Call<ResponseBody> getTermsConditions(@Path(value = "url", encoded = true) String url);
+
+
 }
