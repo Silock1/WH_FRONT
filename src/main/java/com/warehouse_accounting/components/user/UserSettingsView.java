@@ -16,9 +16,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
-import com.vaadin.flow.component.upload.UploadI18N;
 import com.vaadin.flow.component.upload.receivers.FileBuffer;
-import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -33,7 +31,19 @@ import com.warehouse_accounting.models.dto.PositionDto;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.ImageService;
 import com.warehouse_accounting.services.interfaces.PositionService;
+import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.geom.Arc2D;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,11 +53,10 @@ import java.util.List;
 
 import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 
-
+@Log4j2
 @PageTitle("Настройки пользователя")
 @Route(value = "profile/settings", layout = AppView.class)
 public class UserSettingsView extends VerticalLayout {
-
 
     VerticalLayout verticalLayout = new VerticalLayout();
     VerticalLayout mainLeftLayout = new VerticalLayout();
@@ -62,7 +71,7 @@ public class UserSettingsView extends VerticalLayout {
     Button changeButtonPass = new Button((new Icon(VaadinIcon.MINUS)));
     HorizontalLayout passLayout = new HorizontalLayout();
     Button buttonPass = new Button("Изменить пароль");
-
+    private static BufferedImage bufferedImage;
 
     EmployeeService employeeService;
     PositionService positionService;
@@ -78,7 +87,6 @@ public class UserSettingsView extends VerticalLayout {
     TextField phone = new TextField();
     TextField inn = new TextField();
     TextField position = new TextField();
-
 
     public UserSettingsView(EmployeeService employeeService, PositionService positionService, ImageService imageService) {
         this.employeeService = employeeService;
@@ -222,6 +230,17 @@ public class UserSettingsView extends VerticalLayout {
         position.setValue(positionDto.getName());
     }
 
+    private BufferedImage addCorners(BufferedImage tempImg, int cornerRadius) {
+        BufferedImage tempImgRounded = new BufferedImage(500, 500, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics2D = tempImgRounded.createGraphics();
+        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        //graphics2D.setColor(new Color(1f,0f,0f,0f ));
+        graphics2D.fill(new RoundRectangle2D.Float(0, 0, 500, 500, cornerRadius, cornerRadius));
+        graphics2D.setComposite(AlphaComposite.SrcAtop);
+        graphics2D.drawImage(tempImg, 0, 0, null);
+        return tempImgRounded;
+    }
+
     public void activatedCreateButton() {
         createButton.addClickListener(event -> {
 
@@ -235,33 +254,40 @@ public class UserSettingsView extends VerticalLayout {
             employeeDto.setPosition(positionDto);
 
             if (positionService.getAll().stream()
-                    .filter(positionDto -> positionDto.getName().toLowerCase().equals(position.getValue().toLowerCase()))
+                    .filter(positionDto -> positionDto.getName().equalsIgnoreCase(position.getValue()))
                     .findFirst().isPresent()) {
                 positionDto = positionService.getAll().stream()
-                        .filter(positionDto -> positionDto.getName().toLowerCase().equals(position.getValue().toLowerCase()))
+                        .filter(positionDto -> positionDto.getName().equalsIgnoreCase(position.getValue()))
                         .findFirst().get();
             } else {
                 positionService.create(new PositionDto(null, position.getValue(), null));
                 positionDto = positionService.getAll().stream()
-                        .filter(positionDto -> positionDto.getName().toLowerCase().equals(position.getValue().toLowerCase()))
+                        .filter(positionDto -> positionDto.getName().equalsIgnoreCase(position.getValue()))
                         .findFirst().get();
                 positionDto.setSortNumber(positionDto.getId().toString());
                 positionService.update(positionDto);
             }
 
-            String filePath = "src/main/resources/static/avatars/" + new Date().getTime() + buffer.getFileName() ;
+            String filePath = "src/main/resources/static/avatars/" + new Date().getTime() + buffer.getFileName();
             imageDto = new ImageDto(null, filePath, null);
             imageService.create(imageDto);
             imageDto = imageService.getAll().stream().filter(imageDto -> imageDto.getImageUrl().equals(filePath)).findFirst().get();
             employeeDto.setImage(imageDto);
-            System.out.println(employeeDto);
             employeeDto.setPosition(positionDto);
             employeeService.update(employeeDto);
-            //сохранение файла
 
-            File file = new File(filePath);
+
             try {
-                copyInputStreamToFile(buffer.getInputStream(), file);
+                BufferedImage bufferedImage = ImageIO.read(buffer.getInputStream());
+                int width = bufferedImage.getWidth() < bufferedImage.getHeight() ? bufferedImage.getWidth() : bufferedImage.getHeight();
+                BufferedImage circleBuffer = new BufferedImage(width, width, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D g2 = circleBuffer.createGraphics();
+                g2.setClip(new Ellipse2D.Float(0, 0, width, width));
+                g2.drawImage(bufferedImage, 0, 0, width, width, null);
+                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                ImageIO.write(circleBuffer, "png", os);
+                InputStream is = new ByteArrayInputStream(os.toByteArray());
+                copyInputStreamToFile(is, new File(filePath));
             } catch (IOException e) {
                 e.printStackTrace();
             }

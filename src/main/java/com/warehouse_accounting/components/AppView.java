@@ -20,12 +20,20 @@ import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PageConfigurator;
 import com.vaadin.flow.server.StreamResource;
 import com.warehouse_accounting.components.help.HelpButton;
+import com.warehouse_accounting.services.impl.EmployeeServiceImpl;
 import lombok.extern.log4j.Log4j2;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.context.annotation.Bean;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
+import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,6 +46,13 @@ import java.util.stream.Stream;
 public class AppView extends AppLayout implements PageConfigurator {
     private final String LOGO_PNG = "logo_main.svg";
     private final String AVATAR_PNG = "avatar-placeholder.svg";
+
+
+    private Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl("http://localhost:4446")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+    private EmployeeService employeeService = new EmployeeServiceImpl("api/employees", retrofit);
 
     public AppView() {
         prepareNavBarTabs();
@@ -122,11 +137,23 @@ public class AppView extends AppLayout implements PageConfigurator {
         userSubMenu.addItem("Подписка", event -> profile.getUI().ifPresent(ui -> ui.navigate("subscription")));
         profile.getSubMenu().add(new Hr());
         userSubMenu.addItem("Выход", event -> profile.getUI().ifPresent(ui -> ui.navigate("logout")));
-
-        StreamResource res = new StreamResource("avatar-placeholder.svg", () -> getImageInputStream(AVATAR_PNG));
-        Image image = new Image(res, "avatar-placeholder");
+        String path = employeeService.getById(1L).getImage().getImageUrl();
+        String fileName = FilenameUtils.getName(path);
+        String fileNameBase = FilenameUtils.getBaseName(path);
+//        StreamResource res = new StreamResource("avatar-placeholder.svg", () -> getImageInputStreamFromDB(employeeService.getById(1L).getImage().getImageUrl()));
+        StreamResource res = new StreamResource(fileName, () -> getImageInputStreamFromDB(employeeService.getById(1L).getImage().getImageUrl()));
+        Image image = new Image(res, fileNameBase);
         image.setId("avatar-placeholder");
-        image.setSizeFull();
+//        image.setMaxHeight("60px");
+        image.setMaxWidth("46px");
+//        image.setSizeFull();
+
+
+
+//        String fileName = FilenameUtils.getBaseName(path);
+        System.out.println(">>>>>>>>>>>>>>>>" + fileName);
+
+
 
         Tab userMenu = new Tab(userNavBar);
         userMenu.getStyle().set("width", "220px");
@@ -137,10 +164,20 @@ public class AppView extends AppLayout implements PageConfigurator {
 
     public static InputStream getImageInputStream(String svgIconName) {
         InputStream imageInputStream = null;
+
         try {
             imageInputStream = new DataInputStream(new FileInputStream("src/main/resources/static/icons/" + svgIconName));
         } catch (IOException ex) {
             log.error("При чтении icon {} произошла ошибка", svgIconName);
+        }
+        return imageInputStream;
+
+    }    public static InputStream getImageInputStreamFromDB(String url) {
+        InputStream imageInputStream = null;
+        try {
+            imageInputStream = new DataInputStream(new FileInputStream(url));
+        } catch (IOException ex) {
+            log.error("При чтении icon {} произошла ошибка", url);
         }
         return imageInputStream;
     }
@@ -181,7 +218,6 @@ public class AppView extends AppLayout implements PageConfigurator {
         return subMenuView;
     }
 
-    //favicon
     @Override
     public void configurePage(InitialPageSettings initialPageSettings) {
         initialPageSettings.addFavIcon("icon", "icons/favicon.png", "16x16");
