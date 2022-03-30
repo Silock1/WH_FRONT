@@ -1,6 +1,8 @@
 package com.warehouse_accounting.components;
 
 import com.vaadin.flow.component.applayout.AppLayout;
+import com.vaadin.flow.component.avatar.Avatar;
+import com.vaadin.flow.component.avatar.AvatarVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -20,7 +22,13 @@ import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PageConfigurator;
 import com.vaadin.flow.server.StreamResource;
 import com.warehouse_accounting.components.help.HelpButton;
+import com.warehouse_accounting.models.dto.EmployeeDto;
+import com.warehouse_accounting.services.impl.EmployeeServiceImpl;
 import lombok.extern.log4j.Log4j2;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
+import org.apache.commons.io.FilenameUtils;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.DataInputStream;
 import java.io.FileInputStream;
@@ -38,6 +46,14 @@ import java.util.stream.Stream;
 public class AppView extends AppLayout implements PageConfigurator {
     private final String LOGO_PNG = "logo_main.svg";
     private final String AVATAR_PNG = "avatar-placeholder.svg";
+    private Boolean imgUrlExist = true;
+    private EmployeeDto tmpEmployeeDto;
+
+    private Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl("http://localhost:4446")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+    private EmployeeService employeeService = new EmployeeServiceImpl("api/employees", retrofit);
 
     public AppView() {
         prepareNavBarTabs();
@@ -122,25 +138,51 @@ public class AppView extends AppLayout implements PageConfigurator {
         userSubMenu.addItem("Подписка", event -> profile.getUI().ifPresent(ui -> ui.navigate("subscription")));
         profile.getSubMenu().add(new Hr());
         userSubMenu.addItem("Выход", event -> profile.getUI().ifPresent(ui -> ui.navigate("logout")));
+        Avatar avatar = null;
+        try {
+            tmpEmployeeDto = employeeService.getById(1L); // Spring security когда будет
+            imgUrlExist = tmpEmployeeDto.getImage().getImageUrl().equalsIgnoreCase("imageUrl") || tmpEmployeeDto.getImage() == null;
+            String path = tmpEmployeeDto.getImage().getImageUrl();
+            String fileName = FilenameUtils.getName(path);
+            StreamResource res = new StreamResource(fileName, () -> getImageInputStreamFromDB(tmpEmployeeDto.getImage().getImageUrl()));
+            avatar = new Avatar(tmpEmployeeDto.getFirstName() + " " + tmpEmployeeDto.getLastName());
+            avatar.setImage(FilenameUtils.getFullPath(path) + fileName);
+            avatar.addThemeVariants(AvatarVariant.LUMO_XLARGE);
+            avatar.setImageResource(res);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        StreamResource res = new StreamResource("avatar-placeholder.svg", () -> getImageInputStream(AVATAR_PNG));
-        Image image = new Image(res, "avatar-placeholder");
+        StreamResource resDefault = new StreamResource("avatar-placeholder.svg", () -> getImageInputStream(AVATAR_PNG));
+        Image image = new Image(resDefault, "avatar-placeholder");
         image.setId("avatar-placeholder");
         image.setSizeFull();
 
         Tab userMenu = new Tab(userNavBar);
         userMenu.getStyle().set("width", "220px");
-        userMenu.add(image);
+        userMenu.add(imgUrlExist ? image : avatar);
 
         addToNavbar(logo, navBarTabs, rightSideNavBar, userMenu, helpDiv);
     }
 
     public static InputStream getImageInputStream(String svgIconName) {
         InputStream imageInputStream = null;
+
         try {
             imageInputStream = new DataInputStream(new FileInputStream("src/main/resources/static/icons/" + svgIconName));
         } catch (IOException ex) {
             log.error("При чтении icon {} произошла ошибка", svgIconName);
+        }
+        return imageInputStream;
+
+    }
+
+    public static InputStream getImageInputStreamFromDB(String url) {
+        InputStream imageInputStream = null;
+        try {
+            imageInputStream = new DataInputStream(new FileInputStream(url));
+        } catch (IOException ex) {
+            log.error("При чтении icon {} произошла ошибка", url);
         }
         return imageInputStream;
     }
@@ -181,7 +223,6 @@ public class AppView extends AppLayout implements PageConfigurator {
         return subMenuView;
     }
 
-    //favicon
     @Override
     public void configurePage(InitialPageSettings initialPageSettings) {
         initialPageSettings.addFavIcon("icon", "icons/favicon.png", "16x16");
