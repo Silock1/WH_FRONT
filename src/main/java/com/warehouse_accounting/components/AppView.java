@@ -1,6 +1,8 @@
 package com.warehouse_accounting.components;
 
 import com.vaadin.flow.component.applayout.AppLayout;
+import com.vaadin.flow.component.avatar.Avatar;
+import com.vaadin.flow.component.avatar.AvatarVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -20,20 +22,18 @@ import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PageConfigurator;
 import com.vaadin.flow.server.StreamResource;
 import com.warehouse_accounting.components.help.HelpButton;
+import com.warehouse_accounting.models.dto.EmployeeDto;
 import com.warehouse_accounting.services.impl.EmployeeServiceImpl;
 import lombok.extern.log4j.Log4j2;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.context.annotation.Bean;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,7 +46,8 @@ import java.util.stream.Stream;
 public class AppView extends AppLayout implements PageConfigurator {
     private final String LOGO_PNG = "logo_main.svg";
     private final String AVATAR_PNG = "avatar-placeholder.svg";
-
+    private Boolean imgUrlExist;
+    private EmployeeDto tmpEmployeeDto;
 
     private Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://localhost:4446")
@@ -137,27 +138,29 @@ public class AppView extends AppLayout implements PageConfigurator {
         userSubMenu.addItem("Подписка", event -> profile.getUI().ifPresent(ui -> ui.navigate("subscription")));
         profile.getSubMenu().add(new Hr());
         userSubMenu.addItem("Выход", event -> profile.getUI().ifPresent(ui -> ui.navigate("logout")));
-        String path = employeeService.getById(1L).getImage().getImageUrl();
+
+        try {
+            tmpEmployeeDto = employeeService.getById(1L); // Spring security когда будет
+            imgUrlExist = tmpEmployeeDto.getImage().getImageUrl().equalsIgnoreCase("imageUrl") || tmpEmployeeDto.getImage() == null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String path = tmpEmployeeDto.getImage().getImageUrl();
         String fileName = FilenameUtils.getName(path);
-        String fileNameBase = FilenameUtils.getBaseName(path);
-//        StreamResource res = new StreamResource("avatar-placeholder.svg", () -> getImageInputStreamFromDB(employeeService.getById(1L).getImage().getImageUrl()));
-        StreamResource res = new StreamResource(fileName, () -> getImageInputStreamFromDB(employeeService.getById(1L).getImage().getImageUrl()));
-        Image image = new Image(res, fileNameBase);
+        StreamResource res = new StreamResource(fileName, () -> getImageInputStreamFromDB(tmpEmployeeDto.getImage().getImageUrl()));
+        StreamResource resDefault = new StreamResource("avatar-placeholder.svg", () -> getImageInputStream(AVATAR_PNG));
+        Image image = new Image(resDefault, "avatar-placeholder");
         image.setId("avatar-placeholder");
-//        image.setMaxHeight("60px");
-        image.setMaxWidth("46px");
-//        image.setSizeFull();
+        image.setSizeFull();
 
-
-
-//        String fileName = FilenameUtils.getBaseName(path);
-        System.out.println(">>>>>>>>>>>>>>>>" + fileName);
-
-
+        Avatar avatar = new Avatar(tmpEmployeeDto.getFirstName() + " " + tmpEmployeeDto.getLastName());
+        avatar.setImage(FilenameUtils.getFullPath(path) + fileName);
+        avatar.addThemeVariants(AvatarVariant.LUMO_XLARGE);
+        avatar.setImageResource(res);
 
         Tab userMenu = new Tab(userNavBar);
         userMenu.getStyle().set("width", "220px");
-        userMenu.add(image);
+        userMenu.add(imgUrlExist ? image : avatar);
 
         addToNavbar(logo, navBarTabs, rightSideNavBar, userMenu, helpDiv);
     }
@@ -172,7 +175,9 @@ public class AppView extends AppLayout implements PageConfigurator {
         }
         return imageInputStream;
 
-    }    public static InputStream getImageInputStreamFromDB(String url) {
+    }
+
+    public static InputStream getImageInputStreamFromDB(String url) {
         InputStream imageInputStream = null;
         try {
             imageInputStream = new DataInputStream(new FileInputStream(url));

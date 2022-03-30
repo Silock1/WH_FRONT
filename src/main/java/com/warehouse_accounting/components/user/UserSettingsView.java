@@ -1,6 +1,7 @@
 package com.warehouse_accounting.components.user;
 
 import com.vaadin.componentfactory.ToggleButton;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -13,6 +14,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
@@ -21,8 +23,6 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.AppView;
-
-
 import com.warehouse_accounting.components.util.QuestionButton;
 import com.warehouse_accounting.models.dto.EmployeeDto;
 import com.warehouse_accounting.models.dto.ImageDto;
@@ -32,21 +32,10 @@ import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.ImageService;
 import com.warehouse_accounting.services.interfaces.PositionService;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.geom.Arc2D;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -71,22 +60,21 @@ public class UserSettingsView extends VerticalLayout {
     Button changeButtonPass = new Button((new Icon(VaadinIcon.MINUS)));
     HorizontalLayout passLayout = new HorizontalLayout();
     Button buttonPass = new Button("Изменить пароль");
-    private static BufferedImage bufferedImage;
 
-    EmployeeService employeeService;
-    PositionService positionService;
-    ImageService imageService;
-    EmployeeDto employeeDto;
-    PositionDto positionDto;
-    ImageDto imageDto;
-    FileBuffer buffer;
-    TextField firstName = new TextField();
-    TextField middleName = new TextField();
-    TextField lastName = new TextField();
-    TextField email = new TextField();
-    TextField phone = new TextField();
-    TextField inn = new TextField();
-    TextField position = new TextField();
+    private EmployeeService employeeService;
+    private PositionService positionService;
+    private ImageService imageService;
+    private EmployeeDto employeeDto;
+    private PositionDto positionDto;
+    private ImageDto imageDto;
+    private FileBuffer buffer;
+    private TextField firstName = new TextField();
+    private TextField middleName = new TextField();
+    private TextField lastName = new TextField();
+    private TextField email = new TextField();
+    private TextField phone = new TextField();
+    private TextField inn = new TextField();
+    private TextField position = new TextField();
 
     public UserSettingsView(EmployeeService employeeService, PositionService positionService, ImageService imageService) {
         this.employeeService = employeeService;
@@ -129,6 +117,7 @@ public class UserSettingsView extends VerticalLayout {
         verticalLayout.getStyle().set("margin-left", "var(--lumo-space-xl)");
         verticalLayout.getElement().getStyle().set("padding", "40px");
         activatedCreateButton();
+        activatedCloseButton();
         fillFields();
     }
 
@@ -173,7 +162,6 @@ public class UserSettingsView extends VerticalLayout {
 
 
     private HorizontalLayout lablesRow(String rowLabel) {
-
         HorizontalLayout hLayout = new HorizontalLayout();
         Label label = new Label(rowLabel);
         TextField textField = new TextField();
@@ -192,9 +180,7 @@ public class UserSettingsView extends VerticalLayout {
         return hLayout;
     }
 
-    //удалить в конце
     private HorizontalLayout areaRow(String rowArea) {
-
         HorizontalLayout areaLayout = new HorizontalLayout();
         Label label = new Label(rowArea);
         TextArea area = new TextArea();
@@ -206,7 +192,6 @@ public class UserSettingsView extends VerticalLayout {
 
 
     private HorizontalLayout textDefault(String someBox, Button someButton) {
-
         HorizontalLayout WH = new HorizontalLayout();
         Label someLabel = new Label(someBox);
         ComboBox<String> ComboBox = new ComboBox<>();
@@ -219,31 +204,28 @@ public class UserSettingsView extends VerticalLayout {
 
     private void fillFields() {
 //        employeeDto = employeeService.getById(employeeService.getPrincipal().getId()); раскоментировать когда будет security, а строчку ниже удалить
-        employeeDto = employeeService.getById(1L);
-        positionDto = employeeDto.getPosition();
-        firstName.setValue(employeeDto.getFirstName());
-        middleName.setValue(employeeDto.getMiddleName());
-        lastName.setValue(employeeDto.getMiddleName());
-        email.setValue(employeeDto.getEmail());
-        phone.setValue(employeeDto.getPhone());
-        inn.setValue(employeeDto.getInn());
-        position.setValue(positionDto.getName());
+        try {
+            employeeDto = employeeService.getById(1L);
+            positionDto = employeeDto.getPosition();
+            position.setValue(positionDto.getName() == null ? "" : positionDto.getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        firstName.setValue(employeeDto.getFirstName() == null ? "" : employeeDto.getFirstName());
+        middleName.setValue(employeeDto.getMiddleName() == null ? "" : employeeDto.getMiddleName());
+        lastName.setValue(employeeDto.getMiddleName() == null ? "" : employeeDto.getMiddleName());
+        email.setValue(employeeDto.getEmail() == null ? "" : employeeDto.getEmail());
+        phone.setValue(employeeDto.getPhone() == null ? "" : employeeDto.getPhone());
+        inn.setValue(employeeDto.getInn() == null ? "" : employeeDto.getInn());
     }
 
-    private BufferedImage addCorners(BufferedImage tempImg, int cornerRadius) {
-        BufferedImage tempImgRounded = new BufferedImage(500, 500, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D graphics2D = tempImgRounded.createGraphics();
-        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        //graphics2D.setColor(new Color(1f,0f,0f,0f ));
-        graphics2D.fill(new RoundRectangle2D.Float(0, 0, 500, 500, cornerRadius, cornerRadius));
-        graphics2D.setComposite(AlphaComposite.SrcAtop);
-        graphics2D.drawImage(tempImg, 0, 0, null);
-        return tempImgRounded;
+    void activatedCloseButton() {
+        closeButton.addClickListener(event ->
+                UI.getCurrent().getPage().setLocation("http://localhost:4447/"));
     }
 
     public void activatedCreateButton() {
         createButton.addClickListener(event -> {
-
             employeeDto.setFirstName(firstName.getValue());
             employeeDto.setMiddleName(middleName.getValue());
             employeeDto.setLastName(lastName.getValue());
@@ -255,7 +237,8 @@ public class UserSettingsView extends VerticalLayout {
 
             if (positionService.getAll().stream()
                     .filter(positionDto -> positionDto.getName().equalsIgnoreCase(position.getValue()))
-                    .findFirst().isPresent()) {
+                    .findFirst().isPresent()
+            ) {
                 positionDto = positionService.getAll().stream()
                         .filter(positionDto -> positionDto.getName().equalsIgnoreCase(position.getValue()))
                         .findFirst().get();
@@ -268,29 +251,23 @@ public class UserSettingsView extends VerticalLayout {
                 positionService.update(positionDto);
             }
 
-            String filePath = "src/main/resources/static/avatars/" + new Date().getTime() + buffer.getFileName();
-            imageDto = new ImageDto(null, filePath, null);
-            imageService.create(imageDto);
-            imageDto = imageService.getAll().stream().filter(imageDto -> imageDto.getImageUrl().equals(filePath)).findFirst().get();
-            employeeDto.setImage(imageDto);
-            employeeDto.setPosition(positionDto);
-            employeeService.update(employeeDto);
+            if (!buffer.getFileName().equalsIgnoreCase("")) {
+                String filePath = "src/main/resources/static/avatars/" + new Date().getTime() + buffer.getFileName();
+                System.out.println("Буфер -------------->" + buffer.getFileName().equalsIgnoreCase(""));
+                imageDto = new ImageDto(null, filePath, null);
+                imageService.create(imageDto);
+                imageDto = imageService.getAll().stream().filter(imageDto -> imageDto.getImageUrl().equals(filePath)).findFirst().get();
+                employeeDto.setImage(imageDto);
+                employeeDto.setPosition(positionDto);
+                employeeService.update(employeeDto);
 
-
-            try {
-                BufferedImage bufferedImage = ImageIO.read(buffer.getInputStream());
-                int width = bufferedImage.getWidth() < bufferedImage.getHeight() ? bufferedImage.getWidth() : bufferedImage.getHeight();
-                BufferedImage circleBuffer = new BufferedImage(width, width, BufferedImage.TYPE_INT_ARGB);
-                Graphics2D g2 = circleBuffer.createGraphics();
-                g2.setClip(new Ellipse2D.Float(0, 0, width, width));
-                g2.drawImage(bufferedImage, 0, 0, width, width, null);
-                ByteArrayOutputStream os = new ByteArrayOutputStream();
-                ImageIO.write(circleBuffer, "png", os);
-                InputStream is = new ByteArrayInputStream(os.toByteArray());
-                copyInputStreamToFile(is, new File(filePath));
-            } catch (IOException e) {
-                e.printStackTrace();
+                try {
+                    copyInputStreamToFile(buffer.getInputStream(), new File(filePath));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+            UI.getCurrent().getPage().setLocation("http://localhost:4447/");
         });
     }
 
@@ -331,7 +308,6 @@ public class UserSettingsView extends VerticalLayout {
 
 
     private HorizontalLayout usSettings(String someBox) {
-
         HorizontalLayout usLayout = new HorizontalLayout();
         Label usLabel = new Label(someBox);
         ComboBox<String> usBox = new ComboBox<>();
