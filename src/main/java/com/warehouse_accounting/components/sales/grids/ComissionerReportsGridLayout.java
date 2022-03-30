@@ -142,6 +142,8 @@ public class ComissionerReportsGridLayout extends HorizontalLayout {
         add(initGrid());
     }
 
+
+    //Серый фон AccountsPayableGridLayout
 //    public ComissionerReportsGridLayout() {
 //
 //    }
@@ -165,9 +167,9 @@ public class ComissionerReportsGridLayout extends HorizontalLayout {
 
     private HashMap<String, String> getVisibleColumn() {
         HashMap<String, String> fieldNameColumnName = new LinkedHashMap<>();
-        fieldNameColumnName.put("id", "Id");
-        fieldNameColumnName.put("date", "Дата");
-        fieldNameColumnName.put("warehouseDto", "Склад");
+        fieldNameColumnName.put("id", "№");
+        fieldNameColumnName.put("date", "Время");
+        fieldNameColumnName.put("warehouseDto", "Организация");
         fieldNameColumnName.put("contractDto", "Контракт");
         fieldNameColumnName.put("companyDto", "Компания");
         fieldNameColumnName.put("contractorDto", "Контрагент");

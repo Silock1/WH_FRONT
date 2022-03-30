@@ -21,12 +21,17 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
 //import com.warehouse_accounting.components.goods.forms.ComplectForm;
+import com.warehouse_accounting.components.goods.filter.GoodsFilter;
+import com.warehouse_accounting.components.goods.forms.ComplectForm;
 import com.warehouse_accounting.components.goods.forms.GoodsForm;
 import com.warehouse_accounting.components.goods.forms.GroupForm;
 import com.warehouse_accounting.components.goods.forms.ServiceForm;
 import com.warehouse_accounting.components.goods.grids.GoodsGridLayout;
 import com.warehouse_accounting.models.dto.ProductDto;
 import com.warehouse_accounting.models.dto.ProductGroupDto;
+import com.warehouse_accounting.services.interfaces.ContractorService;
+import com.warehouse_accounting.services.interfaces.DepartmentService;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.ProductGroupService;
 import com.warehouse_accounting.services.interfaces.ProductService;
 import org.springframework.stereotype.Component;
@@ -42,26 +47,58 @@ public class GoodsAndServiceView extends VerticalLayout {
     private final TreeGrid<ProductGroupDto> treeGrid = new TreeGrid<>();
     private final TextField textFieldGridSelected = new TextField();
     private final Grid<ProductDto> productDtoGrid = new Grid<>(ProductDto.class, false);
+    private final Div pageContent;
     private Div mainDiv;
     private GoodsGridLayout goodsGridLayout;
-    private Long rootGroupId = 1L; //TODO а нужно ли это?
+    private EmployeeService employeeService;
+    private DepartmentService departmentService;
+    private ContractorService contractorService;
+    private GoodsFilter goodsFilter;
+    private Long rootGroupId = 1L;
 
-    public GoodsAndServiceView(ProductGroupService productGroupService, ProductService productService) {
+
+    public GoodsAndServiceView(GoodsFilter goodsFilter,
+                               ProductService productService,
+                               ProductGroupService productGroupService,
+                               DepartmentService departmentService,
+                               ContractorService contractorService,
+                               EmployeeService employeeService) {
         this.productGroupService = productGroupService;
         this.productService = productService;
-        //this.complectService = complectService;
+        this.employeeService = employeeService;
+        this.departmentService = departmentService;
+        this.contractorService = contractorService;
+        this.goodsFilter = new GoodsFilter(productGroupService, employeeService, departmentService, contractorService);
         goodsGridLayout = new GoodsGridLayout(productGroupService, productService, this);
         Div pageContent = new Div();
-        pageContent.setSizeFull();
         pageContent.add(goodsGridLayout);
-        add(initGroupButtons(), pageContent);
+        pageContent.setSizeFull();
+        this.pageContent = pageContent;
+        add(initGroupButtons(), this.goodsFilter, pageContent);
     }
+
 
     private HorizontalLayout initGroupButtons() {
         HorizontalLayout groupControl = new HorizontalLayout();
 
         Button helpButton = new Button(new Icon(VaadinIcon.QUESTION_CIRCLE));
         helpButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        helpButton.addClickListener(buttonClickEvent -> {Notification.show("" +
+                "В разделе представлены все ваши товары, услуги и комплекты.\n" +
+                "\n" +
+                "Для удобства товары и услуги можно группировать. Различать товары с одинаковым артикулом по характеристикам (например, размеру или цвету) удобно с помощью модификаций. Несколько единиц одного товара можно продавать упаковками. А комплекты позволяют продавать наборы разных товаров и услуг как единое целое.\n" +
+                "\n" +
+                "Каталог товаров можно импортировать и экспортировать.\n" +
+                "\n" +
+                "Читать инструкции:\n" +
+                "\n" +
+                "Товары и услуги\n" +
+                "Импорт и экспорт\n" +
+                "Видео:\n" +
+                "\n" +
+                "Товары и остатки\n" +
+                "Импорт товаров из Excel\n" +
+                "Цены в МоемСкладе", 5000, Notification.Position.TOP_START);});
 
         Label textProducts = new Label();
         textProducts.setText("Товары и услуги");
@@ -91,13 +128,13 @@ public class GoodsAndServiceView extends VerticalLayout {
         });
 
         //TODO Моя кнопка для Компонента через Product
-//        Button addComplectButton = new Button("Комплект", new Icon(VaadinIcon.PLUS));
-//        addComplectButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-//        addComplectButton.addClickListener(event -> {
-//            ComplectForm complectForm = new ComplectForm(mainDiv, this, productService);
-//            mainDiv.removeAll();
-//            mainDiv.add(complectForm);
-//        });
+        Button addComplectButton = new Button("Комплект", new Icon(VaadinIcon.PLUS));
+        addComplectButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        addComplectButton.addClickListener(event -> {
+            ComplectForm complectForm = new ComplectForm(mainDiv, this, productService);
+            mainDiv.removeAll();
+            mainDiv.add(complectForm);
+        });
 
         Button addGroupButton = new Button("Группа", new Icon(VaadinIcon.PLUS));
         addGroupButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -111,6 +148,7 @@ public class GoodsAndServiceView extends VerticalLayout {
 
         Button addFilterButton = new Button("Фильтр", new Icon(VaadinIcon.PLUS));
         addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        addFilterButton.addClickListener(buttonClickEvent -> goodsFilter.setVisible(!goodsFilter.isVisible()));
 
         TextField searchField = new TextField();
         searchField.setPlaceholder("наименование, код или артикул");
@@ -120,16 +158,12 @@ public class GoodsAndServiceView extends VerticalLayout {
         });
 
         HorizontalLayout editMenuBar = initEditMenuBar();
-
         HorizontalLayout printMenuBar = getPrintMenuBar();
-
         HorizontalLayout importMenuBar = getImportMenuBar();
-
         HorizontalLayout exportMenuBar = getExportMenuBar();
 
         groupControl.add(helpButton, textProducts, refreshButton, addProductButton, addServiceButton,
-//                addComplectButton,
-                addGroupButton, addFilterButton, searchField, editMenuBar,
+                addComplectButton, addGroupButton, addFilterButton, searchField, editMenuBar,
                 printMenuBar, importMenuBar, exportMenuBar);
         setSizeFull();
         return groupControl;

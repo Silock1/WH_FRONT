@@ -1,6 +1,6 @@
 package com.warehouse_accounting.services.interfaces.api;
 
-import com.warehouse_accounting.models.dto.UnitsOfMeasureDto;
+import com.warehouse_accounting.models.dto.PointOfSalesDto;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -12,23 +12,22 @@ import retrofit2.http.Path;
 
 import java.util.List;
 
-public interface UnitsOfMeasureApi {
-
+public interface RetailApi {
     @Headers("Accept: application/json")
     @GET("{url}")
-    Call<List<UnitsOfMeasureDto>> getAll(@Path(value = "url", encoded = true) String url);
+    Call<List<PointOfSalesDto>> getAll(@Path(value = "url", encoded = true) String url);
 
     @Headers("Accept: application/json")
     @GET("{url}/{id}")
-    Call<UnitsOfMeasureDto> getById(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
+    Call<PointOfSalesDto> getById(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
 
     @Headers("Accept: application/json")
     @POST("{url}")
-    Call<Void> create(@Path(value = "url", encoded = true) String url, @Body UnitsOfMeasureDto dto);
+    Call <Void> create(@Path(value = "url", encoded = true) String url, @Body PointOfSalesDto dto);
 
     @Headers("Accept: application/json")
-    @POST("{url}")
-    Call<Void> update(@Path(value = "url", encoded = true) String url, @Body UnitsOfMeasureDto dto);
+    @PUT("{url}")
+    Call<Void> update(@Path(value = "url", encoded = true) String url, @Body PointOfSalesDto dto);
 
     @Headers("Accept: application/json")
     @DELETE("{url}/{id}")

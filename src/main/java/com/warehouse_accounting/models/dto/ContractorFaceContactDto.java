@@ -9,16 +9,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UnitsOfMeasureDto {
-
+public class ContractorFaceContactDto {
     private Long id;
-
-    private String type;
-
-    private String name;
-
-    private  String fullName;
-
-    private String code;
-
+    private String allNames;
+    private String position;
+    private String phone;
+    private String email;
+    private String comment;
 }
