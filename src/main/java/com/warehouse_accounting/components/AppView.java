@@ -46,7 +46,7 @@ import java.util.stream.Stream;
 public class AppView extends AppLayout implements PageConfigurator {
     private final String LOGO_PNG = "logo_main.svg";
     private final String AVATAR_PNG = "avatar-placeholder.svg";
-    private Boolean imgUrlExist;
+    private Boolean imgUrlExist = true;
     private EmployeeDto tmpEmployeeDto;
 
     private Retrofit retrofit = new Retrofit.Builder()
@@ -138,25 +138,25 @@ public class AppView extends AppLayout implements PageConfigurator {
         userSubMenu.addItem("Подписка", event -> profile.getUI().ifPresent(ui -> ui.navigate("subscription")));
         profile.getSubMenu().add(new Hr());
         userSubMenu.addItem("Выход", event -> profile.getUI().ifPresent(ui -> ui.navigate("logout")));
-
+        Avatar avatar = null;
         try {
             tmpEmployeeDto = employeeService.getById(1L); // Spring security когда будет
             imgUrlExist = tmpEmployeeDto.getImage().getImageUrl().equalsIgnoreCase("imageUrl") || tmpEmployeeDto.getImage() == null;
+            String path = tmpEmployeeDto.getImage().getImageUrl();
+            String fileName = FilenameUtils.getName(path);
+            StreamResource res = new StreamResource(fileName, () -> getImageInputStreamFromDB(tmpEmployeeDto.getImage().getImageUrl()));
+            avatar = new Avatar(tmpEmployeeDto.getFirstName() + " " + tmpEmployeeDto.getLastName());
+            avatar.setImage(FilenameUtils.getFullPath(path) + fileName);
+            avatar.addThemeVariants(AvatarVariant.LUMO_XLARGE);
+            avatar.setImageResource(res);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String path = tmpEmployeeDto.getImage().getImageUrl();
-        String fileName = FilenameUtils.getName(path);
-        StreamResource res = new StreamResource(fileName, () -> getImageInputStreamFromDB(tmpEmployeeDto.getImage().getImageUrl()));
+
         StreamResource resDefault = new StreamResource("avatar-placeholder.svg", () -> getImageInputStream(AVATAR_PNG));
         Image image = new Image(resDefault, "avatar-placeholder");
         image.setId("avatar-placeholder");
         image.setSizeFull();
-
-        Avatar avatar = new Avatar(tmpEmployeeDto.getFirstName() + " " + tmpEmployeeDto.getLastName());
-        avatar.setImage(FilenameUtils.getFullPath(path) + fileName);
-        avatar.addThemeVariants(AvatarVariant.LUMO_XLARGE);
-        avatar.setImageResource(res);
 
         Tab userMenu = new Tab(userNavBar);
         userMenu.getStyle().set("width", "220px");
