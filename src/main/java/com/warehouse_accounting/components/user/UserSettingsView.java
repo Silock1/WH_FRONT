@@ -14,7 +14,6 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
@@ -33,7 +32,6 @@ import com.warehouse_accounting.services.interfaces.ImageService;
 import com.warehouse_accounting.services.interfaces.PositionService;
 import lombok.extern.log4j.Log4j2;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -260,12 +258,14 @@ public class UserSettingsView extends VerticalLayout {
                 employeeDto.setImage(imageDto);
                 employeeDto.setPosition(positionDto);
                 employeeService.update(employeeDto);
-
                 try {
                     copyInputStreamToFile(buffer.getInputStream(), new File(filePath));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            } else {
+                employeeDto.setPosition(positionDto);
+                employeeService.update(employeeDto);
             }
             UI.getCurrent().getPage().setLocation("http://localhost:4447/");
         });
