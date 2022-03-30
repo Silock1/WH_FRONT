@@ -1,6 +1,0 @@
-[INFO ] 2022-03-10 22:47:34.650 [http-nio-4447-exec-5] EmployeeServiceImpl - Список EmployeeDto получен успешно
-[INFO ] 2022-03-10 22:47:34.656 [http-nio-4447-exec-5] CompanyServiceImpl - Успешно выполнен запрос на получение списка Company
-[INFO ] 2022-03-10 22:47:34.664 [http-nio-4447-exec-5] EmployeeServiceImpl - Список EmployeeDto получен успешно
-[INFO ] 2022-03-10 22:47:34.667 [http-nio-4447-exec-5] DepartmentServiceImpl - Успешно выполнен запрос на получение списка DepartmentDto
-[INFO ] 2022-03-10 22:47:34.674 [http-nio-4447-exec-5] EmployeeServiceImpl - Список EmployeeDto получен успешно
-[INFO ] 2022-03-10 22:47:34.724 [http-nio-4447-exec-5] SupplierInvoiceServiceImpl - Успешно выполнен запрос на получение списка SupplierInvoice
