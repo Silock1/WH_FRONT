@@ -6,7 +6,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.warehouse_accounting.components.indiCators.grids.RecycleBinGridLayout;
+import com.warehouse_accounting.components.indiCators.RecycleBinGridLayout;
 
 import java.util.Arrays;
 import java.util.List;

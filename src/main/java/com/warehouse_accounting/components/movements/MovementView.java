@@ -23,6 +23,7 @@ import com.warehouse_accounting.services.interfaces.MovementService;
 import org.springframework.stereotype.Component;
 import org.vaadin.olli.FileDownloadWrapper;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Component
@@ -156,7 +157,7 @@ public class MovementView extends VerticalLayout {
         });
 
         FileDownloadWrapper buttonWrapper = new FileDownloadWrapper(
-                new StreamResource(LocalDateTime.now().toString() + "someSheet.xlsx",
+                new StreamResource(LocalDate.now().toString() + " someSheet.xlsx",
                         () -> movementService.getExcel().byteStream()));
         buttonWrapper.wrapComponent(new Button("Скачать XLSX", new Icon(VaadinIcon.DOWNLOAD)));
 

@@ -17,4 +17,8 @@ public interface RecycleBinService {
     void deleteById(Long id);
 
     ResponseBody getExcel();
+
+    ResponseBody getPDF();
+
+    ResponseBody getTermsConditions();
 }
