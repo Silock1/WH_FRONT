@@ -251,7 +251,6 @@ public class UserSettingsView extends VerticalLayout {
 
             if (!buffer.getFileName().equalsIgnoreCase("")) {
                 String filePath = "src/main/resources/static/avatars/" + new Date().getTime() + buffer.getFileName();
-                System.out.println("Буфер -------------->" + buffer.getFileName().equalsIgnoreCase(""));
                 imageDto = new ImageDto(null, filePath, null);
                 imageService.create(imageDto);
                 imageDto = imageService.getAll().stream().filter(imageDto -> imageDto.getImageUrl().equals(filePath)).findFirst().get();
