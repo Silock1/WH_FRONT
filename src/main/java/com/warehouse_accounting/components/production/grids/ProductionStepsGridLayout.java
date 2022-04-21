@@ -12,16 +12,30 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.models.dto.ProductionStageDto;
+import com.warehouse_accounting.services.interfaces.ProductionStageService;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 
+import java.util.Arrays;
+import java.util.List;
+
+
+@SpringComponent
+@UIScope
+@Log4j2
 public class ProductionStepsGridLayout extends HorizontalLayout {
 
-    private final TextField selectedTextField;
+    private final TextField selectedTextField = new TextField();
+    private final ProductionStageService productionStageService;
     private final Grid<ProductionStageDto> productionStageDtoGrid = new Grid<>(ProductionStageDto.class, false);
 
 
-    public ProductionStepsGridLayout (TextField selectedTextField) {
-        this.selectedTextField = selectedTextField;
+    public ProductionStepsGridLayout (ProductionStageService productionStageService) {
+        this.productionStageService = productionStageService;
+
 
         // Grid.Column<ProductionStageDto> idColumn = productionStageDtoGrid.addColumn(ProductionStageDto::getId).setHeader("Id");
         Grid.Column<ProductionStageDto> nameColumn = productionStageDtoGrid.addColumn(ProductionStageDto::getName).setHeader("Наименование");
@@ -34,6 +48,8 @@ public class ProductionStepsGridLayout extends HorizontalLayout {
         Grid.Column<ProductionStageDto> editorEmployeeNameColumn = productionStageDtoGrid.addColumn(ProductionStageDto::getEditorEmployeeName).setHeader("Кто изменил");
 
         productionStageDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI); //
+
+       List<ProductionStageDto> productionStageDtoList = productionStageService.getAll();
 
         Button menuButton = new Button(new Icon(VaadinIcon.COG));
         menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);

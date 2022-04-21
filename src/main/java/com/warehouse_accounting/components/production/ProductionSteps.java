@@ -16,19 +16,25 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.production.forms.ProductionStepsForm;
 import com.warehouse_accounting.components.production.grids.ProductionStepsGridLayout;
+import com.warehouse_accounting.services.interfaces.ProductionStageService;
 
+@SpringComponent
+@UIScope
 public class ProductionSteps extends VerticalLayout {
 
     private ProductionStepsGridLayout productionStepsGridLayout;
     private final TextField textFieldGridSelected = new TextField();
-    private final Div parentLayer;
+    //private final Div parentLayer;
 
 
-    public ProductionSteps(Div parentLayer) {
-        this.parentLayer = parentLayer;
-        productionStepsGridLayout = new ProductionStepsGridLayout(textFieldGridSelected);
+    public ProductionSteps(ProductionStageService productionStageService) {
+
+
+        productionStepsGridLayout = new ProductionStepsGridLayout(productionStageService);
         Div pageContent = new Div();
         pageContent.add(productionStepsGridLayout);
         pageContent.setSizeFull();
@@ -61,9 +67,9 @@ public class ProductionSteps extends VerticalLayout {
 
 
         addStepsButton.addClickListener(buttonClickEvent -> {
-            ProductionStepsForm productionStepsForm = new ProductionStepsForm(parentLayer, this);
-            parentLayer.removeAll();
-            parentLayer.add(productionStepsForm);
+//            ProductionStepsForm productionStepsForm = new ProductionStepsForm(parentLayer, this);
+//            parentLayer.removeAll();
+//            parentLayer.add(productionStepsForm);
         });
 
 
