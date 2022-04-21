@@ -50,6 +50,7 @@ public class ProductionStepsGridLayout extends HorizontalLayout {
         productionStageDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI); //
 
        List<ProductionStageDto> productionStageDtoList = productionStageService.getAll();
+       productionStageDtoGrid.setItems(productionStageDtoList);
 
         Button menuButton = new Button(new Icon(VaadinIcon.COG));
         menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
