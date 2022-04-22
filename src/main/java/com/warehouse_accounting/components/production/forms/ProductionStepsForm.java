@@ -5,6 +5,7 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
@@ -15,15 +16,22 @@ import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.ValidationException;
+import com.warehouse_accounting.components.production.grids.ProductionStepsGridLayout;
 import com.warehouse_accounting.models.dto.EmployeeDto;
+import com.warehouse_accounting.models.dto.ProductDto;
 import com.warehouse_accounting.models.dto.ProductionStageDto;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.ProductionStageService;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class ProductionStepsForm extends VerticalLayout {
 
     private  Div parentLayer;
@@ -31,6 +39,8 @@ public class ProductionStepsForm extends VerticalLayout {
     private TextArea textArea;
     private final ProductionStageService productionStageService;
     private final EmployeeService employeeService;
+    private Binder<ProductionStageDto> productionStageDtoBinder = new Binder<>(ProductionStageDto.class);
+    private ProductionStageDto productionStageDto = new ProductionStageDto();
 
     public ProductionStepsForm(
             Div parentLayer,
@@ -45,6 +55,7 @@ public class ProductionStepsForm extends VerticalLayout {
         createButtons();
         text();
         createColumns();
+        //add(getFormLayout());
     }
 
 
@@ -53,15 +64,17 @@ public class ProductionStepsForm extends VerticalLayout {
         Button saveButton = new Button("Сохранить", e -> {
             parentLayer.removeAll();
             EmployeeDto employeeDto = employeeService.getById(1L);
-            ProductionStageDto productionStageDto = ProductionStageDto.builder()
-                    .name("Тест")
-                    .description("Провека записи этапа")
-                    .editorEmployeeId(employeeDto.getId())
-                    .ownerEmployeeId(employeeDto.getId())
-                    .ownerDepartmentId(employeeDto.getDepartment().getId())
-                    .build();
-            productionStageService.create(productionStageDto);
-            parentLayer.add(returnLayer);
+            try {
+                productionStageDtoBinder.writeBean(productionStageDto);
+                productionStageDto.setEditorEmployeeId(employeeDto.getId());
+                productionStageDto.setOwnerEmployeeId(employeeDto.getId());
+                productionStageDto.setOwnerDepartmentId(employeeDto.getDepartment().getId());
+                productionStageService.create(productionStageDto);
+
+            } catch (ValidationException ex) {
+                log.error("Ошибка валидации при создании нового этапа", ex);
+            }
+            parentLayer.add(new ProductionStepsGridLayout(productionStageService));
         });
 
         Button closeButton = new Button("Закрыть", e -> {
@@ -124,24 +137,31 @@ public class ProductionStepsForm extends VerticalLayout {
     private void text() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         Text productionTasks = new Text("Этапы");
-
         horizontalLayout.add( productionTasks);
         add(horizontalLayout);
     }
 
 
     private void createColumns() {
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-//        Text productionTasks = new Text("Этапы");
-        VerticalLayout firstColumn = new VerticalLayout();
-        textArea = new TextArea();
-        textArea.setWidth("44rem");
-        textArea.setPlaceholder("Описание");
+        TextArea textArea = new TextArea();
+        textArea.setMinHeight("100px");
+        textArea.setMaxHeight("150px");
+        textArea.setLabel("Описание");
 
-        firstColumn.add(createSubColumn("Наименование", "company"), textArea);
+        TextField nameField = new TextField();
+        nameField.setLabel("Наименование");
+        nameField.setMinWidth("300px");
+        productionStageDtoBinder.forField(nameField).asRequired().bind(ProductionStageDto::getName, ProductionStageDto::setName);
 
-        horizontalLayout.add( firstColumn);
-        add(horizontalLayout);
+        TextArea descriptionField = new TextArea();
+        descriptionField.setMinWidth("300px");
+        descriptionField.setMinHeight("100px");
+        descriptionField.setMaxHeight("150px");
+        descriptionField.setLabel("Описание");
+        productionStageDtoBinder.forField(descriptionField).bind(ProductionStageDto::getDescription, ProductionStageDto::setDescription);
+
+        add(nameField, descriptionField);
+
     }
 
     private HorizontalLayout createSubColumn(String title, String className) {
@@ -152,4 +172,22 @@ public class ProductionStepsForm extends VerticalLayout {
         horizontalLayout.add(label, textField);
         return horizontalLayout;
     }
+
+    private FormLayout getFormLayout() {
+        FormLayout form = new FormLayout();
+
+        //Operations are grouped by fields : new field + something else + bind + form.add
+        TextField nameField = new TextField();
+        productionStageDtoBinder.forField(nameField).asRequired().bind(ProductionStageDto::getName, ProductionStageDto::setName);
+        form.addFormItem(nameField,"Наименование");
+
+        TextField descriptionField = new TextField();
+        productionStageDtoBinder.forField(descriptionField).bind(ProductionStageDto::getDescription, ProductionStageDto::setDescription);
+        form.addFormItem(descriptionField,"Описание");
+
+//
+//        form.setWidthFull();
+        form.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 10));
+        return form;
+   }
 }

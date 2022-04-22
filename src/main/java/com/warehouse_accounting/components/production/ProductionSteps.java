@@ -24,10 +24,12 @@ import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.ProductionStageService;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @SpringComponent
 @UIScope
+@Log4j2
 public class ProductionSteps extends VerticalLayout {
     private final ProductionStageService productionStageService;
     private final EmployeeService employeeService;
@@ -36,12 +38,13 @@ public class ProductionSteps extends VerticalLayout {
     @Setter
     @Getter
     private Div parentLayer;
+    private Div pageContent;
 
     public ProductionSteps(ProductionStageService productionStageService, EmployeeService employeeService) {
         this.productionStageService = productionStageService;
         this.employeeService = employeeService;
         productionStepsGridLayout = new ProductionStepsGridLayout(productionStageService);
-        Div pageContent = new Div();
+        pageContent = new Div();
         pageContent.add(productionStepsGridLayout);
         pageContent.setSizeFull();
         add(getGroupButton(), pageContent);
@@ -63,7 +66,10 @@ public class ProductionSteps extends VerticalLayout {
         Button refreshButton = new Button(refresh);
         refreshButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         refreshButton.addClickListener(click -> {
-            System.out.println("перезагрузка");
+            log.info("Перезагрузка, обновленеие списка ProductionSteps");
+            pageContent.removeAll();
+            productionStepsGridLayout = new ProductionStepsGridLayout(productionStageService);
+            pageContent.add(productionStepsGridLayout);
         });
 
         Image image = new Image("icons/plus.png", "Plus");
@@ -74,8 +80,8 @@ public class ProductionSteps extends VerticalLayout {
 
         addStepsButton.addClickListener(buttonClickEvent -> {
             ProductionStepsForm productionStepsForm = new ProductionStepsForm(parentLayer, this, productionStageService, employeeService);
-            parentLayer.removeAll();
-            parentLayer.add(productionStepsForm);
+            pageContent.removeAll();
+            pageContent.add(productionStepsForm);
         });
 
 
