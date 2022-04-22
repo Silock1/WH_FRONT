@@ -20,20 +20,26 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.production.forms.ProductionStepsForm;
 import com.warehouse_accounting.components.production.grids.ProductionStepsGridLayout;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.ProductionStageService;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @SpringComponent
 @UIScope
 public class ProductionSteps extends VerticalLayout {
-
+    private final ProductionStageService productionStageService;
+    private final EmployeeService employeeService;
     private ProductionStepsGridLayout productionStepsGridLayout;
     private final TextField textFieldGridSelected = new TextField();
-    //private final Div parentLayer;
+    @Setter
+    @Getter
+    private Div parentLayer;
 
-
-    public ProductionSteps(ProductionStageService productionStageService) {
-
-
+    public ProductionSteps(ProductionStageService productionStageService, EmployeeService employeeService) {
+        this.productionStageService = productionStageService;
+        this.employeeService = employeeService;
         productionStepsGridLayout = new ProductionStepsGridLayout(productionStageService);
         Div pageContent = new Div();
         pageContent.add(productionStepsGridLayout);
@@ -67,9 +73,9 @@ public class ProductionSteps extends VerticalLayout {
 
 
         addStepsButton.addClickListener(buttonClickEvent -> {
-//            ProductionStepsForm productionStepsForm = new ProductionStepsForm(parentLayer, this);
-//            parentLayer.removeAll();
-//            parentLayer.add(productionStepsForm);
+            ProductionStepsForm productionStepsForm = new ProductionStepsForm(parentLayer, this, productionStageService, employeeService);
+            parentLayer.removeAll();
+            parentLayer.add(productionStepsForm);
         });
 
 

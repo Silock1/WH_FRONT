@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface ProductionStageService {
     List<ProductionStageDto> getAll();
+    void create(ProductionStageDto productionStageDto);
 }

@@ -45,4 +45,20 @@ public class ProductionStageServiceImpl implements ProductionStageService {
         }
         return productionStageDtoList;
     }
+
+
+    @Override
+    public void create(ProductionStageDto productionStageDto) {
+        Call<Void> request = productionStageApi.create(productionStageUrl, productionStageDto);
+        try {
+            Response<Void> response = request.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на создание ProductionStageDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на создании ProductionStageDto", response.code());
+            }
+        } catch (IOException e) {
+            log.error("Произошла ошибка при выполнении запроса на создании ProductionStageDto", e);
+        }
+    }
 }

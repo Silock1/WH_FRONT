@@ -23,8 +23,6 @@ import java.util.Arrays;
 import java.util.List;
 
 
-@SpringComponent
-@UIScope
 @Log4j2
 public class ProductionStepsGridLayout extends HorizontalLayout {
 

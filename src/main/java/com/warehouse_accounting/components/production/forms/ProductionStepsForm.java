@@ -17,20 +17,34 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.warehouse_accounting.models.dto.EmployeeDto;
+import com.warehouse_accounting.models.dto.ProductionStageDto;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
+import com.warehouse_accounting.services.interfaces.ProductionStageService;
+import lombok.Getter;
+import lombok.Setter;
 
 public class ProductionStepsForm extends VerticalLayout {
 
-    private final Div parentLayer;
-    private final Component returnLayer;
+    private  Div parentLayer;
+    private  Component returnLayer;
     private TextArea textArea;
+    private final ProductionStageService productionStageService;
+    private final EmployeeService employeeService;
 
-    public ProductionStepsForm(Div parentLayer, Component returnLayer) {
+    public ProductionStepsForm(
+            Div parentLayer,
+            Component returnLayer,
+            ProductionStageService productionStageService,
+            EmployeeService employeeService
+    ) {
         this.parentLayer = parentLayer;
         this.returnLayer = returnLayer;
+        this.productionStageService = productionStageService;
+        this.employeeService = employeeService;
         createButtons();
         text();
         createColumns();
-
     }
 
 
@@ -38,6 +52,15 @@ public class ProductionStepsForm extends VerticalLayout {
         HorizontalLayout buttons = new HorizontalLayout();
         Button saveButton = new Button("Сохранить", e -> {
             parentLayer.removeAll();
+            EmployeeDto employeeDto = employeeService.getById(1L);
+            ProductionStageDto productionStageDto = ProductionStageDto.builder()
+                    .name("Тест")
+                    .description("Провека записи этапа")
+                    .editorEmployeeId(employeeDto.getId())
+                    .ownerEmployeeId(employeeDto.getId())
+                    .ownerDepartmentId(employeeDto.getDepartment().getId())
+                    .build();
+            productionStageService.create(productionStageDto);
             parentLayer.add(returnLayer);
         });
 

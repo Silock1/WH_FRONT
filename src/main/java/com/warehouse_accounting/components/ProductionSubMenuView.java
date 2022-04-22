@@ -9,6 +9,7 @@ import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.production.ProductionSteps;
 import com.warehouse_accounting.components.production.ProductionTasks;
 
+import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -66,6 +67,11 @@ public class ProductionSubMenuView extends VerticalLayout {
             }
         });
         return subMenuTabs;
+    }
+
+    @PostConstruct
+    public void initBean() {
+        productionSteps.setParentLayer(pageContent);
     }
 
 //    private ProductionSteps initProductionSteps(Div pageContent){
