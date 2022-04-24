@@ -9,6 +9,7 @@ import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.goods.GoodsAndServiceView;
 import com.warehouse_accounting.components.goods.filter.GoodsFilter;
 import com.warehouse_accounting.components.movements.MovementView;
+import com.warehouse_accounting.components.priceList.PriceList;
 import com.warehouse_accounting.components.tasks.Tasks;
 import com.warehouse_accounting.services.interfaces.ContractorService;
 import com.warehouse_accounting.services.interfaces.DepartmentService;
@@ -30,6 +31,7 @@ import static com.warehouse_accounting.components.UtilView.subMenuTabs;
 public class GoodsSubMenuView extends VerticalLayout {
 
     private final MovementView movementView;
+    private final PriceList priceList;
     private GoodsAndServiceView goodsAndService;
     private final Div pageContent = new Div();
 
@@ -41,7 +43,8 @@ public class GoodsSubMenuView extends VerticalLayout {
     private final ProductGroupService productGroupService;
 
 
-    public GoodsSubMenuView(MovementView movementView, GoodsAndServiceView goodsAndService, GoodsFilter goodsFilter, ProductService productService, EmployeeService employeeService, DepartmentService departmentService, ContractorService contractorService, ProductGroupService productGroupService) {
+    public GoodsSubMenuView(PriceList priceList, MovementView movementView, GoodsAndServiceView goodsAndService, GoodsFilter goodsFilter, ProductService productService, EmployeeService employeeService, DepartmentService departmentService, ContractorService contractorService, ProductGroupService productGroupService) {
+        this.priceList = priceList;
         this.movementView = movementView;
         this.goodsAndService = goodsAndService;
         this.goodsFilter = goodsFilter;
@@ -95,7 +98,7 @@ public class GoodsSubMenuView extends VerticalLayout {
                     break;
                 case "Прайс-листы":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Прайс-листы"));
+                    pageContent.add(priceList);
                     break;
                 case "Остатки":
                     pageContent.removeAll();
