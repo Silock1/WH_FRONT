@@ -62,6 +62,7 @@ public class ProductionSubMenuView extends VerticalLayout {
                     break;
                 case "Этапы":
                     pageContent.removeAll();
+                    productionSteps.setParentLayer(pageContent);
                     pageContent.add(productionSteps);
                     break;
             }

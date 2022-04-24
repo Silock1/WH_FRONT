@@ -43,11 +43,12 @@ public class ProductionSteps extends VerticalLayout {
     public ProductionSteps(ProductionStageService productionStageService, EmployeeService employeeService) {
         this.productionStageService = productionStageService;
         this.employeeService = employeeService;
-        productionStepsGridLayout = new ProductionStepsGridLayout(productionStageService);
+        productionStepsGridLayout = new ProductionStepsGridLayout(productionStageService, employeeService);
         pageContent = new Div();
         pageContent.add(productionStepsGridLayout);
         pageContent.setSizeFull();
-        add(getGroupButton(), pageContent);
+        HorizontalLayout horizontalLayout = getGroupButton();
+        add(horizontalLayout, pageContent);
     }
 
     private HorizontalLayout getGroupButton() {
@@ -68,7 +69,7 @@ public class ProductionSteps extends VerticalLayout {
         refreshButton.addClickListener(click -> {
             log.info("Перезагрузка, обновленеие списка ProductionSteps");
             pageContent.removeAll();
-            productionStepsGridLayout = new ProductionStepsGridLayout(productionStageService);
+            productionStepsGridLayout = new ProductionStepsGridLayout(productionStageService, employeeService);
             pageContent.add(productionStepsGridLayout);
         });
 
@@ -79,7 +80,7 @@ public class ProductionSteps extends VerticalLayout {
 
 
         addStepsButton.addClickListener(buttonClickEvent -> {
-            ProductionStepsForm productionStepsForm = new ProductionStepsForm(parentLayer, this, productionStageService, employeeService);
+            ProductionStepsForm productionStepsForm = new ProductionStepsForm(pageContent, productionStepsGridLayout, productionStageService, employeeService);
             pageContent.removeAll();
             pageContent.add(productionStepsForm);
         });

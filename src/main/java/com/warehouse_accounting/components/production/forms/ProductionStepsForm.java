@@ -41,6 +41,7 @@ public class ProductionStepsForm extends VerticalLayout {
     private final EmployeeService employeeService;
     private Binder<ProductionStageDto> productionStageDtoBinder = new Binder<>(ProductionStageDto.class);
     private ProductionStageDto productionStageDto = new ProductionStageDto();
+    private ProductionStepsGridLayout productionStepsGridLayout;
 
     public ProductionStepsForm(
             Div parentLayer,
@@ -74,7 +75,8 @@ public class ProductionStepsForm extends VerticalLayout {
             } catch (ValidationException ex) {
                 log.error("Ошибка валидации при создании нового этапа", ex);
             }
-            parentLayer.add(new ProductionStepsGridLayout(productionStageService));
+            productionStepsGridLayout = new ProductionStepsGridLayout(productionStageService, employeeService);
+            parentLayer.add(productionStepsGridLayout);
         });
 
         Button closeButton = new Button("Закрыть", e -> {
