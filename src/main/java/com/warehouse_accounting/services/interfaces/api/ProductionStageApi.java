@@ -20,4 +20,8 @@ public interface ProductionStageApi {
     @Headers("Accept: application/json")
     @PUT("{url}")
     Call<Void> update(@Path(value = "url", encoded = true) String url, @Body ProductionStageDto productionStageDto);
+
+    @Headers("Accept: application/json")
+    @DELETE("{url}/{id}")
+    Call<Void> deleteById(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
 }

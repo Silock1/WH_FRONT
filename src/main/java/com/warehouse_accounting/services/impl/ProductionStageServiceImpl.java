@@ -71,10 +71,25 @@ public class ProductionStageServiceImpl implements ProductionStageService {
                 log.info("Успешно выполнен запрос на обновление ProductionStageDto");
             } else {
                 log.error("Произошла ошибка {} при выполнении запроса на обновление ProductionStageDto", response.code());
-                log.error(response.message());
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на обновление ProductionStageDto", e);
+        }
+    }
+
+
+    @Override
+    public void delete(Long id) {
+        Call<Void> request = productionStageApi.deleteById(productionStageUrl, id);
+        try {
+            Response<Void> response = request.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на удаление ProductionStageDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на удаление ProductionStageDto", response.code());
+            }
+        } catch (IOException e) {
+            log.error("Произошла ошибка при выполнении запроса на удаление ProductionStageDto", e);
         }
     }
 }

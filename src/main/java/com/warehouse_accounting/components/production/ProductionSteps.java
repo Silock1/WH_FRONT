@@ -86,7 +86,13 @@ public class ProductionSteps extends VerticalLayout {
 
 
         addStepsButton.addClickListener(buttonClickEvent -> {
-            ProductionStepsForm productionStepsForm = new ProductionStepsForm(pageContent, productionStepsGridLayout, productionStageService, employeeService, new ProductionStageDto());
+            ProductionStepsForm productionStepsForm = new ProductionStepsForm(
+                    pageContent,
+                    productionStepsGridLayout,
+                    productionStageService,
+                    employeeService,
+                    new ProductionStageDto(),
+                    productionStepsGridLayout);
             pageContent.removeAll();
             pageContent.add(productionStepsForm);
         });

@@ -69,14 +69,15 @@ public class ProductionStepsGridLayout extends HorizontalLayout {
         productionStageDtoGrid.setItems(productionStageDtoList);
 
         productionStageDtoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        productionStageDtoGrid.addItemDoubleClickListener(event -> {
+        productionStageDtoGrid.addItemClickListener(event -> {
             productionSteps.getPageContent().removeAll();
             ProductionStepsForm productionStepsForm = new ProductionStepsForm(
                     productionSteps.getPageContent(),
                     this,
                     productionStageService,
                     employeeService,
-                    event.getItem());
+                    event.getItem(),
+                    this);
             productionSteps.getPageContent().add(productionStepsForm);
         });
 

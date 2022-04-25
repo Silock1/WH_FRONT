@@ -21,6 +21,7 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.warehouse_accounting.components.production.grids.ProductionStepsGridLayout;
 import com.warehouse_accounting.models.dto.EmployeeDto;
 import com.warehouse_accounting.models.dto.ProductDto;
@@ -50,13 +51,15 @@ public class ProductionStepsForm extends VerticalLayout {
             Component returnLayer,
             ProductionStageService productionStageService,
             EmployeeService employeeService,
-            ProductionStageDto productionStageDto
+            ProductionStageDto productionStageDto,
+            ProductionStepsGridLayout productionStepsGridLayout
     ) {
         this.parentLayer = parentLayer;
         this.returnLayer = returnLayer;
         this.productionStageService = productionStageService;
         this.employeeService = employeeService;
         this.productionStageDto = productionStageDto;
+        this.productionStepsGridLayout = productionStepsGridLayout;
         createButtons();
         text();
         createColumns();
@@ -75,7 +78,7 @@ public class ProductionStepsForm extends VerticalLayout {
                 productionStageDto.setOwnerEmployeeId(employeeDto.getId());
                 productionStageDto.setOwnerDepartmentId(employeeDto.getDepartment().getId());
 
-                if (productionStageDto.getId() > 0) {
+                if (productionStageDto.getId() != null && productionStageDto.getId() > 0) {
                     productionStageDto.setDateOfEdit(null);
                     productionStageService.update(productionStageDto);
                 } else {
@@ -87,8 +90,10 @@ public class ProductionStepsForm extends VerticalLayout {
                 log.error("Ошибка валидации при создании нового этапа", ex);
             }
             //productionStepsGridLayout = new ProductionStepsGridLayout(productionStageService, employeeService);
-            parentLayer.add(returnLayer);
+            productionStepsGridLayout.updateGrid();
+            parentLayer.add(productionStepsGridLayout);
         });
+        saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
 
         Button closeButton = new Button("Закрыть", e -> {
             parentLayer.removeAll();
@@ -96,11 +101,11 @@ public class ProductionStepsForm extends VerticalLayout {
             parentLayer.add(returnLayer);
         });
 
-        Button deleteButton = new Button("Удалить", e -> {
-            parentLayer.removeAll();
-            //productionStepsGridLayout = new ProductionStepsGridLayout(productionStageService, employeeService);
-            parentLayer.add(returnLayer);
-        });
+//        Button deleteButton = new Button("Удалить", e -> {
+//            parentLayer.removeAll();
+//            //productionStepsGridLayout = new ProductionStepsGridLayout(productionStageService, employeeService);
+//            parentLayer.add(returnLayer);
+//        });
 
         HorizontalLayout editButton = getEditButton();
 
@@ -125,7 +130,7 @@ public class ProductionStepsForm extends VerticalLayout {
             parentLayer.add(returnLayer);
         });
 
-        buttons.add(saveButton, closeButton, deleteButton, editButton, helpButton, archiveButton );
+        buttons.add(saveButton, closeButton, editButton, helpButton, archiveButton );
         add(buttons);
     }
 
@@ -140,7 +145,16 @@ public class ProductionStepsForm extends VerticalLayout {
         editItem.setAlignItems(Alignment.CENTER);
 
         MenuItem editMenu = editMenuBar.addItem(editItem);
-        editMenu.getSubMenu().addItem("Удалить", menuItemClickEvent -> {}).getElement().setAttribute("disabled", true);
+        boolean visibleItemDelete = true;
+        if (productionStageDto.getId() != null && productionStageDto.getId() > 1) {
+            visibleItemDelete = false;
+        }
+        editMenu.getSubMenu().addItem("Удалить", menuItemClickEvent -> {
+            productionStageService.delete(productionStageDto.getId());
+            productionStepsGridLayout.updateGrid();
+            parentLayer.removeAll();
+            parentLayer.add(productionStepsGridLayout);
+        }).getElement().setAttribute("disabled", visibleItemDelete);
         editMenu.getSubMenu().addItem("Копировать", menuItemClickEvent -> {
 
         });
