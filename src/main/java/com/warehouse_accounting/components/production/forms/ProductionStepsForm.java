@@ -31,6 +31,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 
+import java.util.Date;
+
 @Log4j2
 public class ProductionStepsForm extends VerticalLayout {
 
@@ -40,19 +42,21 @@ public class ProductionStepsForm extends VerticalLayout {
     private final ProductionStageService productionStageService;
     private final EmployeeService employeeService;
     private Binder<ProductionStageDto> productionStageDtoBinder = new Binder<>(ProductionStageDto.class);
-    private ProductionStageDto productionStageDto = new ProductionStageDto();
+    private ProductionStageDto productionStageDto;
     private ProductionStepsGridLayout productionStepsGridLayout;
 
     public ProductionStepsForm(
             Div parentLayer,
             Component returnLayer,
             ProductionStageService productionStageService,
-            EmployeeService employeeService
+            EmployeeService employeeService,
+            ProductionStageDto productionStageDto
     ) {
         this.parentLayer = parentLayer;
         this.returnLayer = returnLayer;
         this.productionStageService = productionStageService;
         this.employeeService = employeeService;
+        this.productionStageDto = productionStageDto;
         createButtons();
         text();
         createColumns();
@@ -70,17 +74,31 @@ public class ProductionStepsForm extends VerticalLayout {
                 productionStageDto.setEditorEmployeeId(employeeDto.getId());
                 productionStageDto.setOwnerEmployeeId(employeeDto.getId());
                 productionStageDto.setOwnerDepartmentId(employeeDto.getDepartment().getId());
-                productionStageService.create(productionStageDto);
+
+                if (productionStageDto.getId() > 0) {
+                    productionStageDto.setDateOfEdit(null);
+                    productionStageService.update(productionStageDto);
+                } else {
+                    productionStageService.create(productionStageDto);
+                }
+
 
             } catch (ValidationException ex) {
                 log.error("Ошибка валидации при создании нового этапа", ex);
             }
-            productionStepsGridLayout = new ProductionStepsGridLayout(productionStageService, employeeService);
-            parentLayer.add(productionStepsGridLayout);
+            //productionStepsGridLayout = new ProductionStepsGridLayout(productionStageService, employeeService);
+            parentLayer.add(returnLayer);
         });
 
         Button closeButton = new Button("Закрыть", e -> {
             parentLayer.removeAll();
+            //productionStepsGridLayout = new ProductionStepsGridLayout(productionStageService, employeeService);
+            parentLayer.add(returnLayer);
+        });
+
+        Button deleteButton = new Button("Удалить", e -> {
+            parentLayer.removeAll();
+            //productionStepsGridLayout = new ProductionStepsGridLayout(productionStageService, employeeService);
             parentLayer.add(returnLayer);
         });
 
@@ -107,7 +125,7 @@ public class ProductionStepsForm extends VerticalLayout {
             parentLayer.add(returnLayer);
         });
 
-        buttons.add(saveButton, closeButton, editButton, helpButton, archiveButton );
+        buttons.add(saveButton, closeButton, deleteButton, editButton, helpButton, archiveButton );
         add(buttons);
     }
 
@@ -122,9 +140,7 @@ public class ProductionStepsForm extends VerticalLayout {
         editItem.setAlignItems(Alignment.CENTER);
 
         MenuItem editMenu = editMenuBar.addItem(editItem);
-        editMenu.getSubMenu().addItem("Удалить", menuItemClickEvent -> {
-        }).getElement().setAttribute("disabled", true);
-
+        editMenu.getSubMenu().addItem("Удалить", menuItemClickEvent -> {}).getElement().setAttribute("disabled", true);
         editMenu.getSubMenu().addItem("Копировать", menuItemClickEvent -> {
 
         });
@@ -154,6 +170,7 @@ public class ProductionStepsForm extends VerticalLayout {
         nameField.setLabel("Наименование");
         nameField.setMinWidth("300px");
         productionStageDtoBinder.forField(nameField).asRequired().bind(ProductionStageDto::getName, ProductionStageDto::setName);
+        nameField.setValue(productionStageDto.getName() == null ? "" : productionStageDto.getName());
 
         TextArea descriptionField = new TextArea();
         descriptionField.setMinWidth("300px");
@@ -161,9 +178,8 @@ public class ProductionStepsForm extends VerticalLayout {
         descriptionField.setMaxHeight("150px");
         descriptionField.setLabel("Описание");
         productionStageDtoBinder.forField(descriptionField).bind(ProductionStageDto::getDescription, ProductionStageDto::setDescription);
-
+        descriptionField.setValue(productionStageDto.getDescription() == null ? "" : productionStageDto.getDescription());
         add(nameField, descriptionField);
-
     }
 
     private HorizontalLayout createSubColumn(String title, String className) {

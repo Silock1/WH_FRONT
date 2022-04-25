@@ -38,14 +38,14 @@ public class ProductionStageServiceImpl implements ProductionStageService {
                 log.info("Успешно выполнен запрос на получение списка ProductionStageDto");
                 log.info(productionStageDtoList);
             } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение списка ProductionStageDto",response.code());
+                log.error("Произошла ошибка {} при выполнении запроса на получение списка ProductionStageDto", response.code());
+                log.error("[eq");
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return productionStageDtoList;
     }
-
 
     @Override
     public void create(ProductionStageDto productionStageDto) {
@@ -59,6 +59,22 @@ public class ProductionStageServiceImpl implements ProductionStageService {
             }
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на создании ProductionStageDto", e);
+        }
+    }
+
+    @Override
+    public void update(ProductionStageDto productionStageDto) {
+        Call<Void> request = productionStageApi.update(productionStageUrl, productionStageDto);
+        try {
+            Response<Void> response = request.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на обновление ProductionStageDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на обновление ProductionStageDto", response.code());
+                log.error(response.message());
+            }
+        } catch (IOException e) {
+            log.error("Произошла ошибка при выполнении запроса на обновление ProductionStageDto", e);
         }
     }
 }

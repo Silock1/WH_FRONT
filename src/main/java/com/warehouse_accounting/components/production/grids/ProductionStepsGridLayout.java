@@ -16,29 +16,39 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.selection.SingleSelect;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.components.production.ProductionSteps;
 import com.warehouse_accounting.components.production.forms.ProductionStepsForm;
 import com.warehouse_accounting.models.dto.ProductionStageDto;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.ProductionStageService;
+import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
-
+@SpringComponent
+@UIScope
 @Log4j2
+@Data
 public class ProductionStepsGridLayout extends HorizontalLayout {
 
     private final TextField selectedTextField = new TextField();
     private final ProductionStageService productionStageService;
     private final EmployeeService employeeService;
     private final Grid<ProductionStageDto> productionStageDtoGrid = new Grid<>(ProductionStageDto.class, false);
+    private final ProductionSteps productionSteps;
+    private List<ProductionStageDto> productionStageDtoList;
 
 
-    public ProductionStepsGridLayout (ProductionStageService productionStageService, EmployeeService employeeService) {
+    public ProductionStepsGridLayout (ProductionStageService productionStageService, EmployeeService employeeService, ProductionSteps productionSteps) {
         this.productionStageService = productionStageService;
         this.employeeService = employeeService;
+        this.productionSteps = productionSteps;
 
 
         Grid.Column<ProductionStageDto> idColumn = productionStageDtoGrid.addColumn(ProductionStageDto::getId).setHeader("Id");
@@ -54,17 +64,20 @@ public class ProductionStepsGridLayout extends HorizontalLayout {
 
         productionStageDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI); //
 
-       List<ProductionStageDto> productionStageDtoList = productionStageService.getAll();
-       productionStageDtoGrid.setItems(productionStageDtoList);
+        productionStageDtoList = productionStageService.getAll();
+        productionStageDtoList.sort(Comparator.comparingLong(ProductionStageDto::getId));
+        productionStageDtoGrid.setItems(productionStageDtoList);
 
         productionStageDtoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        //productionStageDtoGrid.setSelectionMode(Grid.SelectionMode.NONE);
         productionStageDtoGrid.addItemDoubleClickListener(event -> {
-            System.out
-                    .println(("Clicked Item: " + event.getItem()));
-           removeAll();
-           ProductionStepsForm productionStepsForm = new ProductionStepsForm(new Div(), this, productionStageService, employeeService);
-           add(productionStepsForm);
+            productionSteps.getPageContent().removeAll();
+            ProductionStepsForm productionStepsForm = new ProductionStepsForm(
+                    productionSteps.getPageContent(),
+                    this,
+                    productionStageService,
+                    employeeService,
+                    event.getItem());
+            productionSteps.getPageContent().add(productionStepsForm);
         });
 
         Button menuButton = new Button(new Icon(VaadinIcon.COG));
@@ -87,6 +100,12 @@ public class ProductionStepsGridLayout extends HorizontalLayout {
         headerLayout.setAlignItems(FlexComponent.Alignment.BASELINE);
         headerLayout.setFlexGrow(1);
         add(productionStageDtoGrid, headerLayout);
+    }
+
+    public void updateGrid() {
+        productionStageDtoList = productionStageService.getAll();
+        productionStageDtoList.sort(Comparator.comparingLong(ProductionStageDto::getId));
+        productionStageDtoGrid.setItems(productionStageDtoList);
     }
 
     private static class ColumnToggleContextMenu extends ContextMenu {

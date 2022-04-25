@@ -20,6 +20,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.production.forms.ProductionStepsForm;
 import com.warehouse_accounting.components.production.grids.ProductionStepsGridLayout;
+import com.warehouse_accounting.models.dto.ProductionStageDto;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.ProductionStageService;
 import lombok.Getter;
@@ -33,17 +34,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ProductionSteps extends VerticalLayout {
     private final ProductionStageService productionStageService;
     private final EmployeeService employeeService;
-    private ProductionStepsGridLayout productionStepsGridLayout;
+    @Setter
+    @Getter
+    private final ProductionStepsGridLayout productionStepsGridLayout;
     private final TextField textFieldGridSelected = new TextField();
     @Setter
     @Getter
     private Div parentLayer;
+    @Setter
+    @Getter
     private Div pageContent;
 
     public ProductionSteps(ProductionStageService productionStageService, EmployeeService employeeService) {
         this.productionStageService = productionStageService;
         this.employeeService = employeeService;
-        productionStepsGridLayout = new ProductionStepsGridLayout(productionStageService, employeeService);
+        productionStepsGridLayout = new ProductionStepsGridLayout(productionStageService, employeeService, this);
         pageContent = new Div();
         pageContent.add(productionStepsGridLayout);
         pageContent.setSizeFull();
@@ -68,9 +73,10 @@ public class ProductionSteps extends VerticalLayout {
         refreshButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         refreshButton.addClickListener(click -> {
             log.info("Перезагрузка, обновленеие списка ProductionSteps");
-            pageContent.removeAll();
-            productionStepsGridLayout = new ProductionStepsGridLayout(productionStageService, employeeService);
-            pageContent.add(productionStepsGridLayout);
+            //pageContent.removeAll();
+            //productionStepsGridLayout = new ProductionStepsGridLayout(productionStageService, employeeService, th);
+            //pageContent.add(productionStepsGridLayout);
+            productionStepsGridLayout.updateGrid();
         });
 
         Image image = new Image("icons/plus.png", "Plus");
@@ -80,7 +86,7 @@ public class ProductionSteps extends VerticalLayout {
 
 
         addStepsButton.addClickListener(buttonClickEvent -> {
-            ProductionStepsForm productionStepsForm = new ProductionStepsForm(pageContent, productionStepsGridLayout, productionStageService, employeeService);
+            ProductionStepsForm productionStepsForm = new ProductionStepsForm(pageContent, productionStepsGridLayout, productionStageService, employeeService, new ProductionStageDto());
             pageContent.removeAll();
             pageContent.add(productionStepsForm);
         });

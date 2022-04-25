@@ -16,4 +16,8 @@ public interface ProductionStageApi {
     @Headers("Accept: application/json")
     @POST("{url}")
     Call<Void> create(@Path(value = "url", encoded = true) String url, @Body ProductionStageDto productionStageDto);
+
+    @Headers("Accept: application/json")
+    @PUT("{url}")
+    Call<Void> update(@Path(value = "url", encoded = true) String url, @Body ProductionStageDto productionStageDto);
 }
