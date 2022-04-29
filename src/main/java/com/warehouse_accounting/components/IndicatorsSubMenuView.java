@@ -6,7 +6,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.warehouse_accounting.components.indiCators.IndicatorsGridLayout;
 import com.warehouse_accounting.components.indiCators.RecycleBinGridLayout;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,10 +21,12 @@ import static com.warehouse_accounting.components.UtilView.subMenuTabs;
 public class IndicatorsSubMenuView extends VerticalLayout {
 
     private final Div pageContent = new Div();
-    private RecycleBinGridLayout recycleBinGridLayout;
+    private final RecycleBinGridLayout recycleBinGridLayout;
+    private final IndicatorsGridLayout indicatorsGridLayout;
 
-    public IndicatorsSubMenuView(RecycleBinGridLayout recycleBinGridLayout) {
+    public IndicatorsSubMenuView(RecycleBinGridLayout recycleBinGridLayout, IndicatorsGridLayout indicatorsGridLayout) {
         this.recycleBinGridLayout = recycleBinGridLayout;
+        this.indicatorsGridLayout = indicatorsGridLayout;
         this.pageContent.removeAll();
         pageContent.setSizeFull();
         add(initSubMenu(), pageContent);
@@ -40,7 +44,7 @@ public class IndicatorsSubMenuView extends VerticalLayout {
             switch (event.getSelectedTab().getLabel()) {
                 case "Показатели":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Показатели"));
+                    pageContent.add(indicatorsGridLayout);
                     break;
                 case "Документы":
                     pageContent.removeAll();

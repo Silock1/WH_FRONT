@@ -20,7 +20,7 @@ package com.warehouse_accounting.services.impl;
 @Service
 public class SalesChannelsServiceImpl implements SalesChannelsService {
 
-    private final String channelsUrl = "/api/comissioner_reports";
+    private final String channelsUrl = "api/commission_reports";
     private final SalesChannelsApi channelsApi = buildRetrofit().create(SalesChannelsApi.class);
 
     Retrofit buildRetrofit() {
