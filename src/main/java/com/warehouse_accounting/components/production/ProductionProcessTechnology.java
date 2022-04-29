@@ -17,6 +17,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.components.production.grids.ProductionProcessTechnologyGridLayout;
 
 import java.awt.*;
 
@@ -25,9 +26,12 @@ import static com.vaadin.flow.component.button.ButtonVariant.LUMO_TERTIARY_INLIN
 @SpringComponent
 @UIScope
 public class ProductionProcessTechnology extends VerticalLayout {
+    private final ProductionProcessTechnologyGridLayout productionProcessTechnologyGridLayout;
 
-    public ProductionProcessTechnology() {
-        add(createTopGroupElements());
+    public ProductionProcessTechnology(ProductionProcessTechnologyGridLayout productionProcessTechnologyGridLayout) {
+        this.productionProcessTechnologyGridLayout = productionProcessTechnologyGridLayout;
+
+        add(createTopGroupElements(), mainContent());
     }
 
     private HorizontalLayout createTopGroupElements() {
@@ -82,7 +86,7 @@ public class ProductionProcessTechnology extends VerticalLayout {
         Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH));
         refreshButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         refreshButton.addClickListener(c -> {
-
+            //productionProcessTechnologyGridLayout.updateGrid();
         });
         return refreshButton;
     }
@@ -150,6 +154,10 @@ public class ProductionProcessTechnology extends VerticalLayout {
         editSubMenu.addItem("Извлечь из архива").onEnabledStateChanged(false);
 
         return menuBar;
+    }
+
+    private HorizontalLayout mainContent() {
+        return productionProcessTechnologyGridLayout;
     }
 
 
