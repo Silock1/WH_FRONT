@@ -31,6 +31,7 @@ retrofit:
     invoice_url: api/invoices   # []
     legal_detail_url: api/legal_details
     movement_url: api/movements   # []
+    priceList_url: api/priceLists   # []
     payments_url: api/payments    #todo проверить связь с taskDto
     position_url: api/positions
     product_group_url: api/product_groups
