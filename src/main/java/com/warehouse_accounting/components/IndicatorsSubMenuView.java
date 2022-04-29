@@ -8,7 +8,6 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.indiCators.IndicatorsGridLayout;
 import com.warehouse_accounting.components.indiCators.RecycleBinGridLayout;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,7 +16,6 @@ import static com.warehouse_accounting.components.UtilView.subMenuTabs;
 
 @Route(value = "indicators", layout = AppView.class)
 @PageTitle("Показатели")
-
 public class IndicatorsSubMenuView extends VerticalLayout {
 
     private final Div pageContent = new Div();
