@@ -5,6 +5,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
@@ -27,10 +28,8 @@ import static com.vaadin.flow.component.button.ButtonVariant.LUMO_TERTIARY_INLIN
 @UIScope
 public class ProductionProcessTechnology extends VerticalLayout {
     private final ProductionProcessTechnologyGridLayout productionProcessTechnologyGridLayout;
-
     public ProductionProcessTechnology(ProductionProcessTechnologyGridLayout productionProcessTechnologyGridLayout) {
         this.productionProcessTechnologyGridLayout = productionProcessTechnologyGridLayout;
-
         add(createTopGroupElements(), mainContent());
     }
 

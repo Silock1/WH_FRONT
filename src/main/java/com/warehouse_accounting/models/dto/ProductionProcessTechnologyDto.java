@@ -17,7 +17,7 @@ public class ProductionProcessTechnologyDto {
     private Long id;
     private String name;
     private String description;
-    private Boolean generalAccess;
+    private boolean generalAccess;
     private boolean archived;
     private String sortNumber;
     private Long ownerDepartmentId;
@@ -26,24 +26,4 @@ public class ProductionProcessTechnologyDto {
     private Long editorEmployeeId;
     private Set<Long> usedProductionStageId;
 
-
-
-
-
-//    public ProductionProcessTechnologyDto( Long id,
-//                                           String name,
-//                                           String description,
-//                                           Boolean generalAccess,
-//                                           String sortNumber,
-//                                           Long department ,
-//                                           Long employee
-//    ) {
-//        this.id = id;
-//        this.name = name;
-//        this.description = description;
-//        this.generalAccess = generalAccess;
-//        this.sortNumber = sortNumber;
-//        this.department.setId(department);
-//        this.employee.setId(employee);
-//    }
 }
