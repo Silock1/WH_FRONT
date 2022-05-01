@@ -21,9 +21,12 @@ public class ProductionProcessTechnologyDto {
     private boolean archived;
     private String sortNumber;
     private Long ownerDepartmentId;
+    private String ownerDepartmentName;
     private Long ownerEmployeeId;
+    private String ownerEmployeeName;
     private Date dateOfEdit;
     private Long editorEmployeeId;
+    private String editorEmployeeName;
     private Set<Long> usedProductionStageId;
 
 }

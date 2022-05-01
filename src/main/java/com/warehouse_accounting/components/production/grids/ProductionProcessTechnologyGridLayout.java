@@ -44,10 +44,10 @@ public class ProductionProcessTechnologyGridLayout extends HorizontalLayout {
         Grid.Column<ProductionProcessTechnologyDto> nameColumn = productionProcessTechnologyDtoGrid.addColumn(ProductionProcessTechnologyDto::getName).setHeader("Наименование");
         Grid.Column<ProductionProcessTechnologyDto> descriptionColumn = productionProcessTechnologyDtoGrid.addColumn(ProductionProcessTechnologyDto::getDescription).setHeader("Описание");
         Grid.Column<ProductionProcessTechnologyDto> generalAccessColumn = productionProcessTechnologyDtoGrid.addColumn(ProductionProcessTechnologyDto::isGeneralAccess).setHeader("Общий доступ");
-        Grid.Column<ProductionProcessTechnologyDto> ownerDepartmentNameColumn = productionProcessTechnologyDtoGrid.addColumn(ProductionProcessTechnologyDto::getOwnerDepartmentId).setHeader("Владелец-отдел");
-        Grid.Column<ProductionProcessTechnologyDto> ownerEmployeeNameColumn = productionProcessTechnologyDtoGrid.addColumn(ProductionProcessTechnologyDto::getOwnerEmployeeId).setHeader("Владелец-сотрудник");
+        Grid.Column<ProductionProcessTechnologyDto> ownerDepartmentNameColumn = productionProcessTechnologyDtoGrid.addColumn(ProductionProcessTechnologyDto::getOwnerDepartmentName).setHeader("Владелец-отдел");
+        Grid.Column<ProductionProcessTechnologyDto> ownerEmployeeNameColumn = productionProcessTechnologyDtoGrid.addColumn(ProductionProcessTechnologyDto::getOwnerEmployeeName).setHeader("Владелец-сотрудник");
         Grid.Column<ProductionProcessTechnologyDto> dateOfEditColumn = productionProcessTechnologyDtoGrid.addColumn(ProductionProcessTechnologyDto::getDateOfEdit).setHeader("Когда изменен");
-        Grid.Column<ProductionProcessTechnologyDto> editorEmployeeNameColumn = productionProcessTechnologyDtoGrid.addColumn(ProductionProcessTechnologyDto::getEditorEmployeeId).setHeader("Кто изменил");
+        Grid.Column<ProductionProcessTechnologyDto> editorEmployeeNameColumn = productionProcessTechnologyDtoGrid.addColumn(ProductionProcessTechnologyDto::getEditorEmployeeName).setHeader("Кто изменил");
 
         productionProcessTechnologyDtoList = productionProcessTechnologyService.getAll();
         productionProcessTechnologyDtoList.sort(Comparator.comparingLong(ProductionProcessTechnologyDto::getId));
