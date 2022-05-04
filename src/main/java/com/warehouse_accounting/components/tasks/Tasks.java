@@ -14,6 +14,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.warehouse_accounting.components.tasks.filter.TasksFilter;
+import com.warehouse_accounting.components.tasks.forms.TasksEditForm;
 import com.warehouse_accounting.components.tasks.forms.TasksForm;
 import com.warehouse_accounting.components.tasks.grids.TasksGrid;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
@@ -27,11 +28,12 @@ public class Tasks extends VerticalLayout {
     private final TextField textFieldGridSelected = new TextField();
     private EmployeeService employeeService;
 
+
     public Tasks(Div parentLayer, TasksService tasksService, TasksFilter filterLayout, EmployeeService employeeService) {
         this.parentLayer = parentLayer;
         this.filterLayout = filterLayout;
         this.employeeService = employeeService;
-        tasksGrid = new TasksGrid(tasksService);
+        tasksGrid = new TasksGrid(tasksService); // i tyt
         Div pageContent = new Div();
         pageContent.add(tasksGrid);
         filterLayout.setTasks(this);//оно

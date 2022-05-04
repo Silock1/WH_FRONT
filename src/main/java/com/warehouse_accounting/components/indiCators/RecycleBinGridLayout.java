@@ -29,10 +29,9 @@ import com.warehouse_accounting.services.interfaces.RecycleBinService;
 import org.springframework.stereotype.Component;
 import org.vaadin.olli.FileDownloadWrapper;
 
+
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 @Component
 @UIScope
@@ -220,7 +219,7 @@ public class RecycleBinGridLayout extends VerticalLayout {
 
 
         //модальное окно
-        private static VerticalLayout createDialogLayout(Dialog dialog) {
+        private  VerticalLayout createDialogLayout(Dialog dialog) {
             H2 headline = new H2("Создание печатной формы");
             headline.getStyle().set("margin", "var(--lumo-space-m) 0 0 0")
                     .set("font-size", "1.5em").set("font-weight", "bold");
@@ -230,10 +229,13 @@ public class RecycleBinGridLayout extends VerticalLayout {
                 "Скачать в формате EXEL","Скачать в формате PDF");
 */
 
+
+
             FileDownloadWrapper buttonWrapper1 = new FileDownloadWrapper(
                     new StreamResource(LocalDate.now() + " openBrowse.pdf",
                             () -> recycleBinService.getTermsConditions().byteStream()));
             buttonWrapper1.wrapComponent(new Button("Открыть в браузере"));
+
 
             FileDownloadWrapper buttonWrapper2 = new FileDownloadWrapper(
                     new StreamResource(LocalDate.now() + " someSheetExel.xlsx",
