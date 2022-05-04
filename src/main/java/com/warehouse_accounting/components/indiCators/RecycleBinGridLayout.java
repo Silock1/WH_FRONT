@@ -29,9 +29,10 @@ import com.warehouse_accounting.services.interfaces.RecycleBinService;
 import org.springframework.stereotype.Component;
 import org.vaadin.olli.FileDownloadWrapper;
 
-
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 @Component
 @UIScope
@@ -50,7 +51,7 @@ public class RecycleBinGridLayout extends VerticalLayout {
 
         Grid.Column<RecycleBinDto> documentType = grid.addColumn(RecycleBinDto::getDocumentType).setHeader("Тип документа");
         Grid.Column<RecycleBinDto> number = grid.addColumn(RecycleBinDto::getNumber).setHeader("№");
-       // Grid.Column<RecycleBinDto> date = grid.addColumn(RecycleBinDto::getDate).setHeader("Время");
+        // Grid.Column<RecycleBinDto> date = grid.addColumn(RecycleBinDto::getDate).setHeader("Время");
         Grid.Column<RecycleBinDto> sum = grid.addColumn(RecycleBinDto::getSum).setHeader("Сумма");
         Grid.Column<RecycleBinDto> warehouseName = grid.addColumn(RecycleBinDto::getWarehouseName).setHeader("Со склада");
         Grid.Column<RecycleBinDto> warehouseFrom = grid.addColumn(RecycleBinDto::getWarehouseFrom).setHeader("На склад");
@@ -71,7 +72,7 @@ public class RecycleBinGridLayout extends VerticalLayout {
 
         columnToggleContextMenu.addColumnToggleItem("Тип документа", documentType);
         columnToggleContextMenu.addColumnToggleItem("№", number);
-       // columnToggleContextMenu.addColumnToggleItem("Время", date);
+        // columnToggleContextMenu.addColumnToggleItem("Время", date);
         columnToggleContextMenu.addColumnToggleItem("Сумма", sum);
         columnToggleContextMenu.addColumnToggleItem("Со склада", warehouseName);
         columnToggleContextMenu.addColumnToggleItem("На склад", warehouseFrom);
@@ -136,139 +137,136 @@ public class RecycleBinGridLayout extends VerticalLayout {
 
     }*/
 
-        // Здесь настройка панели инструментов
-        private void configToolPanel() {
+    // Здесь настройка панели инструментов
+    private void configToolPanel() {
 
-            Button helpButton = new Button(new Icon(VaadinIcon.QUESTION_CIRCLE));
-            helpButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
-            helpButton.addClickListener(e -> {
-                Notification.show("В разделе хранятся удаленные документы — их можно\n" +
-                        "\n" +
-                        "восстановить в течение 7 дней после удаления. По истечении этого\n" +
-                        "\n" +
-                        "срока документы окончательно стираются.\n" +
-                        "\n" +
-                        "Читать инструкцию: Корзина", 5000, Notification.Position.TOP_START);
-            });
+        Button helpButton = new Button(new Icon(VaadinIcon.QUESTION_CIRCLE));
+        helpButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        helpButton.addClickListener(e -> {
+            Notification.show("В разделе хранятся удаленные документы — их можно\n" +
+                    "\n" +
+                    "восстановить в течение 7 дней после удаления. По истечении этого\n" +
+                    "\n" +
+                    "срока документы окончательно стираются.\n" +
+                    "\n" +
+                    "Читать инструкцию: Корзина", 5000, Notification.Position.TOP_START);
+        });
 
-            Label textProducts = new Label();
-            textProducts.setText("Корзина");
+        Label textProducts = new Label();
+        textProducts.setText("Корзина");
 
-            Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH));
-            refreshButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH));
+        refreshButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
 
-            Button addOrderButton = new Button("Очистить корзину", new Icon(VaadinIcon.PLUS));
-            addOrderButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        Button addOrderButton = new Button("Очистить корзину", new Icon(VaadinIcon.PLUS));
+        addOrderButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
-            Button addFilterButton = new Button("Фильтр");
-            addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        Button addFilterButton = new Button("Фильтр");
+        addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
-            TextField searchField = new TextField();
-            searchField.setPlaceholder("Номер или комментарий");
-            searchField.setMinWidth("170px");
+        TextField searchField = new TextField();
+        searchField.setPlaceholder("Номер или комментарий");
+        searchField.setMinWidth("170px");
 
-            NumberField numberField = new NumberField();
-            //  grid.addSelectionListener(event -> numberField.setValue((double) (grid.getSelectedItems().size())));
-            numberField.setValue(0d);
-            numberField.setWidth("40px");
+        NumberField numberField = new NumberField();
+        //  grid.addSelectionListener(event -> numberField.setValue((double) (grid.getSelectedItems().size())));
+        numberField.setValue(0d);
+        numberField.setWidth("40px");
 
-            MenuBar menuBar = new MenuBar();
+        MenuBar menuBar = new MenuBar();
 
-            MenuItem change = menuBar.addItem("Изменить");
-            change.add(new Icon(VaadinIcon.CARET_DOWN));
+        MenuItem change = menuBar.addItem("Изменить");
+        change.add(new Icon(VaadinIcon.CARET_DOWN));
 
-            MenuItem print = menuBar.addItem(new Icon(VaadinIcon.PRINT));
-            print.add("Печать");
-            print.add(new Icon(VaadinIcon.CARET_DOWN));
+        MenuItem print = menuBar.addItem(new Icon(VaadinIcon.PRINT));
+        print.add("Печать");
+        print.add(new Icon(VaadinIcon.CARET_DOWN));
 
-            SubMenu changeSubMenu = change.getSubMenu();
-            MenuItem delete = changeSubMenu.addItem("Удалить");
-            delete.addClickListener(event -> {
-                //TODO повод поработать этот функционал
-            });
-            MenuItem recover = changeSubMenu.addItem("Востановить");
-            recover.addClickListener(event -> {
-                //TODO повод поработать этот функционал
-            });
-
-            //модальное окно
-            Dialog dialog = new Dialog();
-            VerticalLayout dialogLayout = createDialogLayout(dialog);
-            dialog.add(dialogLayout);
-            //
-
-            SubMenu printSubMenu = print.getSubMenu();
-            MenuItem recycleBinList = printSubMenu.addItem("Список документов");
-            recycleBinList.addClickListener(event -> {
-
-                dialog.open(); //
-
-                //TODO повод поработать этот функционал
-            });
-
-
-            MenuItem configurePrint = printSubMenu.addItem("Настроить...");
-            configurePrint.addClickListener(event -> {
-
-                //TODO повод поработать этот функционал
-            });
-
-
-            horizontalToolPanelLayout.add(helpButton, textProducts, refreshButton, addOrderButton, addFilterButton, searchField, numberField, menuBar);
-        }
-
+        SubMenu changeSubMenu = change.getSubMenu();
+        MenuItem delete = changeSubMenu.addItem("Удалить");
+        delete.addClickListener(event -> {
+            //TODO повод поработать этот функционал
+        });
+        MenuItem recover = changeSubMenu.addItem("Востановить");
+        recover.addClickListener(event -> {
+            //TODO повод поработать этот функционал
+        });
 
         //модальное окно
-        private  VerticalLayout createDialogLayout(Dialog dialog) {
-            H2 headline = new H2("Создание печатной формы");
-            headline.getStyle().set("margin", "var(--lumo-space-m) 0 0 0")
-                    .set("font-size", "1.5em").set("font-weight", "bold");
+        Dialog dialog = new Dialog();
+        VerticalLayout dialogLayout = createDialogLayout(dialog);
+        dialog.add(dialogLayout);
+        //
+
+        SubMenu printSubMenu = print.getSubMenu();
+        MenuItem recycleBinList = printSubMenu.addItem("Список документов");
+        recycleBinList.addClickListener(event -> {
+
+            dialog.open(); //
+
+            //TODO повод поработать этот функционал
+        });
+
+
+        MenuItem configurePrint = printSubMenu.addItem("Настроить...");
+        configurePrint.addClickListener(event -> {
+
+            //TODO повод поработать этот функционал
+        });
+
+
+        horizontalToolPanelLayout.add(helpButton, textProducts, refreshButton, addOrderButton, addFilterButton, searchField, numberField, menuBar);
+    }
+
+
+    //модальное окно
+    private static VerticalLayout createDialogLayout(Dialog dialog) {
+        H2 headline = new H2("Создание печатной формы");
+        headline.getStyle().set("margin", "var(--lumo-space-m) 0 0 0")
+                .set("font-size", "1.5em").set("font-weight", "bold");
 
 
         /*Select<String> selectForm = new Select<>("Открыть в браузере",
                 "Скачать в формате EXEL","Скачать в формате PDF");
 */
 
+        FileDownloadWrapper buttonWrapper1 = new FileDownloadWrapper(
+                new StreamResource(LocalDate.now() + " openBrowse.pdf",
+                        () -> recycleBinService.getTermsConditions().byteStream()));
+        buttonWrapper1.wrapComponent(new Button("Открыть в браузере"));
+
+        FileDownloadWrapper buttonWrapper2 = new FileDownloadWrapper(
+                new StreamResource(LocalDate.now() + " someSheetExel.xlsx",
+                        () -> recycleBinService.getExcel().byteStream()));
+        buttonWrapper2.wrapComponent(new Button("Скачать в формате EXEL"));
 
 
-            FileDownloadWrapper buttonWrapper1 = new FileDownloadWrapper(
-                    new StreamResource(LocalDate.now() + " openBrowse.pdf",
-                            () -> recycleBinService.getTermsConditions().byteStream()));
-            buttonWrapper1.wrapComponent(new Button("Открыть в браузере"));
+        FileDownloadWrapper buttonWrapper3 = new FileDownloadWrapper(
+                new StreamResource(LocalDate.now() + " someSheetPDF.pdf",
+                        () -> recycleBinService.getPDF().byteStream()));
+        buttonWrapper3.wrapComponent(new Button("Скачать в формате PDF"));
 
 
-            FileDownloadWrapper buttonWrapper2 = new FileDownloadWrapper(
-                    new StreamResource(LocalDate.now() + " someSheetExel.xlsx",
-                            () -> recycleBinService.getExcel().byteStream()));
-            buttonWrapper2.wrapComponent(new Button("Скачать в формате EXEL"));
+        VerticalLayout fieldLayout = new VerticalLayout(buttonWrapper1, buttonWrapper2, buttonWrapper3
+        );
+        fieldLayout.setSpacing(false);
+        fieldLayout.setPadding(false);
+        fieldLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
 
 
-            FileDownloadWrapper buttonWrapper3 = new FileDownloadWrapper(
-                    new StreamResource(LocalDate.now() + " someSheetPDF.pdf",
-                            () -> recycleBinService.getPDF().byteStream()));
-            buttonWrapper3.wrapComponent(new Button("Скачать в формате PDF"));
+        Button cancelButton = new Button("Закрыть", e -> dialog.close());
 
 
-            VerticalLayout fieldLayout = new VerticalLayout(buttonWrapper1, buttonWrapper2, buttonWrapper3
-            );
-            fieldLayout.setSpacing(false);
-            fieldLayout.setPadding(false);
-            fieldLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
+        HorizontalLayout buttonLayout = new HorizontalLayout(cancelButton);
+        buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
 
+        VerticalLayout dialogLayout = new VerticalLayout(headline, fieldLayout, buttonLayout);
+        dialogLayout.setPadding(false);
+        dialogLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
+        dialogLayout.getStyle().set("width", "350px").set("max-width", "100%");
 
-            Button cancelButton = new Button("Закрыть", e -> dialog.close());
-
-
-            HorizontalLayout buttonLayout = new HorizontalLayout(cancelButton);
-            buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
-
-            VerticalLayout dialogLayout = new VerticalLayout(headline, fieldLayout, buttonLayout);
-            dialogLayout.setPadding(false);
-            dialogLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
-            dialogLayout.getStyle().set("width", "350px").set("max-width", "100%");
-
-            return dialogLayout;
-        }
-
-
+        return dialogLayout;
     }
+
+
+}
