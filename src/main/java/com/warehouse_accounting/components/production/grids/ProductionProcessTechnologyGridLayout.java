@@ -79,7 +79,7 @@ public class ProductionProcessTechnologyGridLayout extends HorizontalLayout {
         headerLayout.setFlexGrow(1);
 
         setSizeFull();
-        add(productionProcessTechnologyDtoGrid);
+        add(productionProcessTechnologyDtoGrid, headerLayout);
     }
 
 

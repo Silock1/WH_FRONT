@@ -35,6 +35,7 @@ import static com.vaadin.flow.component.button.ButtonVariant.LUMO_TERTIARY_INLIN
 @SpringComponent
 @UIScope
 public class ProductionProcessTechnology extends VerticalLayout {
+    @Getter
     private final ProductionProcessTechnologyGridLayout productionProcessTechnologyGridLayout;
     @Getter
     @Setter
@@ -111,7 +112,7 @@ public class ProductionProcessTechnology extends VerticalLayout {
         Button addProductionTechnologyButton = new Button("Техпроцесс", buttonIcon);
 
         addProductionTechnologyButton.addClickListener(c -> {
-            this.getUI().ifPresent(ui -> ui.navigate(ProductionProcessTechnologyForm.class));
+            add(new ProductionProcessTechnologyForm(this));
         });
 
         return addProductionTechnologyButton;
