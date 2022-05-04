@@ -1,6 +1,2 @@
-[INFO ] 2022-05-01 22:25:37.711 [http-nio-4447-exec-1] RecycleBinServiceImpl - Успешно выполнен запрос на получение списка RecycleBinDto
-[INFO ] 2022-05-01 22:59:29.488 [http-nio-4447-exec-1] EmployeeServiceImpl - EmployeeDto c id: 1 получен успешно
-[INFO ] 2022-05-01 22:59:29.824 [http-nio-4447-exec-2] EmployeeServiceImpl - EmployeeDto c id: 1 получен успешно
-[INFO ] 2022-05-01 22:59:33.745 [http-nio-4447-exec-6] RecycleBinServiceImpl - Успешно выполнен запрос на получение списка RecycleBinDto
-[INFO ] 2022-05-01 22:59:43.426 [http-nio-4447-exec-3] RecycleBinServiceImpl - Успешно выполнен запрос на получение pdf RecycleBinDto
-[INFO ] 2022-05-01 23:00:28.364 [http-nio-4447-exec-4] RecycleBinServiceImpl - Успешно выполнен запрос на получение pdf RecycleBinDto
+[INFO ] 2022-04-21 22:20:12.041 [http-nio-4447-exec-2] ProductionStageServiceImpl - Успешно выполнен запрос на получение списка ProductionStageDto
+[INFO ] 2022-04-21 22:20:12.046 [http-nio-4447-exec-2] ProductionStageServiceImpl - [ProductionStageDto(id=1, name=Основной этап, description=Описание основного этапа., generalAccess=false, archived=false, sortNumber=null, ownerDepartmentId=1, ownerDepartmentName=departmentName, ownerEmployeeId=1, ownerEmployeeName=lastName, dateOfEdit=Thu Apr 21 20:05:33 MSK 2022, editorEmployeeId=1, editorEmployeeName=lastName)]
