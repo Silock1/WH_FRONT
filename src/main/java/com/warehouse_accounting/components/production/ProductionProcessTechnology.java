@@ -16,9 +16,17 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.ParentLayout;
+import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.components.AppView;
+import com.warehouse_accounting.components.ProductionSubMenuView;
+import com.warehouse_accounting.components.production.forms.ProductionProcessTechnologyForm;
 import com.warehouse_accounting.components.production.grids.ProductionProcessTechnologyGridLayout;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.awt.*;
 
@@ -28,9 +36,16 @@ import static com.vaadin.flow.component.button.ButtonVariant.LUMO_TERTIARY_INLIN
 @UIScope
 public class ProductionProcessTechnology extends VerticalLayout {
     private final ProductionProcessTechnologyGridLayout productionProcessTechnologyGridLayout;
+    @Getter
+    @Setter
+    private Div mainContent;
+
     public ProductionProcessTechnology(ProductionProcessTechnologyGridLayout productionProcessTechnologyGridLayout) {
         this.productionProcessTechnologyGridLayout = productionProcessTechnologyGridLayout;
-        add(createTopGroupElements(), mainContent());
+        this.mainContent = new Div();
+        mainContent.setSizeFull();
+        mainContent.add(createTopGroupElements(), mainContent());
+        add(mainContent);
     }
 
     private HorizontalLayout createTopGroupElements() {
@@ -96,7 +111,7 @@ public class ProductionProcessTechnology extends VerticalLayout {
         Button addProductionTechnologyButton = new Button("Техпроцесс", buttonIcon);
 
         addProductionTechnologyButton.addClickListener(c -> {
-
+            this.getUI().ifPresent(ui -> ui.navigate(ProductionProcessTechnologyForm.class));
         });
 
         return addProductionTechnologyButton;

@@ -1,4 +1,4 @@
-package com.warehouse_accounting.components.movements;
+package com.warehouse_accounting.components.contragents.movements;
 
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
