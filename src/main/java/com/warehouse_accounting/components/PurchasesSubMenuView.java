@@ -6,11 +6,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.warehouse_accounting.components.purchases.Acceptances;
-import com.warehouse_accounting.components.purchases.AccountsPayable;
-import com.warehouse_accounting.components.purchases.PurchasesOrders;
-import com.warehouse_accounting.components.purchases.Return;
+import com.warehouse_accounting.components.purchases.*;
 import com.warehouse_accounting.components.purchases.filter.AccountsPayableFilter;
+import com.warehouse_accounting.components.purchases.Facturien;
 import com.warehouse_accounting.components.purchases.grids.SupplierInvoiceGridLayout;
 import com.warehouse_accounting.services.interfaces.CompanyService;
 import com.warehouse_accounting.services.interfaces.ContractService;
@@ -36,6 +34,7 @@ public class PurchasesSubMenuView extends VerticalLayout {
     private AccountsPayable accountsPayable;
     private Acceptances acceptances;
     private Return returns;
+    private Facturien facturiens;
 
     private AccountsPayableFilter accountsPayableFilter;
     private final WarehouseService warehouseService;
@@ -97,7 +96,7 @@ public class PurchasesSubMenuView extends VerticalLayout {
                     break;
                 case "Счета-фактуры полученные":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Счета-фактуры полученные"));
+                    pageContent.add(initFacturien(pageContent));
                     break;
                 case "Счета-фактуры выданные":
                     pageContent.removeAll();
@@ -140,5 +139,13 @@ public class PurchasesSubMenuView extends VerticalLayout {
         }
         return returns;
     }
+
+    private Facturien initFacturien(Div pageContent){
+        if (Objects.isNull(facturiens)) {
+            facturiens = new Facturien(pageContent);
+        }
+        return facturiens;
+    }
+
 }
 
