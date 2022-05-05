@@ -40,7 +40,7 @@ public class ContragentsList extends VerticalLayout {
     public ContragentsList(ContragentsListGridLayout contragentsListGridLayout,
                            ContragentsFilterLayout contragentsFilterLayout,
                            FormNewContragent formNewContragent,
-                            FormEditCotragent formEditCotragent ) {
+                           FormEditCotragent formEditCotragent ) {
 
         this.contragentsListGridLayout=contragentsListGridLayout;
         this.contragentsFilterLayout = contragentsFilterLayout;
@@ -60,11 +60,11 @@ public class ContragentsList extends VerticalLayout {
         Button helpButton = new Button(new Image("icons/helpApp.svg", "helpApp"));
         helpButton.addThemeVariants(ButtonVariant.LUMO_LARGE, ButtonVariant.LUMO_TERTIARY);
         helpButton.addClickListener(c-> Notification.show("В разделе представлен список ваших поставщиков и покупателей." +
-                                                                 " Для них можно настраивать индивидуальные цены и скидки, также можно им звонить и отправлять " +
-                                                                  "документы прямо из МоегоСклада.\n" +
-                                                                  "Список контрагентов можно импортировать и экспортировать.\n" +
-                                                                  "Читать инструкцию: Контрагенты\n"+
-                                                                  "Видео: Контрагенты",4000,Notification.Position.TOP_START));
+                " Для них можно настраивать индивидуальные цены и скидки, также можно им звонить и отправлять " +
+                "документы прямо из МоегоСклада.\n" +
+                "Список контрагентов можно импортировать и экспортировать.\n" +
+                "Читать инструкцию: Контрагенты\n"+
+                "Видео: Контрагенты",4000,Notification.Position.TOP_START));
 
         Label textLabel = new Label("Контрагенты");
         textLabel.setWidth("150px");
@@ -77,9 +77,9 @@ public class ContragentsList extends VerticalLayout {
         Button addContragent = new Button(("Контрагент"), new Icon(VaadinIcon.PLUS));
         addContragent.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         addContragent.addClickListener(e->{
-             hideButtonEndGrid();
-             formEditCotragent.bild(null);
-             add(formEditCotragent);
+            hideButtonEndGrid();
+            formEditCotragent.bild(null);
+            add(formEditCotragent);
         });
 
         Button filter = new Button("Фильтр");
