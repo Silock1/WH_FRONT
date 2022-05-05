@@ -9,6 +9,7 @@ import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.production.ProductionSteps;
 import com.warehouse_accounting.components.production.ProductionTasks;
 
+import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -22,10 +23,11 @@ public class ProductionSubMenuView extends VerticalLayout {
 
     private final Div pageContent = new Div();
     private final ProductionTasks productionTasks;
-    private ProductionSteps productionSteps;
+    private final ProductionSteps productionSteps;
 
-    public ProductionSubMenuView(ProductionTasks productionTasks) {
+    public ProductionSubMenuView(ProductionTasks productionTasks, ProductionSteps productionSteps) {
         this.productionTasks = productionTasks;
+        this.productionSteps = productionSteps;
 
         pageContent.setSizeFull();
         add(initSubMenu(), pageContent);
@@ -60,17 +62,23 @@ public class ProductionSubMenuView extends VerticalLayout {
                     break;
                 case "Этапы":
                     pageContent.removeAll();
-                    pageContent.add(initProductionSteps(pageContent));
+                    productionSteps.setParentLayer(pageContent);
+                    pageContent.add(productionSteps);
                     break;
             }
         });
         return subMenuTabs;
     }
 
-    private ProductionSteps initProductionSteps(Div pageContent){
-        if (Objects.isNull(productionSteps)) {
-            productionSteps = new ProductionSteps(pageContent);
-        }
-        return productionSteps;
+    @PostConstruct
+    public void initBean() {
+        productionSteps.setParentLayer(pageContent);
     }
+
+//    private ProductionSteps initProductionSteps(Div pageContent){
+//        if (Objects.isNull(productionSteps)) {
+//            productionSteps = new ProductionSteps();
+//        }
+//        return productionSteps;
+//    }
 }

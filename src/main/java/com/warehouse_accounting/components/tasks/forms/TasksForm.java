@@ -12,6 +12,8 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.warehouse_accounting.components.contragents.ContragentsList;
+import com.warehouse_accounting.components.tasks.Tasks;
 import com.warehouse_accounting.models.dto.EmployeeDto;
 import com.warehouse_accounting.models.dto.TasksDto;
 import com.warehouse_accounting.services.impl.TasksServiceImpl;
@@ -45,7 +47,6 @@ public class TasksForm extends VerticalLayout {
     private void createButtons() {
         HorizontalLayout buttons = new HorizontalLayout();
 
-        //сохранение
 
         Button saveButton = new Button("Сохранить", e -> {
 

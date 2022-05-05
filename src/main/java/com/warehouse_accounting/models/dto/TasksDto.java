@@ -1,5 +1,6 @@
 package com.warehouse_accounting.models.dto;
 
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

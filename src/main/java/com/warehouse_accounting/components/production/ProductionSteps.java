@@ -16,23 +16,44 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.production.forms.ProductionStepsForm;
 import com.warehouse_accounting.components.production.grids.ProductionStepsGridLayout;
+import com.warehouse_accounting.models.dto.ProductionStageDto;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
+import com.warehouse_accounting.services.interfaces.ProductionStageService;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 
+@SpringComponent
+@UIScope
+@Log4j2
 public class ProductionSteps extends VerticalLayout {
-
-    private ProductionStepsGridLayout productionStepsGridLayout;
+    private final ProductionStageService productionStageService;
+    private final EmployeeService employeeService;
+    @Setter
+    @Getter
+    private final ProductionStepsGridLayout productionStepsGridLayout;
     private final TextField textFieldGridSelected = new TextField();
-    private final Div parentLayer;
+    @Setter
+    @Getter
+    private Div parentLayer;
+    @Setter
+    @Getter
+    private Div pageContent;
 
-
-    public ProductionSteps(Div parentLayer) {
-        this.parentLayer = parentLayer;
-        productionStepsGridLayout = new ProductionStepsGridLayout(textFieldGridSelected);
-        Div pageContent = new Div();
+    public ProductionSteps(ProductionStageService productionStageService, EmployeeService employeeService) {
+        this.productionStageService = productionStageService;
+        this.employeeService = employeeService;
+        productionStepsGridLayout = new ProductionStepsGridLayout(productionStageService, employeeService, this);
+        pageContent = new Div();
         pageContent.add(productionStepsGridLayout);
         pageContent.setSizeFull();
-        add(getGroupButton(), pageContent);
+        HorizontalLayout horizontalLayout = getGroupButton();
+        add(horizontalLayout, pageContent);
     }
 
     private HorizontalLayout getGroupButton() {
@@ -51,7 +72,11 @@ public class ProductionSteps extends VerticalLayout {
         Button refreshButton = new Button(refresh);
         refreshButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         refreshButton.addClickListener(click -> {
-            System.out.println("перезагрузка");
+            log.info("Перезагрузка, обновленеие списка ProductionSteps");
+            //pageContent.removeAll();
+            //productionStepsGridLayout = new ProductionStepsGridLayout(productionStageService, employeeService, th);
+            //pageContent.add(productionStepsGridLayout);
+            productionStepsGridLayout.updateGrid();
         });
 
         Image image = new Image("icons/plus.png", "Plus");
@@ -61,9 +86,15 @@ public class ProductionSteps extends VerticalLayout {
 
 
         addStepsButton.addClickListener(buttonClickEvent -> {
-            ProductionStepsForm productionStepsForm = new ProductionStepsForm(parentLayer, this);
-            parentLayer.removeAll();
-            parentLayer.add(productionStepsForm);
+            ProductionStepsForm productionStepsForm = new ProductionStepsForm(
+                    pageContent,
+                    productionStepsGridLayout,
+                    productionStageService,
+                    employeeService,
+                    new ProductionStageDto(),
+                    productionStepsGridLayout);
+            pageContent.removeAll();
+            pageContent.add(productionStepsForm);
         });
 
 
