@@ -30,6 +30,7 @@ import java.util.List;
 public class ProductionProcessTechnologyGridLayout extends HorizontalLayout {
     private final ProductionProcessTechnologyService productionProcessTechnologyService;
     private List<ProductionProcessTechnologyDto> productionProcessTechnologyDtoList = new ArrayList<>();
+    private final Grid<ProductionProcessTechnologyDto> productionProcessTechnologyDtoGrid = new Grid<>(ProductionProcessTechnologyDto.class, false);
 
     public ProductionProcessTechnologyGridLayout(ProductionProcessTechnologyService productionProcessTechnologyService) {
         this.productionProcessTechnologyService = productionProcessTechnologyService;
@@ -38,7 +39,7 @@ public class ProductionProcessTechnologyGridLayout extends HorizontalLayout {
     }
 
     private void initializingGrid() {
-        Grid<ProductionProcessTechnologyDto> productionProcessTechnologyDtoGrid = new Grid<>(ProductionProcessTechnologyDto.class, false);
+
         Grid.Column<ProductionProcessTechnologyDto> idColumn = productionProcessTechnologyDtoGrid.addColumn(ProductionProcessTechnologyDto::getId).setHeader("Id");
         idColumn.setVisible(false);
         Grid.Column<ProductionProcessTechnologyDto> nameColumn = productionProcessTechnologyDtoGrid.addColumn(ProductionProcessTechnologyDto::getName).setHeader("Наименование");
@@ -80,6 +81,12 @@ public class ProductionProcessTechnologyGridLayout extends HorizontalLayout {
 
         setSizeFull();
         add(productionProcessTechnologyDtoGrid, headerLayout);
+    }
+
+    public void updateGrid() {
+        productionProcessTechnologyDtoList = productionProcessTechnologyService.getAll();
+        productionProcessTechnologyDtoList.sort(Comparator.comparingLong(ProductionProcessTechnologyDto::getId));
+        productionProcessTechnologyDtoGrid.setItems(productionProcessTechnologyDtoList);
     }
 
 

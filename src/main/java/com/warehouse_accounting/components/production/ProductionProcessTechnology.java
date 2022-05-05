@@ -117,7 +117,7 @@ public class ProductionProcessTechnology extends VerticalLayout {
         Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH));
         refreshButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         refreshButton.addClickListener(c -> {
-            //productionProcessTechnologyGridLayout.updateGrid();
+            productionProcessTechnologyGridLayout.updateGrid();
         });
         return refreshButton;
     }
