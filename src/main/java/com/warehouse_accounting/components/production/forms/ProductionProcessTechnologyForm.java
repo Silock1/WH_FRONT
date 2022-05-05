@@ -94,11 +94,23 @@ public class ProductionProcessTechnologyForm extends VerticalLayout {
         Button saveButton = new Button("Сохранить");
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
         saveButton.addClickListener(c -> {
+            if (!productionProcessTechnologyDtoBinder.validate().isOk()) {
+                return;
+            }
+            if (selectStage.getComponentCount() < 1) {
+                return;
+            }
             Set<Long> selectStageSet = selectStage.getChildren()
                     .map(x ->((Select<String>) x).getValue())
+                    .filter(s -> !s.isEmpty())
                     .map(x -> productionStageDtoList.stream().filter(p -> p.getName().equals(x)).findFirst().get())
                     .map(ProductionStageDto::getId)
                     .collect(Collectors.toSet());
+
+            if (selectStageSet.size() == 0) {
+                return;
+            }
+
             EmployeeDto employeeDto = employeeService.getById(1L);
             try {
                 productionProcessTechnologyDtoBinder.writeBean(productionProcessTechnologyDto);
@@ -216,7 +228,10 @@ public class ProductionProcessTechnologyForm extends VerticalLayout {
         TextField nameField = new TextField();
         nameField.setLabel("Наименование");
         nameField.setMinWidth("300px");
-        productionProcessTechnologyDtoBinder.forField(nameField).asRequired().bind(ProductionProcessTechnologyDto::getName, ProductionProcessTechnologyDto::setName);
+        productionProcessTechnologyDtoBinder
+                .forField(nameField)
+                .asRequired("Наименование не должно быть пустым!")
+                .bind(ProductionProcessTechnologyDto::getName, ProductionProcessTechnologyDto::setName);
         nameField.setValue(productionProcessTechnologyDto.getName() == null ? "" : productionProcessTechnologyDto.getName());
 
         TextArea descriptionField = new TextArea();
@@ -224,7 +239,9 @@ public class ProductionProcessTechnologyForm extends VerticalLayout {
         descriptionField.setMinHeight("100px");
         descriptionField.setMaxHeight("150px");
         descriptionField.setLabel("Описание");
-        productionProcessTechnologyDtoBinder.forField(descriptionField).bind(ProductionProcessTechnologyDto::getDescription, ProductionProcessTechnologyDto::setDescription);
+        productionProcessTechnologyDtoBinder
+                .forField(descriptionField)
+                .bind(ProductionProcessTechnologyDto::getDescription, ProductionProcessTechnologyDto::setDescription);
         descriptionField.setValue(productionProcessTechnologyDto.getDescription() == null ? "" : productionProcessTechnologyDto.getDescription());
 
         HorizontalLayout stageProduction = new HorizontalLayout();
@@ -233,20 +250,27 @@ public class ProductionProcessTechnologyForm extends VerticalLayout {
         stageProduction.add(createHelpButton(showTextStage), new Text("Этапы производства"));
 
 
+        HorizontalLayout buttonStageGroup = new HorizontalLayout();
         Button addStageButton = new Button("Добавить этап");
         addStageButton.addClickListener(c -> {
             Select<String> select = new Select<>();
             select.setItems(productionStageDtoList.stream().map(ProductionStageDto::getName));
-            select.setValue("Most recent first");
-            select.addValueChangeListener(x -> {
-                System.out.println(x.getValue());
-            });
+            select.setValue("");
             selectStage.add(select);
         });
 
+        Button delStageButton = new Button("Удалить этап");
+        delStageButton.addClickListener(c -> {
+            if(selectStage.getComponentCount()-1 > -1) {
+                selectStage.remove(selectStage.getComponentAt(selectStage.getComponentCount()-1));
+            }
+        });
+        buttonStageGroup.add(addStageButton, delStageButton);
+
+
 
         VerticalLayout returnLayout = new VerticalLayout();
-        returnLayout.add(new Text("Техпроцесс"), nameField, descriptionField, createEmptyDiv(), stageProduction, new Text("Этап"), selectStage, addStageButton);
+        returnLayout.add(new Text("Техпроцесс"), nameField, descriptionField, createEmptyDiv(), stageProduction, new Text("Этап"), selectStage, buttonStageGroup);
         return returnLayout;
     }
 
