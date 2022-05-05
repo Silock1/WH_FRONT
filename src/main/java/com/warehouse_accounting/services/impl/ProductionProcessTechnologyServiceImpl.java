@@ -16,12 +16,12 @@ import java.util.List;
 
 @Log4j2
 @Service
-public class ProductionProcessTechnologyImpl implements ProductionProcessTechnologyService {
+public class ProductionProcessTechnologyServiceImpl implements ProductionProcessTechnologyService {
 
     private final ProductionProcessTechnologyApi productionProcessTechnologyApi;
     private final String productionProcessTechnologyUrl;
 
-    public ProductionProcessTechnologyImpl(@Value("api/production_process_technology") String productionStageUrl, Retrofit retrofit) {
+    public ProductionProcessTechnologyServiceImpl(@Value("api/production_process_technology") String productionStageUrl, Retrofit retrofit) {
         this.productionProcessTechnologyApi = retrofit.create(ProductionProcessTechnologyApi.class);
         this.productionProcessTechnologyUrl = productionStageUrl;
     }
@@ -47,8 +47,18 @@ public class ProductionProcessTechnologyImpl implements ProductionProcessTechnol
     }
 
     @Override
-    public void create(ProductionProcessTechnologyDto ProductionProcessTechnologyDto) {
-
+    public void create(ProductionProcessTechnologyDto productionProcessTechnologyDto) {
+        Call<Void> request = productionProcessTechnologyApi.create(productionProcessTechnologyUrl, productionProcessTechnologyDto);
+        try {
+            Response<Void> response = request.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на создание ProductionProcessTechnologyDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на создании ProductionProcessTechnologyDto", response.code());
+            }
+        } catch (IOException e) {
+            log.error("Произошла ошибка при выполнении запроса на создании ProductionProcessTechnologyDto", e);
+        }
     }
 
     @Override

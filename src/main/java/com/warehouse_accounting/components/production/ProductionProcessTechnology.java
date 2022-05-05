@@ -25,6 +25,10 @@ import com.warehouse_accounting.components.AppView;
 import com.warehouse_accounting.components.ProductionSubMenuView;
 import com.warehouse_accounting.components.production.forms.ProductionProcessTechnologyForm;
 import com.warehouse_accounting.components.production.grids.ProductionProcessTechnologyGridLayout;
+import com.warehouse_accounting.models.dto.ProductionProcessTechnologyDto;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
+import com.warehouse_accounting.services.interfaces.ProductionProcessTechnologyService;
+import com.warehouse_accounting.services.interfaces.ProductionStageService;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,12 +41,24 @@ import static com.vaadin.flow.component.button.ButtonVariant.LUMO_TERTIARY_INLIN
 public class ProductionProcessTechnology extends VerticalLayout {
     @Getter
     private final ProductionProcessTechnologyGridLayout productionProcessTechnologyGridLayout;
+    private final ProductionStageService productionStageService;
+    private final EmployeeService employeeService;
+    private final ProductionProcessTechnologyService productionProcessTechnologyService;
     @Getter
     @Setter
     private Div mainContent;
 
-    public ProductionProcessTechnology(ProductionProcessTechnologyGridLayout productionProcessTechnologyGridLayout) {
+    public ProductionProcessTechnology(
+            ProductionProcessTechnologyGridLayout productionProcessTechnologyGridLayout,
+            ProductionStageService productionStageService,
+            EmployeeService employeeService,
+            ProductionProcessTechnologyService productionProcessTechnologyService
+    ) {
         this.productionProcessTechnologyGridLayout = productionProcessTechnologyGridLayout;
+        this.productionStageService = productionStageService;
+        this.employeeService = employeeService;
+        this.productionProcessTechnologyService = productionProcessTechnologyService;
+
         this.mainContent = new Div();
         mainContent.setSizeFull();
         mainContent.add(createTopGroupElements(), mainContent());
@@ -112,7 +128,7 @@ public class ProductionProcessTechnology extends VerticalLayout {
         Button addProductionTechnologyButton = new Button("Техпроцесс", buttonIcon);
 
         addProductionTechnologyButton.addClickListener(c -> {
-            add(new ProductionProcessTechnologyForm(this));
+            add(new ProductionProcessTechnologyForm(this, new ProductionProcessTechnologyDto(), productionStageService, employeeService, productionProcessTechnologyService));
         });
 
         return addProductionTechnologyButton;

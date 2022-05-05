@@ -4,6 +4,7 @@ package com.warehouse_accounting.components.production.forms;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
@@ -19,25 +20,54 @@ import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
 import com.warehouse_accounting.components.production.ProductionProcessTechnology;
+import com.warehouse_accounting.models.dto.EmployeeDto;
 import com.warehouse_accounting.models.dto.ProductionProcessTechnologyDto;
 import com.warehouse_accounting.models.dto.ProductionStageDto;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
+import com.warehouse_accounting.services.interfaces.ProductionProcessTechnologyService;
+import com.warehouse_accounting.services.interfaces.ProductionStageService;
+import lombok.extern.log4j.Log4j2;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.vaadin.flow.component.button.ButtonVariant.LUMO_TERTIARY_INLINE;
 
 
 @UIScope
+@Log4j2
 public class ProductionProcessTechnologyForm extends VerticalLayout {
     private final ProductionProcessTechnology productionProcessTechnology;
+    private final ProductionStageService productionStageService;
+    private final EmployeeService employeeService;
+    private final ProductionProcessTechnologyService productionProcessTechnologyService;
     private final Div returnDiv;
+    private final VerticalLayout selectStage = new VerticalLayout();
+    private final List<ProductionStageDto> productionStageDtoList;
     private Binder<ProductionProcessTechnologyDto> productionProcessTechnologyDtoBinder = new Binder<>(ProductionProcessTechnologyDto.class);
+    private ProductionProcessTechnologyDto productionProcessTechnologyDto;
 
 
-    public ProductionProcessTechnologyForm(ProductionProcessTechnology productionProcessTechnology) {
+    public ProductionProcessTechnologyForm(
+            ProductionProcessTechnology productionProcessTechnology,
+            ProductionProcessTechnologyDto productionProcessTechnologyDto,
+            ProductionStageService productionStageService,
+            EmployeeService employeeService,
+            ProductionProcessTechnologyService productionProcessTechnologyService
+    ) {
         this.productionProcessTechnology = productionProcessTechnology;
+        this.productionProcessTechnologyDto = productionProcessTechnologyDto;
+        this.productionStageService = productionStageService;
+        this.employeeService = employeeService;
+        this.productionProcessTechnologyService = productionProcessTechnologyService;
+        this.productionStageDtoList = productionStageService.getAll();
         this.returnDiv = productionProcessTechnology.getMainContent();
 
         productionProcessTechnology.removeAll();
@@ -64,7 +94,29 @@ public class ProductionProcessTechnologyForm extends VerticalLayout {
         Button saveButton = new Button("Сохранить");
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
         saveButton.addClickListener(c -> {
+            Set<Long> selectStageSet = selectStage.getChildren()
+                    .map(x ->((Select<String>) x).getValue())
+                    .map(x -> productionStageDtoList.stream().filter(p -> p.getName().equals(x)).findFirst().get())
+                    .map(ProductionStageDto::getId)
+                    .collect(Collectors.toSet());
+            EmployeeDto employeeDto = employeeService.getById(1L);
+            try {
+                productionProcessTechnologyDtoBinder.writeBean(productionProcessTechnologyDto);
+                productionProcessTechnologyDto.setUsedProductionStageId(selectStageSet);
+                productionProcessTechnologyDto.setEditorEmployeeId(employeeDto.getId());
+                productionProcessTechnologyDto.setOwnerEmployeeId(employeeDto.getId());
+                productionProcessTechnologyDto.setOwnerDepartmentId(employeeDto.getDepartment().getId());
+                productionProcessTechnologyDto.setDateOfEdit(null);
 
+                if (productionProcessTechnologyDto.getId() != null && productionProcessTechnologyDto.getId() > 0) {
+                    productionProcessTechnologyService.update(productionProcessTechnologyDto);
+                } else {
+                    System.out.println(productionProcessTechnologyDto);
+                    productionProcessTechnologyService.create(productionProcessTechnologyDto);
+                }
+            } catch (ValidationException e) {
+                log.error("Ошибка валидации при создании нового этапа", e);
+            }
         });
         return saveButton;
     }
@@ -164,31 +216,34 @@ public class ProductionProcessTechnologyForm extends VerticalLayout {
         TextField nameField = new TextField();
         nameField.setLabel("Наименование");
         nameField.setMinWidth("300px");
-        //productionStageDtoBinder.forField(nameField).asRequired().bind(ProductionStageDto::getName, ProductionStageDto::setName);
-        //nameField.setValue(productionStageDto.getName() == null ? "" : productionStageDto.getName());
+        productionProcessTechnologyDtoBinder.forField(nameField).asRequired().bind(ProductionProcessTechnologyDto::getName, ProductionProcessTechnologyDto::setName);
+        nameField.setValue(productionProcessTechnologyDto.getName() == null ? "" : productionProcessTechnologyDto.getName());
 
         TextArea descriptionField = new TextArea();
         descriptionField.setMinWidth("300px");
         descriptionField.setMinHeight("100px");
         descriptionField.setMaxHeight("150px");
         descriptionField.setLabel("Описание");
-        //productionStageDtoBinder.forField(descriptionField).bind(ProductionStageDto::getDescription, ProductionStageDto::setDescription);
-        //descriptionField.setValue(productionStageDto.getDescription() == null ? "" : productionStageDto.getDescription());
+        productionProcessTechnologyDtoBinder.forField(descriptionField).bind(ProductionProcessTechnologyDto::getDescription, ProductionProcessTechnologyDto::setDescription);
+        descriptionField.setValue(productionProcessTechnologyDto.getDescription() == null ? "" : productionProcessTechnologyDto.getDescription());
 
         HorizontalLayout stageProduction = new HorizontalLayout();
         stageProduction.setAlignItems(Alignment.CENTER);
         String showTextStage = "Техпроцессы составляются из этапов. Одни и те же этапы могут быть включены в разные техпроцессы. Новые этапы можно создать в разделе Производство → Этапы.";
         stageProduction.add(createHelpButton(showTextStage), new Text("Этапы производства"));
 
-        VerticalLayout selectStage = new VerticalLayout();
+
         Button addStageButton = new Button("Добавить этап");
         addStageButton.addClickListener(c -> {
             Select<String> select = new Select<>();
-            select.setItems("Most recent first", "Rating: high to low",
-                    "Rating: low to high", "Price: high to low", "Price: low to high");
+            select.setItems(productionStageDtoList.stream().map(ProductionStageDto::getName));
             select.setValue("Most recent first");
+            select.addValueChangeListener(x -> {
+                System.out.println(x.getValue());
+            });
             selectStage.add(select);
         });
+
 
         VerticalLayout returnLayout = new VerticalLayout();
         returnLayout.add(new Text("Техпроцесс"), nameField, descriptionField, createEmptyDiv(), stageProduction, new Text("Этап"), selectStage, addStageButton);
