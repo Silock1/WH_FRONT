@@ -151,11 +151,11 @@ public class FormEditCotragent extends VerticalLayout {
 
 // МОЙ НОВЫЙ КОД
             contractorDto.setNumberDiscountCard(discountCard.getValue());
-            contractorDto.setTypeOfPriceId(typeOfPrice.getValue().equals("Оптовые") ? 2L : 1L);
+            contractorDto.setTypeOfPriceId(typeOfPrice.getValue().equals("Оптовая") ? 2L : 1L);
             contractorDto.setTypeOfPriceName(typeOfPrice.getValue());
             contractorDto.getTypeOfPrice().setName(typeOfPrice.getValue());
             contractorDto.getTypeOfPrice()
-                    .setSortNumber(typeOfPrice.getValue().equals("Оптовые") ? "2" : "1");
+                    .setSortNumber(typeOfPrice.getValue().equals("Оптовая") ? "2" : "1");
 
             if (outerCode.getValue().equals("")) {
                 contractorDto.setOuterCode("Generate");
@@ -418,23 +418,6 @@ public class FormEditCotragent extends VerticalLayout {
         accordionPanel.setOpened(true);
         return accordionPanel;
 
-//        Text saleAndPrice = new Text("Скидки и цены");
-//        FormLayout formSalePrice = new FormLayout();
-//        price = new ComboBox<>();
-//        price.setItems("Оптовые", "Мелкооптовые");
-//        discountCard = new TextField();
-//        formSalePrice.addFormItem(price, "Цены");
-//        formSalePrice.addFormItem(discountCard, "Дисконтная карта");
-//        formSalePrice.setWidth("400px");
-
-
-//        HorizontalLayout layout = new HorizontalLayout();
-//        Text text = new Text("Тут пока не готово");
-//        layout.add(text);
-//        Accordion accordion = new Accordion();
-//        AccordionPanel accordionPanel = accordion.add("Скидки и цены", layout);
-//        accordionPanel.addThemeVariants(DetailsVariant.FILLED);
-//        return accordionPanel;
     }
 
     //БЛок Доступ
