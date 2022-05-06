@@ -16,13 +16,8 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.ParentLayout;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import com.warehouse_accounting.components.AppView;
-import com.warehouse_accounting.components.ProductionSubMenuView;
 import com.warehouse_accounting.components.production.forms.ProductionProcessTechnologyForm;
 import com.warehouse_accounting.components.production.grids.ProductionProcessTechnologyGridLayout;
 import com.warehouse_accounting.models.dto.ProductionProcessTechnologyDto;
@@ -31,8 +26,6 @@ import com.warehouse_accounting.services.interfaces.ProductionProcessTechnologyS
 import com.warehouse_accounting.services.interfaces.ProductionStageService;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.awt.*;
 
 import static com.vaadin.flow.component.button.ButtonVariant.LUMO_TERTIARY_INLINE;
 

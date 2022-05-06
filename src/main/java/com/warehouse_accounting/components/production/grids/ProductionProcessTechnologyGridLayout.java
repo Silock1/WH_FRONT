@@ -86,7 +86,7 @@ public class ProductionProcessTechnologyGridLayout extends HorizontalLayout {
         productionProcessTechnologyDtoList.sort(Comparator.comparingLong(ProductionProcessTechnologyDto::getId));
         productionProcessTechnologyDtoGrid.getDataProvider().refreshAll();
         productionProcessTechnologyDtoGrid.setItems(productionProcessTechnologyDtoList);
-        //productionProcessTechnologyDtoGrid.getDataProvider().refreshAll();
+        productionProcessTechnologyDtoGrid.getDataProvider().refreshAll();
     }
 
 

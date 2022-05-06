@@ -165,19 +165,19 @@ public class ProductionProcessTechnologyForm extends VerticalLayout {
         editItem.setAlignItems(Alignment.CENTER);
 
         MenuItem editMenu = editMenuBar.addItem(editItem);
-//        boolean visibleItemDelete = true;
-//        if (productionStageDto.getId() != null && productionStageDto.getId() > 1) {
-//            visibleItemDelete = false;
-//        }
-//        editMenu.getSubMenu().addItem("Удалить", menuItemClickEvent -> {
-//            productionStageService.delete(productionStageDto.getId());
-//            productionStepsGridLayout.updateGrid();
-//            parentLayer.removeAll();
-//            parentLayer.add(productionStepsGridLayout);
-//        }).getElement().setAttribute("disabled", visibleItemDelete);
-//        editMenu.getSubMenu().addItem("Копировать", menuItemClickEvent -> {
-//
-//        });
+        boolean visibleItemDelete = true;
+        if (productionProcessTechnologyDto.getId() != null && productionProcessTechnologyDto.getId() > 1) {
+            visibleItemDelete = false;
+        }
+        editMenu.getSubMenu().addItem("Удалить", menuItemClickEvent -> {
+            productionProcessTechnologyService.delete(productionProcessTechnologyDto.getId());
+            productionProcessTechnology.getProductionProcessTechnologyGridLayout().updateGrid();
+            productionProcessTechnology.removeAll();
+            productionProcessTechnology.add(returnDiv);
+        }).getElement().setAttribute("disabled", visibleItemDelete);
+        editMenu.getSubMenu().addItem("Копировать", menuItemClickEvent -> {
+
+        });
 
         HorizontalLayout groupEdit = new HorizontalLayout();
         groupEdit.add(editMenuBar);

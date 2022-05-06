@@ -78,6 +78,16 @@ public class ProductionProcessTechnologyServiceImpl implements ProductionProcess
 
     @Override
     public void delete(Long id) {
-
+        Call<Void> request = productionProcessTechnologyApi.deleteById(productionProcessTechnologyUrl, id);
+        try {
+            Response<Void> response = request.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на удаление ProductionProcessTechnologyDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на удаление ProductionProcessTechnologyDto", response.code());
+            }
+        } catch (IOException e) {
+            log.error("Произошла ошибка при выполнении запроса на удаление ProductionProcessTechnologyDto", e);
+        }
     }
 }
