@@ -62,8 +62,18 @@ public class ProductionProcessTechnologyServiceImpl implements ProductionProcess
     }
 
     @Override
-    public void update(ProductionProcessTechnologyDto ProductionProcessTechnologyDto) {
-
+    public void update(ProductionProcessTechnologyDto productionProcessTechnologyDto) {
+        Call<Void> request = productionProcessTechnologyApi.update(productionProcessTechnologyUrl, productionProcessTechnologyDto);
+        try {
+            Response<Void> response = request.execute();
+            if (response.isSuccessful()) {
+                log.info("Успешно выполнен запрос на обновление ProductionProcessTechnologyDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на обновление ProductionProcessTechnologyDto", response.code());
+            }
+        } catch (IOException e) {
+            log.error("Произошла ошибка при выполнении запроса на обновление ProductionProcessTechnologyDto", e);
+        }
     }
 
     @Override

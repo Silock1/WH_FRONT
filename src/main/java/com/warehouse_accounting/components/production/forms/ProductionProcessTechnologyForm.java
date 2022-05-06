@@ -275,6 +275,20 @@ public class ProductionProcessTechnologyForm extends VerticalLayout {
         });
         buttonStageGroup.add(addStageButton, delStageButton);
 
+        if (productionProcessTechnologyDto.getUsedProductionStageId() != null) {
+            productionProcessTechnologyDto.getUsedProductionStageId().forEach(id -> {
+                Select<String> select = new Select<>();
+                select.setMinWidth("300px");
+                select.setItems(productionStageDtoList.stream().map(ProductionStageDto::getName));
+                productionStageDtoList.forEach(p -> {
+                    if (p.getId().equals(id)) {
+                        select.setValue(p.getName());
+                    }
+                });
+                selectStage.add(select);
+            });
+        }
+
 
         VerticalLayout returnLayout = new VerticalLayout();
         returnLayout.setAlignItems(Alignment.START);

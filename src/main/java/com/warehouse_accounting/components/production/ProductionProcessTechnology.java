@@ -188,6 +188,9 @@ public class ProductionProcessTechnology extends VerticalLayout {
     }
 
     private HorizontalLayout mainContent() {
+        productionProcessTechnologyGridLayout.getProductionProcessTechnologyDtoGrid().addItemClickListener(event -> {
+            add(new ProductionProcessTechnologyForm(this, event.getItem(), productionStageService, employeeService, productionProcessTechnologyService));
+        });
         return productionProcessTechnologyGridLayout;
     }
 

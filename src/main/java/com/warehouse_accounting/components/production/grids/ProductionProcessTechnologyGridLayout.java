@@ -30,6 +30,7 @@ import java.util.List;
 public class ProductionProcessTechnologyGridLayout extends HorizontalLayout {
     private final ProductionProcessTechnologyService productionProcessTechnologyService;
     private List<ProductionProcessTechnologyDto> productionProcessTechnologyDtoList = new ArrayList<>();
+    @Getter
     private final Grid<ProductionProcessTechnologyDto> productionProcessTechnologyDtoGrid = new Grid<>(ProductionProcessTechnologyDto.class, false);
 
     public ProductionProcessTechnologyGridLayout(ProductionProcessTechnologyService productionProcessTechnologyService) {
@@ -55,9 +56,6 @@ public class ProductionProcessTechnologyGridLayout extends HorizontalLayout {
         productionProcessTechnologyDtoGrid.setItems(productionProcessTechnologyDtoList);
 
         productionProcessTechnologyDtoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        productionProcessTechnologyDtoGrid.addItemClickListener(event -> {
-
-        });
 
         Button menuButton = new Button(new Icon(VaadinIcon.COG));
         menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -86,7 +84,9 @@ public class ProductionProcessTechnologyGridLayout extends HorizontalLayout {
     public void updateGrid() {
         productionProcessTechnologyDtoList = productionProcessTechnologyService.getAll();
         productionProcessTechnologyDtoList.sort(Comparator.comparingLong(ProductionProcessTechnologyDto::getId));
+        productionProcessTechnologyDtoGrid.getDataProvider().refreshAll();
         productionProcessTechnologyDtoGrid.setItems(productionProcessTechnologyDtoList);
+        //productionProcessTechnologyDtoGrid.getDataProvider().refreshAll();
     }
 
 
