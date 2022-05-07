@@ -31,7 +31,7 @@ public interface SalesChannelsApi {
     Call<Void> update(@Path(value = "url", encoded = true) String url, @Body SalesChannelDto dto);
 
     @Headers("Accept: application/json")
-    @DELETE
+    @DELETE("{url}/{id}")
     Call<Void> deleteById(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
 }
 

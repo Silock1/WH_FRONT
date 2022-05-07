@@ -5,7 +5,6 @@ package com.warehouse_accounting.services.impl;
     import com.warehouse_accounting.services.interfaces.SalesChannelsService;
     import com.warehouse_accounting.services.interfaces.api.SalesChannelsApi;
     import lombok.extern.log4j.Log4j2;
-    import org.springframework.beans.factory.annotation.Value;
     import org.springframework.stereotype.Service;
     import retrofit2.Call;
     import retrofit2.Response;
@@ -20,7 +19,7 @@ package com.warehouse_accounting.services.impl;
 @Service
 public class SalesChannelsServiceImpl implements SalesChannelsService {
 
-    private final String channelsUrl = "/api/comissioner_reports";
+    private final String channelsUrl = "/api/sales_channels";
     private final SalesChannelsApi channelsApi = buildRetrofit().create(SalesChannelsApi.class);
 
     Retrofit buildRetrofit() {
