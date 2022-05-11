@@ -40,4 +40,10 @@ public class TariffDto {
 
     private Date dateEndSubscription;
 
+    public static TariffDto getDefaultTarifDto() {
+        return new TariffDto(1L, "tarifName", 1, 1, 1,
+                1, 1, true, true, true,
+                60, 500, new Date(), new Date());
+    }
+
 }

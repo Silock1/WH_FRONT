@@ -42,4 +42,24 @@ public class EmployeeDto {
 
     private Set<TariffDto> tariff;
 
+    @Override
+    public String toString() {
+        return "EmployeeDto{" +
+                "id=" + id +
+                ", lastName='" + lastName + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", middleName='" + middleName + '\'' +
+                ", sortNumber='" + sortNumber + '\'' +
+                ", phone='" + phone + '\'' +
+                ", inn='" + inn + '\'' +
+                ", description='" + description + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", department=" + department +
+                ", position=" + position +
+                ", roles=" + roles +
+                ", image=" + image +
+                ", tariff=" + tariff +
+                '}';
+    }
 }

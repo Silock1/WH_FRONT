@@ -29,9 +29,11 @@ retrofit:
     invoice_edit_url: api/invoice_edits   #404
     invoice_product_url: api/invoice_products   # []
     invoice_url: api/invoices   # []
+    language_url: api/language
     legal_detail_url: api/legal_details
     movement_url: api/movements   # []
     priceList_url: api/priceLists   # []
+    printing_documents_url: api/printing_documents
     payments_url: api/payments    #todo проверить связь с taskDto
     position_url: api/positions
     product_group_url: api/product_groups
@@ -41,6 +43,8 @@ retrofit:
     return_url: api/returns   # []
     retail_url: api/retail
     role_url: api/roles
+    settings_url: api/settings
+    start_screen_url: api/start_screen
     street_url: api/streets   #404
     subscription_url: api/subscription
     supplier_invoice_url: api/supplier_invoices

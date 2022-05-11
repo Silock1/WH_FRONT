@@ -18,4 +18,13 @@ public class ProjectDto {
     private String code;
 
     private String description;
+
+    public String getName(ProjectDto projectDto) {
+        return projectDto.name == null ? "Project number: " + projectDto.id : projectDto.name;
+    }
+
+    @Override
+    public String toString() {
+        return name == null ? "Company number: " + id : name;
+    }
 }
