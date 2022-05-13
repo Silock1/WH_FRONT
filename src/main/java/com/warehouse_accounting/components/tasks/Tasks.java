@@ -18,6 +18,7 @@ import com.warehouse_accounting.components.tasks.forms.TasksEditForm;
 import com.warehouse_accounting.components.tasks.forms.TasksForm;
 import com.warehouse_accounting.components.tasks.grids.TasksGrid;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
+import com.warehouse_accounting.services.interfaces.ContractorService;
 import com.warehouse_accounting.services.interfaces.TasksService;
 
 
@@ -28,12 +29,15 @@ public class Tasks extends VerticalLayout {
     private final TextField textFieldGridSelected = new TextField();
     private EmployeeService employeeService;
 
+    private ContractorService contractorService;
 
-    public Tasks(Div parentLayer, TasksService tasksService, TasksFilter filterLayout, EmployeeService employeeService) {
+    public Tasks(Div parentLayer, TasksService tasksService, TasksFilter filterLayout
+            , EmployeeService employeeService, ContractorService contractorService) {
         this.parentLayer = parentLayer;
         this.filterLayout = filterLayout;
         this.employeeService = employeeService;
-        tasksGrid = new TasksGrid(tasksService); // i tyt
+        this.contractorService = contractorService;
+        tasksGrid = new TasksGrid(tasksService);
         Div pageContent = new Div();
         pageContent.add(tasksGrid);
         filterLayout.setTasks(this);//оно
@@ -61,7 +65,8 @@ public class Tasks extends VerticalLayout {
         addOrderButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
         addOrderButton.addClickListener(buttonClickEvent -> {
-            TasksForm tasksForm = new TasksForm(parentLayer, this, employeeService);
+            TasksForm tasksForm = new TasksForm(parentLayer, this
+                    , employeeService, contractorService);
             parentLayer.removeAll();
             parentLayer.add(tasksForm);
 

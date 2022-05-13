@@ -44,5 +44,4 @@ public class ContractorDto {
     private List<BankAccountDto> bankAccountDtos;  // Не создаются на беке
     private LegalDetailDto legalDetailDto;
 
-
 }

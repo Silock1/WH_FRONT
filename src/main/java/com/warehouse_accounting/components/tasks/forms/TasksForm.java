@@ -11,18 +11,21 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
-import com.warehouse_accounting.components.contragents.ContragentsList;
-import com.warehouse_accounting.components.tasks.Tasks;
+
+import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.models.dto.EmployeeDto;
 import com.warehouse_accounting.models.dto.TasksDto;
 import com.warehouse_accounting.services.impl.TasksServiceImpl;
+import com.warehouse_accounting.services.interfaces.ContractorService;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.TasksService;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
 
 
 public class TasksForm extends VerticalLayout {
@@ -35,11 +38,22 @@ public class TasksForm extends VerticalLayout {
     private Notification notification;
     private Checkbox accessCheckbox;
     private EmployeeService employeeService;
+    private ContractorService contractorService;
+    private ComboBox<ContractorDto> contractorDtoComboBox;
+    private Long contractorId;
+    private String contractorName;
 
-    public TasksForm(Div parentLayer, Component returnLayer, EmployeeService employeeService) {
+
+
+    private ContractorDto contractorDto;
+    private Select<String> linkedContractor;
+
+    public TasksForm(Div parentLayer, Component returnLayer
+            , EmployeeService employeeService, ContractorService contractorService) {
         this.parentLayer = parentLayer;
         this.returnLayer = returnLayer;
         this.employeeService = employeeService;
+        this.contractorService = contractorService;
         createButtons();
         createMenu();
     }
@@ -64,6 +78,8 @@ public class TasksForm extends VerticalLayout {
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy");
                 String date = dtf.format(deadline.getValue());
                 tasksDto.setDeadline(date);
+                tasksDto.setContractorId(contractorDtoComboBox.getValue().getId());
+                tasksDto.setContractorName(contractorDtoComboBox.getValue().getName());
 
 
                 tasksDto.setIsDone(accessCheckbox.getValue());
@@ -133,6 +149,18 @@ public class TasksForm extends VerticalLayout {
 
         line3.add(left, right);
 
-        add(line1, line2, line3);
+//      линия 4, контрагенты
+
+        HorizontalLayout line4 = new HorizontalLayout();
+
+       contractorDtoComboBox = new ComboBox<>("Свяжите с контрагентом");
+       contractorDtoComboBox.setItems(contractorService.getAll());
+       contractorDtoComboBox.setItemLabelGenerator(ContractorDto::getName);
+       contractorDtoComboBox.setWidth("300px");
+       right.add(contractorDtoComboBox);
+       line4.add(left, right);
+
+        add(line1, line2, line3, line4);
     }
+
 }

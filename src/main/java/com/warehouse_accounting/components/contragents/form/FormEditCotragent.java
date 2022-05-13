@@ -129,23 +129,53 @@ public class FormEditCotragent extends VerticalLayout {
         typeForm = newForm ? "Cоздать" : "Изменить";
         edit = new Button(typeForm);
         edit.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
-        edit.addClickListener(e->{
+        edit.addClickListener(e -> {
 
-                // получение Основные данные аккаунта
-                contractorDto.setName(name.getValue());
-                contractorDto.setStatus(status.getValue());
-                contractorDto.setContractorGroupName(group.getValue());
-                contractorDto.setPhone(phone.getValue());
-                contractorDto.setFax(fax.getValue());
-                contractorDto.setEmail(emil.getValue());
-                contractorDto.setAddress(address.getValue());
-                contractorDto.setCommentToAddress(commentToAddress.getValue());
-                contractorDto.setComment(comment.getValue());
-                contractorDto.setCode(code.getValue());
-                if(outerCode.getValue().equals("")){
-                    contractorDto.setOuterCode("Generate");
-                }else {
-                    contractorDto.setOuterCode(outerCode.getValue());
+            // получение Основные данные аккаунта
+            contractorDto.setName(name.getValue());
+            contractorDto.setStatus(status.getValue());
+            contractorDto.setContractorGroupName(group.getValue());
+            contractorDto.setPhone(phone.getValue());
+            contractorDto.setFax(fax.getValue());
+            contractorDto.setEmail(emil.getValue());
+            contractorDto.setAddress(address.getValue());
+            contractorDto.setCommentToAddress(commentToAddress.getValue());
+            contractorDto.setComment(comment.getValue());
+            contractorDto.setCode(code.getValue());
+
+// МОЙ НОВЫЙ КОД
+            contractorDto.setNumberDiscountCard(discountCard.getValue());
+            contractorDto.setTypeOfPriceId(typeOfPrice.getValue().equals("Оптовая") ? 2L : 1L);
+            contractorDto.setTypeOfPriceName(typeOfPrice.getValue());
+            contractorDto.getTypeOfPrice().setName(typeOfPrice.getValue());
+            contractorDto.getTypeOfPrice()
+                    .setSortNumber(typeOfPrice.getValue().equals("Оптовая") ? "2" : "1");
+
+            if (outerCode.getValue().equals("")) {
+                contractorDto.setOuterCode("Generate");
+            } else {
+                contractorDto.setOuterCode(outerCode.getValue());
+            }
+            // получение Данные LegalDetails
+            contractorDto.getLegalDetailDto().setLastName(lastName.getValue());
+            contractorDto.getLegalDetailDto().setFirstName(firstName.getValue());
+            contractorDto.getLegalDetailDto().setMiddleName(middleName.getValue());
+            contractorDto.getLegalDetailDto().setAddress(addressLegal.getValue());
+            contractorDto.getLegalDetailDto().setCommentToAddress(commentToAddressLegal.getValue());
+            contractorDto.getLegalDetailDto().setInn(inn.getValue());
+            contractorDto.getLegalDetailDto().setOkpo(okpo.getValue());
+            contractorDto.getLegalDetailDto().setOgrnip(ogrnip.getValue());
+            contractorDto.getLegalDetailDto().setKpp(kpp.getValue());
+            contractorDto.getLegalDetailDto().setNumberOfTheCertificate(numberOfTheCertificate.getValue());
+            contractorDto.getLegalDetailDto().setDateOfTheCertificate(dateOfTheCertificate.getValue());
+            contractorDto.getLegalDetailDto().setTypeOfContractorName(typeOfContractor.getValue());
+
+
+            BankAccountDto accountDto;
+            for (FormBankAccauntInner form : formsBankAccount) {
+                accountDto = form.getBankAccount();
+                if (!form.isDeleted() && form.isNewAccount()) {
+                    contractorDto.getBankAccountDtos().add(accountDto);
                 }
                 // получение Данные LegalDetails
                 contractorDto.getLegalDetailDto().setLastName(lastName.getValue());
@@ -365,12 +395,34 @@ public class FormEditCotragent extends VerticalLayout {
     // Блок Скидки и цены
     private AccordionPanel getSalasEndPriceAccordion(){
         HorizontalLayout layout = new HorizontalLayout();
-        Text text = new Text("Тут пока не готово");
-        layout.add(text);
+        FormLayout formSalePrice = new FormLayout();
+        typeOfPrice = new Select<>();
+        typeOfPrice.setItems(typeOfPriceService.getAll()
+                .stream().map(TypeOfPriceDto::getName)
+                .collect(Collectors.toList()));
+        typeOfPrice.setEmptySelectionCaption("Тип цены");
+        if (contractorDto.getTypeOfPrice() == null) {
+            contractorDto.setTypeOfPrice(TypeOfPriceDto.builder()
+                    .name("")
+                    .sortNumber("")
+                    .build());
+        }
+
+        if (contractorDto.getTypeOfPriceName() != null) {
+            typeOfPrice.setValue(contractorDto.getTypeOfPriceName());
+        }
+        discountCard = new TextField();
+        if (contractorDto.getNumberDiscountCard() != null)
+            discountCard.setValue(contractorDto.getNumberDiscountCard());
+
+        formSalePrice.addFormItem(typeOfPrice, "Цены");
+        formSalePrice.addFormItem(discountCard, "Дисконтная карта");
+        formSalePrice.setWidth("400px");
         Accordion accordion = new Accordion();
         AccordionPanel accordionPanel = accordion.add("Скидки и цены", layout);
         accordionPanel.addThemeVariants(DetailsVariant.FILLED);
         return accordionPanel;
+
     }
     //БЛок Доступ
     private AccordionPanel getAccessAccordion(){
