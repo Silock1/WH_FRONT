@@ -20,7 +20,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     private final BankAccountApi bankAccountApi;
     private final String bankAccountUrl;
 
-    public BankAccountServiceImpl(@Value("${retrofit.restServices.bankAccount_url}") String bankAccountUrl, Retrofit retrofit) {
+    public BankAccountServiceImpl(@Value("${retrofit.restServices.bank_account_url}") String bankAccountUrl, Retrofit retrofit) {
         this.bankAccountUrl = bankAccountUrl;
         this.bankAccountApi = retrofit.create(BankAccountApi.class);
     }

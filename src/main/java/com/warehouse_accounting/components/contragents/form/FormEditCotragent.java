@@ -31,6 +31,7 @@ import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.models.dto.dadataDto.Example2;
 import com.warehouse_accounting.models.dto.ContractorFaceContactDto;
 import com.warehouse_accounting.models.dto.LegalDetailDto;
+import com.warehouse_accounting.services.interfaces.BankAccountService;
 import com.warehouse_accounting.services.interfaces.ContractorGroupService;
 import com.warehouse_accounting.services.interfaces.ContractorService;
 import com.warehouse_accounting.services.interfaces.DadataService;
@@ -47,6 +48,7 @@ public class FormEditCotragent extends VerticalLayout {
     private ContractorGroupService contractorGroupService;
     private TypeOfContractorService typeOfContractorService;
     private ContractorService contractorService;
+    private BankAccountService bankAccountService;
     private ContragentsList parent;
     private ContractorDto contractorDto;
     private DadataService dadata;
@@ -85,11 +87,12 @@ public class FormEditCotragent extends VerticalLayout {
     private List<FormBankAccauntInner> formsBankAccount;
     private List<FormForFaceContactInner> formsFacesContact;
 
-    public FormEditCotragent(ContractorService contractorService,DadataService dadata, TypeOfContractorService typeOfContractorService, ContractorGroupService contractorGroupService) {
+    public FormEditCotragent(ContractorService contractorService, DadataService dadata, TypeOfContractorService typeOfContractorService, ContractorGroupService contractorGroupService, BankAccountService bankAccountService) {
         this.contractorService = contractorService;
         this.typeOfContractorService = typeOfContractorService;
         this.contractorGroupService = contractorGroupService;
         this.dadata = dadata;
+        this.bankAccountService = bankAccountService;
     }
     public void bild(ContractorDto contractorDto){
         removeAll();
@@ -523,14 +526,14 @@ public class FormEditCotragent extends VerticalLayout {
         VerticalLayout bankAccountSpace = new VerticalLayout();
         if(contractorDto.getBankAccountDtos() != null) {
             for (BankAccountDto bankAccountDto : contractorDto.getBankAccountDtos()) {
-                FormBankAccauntInner formBankAccauntInner = new FormBankAccauntInner();
+                FormBankAccauntInner formBankAccauntInner = new FormBankAccauntInner(bankAccountService);
                 bankAccountSpace.add(formBankAccauntInner.getFormForBankAccount(bankAccountDto));
                 formsBankAccount.add(formBankAccauntInner);
             }
         }
         Button addNewBankAcc = new Button("Добавить счёт");
         addNewBankAcc.addClickListener(e->{
-            FormBankAccauntInner form = new FormBankAccauntInner();
+            FormBankAccauntInner form = new FormBankAccauntInner(bankAccountService);
             bankAccountSpace.add(form.getFormForBankAccount(null));
             formsBankAccount.add(form);
         });
