@@ -7,6 +7,7 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.warehouse_accounting.models.dto.BankAccountDto;
+import com.warehouse_accounting.services.interfaces.BankAccountService;
 
 public class FormBankAccauntInner {
 
@@ -18,10 +19,12 @@ public class FormBankAccauntInner {
     private Checkbox checkbox;
 
     private BankAccountDto bankAccountDto;
+    private BankAccountService bankAccountService;
     private boolean newAccount = false;
     private boolean deleted = false;
 
-    public FormBankAccauntInner() {
+    public FormBankAccauntInner(BankAccountService bankAccountService) {
+        this.bankAccountService = bankAccountService;
     }
 
     public boolean isDeleted() {
@@ -48,6 +51,7 @@ public class FormBankAccauntInner {
         VerticalLayout main = new VerticalLayout();
         Button button = new Button("Удалить");
         button.addClickListener(e ->{
+            bankAccountService.deleteById(this.bankAccountDto.getId());
             main.setVisible(false);
             deleted = true;
         });

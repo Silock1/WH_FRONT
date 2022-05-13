@@ -5,14 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Set;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductionStageDto {
+public class ProductionProcessTechnologyDto {
 
     private Long id;
     private String name;
@@ -27,5 +27,6 @@ public class ProductionStageDto {
     private Date dateOfEdit;
     private Long editorEmployeeId;
     private String editorEmployeeName;
-}
+    private Set<Long> usedProductionStageId;
 
+}

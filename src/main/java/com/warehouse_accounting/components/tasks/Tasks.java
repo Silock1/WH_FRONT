@@ -14,6 +14,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.warehouse_accounting.components.tasks.filter.TasksFilter;
+import com.warehouse_accounting.components.tasks.forms.TasksEditForm;
 import com.warehouse_accounting.components.tasks.forms.TasksForm;
 import com.warehouse_accounting.components.tasks.grids.TasksGrid;
 import com.warehouse_accounting.services.interfaces.EmployeeService;

@@ -61,7 +61,6 @@ public class TasksForm extends VerticalLayout {
     private void createButtons() {
         HorizontalLayout buttons = new HorizontalLayout();
 
-        //сохранение
 
         Button saveButton = new Button("Сохранить", e -> {
 

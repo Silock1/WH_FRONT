@@ -6,9 +6,11 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.warehouse_accounting.components.production.ProductionProcessTechnology;
 import com.warehouse_accounting.components.production.ProductionSteps;
 import com.warehouse_accounting.components.production.ProductionTasks;
 
+import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -22,10 +24,13 @@ public class ProductionSubMenuView extends VerticalLayout {
 
     private final Div pageContent = new Div();
     private final ProductionTasks productionTasks;
-    private ProductionSteps productionSteps;
+    private final ProductionSteps productionSteps;
+    private final ProductionProcessTechnology productionProcessTechnology;
 
-    public ProductionSubMenuView(ProductionTasks productionTasks) {
+    public ProductionSubMenuView(ProductionTasks productionTasks, ProductionSteps productionSteps, ProductionProcessTechnology productionProcessTechnology) {
         this.productionTasks = productionTasks;
+        this.productionSteps = productionSteps;
+        this.productionProcessTechnology = productionProcessTechnology;
 
         pageContent.setSizeFull();
         add(initSubMenu(), pageContent);
@@ -56,21 +61,27 @@ public class ProductionSubMenuView extends VerticalLayout {
                     break;
                 case "Техпроцессы":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Техпроцессы"));
+                    pageContent.add(productionProcessTechnology);
                     break;
                 case "Этапы":
                     pageContent.removeAll();
-                    pageContent.add(initProductionSteps(pageContent));
+                    productionSteps.setParentLayer(pageContent);
+                    pageContent.add(productionSteps);
                     break;
             }
         });
         return subMenuTabs;
     }
 
-    private ProductionSteps initProductionSteps(Div pageContent){
-        if (Objects.isNull(productionSteps)) {
-            productionSteps = new ProductionSteps(pageContent);
-        }
-        return productionSteps;
+    @PostConstruct
+    public void initBean() {
+        productionSteps.setParentLayer(pageContent);
     }
+
+//    private ProductionSteps initProductionSteps(Div pageContent){
+//        if (Objects.isNull(productionSteps)) {
+//            productionSteps = new ProductionSteps();
+//        }
+//        return productionSteps;
+//    }
 }

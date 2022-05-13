@@ -1,4 +1,4 @@
-package com.warehouse_accounting.components.movements;
+package com.warehouse_accounting.components.priceList;
 
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
@@ -15,39 +15,31 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
-import com.warehouse_accounting.models.dto.MovementDto;
-import com.warehouse_accounting.services.interfaces.MovementService;
+import com.warehouse_accounting.models.dto.PriceListDto;
+import com.warehouse_accounting.services.interfaces.PriceListService;
 import org.springframework.stereotype.Component;
-import org.vaadin.olli.FileDownloadWrapper;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Component
 @UIScope
-@Route(value = "movement", layout = AppView.class)
-public class MovementView extends VerticalLayout {
+@Route(value = "priceList", layout = AppView.class)
+public class PriceList extends VerticalLayout {
 
     private HorizontalLayout horizontalToolPanelLayout = new HorizontalLayout();
-    private Grid<MovementDto> grid = new Grid<>(MovementDto.class);
-    private MovementService movementService;
+    private Grid<PriceListDto> grid = new Grid<>(PriceListDto.class);
+    private PriceListService priceListService;
 
-    public MovementView(MovementService movementService) {
-        this.movementService = movementService;
+    public PriceList(PriceListService priceListService) {
+        this.priceListService = priceListService;
         horizontalToolPanelLayout.setAlignItems(Alignment.CENTER);
 
         // Здесь настройка грида
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
-        grid.setItems(movementService.getAll());
+        grid.setItems(priceListService.getAll());
         grid.setColumnOrder(grid.getColumnByKey("id").setHeader("№"),
                 grid.getColumnByKey("dateTime").setHeader("Время"),
-                grid.getColumnByKey("warehouseFrom").setHeader("Со склада"),
-                grid.getColumnByKey("warehouseTo").setHeader("На склад"),
                 grid.getColumnByKey("company").setHeader("Организация"),
-                grid.getColumnByKey("sum").setHeader("Сумма"),
                 grid.getColumnByKey("moved").setHeader("Отправлено"),
                 grid.getColumnByKey("printed").setHeader("Напечатано"),
                 grid.getColumnByKey("comment").setHeader("Комментарий"));
@@ -67,14 +59,14 @@ public class MovementView extends VerticalLayout {
         dialog.setWidth("400px");
         dialog.setHeight("150px");
 
-        Span text = new Span("Перемещения");
+        Span text = new Span("Прайс-листы");
         text.setClassName("pageTitle");
 
         Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH), event -> {
             //TODO повод поработать этот функционал
         });
 
-        Button addMovementButton = new Button("Перемещение", new Icon(VaadinIcon.PLUS), event -> {
+        Button addPriceListButton = new Button("Прайс-лист", new Icon(VaadinIcon.PLUS), event -> {
             //TODO повод поработать этот функционал
         });
 
@@ -122,10 +114,6 @@ public class MovementView extends VerticalLayout {
         undoOperate.addClickListener(event -> {
             //TODO повод поработать этот функционал
         });
-        MenuItem combine = changeSubMenu.addItem("Снять проведение");
-        combine.addClickListener(event -> {
-            //TODO повод поработать этот функционал
-        });
 
         SubMenu statusSubMenu = status.getSubMenu();
         MenuItem configureStatus = statusSubMenu.addItem("Настроить...");
@@ -134,14 +122,24 @@ public class MovementView extends VerticalLayout {
         });
 
         SubMenu printSubMenu = print.getSubMenu();
-        MenuItem movementList = printSubMenu.addItem("Список перемещений");
-        movementList.addClickListener(event -> {
+        MenuItem priceListList = printSubMenu.addItem("Список прайс-листов");
+        priceListList.addClickListener(event -> {
             //TODO повод поработать этот функционал
         });
-        MenuItem torg13 = printSubMenu.addItem("ТОРГ-13");
-        torg13.addClickListener(event -> {
+
+        MenuItem priceTags2x3 = printSubMenu.addItem("Ценники 2x3");
+        priceTags2x3.addClickListener(event -> {
             //TODO повод поработать этот функционал
         });
+        MenuItem priceTags = printSubMenu.addItem("Ценники");
+        priceTags.addClickListener(event -> {
+            //TODO повод поработать этот функционал
+        });
+        MenuItem priceList = printSubMenu.addItem("Прайс-лист");
+        priceList.addClickListener(event -> {
+            //TODO повод поработать этот функционал
+        });
+
         MenuItem kit = printSubMenu.addItem("Комплект...");
         kit.addClickListener(event -> {
             //TODO повод поработать этот функционал
@@ -156,11 +154,6 @@ public class MovementView extends VerticalLayout {
             //TODO повод поработать этот функционал
         });
 
-        FileDownloadWrapper buttonWrapper = new FileDownloadWrapper(
-                new StreamResource(LocalDate.now().toString() + " someSheet.xlsx",
-                        () -> movementService.getExcel().byteStream()));
-        buttonWrapper.wrapComponent(new Button("Скачать XLSX", new Icon(VaadinIcon.DOWNLOAD)));
-
-        horizontalToolPanelLayout.add(helpButton, text, refreshButton, addMovementButton, filterButton, searchField, numberField, menuBar, settingsButton, buttonWrapper);
+        horizontalToolPanelLayout.add(helpButton, text, refreshButton, addPriceListButton, filterButton, searchField, numberField, menuBar, settingsButton);
     }
 }

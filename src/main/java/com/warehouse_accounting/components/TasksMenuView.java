@@ -4,7 +4,6 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.warehouse_accounting.components.sales.CustomerInvoices;
 import com.warehouse_accounting.components.tasks.Tasks;
 import com.warehouse_accounting.components.tasks.filter.TasksFilter;
 import com.warehouse_accounting.services.interfaces.ContractorService;
