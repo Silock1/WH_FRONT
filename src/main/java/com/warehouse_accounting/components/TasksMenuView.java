@@ -4,9 +4,9 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.warehouse_accounting.components.sales.CustomerInvoices;
 import com.warehouse_accounting.components.tasks.Tasks;
 import com.warehouse_accounting.components.tasks.filter.TasksFilter;
+import com.warehouse_accounting.services.interfaces.ContractorService;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.TasksService;
 
@@ -22,10 +22,14 @@ public class TasksMenuView extends VerticalLayout {
     private final TasksService tasksService;
     private final EmployeeService employeeService;
 
-    public TasksMenuView(TasksService tasksService, TasksFilter tasksFilter, EmployeeService employeeService) {
+    private final ContractorService contractorService;
+
+    public TasksMenuView(TasksService tasksService, TasksFilter tasksFilter, EmployeeService employeeService
+            , ContractorService contractorService) {
         this.tasksService = tasksService;
         this.employeeService = employeeService;
         this.tasksFilter = tasksFilter;
+        this.contractorService = contractorService;
         pageContent.removeAll();
         pageContent.add(initTasks(pageContent));
         pageContent.setSizeFull();
@@ -34,7 +38,8 @@ public class TasksMenuView extends VerticalLayout {
 
     private Tasks initTasks(Div pageContent) {
         if (Objects.isNull(tasks)) {
-            tasks = new Tasks(pageContent, tasksService, tasksFilter, employeeService);
+            tasks = new Tasks(pageContent, tasksService, tasksFilter
+                    , employeeService,contractorService);
         }
         return tasks;
     }

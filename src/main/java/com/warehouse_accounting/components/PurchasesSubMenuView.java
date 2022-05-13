@@ -6,11 +6,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.warehouse_accounting.components.purchases.Acceptances;
-import com.warehouse_accounting.components.purchases.AccountsPayable;
-import com.warehouse_accounting.components.purchases.PurchasesOrders;
-import com.warehouse_accounting.components.purchases.Return;
+import com.warehouse_accounting.components.purchases.*;
 import com.warehouse_accounting.components.purchases.filter.AccountsPayableFilter;
+import com.warehouse_accounting.components.purchases.InvoicesReceived;
 import com.warehouse_accounting.components.purchases.grids.SupplierInvoiceGridLayout;
 import com.warehouse_accounting.services.interfaces.CompanyService;
 import com.warehouse_accounting.services.interfaces.ContractService;
@@ -33,11 +31,11 @@ public class PurchasesSubMenuView extends VerticalLayout {
 
     private final Div pageContent = new Div();
     private PurchasesOrders purchasesOrders;
-    private AccountsPayable accountsPayable;
+    //private AccountsPayable accountsPayable;
     private Acceptances acceptances;
     private Return returns;
 
-    private AccountsPayableFilter accountsPayableFilter;
+    //private AccountsPayableFilter accountsPayableFilter;
     private final WarehouseService warehouseService;
     private final ContractService contractService;
     private final ContractorService contractorService;
@@ -46,13 +44,13 @@ public class PurchasesSubMenuView extends VerticalLayout {
     private final DepartmentService departmentService;
     private final ProductService productService;
     private final CompanyService companyService;
+    private final InvoicesReceived invoicesReceived;
 
-    public PurchasesSubMenuView(AccountsPayableFilter accountsPayableFilter, WarehouseService warehouseService,
+    public PurchasesSubMenuView(WarehouseService warehouseService,
                                 ContractService contractService, ContractorService contractorService,
                                 ProjectService projectService, EmployeeService employeeService,
                                 DepartmentService departmentService, ProductService productService,
-                                CompanyService companyService) {
-        this.accountsPayableFilter = accountsPayableFilter;
+                                CompanyService companyService, InvoicesReceived invoicesReceived) {
         this.warehouseService = warehouseService;
         this.contractService = contractService;
         this.contractorService = contractorService;
@@ -61,6 +59,7 @@ public class PurchasesSubMenuView extends VerticalLayout {
         this.departmentService = departmentService;
         this.productService = productService;
         this.companyService = companyService;
+        this.invoicesReceived = invoicesReceived;
         pageContent.setSizeFull();
         pageContent.add(initPurchasesOrders(pageContent));
         add(initSubMenu(), pageContent);
@@ -84,8 +83,7 @@ public class PurchasesSubMenuView extends VerticalLayout {
                     break;
                 case "Счета поставщиков":
                     pageContent.removeAll();
-                    pageContent.add(initAccountsPayable(pageContent));
-                    pageContent.add(SupplierInvoiceGridLayout.initSupplierInvoiceGrid());
+                    pageContent.add(new Span("Счета поставщиков"));
                     break;
                 case "Приемки":
                     pageContent.removeAll();
@@ -97,7 +95,7 @@ public class PurchasesSubMenuView extends VerticalLayout {
                     break;
                 case "Счета-фактуры полученные":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Счета-фактуры полученные"));
+                    pageContent.add(invoicesReceived);
                     break;
                 case "Счета-фактуры выданные":
                     pageContent.removeAll();
@@ -118,7 +116,7 @@ public class PurchasesSubMenuView extends VerticalLayout {
         }
         return purchasesOrders;
     }
-
+/*
     private AccountsPayable initAccountsPayable(Div pageContent){
         if (Objects.isNull(accountsPayable)){
             accountsPayable = new AccountsPayable(pageContent, warehouseService, contractService, contractorService,
@@ -126,6 +124,8 @@ public class PurchasesSubMenuView extends VerticalLayout {
         }
         return accountsPayable;
     }
+
+ */
 
     private Acceptances initAcceptances(Div pageContent){
         if (Objects.isNull(acceptances)) {
@@ -140,5 +140,6 @@ public class PurchasesSubMenuView extends VerticalLayout {
         }
         return returns;
     }
+
 }
 

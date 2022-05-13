@@ -15,6 +15,7 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.contragents.ContragentsList;
 import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.services.interfaces.ContractorService;
+
 /*
 Таблица контрагентов
  */
@@ -22,9 +23,12 @@ import com.warehouse_accounting.services.interfaces.ContractorService;
 @UIScope
 public class ContragentsListGridLayout extends HorizontalLayout {
     private final ContractorService contractorService;
+
     private Button settingButton = new Button(new Icon(VaadinIcon.COG_O));
     private  Grid<ContractorDto> contractorDtoGrid;
     private ContragentsList parent;
+
+
 
     public ContragentsListGridLayout(ContractorService contractorService) {
         this.contractorService = contractorService;
@@ -64,6 +68,8 @@ public class ContragentsListGridLayout extends HorizontalLayout {
         contractorDtoGrid.addColumn(ContractorDto::getLegalDetailInn).setHeader("ИНН").setSortable(true).setAutoWidth(true);
         contractorDtoGrid.addColumn(ContractorDto::getLegalDetailKpp).setHeader("КПП").setSortable(true).setAutoWidth(true);
         contractorDtoGrid.addColumn(ContractorDto::getTypeOfPriceName).setHeader("Цены").setSortable(true).setAutoWidth(true);
+
+        contractorDtoGrid.addItemDoubleClickListener(event -> parent.editFormActivate(event.getItem()));
 
         contractorDtoGrid.addColumn(rowEdit()).setHeader("Изменить").setSortable(true).setAutoWidth(true);
         contractorDtoGrid.addColumn(rowDelete()).setHeader("Удалить").setSortable(true).setAutoWidth(true);

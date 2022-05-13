@@ -1,6 +1,7 @@
 package com.warehouse_accounting.services.interfaces.api;
 
-import com.warehouse_accounting.models.dto.SalesChannelDto;
+import com.warehouse_accounting.models.dto.ProductionProcessTechnologyDto;
+import com.warehouse_accounting.models.dto.ProductionStageDto;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -12,33 +13,20 @@ import retrofit2.http.Path;
 
 import java.util.List;
 
-public interface SalesChannelsApi {
-
+public interface ProductionProcessTechnologyApi {
     @Headers("Accept: application/json")
     @GET("{url}")
-    Call<List<SalesChannelDto>> getAll(@Path(value = "url", encoded = true) String url);
-
-    @Headers("Accept: application/json")
-    @GET("{url}/{id}")
-    Call<SalesChannelDto> getById(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
+    Call<List<ProductionProcessTechnologyDto>> getAll(@Path(value = "url", encoded = true) String url);
 
     @Headers("Accept: application/json")
     @POST("{url}")
-    Call<Void> create(@Path(value = "url",encoded = true) String url, @Body SalesChannelDto salesChannelDto);
+    Call<Void> create(@Path(value = "url", encoded = true) String url, @Body ProductionProcessTechnologyDto productionProcessTechnologyDto);
 
     @Headers("Accept: application/json")
-    @PUT
-    Call<Void> update(@Path(value = "url", encoded = true) String url, @Body SalesChannelDto dto);
+    @PUT("{url}")
+    Call<Void> update(@Path(value = "url", encoded = true) String url, @Body ProductionProcessTechnologyDto productionProcessTechnologyDto);
 
     @Headers("Accept: application/json")
     @DELETE("{url}/{id}")
     Call<Void> deleteById(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
 }
-
-
-
-
-
-
-
-
