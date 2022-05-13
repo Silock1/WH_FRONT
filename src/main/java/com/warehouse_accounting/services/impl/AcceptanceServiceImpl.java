@@ -19,7 +19,6 @@ import java.util.List;
 @Service
 public class AcceptanceServiceImpl implements AcceptanceService {
 
-
     private final AcceptanceApi acceptanceApi;
     private final String acceptanceUrl;
 
