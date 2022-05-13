@@ -411,7 +411,6 @@ public class FormEditCotragent extends VerticalLayout {
         formSalePrice.addFormItem(typeOfPrice, "Цены");
         formSalePrice.addFormItem(discountCard, "Дисконтная карта");
         formSalePrice.setWidth("400px");
-//        layout.add(formSalePrice);
         Accordion accordion = new Accordion();
         AccordionPanel accordionPanel = accordion.add("Скидки и цены", formSalePrice);
         accordionPanel.addThemeVariants(DetailsVariant.FILLED);

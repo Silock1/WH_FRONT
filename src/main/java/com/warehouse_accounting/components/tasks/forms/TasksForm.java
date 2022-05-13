@@ -150,7 +150,7 @@ public class TasksForm extends VerticalLayout {
 
         line3.add(left, right);
 
-//        Моя линия 4, контрагенты
+//      линия 4, контрагенты
 
         HorizontalLayout line4 = new HorizontalLayout();
 
