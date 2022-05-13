@@ -8,9 +8,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.goods.GoodsAndServiceView;
 import com.warehouse_accounting.components.goods.filter.GoodsFilter;
-import com.warehouse_accounting.components.movements.MovementView;
+import com.warehouse_accounting.components.contragents.movements.MovementView;
 import com.warehouse_accounting.components.priceList.PriceList;
-import com.warehouse_accounting.components.tasks.Tasks;
 import com.warehouse_accounting.services.interfaces.ContractorService;
 import com.warehouse_accounting.services.interfaces.DepartmentService;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
@@ -20,7 +19,6 @@ import com.warehouse_accounting.services.interfaces.ProductService;
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import static com.warehouse_accounting.components.UtilView.subMenuTabs;
 

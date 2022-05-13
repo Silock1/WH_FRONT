@@ -18,7 +18,6 @@ import java.util.List;
 
 @Log4j2
 @Service
-
 public class PaymentsServiceImpl implements PaymentsService {
 
     private final PaymentsApi paymentsApi;
