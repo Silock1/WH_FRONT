@@ -1,6 +1,5 @@
 package com.warehouse_accounting.models.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,20 +7,68 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class NotificationsDto {
 
     private Long id;
 
-    private boolean isEnabled;
+    // Заказы покупателей
+    private SelectorDto buyerOrders = new SelectorDto();
 
-    private String description;
+    // Счета покупателей
+    private SelectorDto buyersInvoices= new SelectorDto();
 
-    private boolean isEmailProvided;
+    // Остатки
+    private SelectorDto remainder= new SelectorDto();
 
-    private boolean isPhoneProvided;
+    // Розничная торговля
+    private SelectorDto retail= new SelectorDto();
 
-    private String label;
+    // Задачи
+    private SelectorDto tasks= new SelectorDto();
 
+    // Обмен данными
+    private SelectorDto dataExchange= new SelectorDto();
+
+    // Сценарии
+    private SelectorDto scripts= new SelectorDto();
+
+    // Интернет-магазины
+    private SelectorDto onlineStores= new SelectorDto();
+
+    public NotificationsDto(Long id,
+                            Long buyerOrdersId,
+                            Long buyersInvoicesId,
+                            Long remainderId,
+                            Long retailId,
+                            Long tasksId,
+                            Long dataExchangeId,
+                            Long scriptsId,
+                            Long onlineStoresId) {
+        this.id = id;
+        this.buyerOrders.setId(buyerOrdersId);
+        this.buyersInvoices.setId(buyersInvoicesId);
+        this.remainder.setId(remainderId);
+        this.retail.setId(retailId);
+        this.tasks.setId(tasksId);
+        this.dataExchange.setId(dataExchangeId);
+        this.scripts.setId(scriptsId);
+        this.onlineStores.setId(onlineStoresId);
+    }
+
+    @Override
+    public String toString() {
+        return "NotificationsDto{" +
+                "id=" + id +
+                ", buyerOrders=" + buyerOrders +
+                ", buyersInvoices=" + buyersInvoices +
+                ", remainder=" + remainder +
+                ", retail=" + retail +
+                ", tasks=" + tasks +
+                ", dataExchange=" + dataExchange +
+                ", scripts=" + scripts +
+                ", onlineStores=" + onlineStores +
+                '}';
+    }
 }

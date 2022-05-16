@@ -1,6 +1,5 @@
 package com.warehouse_accounting.models.dto;
 
-import com.warehouse_accounting.models.dto.TypeOfContractorDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -44,4 +43,12 @@ public class ContractorDto {
     private List<BankAccountDto> bankAccountDtos;  // Не создаются на беке
     private LegalDetailDto legalDetailDto;
 
+    public String getName() {
+        return name == null ? "Contractor with id: " + id : name;
+    }
+
+    @Override
+    public String toString() {
+        return name == null ? "Company number: " + id : name;
+    }
 }

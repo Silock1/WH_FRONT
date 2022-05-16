@@ -14,7 +14,6 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.FileBuffer;
@@ -23,20 +22,42 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.AppView;
 import com.warehouse_accounting.components.util.QuestionButton;
+import com.warehouse_accounting.models.dto.CompanyDto;
+import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.models.dto.EmployeeDto;
 import com.warehouse_accounting.models.dto.ImageDto;
+import com.warehouse_accounting.models.dto.LanguageDto;
 import com.warehouse_accounting.models.dto.NotificationsDto;
 import com.warehouse_accounting.models.dto.PositionDto;
+import com.warehouse_accounting.models.dto.PrintingDocumentsDto;
+import com.warehouse_accounting.models.dto.ProjectDto;
+import com.warehouse_accounting.models.dto.SelectorDto;
+import com.warehouse_accounting.models.dto.SelectorForViewDto;
+import com.warehouse_accounting.models.dto.SettingsDto;
+import com.warehouse_accounting.models.dto.StartScreenDto;
+import com.warehouse_accounting.models.dto.TariffDto;
+import com.warehouse_accounting.models.dto.WarehouseDto;
+import com.warehouse_accounting.services.interfaces.CompanyService;
+import com.warehouse_accounting.services.interfaces.ContractorService;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.ImageService;
+import com.warehouse_accounting.services.interfaces.LanguageService;
 import com.warehouse_accounting.services.interfaces.PositionService;
+import com.warehouse_accounting.services.interfaces.PrintingDocumentsService;
+import com.warehouse_accounting.services.interfaces.ProjectService;
+import com.warehouse_accounting.services.interfaces.SettingsService;
+import com.warehouse_accounting.services.interfaces.StartScreenService;
+import com.warehouse_accounting.services.interfaces.WarehouseService;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 
@@ -44,6 +65,7 @@ import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 @PageTitle("Настройки пользователя")
 @Route(value = "profile/settings", layout = AppView.class)
 public class UserSettingsView extends VerticalLayout {
+
 
     VerticalLayout verticalLayout = new VerticalLayout();
     VerticalLayout mainLeftLayout = new VerticalLayout();
@@ -58,54 +80,121 @@ public class UserSettingsView extends VerticalLayout {
     Button changeButtonPass = new Button((new Icon(VaadinIcon.MINUS)));
     HorizontalLayout passLayout = new HorizontalLayout();
     Button buttonPass = new Button("Изменить пароль");
+    private Grid<SelectorForViewDto> gridNotifications = new Grid<>();
+    private List<ToggleButton> toggleButtonList = new ArrayList<>();
+    private List<Checkbox> checkboxListPost = new ArrayList<>();
+    private List<Checkbox> checkboxListPhone = new ArrayList<>();
 
-    private EmployeeService employeeService;
-    private PositionService positionService;
-    private ImageService imageService;
+    private final EmployeeService employeeService;
+    private final PositionService positionService;
+    private final ImageService imageService;
+    private final LanguageService languageService;
+    private final SettingsService settingsService;
+    private final CompanyService companyService;
+    private final WarehouseService warehouseService;
+    private final ContractorService contractorService;
+    private final ProjectService projectService;
+    private final PrintingDocumentsService printingDocumentsService;
+    private final StartScreenService startScreenService;
+    private int numberOfAdditionalFields;
+    private boolean refreshReportsAuto;
+    private boolean signatureInLetters;
+
+    private SettingsDto settingsDto;
     private EmployeeDto employeeDto;
     private PositionDto positionDto;
+    private LanguageDto languageDto;
     private ImageDto imageDto;
-    private FileBuffer buffer;
-    private TextField firstName = new TextField();
-    private TextField middleName = new TextField();
-    private TextField lastName = new TextField();
-    private TextField email = new TextField();
-    private TextField phone = new TextField();
-    private TextField inn = new TextField();
-    private TextField position = new TextField();
+    private CompanyDto companyDto;
+    private WarehouseDto warehouseDto;
+    private ContractorDto customerDto;
+    private ContractorDto producerDto;
+    private ProjectDto projectDto;
+    private PrintingDocumentsDto printingDocumentsDto;
+    private StartScreenDto startScreenDto;
+    private NotificationsDto notificationsDto;
+    private TariffDto tariffDto;
 
-    public UserSettingsView(EmployeeService employeeService, PositionService positionService, ImageService imageService) {
+    private FileBuffer buffer;
+    private final TextField firstName = new TextField();
+    private final TextField middleName = new TextField();
+    private final TextField lastName = new TextField();
+    private final TextField email = new TextField();
+    private final TextField phone = new TextField();
+    private final TextField inn = new TextField();
+    private final TextField position = new TextField();
+    private final TextField numberOfAdFields = new TextField();
+    private final Checkbox refreshReports = new Checkbox();
+    private final Checkbox signatureInLet = new Checkbox();
+    private final ComboBox companyBox = new ComboBox();
+    private final ComboBox warehouseBox = new ComboBox();
+    private final ComboBox customerBox = new ComboBox();
+    private final ComboBox producerBox = new ComboBox();
+    private final ComboBox projectBox = new ComboBox();
+    private final ComboBox printingDocBox = new ComboBox();
+    private final ComboBox startScreenBox = new ComboBox();
+
+    public UserSettingsView(SettingsService settingsService,
+                            CompanyService companyService,
+                            WarehouseService warehouseService,
+                            ContractorService contractorService,
+                            ProjectService projectService,
+                            PrintingDocumentsService printingDocumentsService,
+                            StartScreenService startScreenService,
+                            PositionService positionService,
+                            EmployeeService employeeService,
+                            ImageService imageService,
+                            LanguageService languageService) throws IOException {
+        this.companyService = companyService;
+        this.warehouseService = warehouseService;
+        this.contractorService = contractorService;
+        this.projectService = projectService;
+        this.printingDocumentsService = printingDocumentsService;
+        this.startScreenService = startScreenService;
+        this.settingsService = settingsService;
+        this.languageService = languageService;
         this.employeeService = employeeService;
         this.positionService = positionService;
         this.imageService = imageService;
         dsUserSettingsView();
     }
 
-    public void dsUserSettingsView() {
-
+    public void dsUserSettingsView() throws IOException {
+        initialization();
         setSizeFull();
         horizontalLayout.add(createButton, closeButton, change, changeButtonPass);
-        verticalLayout.add(textFieldrow("Имя", firstName), textFieldrow("Отчество", middleName), textFieldrow("Фамилия", lastName),
-                textFieldrow("E-mail", email), textFieldrow("Телефон", phone), textFieldrow("Должность", position),
-                textFieldrow("ИНН", inn));
+        verticalLayout.add(
+                textFieldrow("Имя", firstName, employeeDto.getFirstName()),
+                textFieldrow("Отчество", middleName, employeeDto.getMiddleName()),
+                textFieldrow("Фамилия", lastName, employeeDto.getLastName()),
+                textFieldrow("E-mail", email, employeeDto.getEmail()),
+                textFieldrow("Телефон", phone, employeeDto.getPhone()),
+                textFieldrow("Должность", position, employeeDto.getPosition().getName()),
+                textFieldrow("ИНН", inn, employeeDto.getInn()));
         createButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
         changeButtonPass.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         verticalLayout2.add(imagePortrait());
         passLayout.add(buttonPass);
         mainLeftLayout.add(horizontalLayout, verticalLayout);
 
-
-        mainRightLayout.add(textDefault(), textDefault("Организация", buttonPen()),
-                textDefault("Склад", buttonPen()),
-
-                textDefault("Покупатель", buttonPlus()), textDefault("Поставщик", buttonPlus()),
-                textDefault("Проект", buttonPlus()), settings(), usSettings("Язык"),
-                usSettings("Печать документов"),
-                lablesRow("Число дополнительных полей в строке"), usSettings("Стартовый экран"),
-                forCheckbox("Обновлять отчеты автоматически"), areaRow("Подпись в отправляемых письмах"),
-                forCheckbox("Использовать новый редактор контрагентов"),
-                forCheckbox("Использовать новый редактор товаров"),
-                forCheckbox("Использовать одну кнопку для выбора из справочника товаров"), notification(),
+        fillFields();
+        mainRightLayout.add(textDefault(),
+                setComboBox("Company", companyBox, companyService.getAll()),
+                setComboBox("Warehouse", warehouseBox, warehouseService.getAll()),
+                setComboBox("Customer", customerBox, contractorService.getAll()),
+                setComboBox("Producer", producerBox, contractorService.getAll()),
+                setComboBox("Project", projectBox, projectService.getAll()),
+                settingsLabel(),
+                setDefaultLanguage(),
+                setComboBox("Printing Documents", printingDocBox, printingDocumentsService.getAll()),
+                labelsRow("Число дополнительных полей в строке", numberOfAdFields),
+                setComboBox("Start Screen", startScreenBox, startScreenService.getAll()),
+                forCheckbox("Обновлять отчеты автоматически", refreshReports, refreshReportsAuto),
+                forCheckbox("Подпись в отправляемых письмах", signatureInLet, signatureInLetters),
+//                forCheckbox("Использовать новый редактор контрагентов"),
+//                forCheckbox("Использовать новый редактор товаров"),
+//                forCheckbox("Использовать одну кнопку для выбора из справочника товаров"),
+                notificationLabel(),
                 createNotificationsGrid());
         mainHorisontalLayout.setWidth("70%");
         mainLeftLayout.add(namer(), passLayout, horizontalLayout, verticalLayout, verticalLayout2);
@@ -116,12 +205,40 @@ public class UserSettingsView extends VerticalLayout {
         verticalLayout.getElement().getStyle().set("padding", "40px");
         activatedCreateButton();
         activatedCloseButton();
-        fillFields();
     }
 
+    private void initialization() {
+        if (settingsService.getAll().isEmpty()) {
+            settingsDto = new SettingsDto();
+            System.out.println("Empty");
+        } else {
+            settingsDto = settingsService.getById(1L);
+        }
+        employeeDto = employeeService.getById(1L);
+        companyDto = settingsDto.getCompanyDto();
+        warehouseDto = settingsDto.getWarehouseDto();
+        customerDto = settingsDto.getCustomerDto();
+        producerDto = settingsDto.getProducerDto();
+        projectDto = settingsDto.getProjectDto();
+        printingDocumentsDto = settingsDto.getPrintingDocumentsDto();
+        numberOfAdditionalFields = settingsDto.getNumberOfAdditionalFieldsPerLine();
+        startScreenDto = settingsDto.getStartScreenDto();
+        refreshReportsAuto = settingsDto.isRefreshReportsAuto();
+        signatureInLetters = settingsDto.isSignatureInLetters();
+        notificationsDto = settingsDto.getNotificationsDto();
+
+    }
+
+    private HorizontalLayout setComboBox(String label, ComboBox comboBox, List list) {
+        Label companyLabel = new Label(label);
+        comboBox.setItems(list);
+        comboBox.setItemLabelGenerator(Object::toString);
+        companyLabel.getStyle().set("width", "90px");
+        comboBox.getStyle().set("width", "190px");
+        return new HorizontalLayout(companyLabel, comboBox, buttonPen());
+    }
 
     private HorizontalLayout namer() {
-
         HorizontalLayout hLayout = new HorizontalLayout();
         Label loginLabel = new Label("Логин");
         hLayout.add(loginLabel);
@@ -129,23 +246,9 @@ public class UserSettingsView extends VerticalLayout {
     }
 
     private Button buttonPen() {
-
         Button penButton = new Button(new Icon(VaadinIcon.PENCIL));
-
         penButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-
         return penButton;
-
-    }
-
-    private Button buttonPlus() {
-
-        Button plusButton = new Button(new Icon(VaadinIcon.PLUS));
-
-        plusButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-
-        return plusButton;
-
     }
 
 //    private Component addLoginInfo() {
@@ -159,53 +262,41 @@ public class UserSettingsView extends VerticalLayout {
 //    нужна реализация security
 
 
-    private HorizontalLayout lablesRow(String rowLabel) {
+    private HorizontalLayout labelsRow(String rowLabel, TextField textField) {
         HorizontalLayout hLayout = new HorizontalLayout();
         Label label = new Label(rowLabel);
-        TextField textField = new TextField();
+        textField.setValue(String.valueOf(numberOfAdditionalFields));
         hLayout.add(label, textField);
         label.getStyle().set("width", "90px");
         textField.getStyle().set("width", "190px");
         return hLayout;
     }
 
-    private HorizontalLayout textFieldrow(String lable, TextField field) {
+    private HorizontalLayout textFieldrow(String lable, TextField field, String value) {
         HorizontalLayout hLayout = new HorizontalLayout();
         Label label = new Label(lable);
+        if (value == null) {
+            value = "";
+        }
+        field.setValue(value);
         hLayout.add(label, field);
         label.getStyle().set("width", "90px");
         field.getStyle().set("width", "190px");
         return hLayout;
     }
 
-    private HorizontalLayout areaRow(String rowArea) {
-        HorizontalLayout areaLayout = new HorizontalLayout();
-        Label label = new Label(rowArea);
-        TextArea area = new TextArea();
-        areaLayout.add(label, area);
-        label.getStyle().set("width", "90px");
-        area.getStyle().set("width", "190px");
-        return areaLayout;
-    }
-
-
-    private HorizontalLayout textDefault(String someBox, Button someButton) {
-        HorizontalLayout WH = new HorizontalLayout();
-        Label someLabel = new Label(someBox);
-        ComboBox<String> ComboBox = new ComboBox<>();
-
-        WH.add(someLabel, ComboBox, someButton);
-        someLabel.getStyle().set("width", "90px");
-        ComboBox.getStyle().set("width", "190px");
-        return WH;
-    }
-
     private void fillFields() {
 //        employeeDto = employeeService.getById(employeeService.getPrincipal().getId()); раскоментировать когда будет security, а строчку ниже удалить
         try {
-            employeeDto = employeeService.getById(1L);
             positionDto = employeeDto.getPosition();
-            position.setValue(positionDto.getName() == null ? "" : positionDto.getName());
+            if (positionDto == null) {
+                positionDto = new PositionDto();
+                positionDto.setName("");
+            }
+            if (positionDto.getName() == null) {
+                positionDto.setName("");
+            }
+            position.setValue(positionDto.getName());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -222,6 +313,51 @@ public class UserSettingsView extends VerticalLayout {
                 UI.getCurrent().getPage().setLocation("http://localhost:4447/"));
     }
 
+    private void setNotificationSettings() {
+        SelectorDto buyerOrders = new SelectorDto(0L, toggleButtonList.get(0).getValue(),
+                checkboxListPost.get(0).getValue(), checkboxListPhone.get(0).getValue());
+        SelectorDto buyerInvoices = new SelectorDto(1L, toggleButtonList.get(1).getValue(),
+                checkboxListPost.get(1).getValue(), checkboxListPhone.get(1).getValue());
+        SelectorDto remainder = new SelectorDto(2L, toggleButtonList.get(2).getValue(),
+                checkboxListPost.get(2).getValue(), checkboxListPhone.get(2).getValue());
+        SelectorDto retail = new SelectorDto(3L, toggleButtonList.get(3).getValue(),
+                checkboxListPost.get(3).getValue(), checkboxListPhone.get(3).getValue());
+        SelectorDto tasks = new SelectorDto(4L, toggleButtonList.get(4).getValue(),
+                checkboxListPost.get(4).getValue(), checkboxListPhone.get(4).getValue());
+        SelectorDto dataExchange = new SelectorDto(5L, toggleButtonList.get(5).getValue(),
+                checkboxListPost.get(5).getValue(), checkboxListPhone.get(5).getValue());
+        SelectorDto scripts = new SelectorDto(6L, toggleButtonList.get(6).getValue(),
+                checkboxListPost.get(6).getValue(), checkboxListPhone.get(6).getValue());
+        SelectorDto onlineStores = new SelectorDto(7L, toggleButtonList.get(7).getValue(),
+                checkboxListPost.get(7).getValue(), checkboxListPhone.get(7).getValue());
+        if (notificationsDto == null) {
+            notificationsDto = new NotificationsDto();
+        }
+        notificationsDto.setBuyerOrders(buyerOrders);
+        notificationsDto.setBuyersInvoices(buyerInvoices);
+        notificationsDto.setRemainder(remainder);
+        notificationsDto.setRetail(retail);
+        notificationsDto.setTasks(tasks);
+        notificationsDto.setDataExchange(dataExchange);
+        notificationsDto.setScripts(scripts);
+        notificationsDto.setOnlineStores(onlineStores);
+    }
+
+    private SettingsDto saveSetting() {
+        settingsDto.setCompanyDto(companyDto);
+        settingsDto.setWarehouseDto(warehouseDto);
+        settingsDto.setCustomerDto(customerDto);
+        settingsDto.setProducerDto(producerDto);
+        settingsDto.setProjectDto(projectDto);
+        settingsDto.setPrintingDocumentsDto(printingDocumentsDto);
+        settingsDto.setNumberOfAdditionalFieldsPerLine(Integer.parseInt(numberOfAdFields.getValue()));
+        settingsDto.setStartScreenDto(startScreenDto);
+        settingsDto.setRefreshReportsAuto(refreshReports.getValue());
+        settingsDto.setSignatureInLetters(signatureInLet.getValue());
+        settingsDto.setNotificationsDto(notificationsDto);
+        return settingsDto;
+    }
+
     public void activatedCreateButton() {
         createButton.addClickListener(event -> {
             employeeDto.setFirstName(firstName.getValue());
@@ -231,11 +367,14 @@ public class UserSettingsView extends VerticalLayout {
             employeeDto.setPhone(phone.getValue());
             employeeDto.setInn(inn.getValue());
             positionDto.setName(position.getValue());
-            employeeDto.setPosition(positionDto);
-
+            Set<TariffDto> tariffDtos;
+            if (employeeDto.getTariff().isEmpty()) {
+                tariffDtos = new HashSet<>();
+                tariffDtos.add(TariffDto.getDefaultTarifDto());
+                employeeDto.setTariff(tariffDtos);
+            }
             if (positionService.getAll().stream()
-                    .filter(positionDto -> positionDto.getName().equalsIgnoreCase(position.getValue()))
-                    .findFirst().isPresent()
+                    .anyMatch(positionDto -> positionDto.getName().equalsIgnoreCase(position.getValue()))
             ) {
                 positionDto = positionService.getAll().stream()
                         .filter(positionDto -> positionDto.getName().equalsIgnoreCase(position.getValue()))
@@ -253,7 +392,8 @@ public class UserSettingsView extends VerticalLayout {
                 String filePath = "src/main/resources/static/avatars/" + new Date().getTime() + buffer.getFileName();
                 imageDto = new ImageDto(null, filePath, null);
                 imageService.create(imageDto);
-                imageDto = imageService.getAll().stream().filter(imageDto -> imageDto.getImageUrl().equals(filePath)).findFirst().get();
+                imageDto = imageService.getAll().stream().filter(imageDto ->
+                        imageDto.getImageUrl().equals(filePath)).findFirst().get();
                 employeeDto.setImage(imageDto);
                 employeeDto.setPosition(positionDto);
                 employeeService.update(employeeDto);
@@ -266,8 +406,34 @@ public class UserSettingsView extends VerticalLayout {
                 employeeDto.setPosition(positionDto);
                 employeeService.update(employeeDto);
             }
+
+            if (employeeService.getById(1L) == null) {
+                employeeDto.setId(1L);
+                employeeService.create(employeeDto);
+            } else {
+                employeeDto.setId(1L);
+                employeeService.update(employeeDto);
+            }
+
+            setComboBoxSettings();
+            setNotificationSettings();
+            saveSetting();
+            settingsService.update(settingsDto);
             UI.getCurrent().getPage().setLocation("http://localhost:4447/");
         });
+    }
+
+    private void setComboBoxSettings() {
+        companyDto = (CompanyDto) companyBox.getValue();
+        if (companyBox.getValue() == null && companyDto == null) {
+            companyDto = new CompanyDto();
+        }
+        warehouseDto = (WarehouseDto) warehouseBox.getValue();
+        customerDto = (ContractorDto) customerBox.getValue();
+        producerDto = (ContractorDto) producerBox.getValue();
+        projectDto = (ProjectDto) projectBox.getValue();
+        printingDocumentsDto = (PrintingDocumentsDto) printingDocBox.getValue();
+        startScreenDto = (StartScreenDto) startScreenBox.getValue();
     }
 
     private VerticalLayout imagePortrait() {
@@ -296,7 +462,7 @@ public class UserSettingsView extends VerticalLayout {
         return defLayout;
     }
 
-    private HorizontalLayout settings() {
+    private HorizontalLayout settingsLabel() {
         HorizontalLayout settLayout = new HorizontalLayout();
         Label setting = new Label("Настройки");
         setting.getStyle().set("color", "red");
@@ -306,28 +472,28 @@ public class UserSettingsView extends VerticalLayout {
     }
 
 
-    private HorizontalLayout usSettings(String someBox) {
-        HorizontalLayout usLayout = new HorizontalLayout();
-        Label usLabel = new Label(someBox);
-        ComboBox<String> usBox = new ComboBox<>();
-        usLayout.add(usLabel, usBox);
-        usLabel.getStyle().set("width", "90px");
-        usBox.getStyle().set("width", "190px");
-        return usLayout;
+    private HorizontalLayout setDefaultLanguage() {
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        Label currentLabel = new Label("Язык");
+        ComboBox<LanguageDto> currentBox = new ComboBox<>();
+        currentBox.setItems(languageService.getAll());
+        currentBox.setItemLabelGenerator(LanguageDto::getLanguage);
+        horizontalLayout.add(currentLabel, currentBox);
+        currentLabel.getStyle().set("width", "90px");
+        currentBox.getStyle().set("width", "190px");
+        return horizontalLayout;
     }
 
-    private HorizontalLayout forCheckbox(String text) {
-        HorizontalLayout checkboxLayout = new HorizontalLayout();
+    private HorizontalLayout forCheckbox(String text, Checkbox checkbox, boolean value) {
+        checkbox.setValue(value);
         Label checkboxLabel = new Label(text);
-        Checkbox checkbox = new Checkbox();
-        checkboxLayout.add(checkboxLabel, checkbox);
         checkboxLabel.getStyle().set("width", "90px");
         checkbox.getStyle().set("width", "190px");
-        return checkboxLayout;
+        return new HorizontalLayout(checkboxLabel, checkbox);
 
     }
 
-    private HorizontalLayout notification() {
+    private HorizontalLayout notificationLabel() {
         HorizontalLayout notifLayout = new HorizontalLayout();
         Label notifications = new Label("Уведомления");
         notifications.getStyle().set("color", "red");
@@ -345,96 +511,117 @@ public class UserSettingsView extends VerticalLayout {
     }
 
 
-    private Grid<NotificationsDto> createNotificationsGrid() {
+    private Grid<SelectorForViewDto> createNotificationsGrid() {
 
-        Grid<NotificationsDto> grid = new Grid<>();
+        System.out.println(gridNotifications.getPageSize());
 
-
-        grid.addColumn(new ComponentRenderer<>(notificationsDto ->
-                        buttonQuestion(notificationsDto.getDescription())))
+        gridNotifications.addColumn(new ComponentRenderer<>(selectorDto ->
+                buttonQuestion(selectorDto.getDescription())))
                 .setAutoWidth(true);
 
-        grid.addColumn(new ComponentRenderer<>(notificationsDto -> createLabel(notificationsDto.getLabel())))
+        gridNotifications.addColumn(new ComponentRenderer<>(selectorDto -> createLabel(selectorDto.getLabel())))
                 .setAutoWidth(true);
 
-        grid.addColumn(new ComponentRenderer<>(notificationsDto -> toggleButton(notificationsDto.isEnabled())))
+        gridNotifications.addColumn(new ComponentRenderer<>(selectorDto -> toggleButton(selectorDto.isActivate())))
                 .setWidth("30px");
 
-        grid.addColumn(new ComponentRenderer<>(notificationsDto -> createStyleCheckBox(notificationsDto.isEmailProvided())))
+        gridNotifications.addColumn(new ComponentRenderer<>(selectorDto -> createStyleCheckBoxPost(selectorDto.isPost())))
                 .setHeader("Почта")
                 .setWidth("30px");
-        grid.addColumn(new ComponentRenderer<>(notificationsDto -> createStyleCheckBox(notificationsDto.isPhoneProvided())))
+        gridNotifications.addColumn(new ComponentRenderer<>(selectorDto -> createStyleCheckBoxPhone(selectorDto.isPhone())))
                 .setHeader("Телефон")
                 .setWidth("30px");
-        grid.setItems(getAll());
-        return grid;
-
-
+        gridNotifications.setItems(getAll());
+        return gridNotifications;
     }
 
     private Button buttonQuestion(String text) {
-
         return QuestionButton.buttonQuestion(text);
     }
 
     private Label createLabel(String label) {
-
         Label label1 = new Label(label);
-
         label1.getStyle().set("margin-top", "8px");
         return label1;
-
     }
 
-    private Checkbox createStyleCheckBox(boolean value) {
-
+    private Checkbox createStyleCheckBoxPhone(boolean value) {
         Checkbox checkbox = new Checkbox();
         checkbox.setValue(value);
+        checkboxListPhone.add(checkbox);
         return checkbox;
+    }
 
+    private Checkbox createStyleCheckBoxPost(boolean value) {
+        Checkbox checkbox = new Checkbox();
+        checkbox.setValue(value);
+        checkboxListPost.add(checkbox);
+        return checkbox;
     }
 
     private ToggleButton toggleButton(boolean value) {
         ToggleButton toggle = new ToggleButton();
         toggle.setValue(value);
         toggle.setLabel("");
+        toggleButtonList.add(toggle);
         return toggle;
     }
 
-    private List<NotificationsDto> getAll() {
+    private List<SelectorForViewDto> getAll() {
+        if (notificationsDto == null) {
+            return Arrays.asList(
+                    createSelector(1L, true, "Уведомления о создании и просрочке заказа покупателя.",
+                            true, false, "Заказы покупателей"),
+                    createSelector(2L, true, "Уведомления о просрочке счета покупателя.",
+                            true, false, "Счета покупателей"),
+                    createSelector(3L, true, "Уведомления о снижении остатка товара ниже его неснижаемого остатка.",
+                            true, false, "Остатки"),
+                    createSelector(4L, true, "Уведомления об открытии и закрытии розничной смены.",
+                            true, false, "Розничная торговля"),
+                    createSelector(5L, true, "Уведомления об изменениях, связанных с задачами.",
+                            true, false, "Задачи"),
+                    createSelector(6L, true, "Уведомления об окончании импорта и экспорта.",
+                            true, false, "Обмен данными"),
+                    createSelector(7L, true, "Уведомления, настроенные для сценариев",
+                            true, false, "Сценарии"),
+                    createSelector(8L, true, "Уведомления об изменениях в настройках.",
+                            true, false, "Интернет-магазины"));
+        }
         return Arrays.asList(
-                createUser(1L, true, "Уведомления о создании и просрочке заказа покупателя.",
-                        true, false, "Заказы покупателей"),
-                createUser(2L, true, "Уведомления о просрочке счета покупателя.",
-                        true, false, "Счета покупателей"),
-                createUser(3L, true, "Уведомления о снижении остатка товара ниже его неснижаемого остатка.",
-                        true, false, "Остатки"),
-                createUser(4L, true, "Уведомления об открытии и закрытии розничной смены.",
-                        true, false, "Розничная торговля"),
-                createUser(5L, true, "Уведомления об изменениях, связанных с задачами.",
-                        true, false, "Задачи"),
-                createUser(6L, true, "Уведомления об окончании импорта и экспорта.",
-                        true, false, "Обмен данными"),
-                createUser(7L, true, "Уведомления, настроенные для сценариев",
-                        true, false, "Сценарии"),
-                createUser(8L, true, "Уведомления об изменениях в настройках.",
-                        true, false, "Интернет-магазины"));
-
+                createSelector(notificationsDto.getBuyerOrders().getId(), notificationsDto.getBuyerOrders().isActivate(),
+                        "Уведомления о создании и просрочке заказа покупателя.",
+                        notificationsDto.getBuyerOrders().isPost(), notificationsDto.getBuyerOrders().isPhone(), "Заказы покупателей"),
+                createSelector(notificationsDto.getBuyersInvoices().getId(), notificationsDto.getBuyersInvoices().isActivate(),
+                        "Уведомления о просрочке счета покупателя.",
+                        notificationsDto.getBuyersInvoices().isPost(), notificationsDto.getBuyersInvoices().isPhone(), "Счета покупателей"),
+                createSelector(notificationsDto.getRemainder().getId(), notificationsDto.getRemainder().isActivate(),
+                        "Уведомления о снижении остатка товара ниже его неснижаемого остатка.",
+                        notificationsDto.getRemainder().isPost(), notificationsDto.getRemainder().isPhone(), "Остатки"),
+                createSelector(notificationsDto.getRetail().getId(), notificationsDto.getRetail().isActivate(),
+                        "Уведомления об открытии и закрытии розничной смены.",
+                        notificationsDto.getRetail().isPost(), notificationsDto.getRetail().isPhone(), "Розничная торговля"),
+                createSelector(notificationsDto.getTasks().getId(), notificationsDto.getTasks().isActivate(),
+                        "Уведомления об изменениях, связанных с задачами.",
+                        notificationsDto.getTasks().isPost(), notificationsDto.getTasks().isPhone(), "Задачи"),
+                createSelector(notificationsDto.getDataExchange().getId(), notificationsDto.getDataExchange().isActivate(),
+                        "Уведомления об окончании импорта и экспорта.",
+                        notificationsDto.getDataExchange().isPost(), notificationsDto.getDataExchange().isPhone(), "Обмен данными"),
+                createSelector(notificationsDto.getScripts().getId(), notificationsDto.getScripts().isActivate(),
+                        "Уведомления, настроенные для сценариев",
+                        notificationsDto.getScripts().isPost(), notificationsDto.getScripts().isPhone(), "Сценарии"),
+                createSelector(notificationsDto.getOnlineStores().getId(), notificationsDto.getOnlineStores().isActivate(),
+                        "Уведомления об изменениях в настройках.",
+                        notificationsDto.getOnlineStores().isPost(), notificationsDto.getOnlineStores().isPhone(), "Интернет-магазины"));
 
     }
 
-    private NotificationsDto createUser(Long id, boolean isEnabled, String description, boolean isEmailProvided
-            , boolean isPhoneProvided, String label) {
-        NotificationsDto notificationsDto = new NotificationsDto();
-
-        notificationsDto.setId(id);
-        notificationsDto.setEnabled(isEnabled);
-        notificationsDto.setDescription(description);
-        notificationsDto.setEmailProvided(isEmailProvided);
-        notificationsDto.setPhoneProvided(isPhoneProvided);
-        notificationsDto.setLabel(label);
-
-        return notificationsDto;
+    private SelectorForViewDto createSelector(Long id,
+                                              boolean isEnabled,
+                                              String description,
+                                              boolean isEmailProvided,
+                                              boolean isPhoneProvided,
+                                              String label) {
+        return new SelectorForViewDto(id, isEnabled, description, isEmailProvided, isPhoneProvided, label);
     }
 
 }

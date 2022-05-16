@@ -44,4 +44,9 @@ public class CompanyDto {
     private String stamp;
 
     private LegalDetailDto legalDetailDto;
+
+    @Override
+    public String toString() {
+        return name == null ? "Company number: " + id : name;
+    }
 }
