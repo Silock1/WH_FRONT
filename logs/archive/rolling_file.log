@@ -1,2 +1,3 @@
-[INFO ] 2022-04-21 22:20:12.041 [http-nio-4447-exec-2] ProductionStageServiceImpl - Успешно выполнен запрос на получение списка ProductionStageDto
-[INFO ] 2022-04-21 22:20:12.046 [http-nio-4447-exec-2] ProductionStageServiceImpl - [ProductionStageDto(id=1, name=Основной этап, description=Описание основного этапа., generalAccess=false, archived=false, sortNumber=null, ownerDepartmentId=1, ownerDepartmentName=departmentName, ownerEmployeeId=1, ownerEmployeeName=lastName, dateOfEdit=Thu Apr 21 20:05:33 MSK 2022, editorEmployeeId=1, editorEmployeeName=lastName)]
+[INFO ] 2022-06-15 16:00:14.129 [http-nio-4447-exec-2] EmployeeServiceImpl - Список EmployeeDto получен успешно
+[INFO ] 2022-06-15 16:00:14.161 [http-nio-4447-exec-2] TasksServiceImpl - Успешно выполнен запрос на получение списка TasksDto
+[INFO ] 2022-06-15 21:10:17.078 [http-nio-4447-exec-3] PointOfSalesServiceImpl - Успешно выполнен запрос на получение списка PointOfSalesDto

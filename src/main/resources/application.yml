@@ -28,6 +28,7 @@ retrofit:
     image_url: api/images
     invoice_edit_url: api/invoice_edits   #404
     invoice_product_url: api/invoice_products   # []
+    invoice_received_url: api/invoice_received
     invoice_url: api/invoices   # []
     language_url: api/language
     legal_detail_url: api/legal_details

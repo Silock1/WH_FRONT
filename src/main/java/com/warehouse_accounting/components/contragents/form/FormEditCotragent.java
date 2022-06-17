@@ -26,19 +26,13 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.contragents.ContragentsList;
-import com.warehouse_accounting.models.dto.BankAccountDto;
-import com.warehouse_accounting.models.dto.ContractorDto;
+import com.warehouse_accounting.models.dto.*;
 import com.warehouse_accounting.models.dto.dadataDto.Example2;
-import com.warehouse_accounting.models.dto.ContractorFaceContactDto;
-import com.warehouse_accounting.models.dto.LegalDetailDto;
-import com.warehouse_accounting.services.interfaces.BankAccountService;
-import com.warehouse_accounting.services.interfaces.ContractorGroupService;
-import com.warehouse_accounting.services.interfaces.ContractorService;
-import com.warehouse_accounting.services.interfaces.DadataService;
-import com.warehouse_accounting.services.interfaces.TypeOfContractorService;
+import com.warehouse_accounting.services.interfaces.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @SpringComponent
@@ -49,6 +43,7 @@ public class FormEditCotragent extends VerticalLayout {
     private TypeOfContractorService typeOfContractorService;
     private ContractorService contractorService;
     private BankAccountService bankAccountService;
+    private TypeOfPriceService typeOfPriceService;
     private ContragentsList parent;
     private ContractorDto contractorDto;
     private DadataService dadata;
@@ -68,8 +63,10 @@ public class FormEditCotragent extends VerticalLayout {
     private TextArea comment;
     private TextField code;
     private TextField outerCode;
+    private TextField discountCard;
+    private Select<String> typeOfPrice;
 
-    // Поля для LegalDetais
+    // Поля для LegalDetails
     private TextField lastName;
     private TextField firstName;
     private TextField middleName;
@@ -87,12 +84,13 @@ public class FormEditCotragent extends VerticalLayout {
     private List<FormBankAccauntInner> formsBankAccount;
     private List<FormForFaceContactInner> formsFacesContact;
 
-    public FormEditCotragent(ContractorService contractorService, DadataService dadata, TypeOfContractorService typeOfContractorService, ContractorGroupService contractorGroupService, BankAccountService bankAccountService) {
+    public FormEditCotragent(ContractorService contractorService, DadataService dadata, TypeOfContractorService typeOfContractorService, ContractorGroupService contractorGroupService, BankAccountService bankAccountService, TypeOfPriceService typeOfPriceService) {
         this.contractorService = contractorService;
         this.typeOfContractorService = typeOfContractorService;
         this.contractorGroupService = contractorGroupService;
         this.dadata = dadata;
         this.bankAccountService = bankAccountService;
+        this.typeOfPriceService = typeOfPriceService;
     }
     public void bild(ContractorDto contractorDto){
         removeAll();
@@ -156,6 +154,7 @@ public class FormEditCotragent extends VerticalLayout {
             } else {
                 contractorDto.setOuterCode(outerCode.getValue());
             }
+
             // получение Данные LegalDetails
             contractorDto.getLegalDetailDto().setLastName(lastName.getValue());
             contractorDto.getLegalDetailDto().setFirstName(firstName.getValue());
@@ -177,41 +176,20 @@ public class FormEditCotragent extends VerticalLayout {
                 if (!form.isDeleted() && form.isNewAccount()) {
                     contractorDto.getBankAccountDtos().add(accountDto);
                 }
-                // получение Данные LegalDetails
-                contractorDto.getLegalDetailDto().setLastName(lastName.getValue());
-                contractorDto.getLegalDetailDto().setFirstName(firstName.getValue());
-                contractorDto.getLegalDetailDto().setMiddleName(middleName.getValue());
-                contractorDto.getLegalDetailDto().setAddress(addressLegal.getValue());
-                contractorDto.getLegalDetailDto().setCommentToAddress(commentToAddressLegal.getValue());
-                contractorDto.getLegalDetailDto().setInn(inn.getValue());
-                contractorDto.getLegalDetailDto().setOkpo(okpo.getValue());
-                contractorDto.getLegalDetailDto().setOgrnip(ogrnip.getValue());
-                contractorDto.getLegalDetailDto().setKpp(kpp.getValue());
-                contractorDto.getLegalDetailDto().setNumberOfTheCertificate(numberOfTheCertificate.getValue());
-                contractorDto.getLegalDetailDto().setDateOfTheCertificate(dateOfTheCertificate.getValue());
-                contractorDto.getLegalDetailDto().setTypeOfContractorName(typeOfContractor.getValue());
-
-
-                BankAccountDto accountDto;
-                for(FormBankAccauntInner form : formsBankAccount){
-                    accountDto = form.getBankAccount();
-                    if(!form.isDeleted() && form.isNewAccount()){
-                        contractorDto.getBankAccountDtos().add(accountDto);
-                    }
-                    if(!form.isDeleted() && !form.isNewAccount()){
-                        for(BankAccountDto bankAccountOld : contractorDto.getBankAccountDtos()){
-                            if(bankAccountOld.getId() == accountDto.getId()){
-                                bankAccountOld.setRcbic(accountDto.getRcbic());
-                                bankAccountOld.setBank(accountDto.getBank());
-                                bankAccountOld.setAddress(accountDto.getAddress());
-                                bankAccountOld.setCorrespondentAccount(accountDto.getCorrespondentAccount());
-                                bankAccountOld.setAccount(accountDto.getAccount());
-                                bankAccountOld.setMainAccount(accountDto.getMainAccount());
-                                bankAccountOld.setSortNumber(accountDto.getSortNumber());
-                            }
+                if (!form.isDeleted() && !form.isNewAccount()) {
+                    for (BankAccountDto bankAccountOld : contractorDto.getBankAccountDtos()) {
+                        if (bankAccountOld.getId() == accountDto.getId()) {
+                            bankAccountOld.setRcbic(accountDto.getRcbic());
+                            bankAccountOld.setBank(accountDto.getBank());
+                            bankAccountOld.setAddress(accountDto.getAddress());
+                            bankAccountOld.setCorrespondentAccount(accountDto.getCorrespondentAccount());
+                            bankAccountOld.setAccount(accountDto.getAccount());
+                            bankAccountOld.setMainAccount(accountDto.getMainAccount());
+                            bankAccountOld.setSortNumber(accountDto.getSortNumber());
                         }
                     }
                 }
+            }
            // Получение контактов аккаунттов или изменений в нём.
             ContractorFaceContactDto contact;
             for(FormForFaceContactInner form: formsFacesContact ){
