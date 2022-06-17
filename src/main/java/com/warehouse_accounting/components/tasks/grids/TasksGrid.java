@@ -13,10 +13,10 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.tasks.forms.TasksEditForm;
 import com.warehouse_accounting.models.dto.TasksDto;
 import com.warehouse_accounting.services.interfaces.TasksService;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -25,7 +25,6 @@ import java.util.List;
 @UIScope
 @Getter
 @Setter
-@Builder
 public class TasksGrid extends HorizontalLayout {
     private Grid<TasksDto> taskDtoGrid = new Grid<>(TasksDto.class, false);
     private List<TasksDto> tasksDto;
@@ -85,7 +84,7 @@ public class TasksGrid extends HorizontalLayout {
     private void editButton(TasksDto tasksDto1){
         Button edit = new Button("Edit");
         edit.addClickListener(event -> {
-            tasksEditForm.build(tasksDto1);
+
         });
     }
 
