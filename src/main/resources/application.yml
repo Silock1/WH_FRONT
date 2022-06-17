@@ -55,6 +55,7 @@ retrofit:
     units_of_measure_url: api/unitsOfMeasure
     goods_to_realize_get_url: api/goodstorealizeget
     goods_to_realize_give_url: api/goodstorealizegive
+    invoice_received_url: api/invoice_received
     #    customer_order_url: api/customer_orders
     tasks_url: api/tasks_employee
 
