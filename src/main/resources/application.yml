@@ -26,6 +26,7 @@ retrofit:
     employee_url: api/employees
     feed_url: api/feed
     image_url: api/images
+    invoice_received_url: api/invoice_received
     invoice_edit_url: api/invoice_edits   #404
     invoice_product_url: api/invoice_products   # []
     invoice_url: api/invoices   # []
