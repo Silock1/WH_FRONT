@@ -9,6 +9,7 @@ import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.goods.GoodsAndServiceView;
 import com.warehouse_accounting.components.goods.filter.GoodsFilter;
 import com.warehouse_accounting.components.contragents.movements.MovementView;
+import com.warehouse_accounting.components.goods.*;
 import com.warehouse_accounting.components.priceList.PriceList;
 import com.warehouse_accounting.services.interfaces.ContractorService;
 import com.warehouse_accounting.services.interfaces.DepartmentService;
@@ -30,6 +31,7 @@ public class GoodsSubMenuView extends VerticalLayout {
 
     private final MovementView movementView;
     private final PriceList priceList;
+    private final WriteOffs writeOffs;
     private GoodsAndServiceView goodsAndService;
     private final Div pageContent = new Div();
 
@@ -41,9 +43,10 @@ public class GoodsSubMenuView extends VerticalLayout {
     private final ProductGroupService productGroupService;
 
 
-    public GoodsSubMenuView(PriceList priceList, MovementView movementView, GoodsAndServiceView goodsAndService, GoodsFilter goodsFilter, ProductService productService, EmployeeService employeeService, DepartmentService departmentService, ContractorService contractorService, ProductGroupService productGroupService) {
+    public GoodsSubMenuView(PriceList priceList, MovementView movementView, GoodsAndServiceView goodsAndService, GoodsFilter goodsFilter, ProductService productService, EmployeeService employeeService, DepartmentService departmentService, ContractorService contractorService, ProductGroupService productGroupService, WriteOffs writeOffs) {
         this.priceList = priceList;
         this.movementView = movementView;
+        this.writeOffs = writeOffs;
         this.goodsAndService = goodsAndService;
         this.goodsFilter = goodsFilter;
         this.productService = productService;
@@ -80,7 +83,7 @@ public class GoodsSubMenuView extends VerticalLayout {
                     break;
                 case "Списания":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Списания"));
+                    pageContent.add(writeOffs); //списания
                     break;
                 case "Инвентаризация":
                     pageContent.removeAll();
