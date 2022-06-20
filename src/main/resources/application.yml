@@ -32,7 +32,7 @@ retrofit:
     language_url: api/language
     legal_detail_url: api/legal_details
     movement_url: api/movements   # []
-    priceList_url: api/priceLists   # []
+    priceList_url: api/price_list   # []
     printing_documents_url: api/printing_documents
     payments_url: api/payments    #todo проверить связь с taskDto
     position_url: api/positions

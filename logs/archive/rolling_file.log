@@ -1,4 +1,4 @@
-[INFO ] 2022-06-17 02:17:08.444 [http-nio-4447-exec-5] ProjectServiceImpl - Успешно выполнен запрос на получение списка ProjectDto
-[INFO ] 2022-06-17 02:17:08.455 [http-nio-4447-exec-5] LanguageService - Успешно выполнен запрос на получение списка Language
-[INFO ] 2022-06-17 02:17:08.461 [http-nio-4447-exec-5] PrintingDocumentsServiceImpl - Успешно выполнен запрос на получение списка PrintingDocuments
-[INFO ] 2022-06-17 02:17:08.471 [http-nio-4447-exec-5] StartScreenServiceImpl - Успешно выполнен запрос на получение списка StartScreen
+[INFO ] 2022-06-20 15:10:52.093 [http-nio-4447-exec-5] EmployeeServiceImpl - Список EmployeeDto получен успешно
+[INFO ] 2022-06-20 15:10:52.102 [http-nio-4447-exec-5] ProductGroupServiceImpl - Успешно выполнен запрос на получение ProductGroupDto по id: 1
+[INFO ] 2022-06-20 15:10:52.109 [http-nio-4447-exec-5] ProductGroupServiceImpl - Успешно выполнен запрос на получение списка ProductGroupDto
+[INFO ] 2022-06-20 15:10:52.179 [http-nio-4447-exec-5] ProductServiceImpl - Успешно выполнен запрос на получение списка ProductDto
