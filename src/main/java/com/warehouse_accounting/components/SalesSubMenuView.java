@@ -10,6 +10,7 @@ import com.warehouse_accounting.components.sales.ComissionerReports;
 import com.warehouse_accounting.components.sales.CustomerGoodsToRealize;
 import com.warehouse_accounting.components.sales.CustomerInvoices;
 import com.warehouse_accounting.components.sales.CustomerOrders;
+import com.warehouse_accounting.components.sales.Shipments;
 import com.warehouse_accounting.components.sales.filter.CustomerOrdersFilter;
 import com.warehouse_accounting.components.sales.filter.GoodsToRealizeFilter;
 import com.warehouse_accounting.components.sales.filter.SalesShipmentsFilter;
@@ -20,11 +21,9 @@ import com.warehouse_accounting.services.interfaces.DepartmentService;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.GoodsToRealizeGetService;
 import com.warehouse_accounting.services.interfaces.GoodsToRealizeGiveService;
-import com.warehouse_accounting.components.sales.Shipments;
 import com.warehouse_accounting.services.interfaces.ProjectService;
 import com.warehouse_accounting.services.interfaces.WarehouseService;
 
-import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -41,6 +40,7 @@ public class SalesSubMenuView extends VerticalLayout {
     private final GoodsToRealizeFilter filterLayout;
     private final SalesShipmentsFilter salesShipmentsFilter;
     private final CustomerOrdersFilter customerOrdersFilter;
+    private final GoodsToRealizeFilter goodsToRealizeFilter;
 
     private GoodsToRealizeGiveService goodsToRealizeGiveService;
     private GoodsToRealizeGetService goodsToRealizeGetService;
@@ -57,11 +57,13 @@ public class SalesSubMenuView extends VerticalLayout {
     private DepartmentService departmentService;
     private EmployeeService employeeService;
 
-    public SalesSubMenuView(GoodsToRealizeFilter filterLayout, SalesShipmentsFilter salesShipmentsFilter,
+    public SalesSubMenuView(SalesShipmentsFilter salesShipmentsFilter,
                             CustomerOrdersFilter customerOrdersFilter, GoodsToRealizeGiveService goodsToRealizeGiveService,
                             GoodsToRealizeGetService goodsToRealizeGetService, CompanyService companyService,
                             ContractorService contractorService, ContractService contractService, ProjectService projectService,
-                            WarehouseService warehouseService, DepartmentService departmentService, EmployeeService employeeService) {
+                            WarehouseService warehouseService, DepartmentService departmentService, EmployeeService employeeService,
+                            GoodsToRealizeFilter filterLayout, GoodsToRealizeFilter goodsToRealizeFilter) {
+        this.goodsToRealizeFilter = goodsToRealizeFilter;
         this.customerOrdersFilter = customerOrdersFilter;
         this.companyService = companyService;
         this.contractorService = contractorService;
