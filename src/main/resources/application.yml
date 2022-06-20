@@ -6,6 +6,7 @@ retrofit:
 
 
   restServices:
+    invoice_received_url: api/invoice_received
     acceptance_url: api/acceptances   #404
     adjustments_url: api/adjustments
     application_url: api/applications

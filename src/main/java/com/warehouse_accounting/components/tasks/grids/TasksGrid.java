@@ -16,6 +16,7 @@ import com.warehouse_accounting.services.interfaces.TasksService;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -81,8 +82,10 @@ public class TasksGrid extends HorizontalLayout {
                 .withEventHandler("handleClick", this::deleteButton);
     }
     private void editButton(TasksDto tasksDto1){
-        tasksEditForm.build(tasksDto1);
-        add(tasksEditForm);
+        Button edit = new Button("Edit");
+        edit.addClickListener(event -> {
+
+        });
     }
 
     private  void deleteButton(TasksDto tasksDto){
