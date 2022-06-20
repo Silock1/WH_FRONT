@@ -4,7 +4,6 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
@@ -16,79 +15,32 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
-import com.warehouse_accounting.components.purchases.filter.AccountsPayableFilter;
-import com.warehouse_accounting.components.purchases.forms.CreateInvoiceForm;
-import com.warehouse_accounting.components.purchases.grids.SupplierInvoiceGridLayout;
-import com.warehouse_accounting.services.impl.SupplierInvoiceServiceImpl;
-import com.warehouse_accounting.services.interfaces.CompanyService;
-import com.warehouse_accounting.services.interfaces.ContractService;
-import com.warehouse_accounting.services.interfaces.ContractorService;
-import com.warehouse_accounting.services.interfaces.DepartmentService;
-import com.warehouse_accounting.services.interfaces.EmployeeService;
-import com.warehouse_accounting.services.interfaces.ProductService;
-import com.warehouse_accounting.services.interfaces.ProjectService;
-import com.warehouse_accounting.services.interfaces.SupplierInvoiceService;
-import com.warehouse_accounting.services.interfaces.WarehouseService;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.warehouse_accounting.components.purchases.grids.AccountsPayableGridLayout;
 
 /*
 Счета поставщиков
  */
 public class AccountsPayable extends VerticalLayout {
 
+    private AccountsPayableGridLayout accountsPayableGridLayout;
     private final TextField textField = new TextField();
     private final Div parentLayer;
-    private AccountsPayableFilter accountsPayableFilter;
-    private final WarehouseService warehouseService;
-    private final ContractService contractService;
-    private final ContractorService contractorService;
-    private final ProjectService projectService;
-    private final EmployeeService employeeService;
-    private final DepartmentService departmentService;
-    private final ProductService productService;
-    private final CompanyService companyService;
 
-    private Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://localhost:4446")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-    private SupplierInvoiceService supplierInvoiceService = new SupplierInvoiceServiceImpl("/api/supplier_invoices",retrofit);
-
-    public AccountsPayable(Div parentLayer, WarehouseService warehouseService, ContractService contractService,
-                           ContractorService contractorService, ProjectService projectService, EmployeeService employeeService,
-                           DepartmentService departmentService, ProductService productService, CompanyService companyService) {
+    public AccountsPayable(Div parentLayer) {
         this.parentLayer = parentLayer;
-        this.warehouseService = warehouseService;
-        this.contractService = contractService;
-        this.contractorService = contractorService;
-        this.projectService = projectService;
-        this.employeeService = employeeService;
-        this.departmentService = departmentService;
-        this.productService = productService;
-        this.companyService = companyService;
-        this.accountsPayableFilter = new AccountsPayableFilter(warehouseService, contractService,
-                contractorService, projectService, employeeService, departmentService, productService, companyService);
-        SupplierInvoiceGridLayout.parentLayer = parentLayer;
-        SupplierInvoiceGridLayout.returnLayer = this;
+        this.accountsPayableGridLayout = new AccountsPayableGridLayout(textField);
         Div pageContent = new Div();
-
+        pageContent.add(accountsPayableGridLayout);
         pageContent.setSizeFull();
-        add(getGroupButtons(), accountsPayableFilter, pageContent);
+        add(getGroupButtons(), pageContent);
     }
-
 
     private HorizontalLayout getGroupButtons() {
         HorizontalLayout groupControl = new HorizontalLayout();
 
         Button helpButton = new Button(new Icon(VaadinIcon.QUESTION_CIRCLE));
         helpButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
-        helpButton.addClickListener(e->{
+        helpButton.addClickListener(e -> {
             Notification.show("Счета поставщиков помогают планировать оплату товаров. Счета не меняют количество товара на складе — для этого нужно создать приемку, а чтобы учесть оплату — платеж.\n" +
                     "\n" +
                     "Дату оплаты можно запланировать. Не оплаченные вовремя счета отображаются в разделе Показатели.\n" +
@@ -107,20 +59,8 @@ public class AccountsPayable extends VerticalLayout {
         Button addOrderButton = new Button("Счет", new Icon(VaadinIcon.PLUS));
         addOrderButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
-        //--------- Реализация кнопки Счет - временно здесь ----------------//
-        addOrderButton.addClickListener(event -> {
-            removeAll();
-            add(getGroupButtons());
-            CreateInvoiceForm invoiceForm = new CreateInvoiceForm(parentLayer, this);
-            parentLayer.removeAll();
-            parentLayer.add(invoiceForm);
-        });
-
         Button addFilterButton = new Button("Фильтр");
         addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        addFilterButton.addClickListener(e->
-                accountsPayableFilter.setVisible(!accountsPayableFilter.isVisible())
-        );
 
         TextField searchField = new TextField();
         searchField.setPlaceholder("Номер или комментарий");
@@ -158,9 +98,11 @@ public class AccountsPayable extends VerticalLayout {
         editItem.setAlignItems(Alignment.CENTER);
 
         MenuItem editMenu = editMenuBar.addItem(editItem);
-
-        editMenu.getSubMenu().addItem("Удалить выбранные", menuItemClickEvent -> {
-            deleteSelected();
+        editMenu.getSubMenu().addItem("Удалить", menuItemClickEvent -> {
+            int selected = accountsPayableGridLayout.getInvoiceAccountsPayableDtoGrid().asMultiSelect().getSelectedItems().size();
+            Notification notification = new Notification(String.format("Выделено для удаления %d", selected),
+                    3000, Notification.Position.MIDDLE);
+            notification.open();
         });
 
         editMenu.getSubMenu().addItem("Копировать", menuItemClickEvent -> {
@@ -180,44 +122,12 @@ public class AccountsPayable extends VerticalLayout {
 
         });
 
+
         HorizontalLayout groupEdit = new HorizontalLayout();
         groupEdit.add(textField, editMenuBar);
         groupEdit.setSpacing(false);
         groupEdit.setAlignItems(Alignment.CENTER);
         return groupEdit;
-    }
-
-    private void deleteSelected(){ // Метод удаляет выбранные счета
-
-        Button delete = new Button("Удалить");
-        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
-        Button cancel = new Button("Отмена");
-        HorizontalLayout buttonLayout = new HorizontalLayout(cancel,delete);
-
-        Dialog dialog = new Dialog();
-        dialog.add("Подтвердите удаление");
-        dialog.add(new VerticalLayout());
-        dialog.add(buttonLayout);
-
-        dialog.open();
-
-        delete.addClickListener(event -> {
-            Set<Long> setId = new HashSet<>();
-            setId.addAll(SupplierInvoiceGridLayout.gridEntityId);
-            List<Long> listId = new ArrayList<>();
-            listId.addAll(setId);
-            SupplierInvoiceGridLayout.gridEntityId.removeAll(SupplierInvoiceGridLayout.gridEntityId);
-
-            for(int i=0; i<listId.size(); i++){
-                supplierInvoiceService.deleteById(listId.get(i));
-            }
-
-            parentLayer.removeAll();
-            parentLayer.add(this, SupplierInvoiceGridLayout.initSupplierInvoiceGrid());
-            dialog.close();
-        });
-
-        cancel.addClickListener(event -> dialog.close());
     }
 
     private HorizontalLayout getStatusMenuBar() {
