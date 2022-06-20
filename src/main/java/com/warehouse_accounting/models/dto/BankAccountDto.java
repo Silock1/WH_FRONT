@@ -17,7 +17,9 @@ public class BankAccountDto {
 
     private String bank;
 
+
     private String address;
+//    public Address address;
 
     private String correspondentAccount;
 
@@ -26,4 +28,5 @@ public class BankAccountDto {
     private Boolean mainAccount;
 
     private String sortNumber;
+
 }

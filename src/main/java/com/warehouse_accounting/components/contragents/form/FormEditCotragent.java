@@ -1,8 +1,6 @@
 package com.warehouse_accounting.components.contragents.form;
 
 
-
-
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.accordion.AccordionPanel;
@@ -26,9 +24,18 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.contragents.ContragentsList;
-import com.warehouse_accounting.models.dto.*;
+import com.warehouse_accounting.models.dto.BankAccountDto;
+import com.warehouse_accounting.models.dto.ContractorDto;
+import com.warehouse_accounting.models.dto.ContractorFaceContactDto;
+import com.warehouse_accounting.models.dto.LegalDetailDto;
+import com.warehouse_accounting.models.dto.TypeOfPriceDto;
 import com.warehouse_accounting.models.dto.dadataDto.Example2;
-import com.warehouse_accounting.services.interfaces.*;
+import com.warehouse_accounting.services.interfaces.BankAccountService;
+import com.warehouse_accounting.services.interfaces.ContractorGroupService;
+import com.warehouse_accounting.services.interfaces.ContractorService;
+import com.warehouse_accounting.services.interfaces.DadataService;
+import com.warehouse_accounting.services.interfaces.TypeOfContractorService;
+import com.warehouse_accounting.services.interfaces.TypeOfPriceService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +54,9 @@ public class FormEditCotragent extends VerticalLayout {
     private ContragentsList parent;
     private ContractorDto contractorDto;
     private DadataService dadata;
+    private TypeOfPriceService typeOfPriceService;
     private boolean newForm = false;
+
 
     private Button edit = new Button ("Изменить");
     private Button close = new Button ("Закрыть");
@@ -56,6 +65,8 @@ public class FormEditCotragent extends VerticalLayout {
     private ComboBox<String> status;
     private ComboBox<String> group;
     private TextField phone;
+    private TextField discountCard;
+    private Select <String> typeOfPrice;
     private TextField fax;
     private TextField emil;
     private TextArea address;
@@ -109,7 +120,7 @@ public class FormEditCotragent extends VerticalLayout {
                     .code("")
                     .outerCode("")
                     .build();
-            }
+        }
         else {
             contractorDto = contractorService.getById(contractorDto.getId());
             newForm = false;
@@ -176,57 +187,80 @@ public class FormEditCotragent extends VerticalLayout {
                 if (!form.isDeleted() && form.isNewAccount()) {
                     contractorDto.getBankAccountDtos().add(accountDto);
                 }
-                if (!form.isDeleted() && !form.isNewAccount()) {
-                    for (BankAccountDto bankAccountOld : contractorDto.getBankAccountDtos()) {
-                        if (bankAccountOld.getId() == accountDto.getId()) {
-                            bankAccountOld.setRcbic(accountDto.getRcbic());
-                            bankAccountOld.setBank(accountDto.getBank());
-                            bankAccountOld.setAddress(accountDto.getAddress());
-                            bankAccountOld.setCorrespondentAccount(accountDto.getCorrespondentAccount());
-                            bankAccountOld.setAccount(accountDto.getAccount());
-                            bankAccountOld.setMainAccount(accountDto.getMainAccount());
-                            bankAccountOld.setSortNumber(accountDto.getSortNumber());
-                        }
-                    }
-                }
-            }
-           // Получение контактов аккаунттов или изменений в нём.
-            ContractorFaceContactDto contact;
-            for(FormForFaceContactInner form: formsFacesContact ){
-                contact = form.getContactFace();
-                if(!form.isDeleted() && form.isNewFaceContact()){
-                    contractorDto.getContacts().add(contact);
-                }
-                if(!form.isDeleted() && !form.isNewFaceContact()){
-                    for(ContractorFaceContactDto contactOld : contractorDto.getContacts()){
-                        if(contactOld.getId() == contact.getId()){
-                            contactOld.setAllNames(contact.getAllNames());
-                            contactOld.setPosition(contact.getPosition());
-                            contactOld.setPhone(contactOld.getPhone());
-                            contactOld.setEmail(contact.getEmail());
-                            contactOld.setComment(contact.getComment());
-                        }
-                    }
-                }
-            }
-            if(newForm){
-                contractorService.create(contractorDto);
-            }else {
-                contractorService.update(contractorDto);
-            }
-            //Удобно в тестах для отладки пока оставить.
-            System.out.println("Отправил:" + contractorDto);
+                // получение Данные LegalDetails
+                contractorDto.getLegalDetailDto().setLastName(lastName.getValue());
+                contractorDto.getLegalDetailDto().setFirstName(firstName.getValue());
+                contractorDto.getLegalDetailDto().setMiddleName(middleName.getValue());
+                contractorDto.getLegalDetailDto().setAddress(addressLegal.getValue());
+                contractorDto.getLegalDetailDto().setCommentToAddress(commentToAddressLegal.getValue());
+                contractorDto.getLegalDetailDto().setInn(inn.getValue());
+                contractorDto.getLegalDetailDto().setOkpo(okpo.getValue());
+                contractorDto.getLegalDetailDto().setOgrnip(ogrnip.getValue());
+                contractorDto.getLegalDetailDto().setKpp(kpp.getValue());
+                contractorDto.getLegalDetailDto().setNumberOfTheCertificate(numberOfTheCertificate.getValue());
+                contractorDto.getLegalDetailDto().setDateOfTheCertificate(dateOfTheCertificate.getValue());
+                contractorDto.getLegalDetailDto().setTypeOfContractorName(typeOfContractor.getValue());
 
-            removeAll();
-            parent.showButtonEndGrid(true);
+
+                BankAccountDto accountDto1;
+                for(FormBankAccauntInner form2 : formsBankAccount){
+                    accountDto1 = form2.getBankAccount();
+                    if(!form2.isDeleted() && form2.isNewAccount()){
+                        contractorDto.getBankAccountDtos().add(accountDto1);
+                    }
+                    if(!form2.isDeleted() && !form2.isNewAccount()){
+                        for(BankAccountDto bankAccountOld : contractorDto.getBankAccountDtos()){
+                            if(bankAccountOld.getId() == accountDto1.getId()){
+                                bankAccountOld.setRcbic(accountDto1.getRcbic());
+                                bankAccountOld.setBank(accountDto1.getBank());
+                                bankAccountOld.setAddress(accountDto1.getAddress());
+                                bankAccountOld.setCorrespondentAccount(accountDto1.getCorrespondentAccount());
+                                bankAccountOld.setAccount(accountDto1.getAccount());
+                                bankAccountOld.setMainAccount(accountDto1.getMainAccount());
+                                bankAccountOld.setSortNumber(accountDto1.getSortNumber());
+                            }
+                        }
+                    }
+                }
+                // Получение контактов аккаунттов или изменений в нём.
+                ContractorFaceContactDto contact;
+                for(FormForFaceContactInner form3: formsFacesContact ){
+                    contact = form3.getContactFace();
+                    if(!form3.isDeleted() && form3.isNewFaceContact()){
+                        contractorDto.getContacts().add(contact);
+                    }
+                    if(!form3.isDeleted() && !form3.isNewFaceContact()){
+                        for(ContractorFaceContactDto contactOld : contractorDto.getContacts()){
+                            if(contactOld.getId() == contact.getId()){
+                                contactOld.setAllNames(contact.getAllNames());
+                                contactOld.setPosition(contact.getPosition());
+                                contactOld.setPhone(contactOld.getPhone());
+                                contactOld.setEmail(contact.getEmail());
+                                contactOld.setComment(contact.getComment());
+                            }
+                        }
+                    }
+                }
+                if(newForm){
+                    contractorService.create(contractorDto);
+                }else {
+                    contractorService.update(contractorDto);
+                }
+                //Удобно в тестах для отладки пока оставить.
+                System.out.println("Отправил:" + contractorDto);
+
+                removeAll();
+                parent.showButtonEndGrid(true);
+            }
+            close = new Button("Закрыть");
+            close.addClickListener(e1 -> {
+                removeAll();
+                parent.showButtonEndGrid(false);
+            });
+            button.add(close,edit);
+            button.setAlignItems(Alignment.CENTER);
+//        return button;
         });
-        close = new Button("Закрыть");
-        close.addClickListener(e -> {
-            removeAll();
-            parent.showButtonEndGrid(false);
-        });
-        button.add(close,edit);
-        button.setAlignItems(Alignment.CENTER);
         return button;
     }
     private HorizontalLayout getNameContragent(ContractorDto contractorDto) {
@@ -242,11 +276,11 @@ public class FormEditCotragent extends VerticalLayout {
         VerticalLayout leftLayout = new VerticalLayout();
         leftLayout.add(getContragentAccordion(), getFaceContactAccordion(),getLegаlDetailAccordion(),getSalasEndPriceAccordion(), getAccessAccordion());
         leftLayout.setWidth("450px");
-      return leftLayout;
+        return leftLayout;
     }
     private VerticalLayout rightGroupButtonLayout() {
         VerticalLayout rightLayout = new VerticalLayout();
-            rightLayout.setWidth("500px");
+        rightLayout.setWidth("500px");
         Tab details = new Tab("События");
         Tab payment = new Tab("Задачи");
         Tab shipping = new Tab("Документы");
@@ -329,7 +363,7 @@ public class FormEditCotragent extends VerticalLayout {
         faceContacts.setOpened(true);
         return faceContacts;
     }
-        //<Блок реквизиты
+    //<Блок реквизиты
     private AccordionPanel getLegаlDetailAccordion(){
         if(contractorDto.getLegalDetailDto() == null) contractorDto.setLegalDetailDto(new LegalDetailDto());
 
@@ -349,14 +383,14 @@ public class FormEditCotragent extends VerticalLayout {
             typeOfContractor.setValue("Юридическое лицо");
         }
         typeOfContractor.addFocusListener(e ->{
-           if(typeOfContractor.getValue().equals("Физическое лицо")){
-               forms.removeAll();
-               forms.add(getFormForContractorType("Физическое лицо"));
-           }
-           if (typeOfContractor.getValue().equals("Индивидуальный предприниматель")) {
-               forms.removeAll();
-               forms.add(getFormForContractorType("Индивидуальный предприниматель"));
-           }
+            if(typeOfContractor.getValue().equals("Физическое лицо")){
+                forms.removeAll();
+                forms.add(getFormForContractorType("Физическое лицо"));
+            }
+            if (typeOfContractor.getValue().equals("Индивидуальный предприниматель")) {
+                forms.removeAll();
+                forms.add(getFormForContractorType("Индивидуальный предприниматель"));
+            }
             if (typeOfContractor.getValue().equals("Юридическое лицо")) {
                 forms.removeAll();
                 forms.add(getFormForContractorType("Юридическое лицо"));
@@ -459,36 +493,36 @@ public class FormEditCotragent extends VerticalLayout {
 
         switch (type) {
             case "Индивидуальный предприниматель":
-            formLayout.addFormItem(inn, "ИНН");
-            formLayout.addFormItem(lastName, "Фамилия");
-            formLayout.addFormItem(firstName, "Имя");
-            formLayout.addFormItem(middleName, "Отчество");
-            formLayout.addFormItem(addressLegal, "Адрес регистрации");
-            formLayout.addFormItem(commentToAddressLegal, "Комментарий к аресу");
-            formLayout.addFormItem(okpo, "ОКПО");
-            formLayout.addFormItem(ogrnip, "ОГРНИП");
-            formLayout.addFormItem(numberOfTheCertificate, "Номер свидетельства");
-            formLayout.addFormItem(dateOfTheCertificate, "Дата свидетельства");
-            break;
+                formLayout.addFormItem(inn, "ИНН");
+                formLayout.addFormItem(lastName, "Фамилия");
+                formLayout.addFormItem(firstName, "Имя");
+                formLayout.addFormItem(middleName, "Отчество");
+                formLayout.addFormItem(addressLegal, "Адрес регистрации");
+                formLayout.addFormItem(commentToAddressLegal, "Комментарий к аресу");
+                formLayout.addFormItem(okpo, "ОКПО");
+                formLayout.addFormItem(ogrnip, "ОГРНИП");
+                formLayout.addFormItem(numberOfTheCertificate, "Номер свидетельства");
+                formLayout.addFormItem(dateOfTheCertificate, "Дата свидетельства");
+                break;
 
             case "Физическое лицо":
-            formLayout.addFormItem(inn, "ИНН");
-            formLayout.addFormItem(lastName, "Фамилия");
-            formLayout.addFormItem(firstName, "Имя");
-            formLayout.addFormItem(middleName, "Отчество");
-            formLayout.addFormItem(addressLegal, "Адрес регистрации");
-            formLayout.addFormItem(commentToAddressLegal, "Комментарий к аресу");
-            break;
+                formLayout.addFormItem(inn, "ИНН");
+                formLayout.addFormItem(lastName, "Фамилия");
+                formLayout.addFormItem(firstName, "Имя");
+                formLayout.addFormItem(middleName, "Отчество");
+                formLayout.addFormItem(addressLegal, "Адрес регистрации");
+                formLayout.addFormItem(commentToAddressLegal, "Комментарий к аресу");
+                break;
 
             case "Юридическое лицо":
-            formLayout.addFormItem(inn, "ИНН");
-            formLayout.addFormItem(firstName, "Полное наименование");
-            formLayout.addFormItem(addressLegal, "Юридический адрес");
-            formLayout.addFormItem(commentToAddressLegal, "Комментарий к аресу");
-            formLayout.addFormItem(kpp, "КПП");
-            formLayout.addFormItem(ogrnip, "ОГРН");
-            formLayout.addFormItem(okpo, "ОКПО");
-            break;
+                formLayout.addFormItem(inn, "ИНН");
+                formLayout.addFormItem(firstName, "Полное наименование");
+                formLayout.addFormItem(addressLegal, "Юридический адрес");
+                formLayout.addFormItem(commentToAddressLegal, "Комментарий к аресу");
+                formLayout.addFormItem(kpp, "КПП");
+                formLayout.addFormItem(ogrnip, "ОГРН");
+                formLayout.addFormItem(okpo, "ОКПО");
+                break;
         }
         VerticalLayout buttins = new VerticalLayout();
         Button button = new Button("Запросить по ИНН");
