@@ -6,6 +6,7 @@ retrofit:
 
 
   restServices:
+    invoice_received_url: api/invoice_received
     acceptance_url: api/acceptances   #404
     adjustments_url: api/adjustments
     application_url: api/applications
@@ -26,6 +27,7 @@ retrofit:
     employee_url: api/employees
     feed_url: api/feed
     image_url: api/images
+    invoice_received_url: api/invoice_received
     invoice_edit_url: api/invoice_edits   #404
     invoice_product_url: api/invoice_products   # []
     invoice_url: api/invoices   # []
