@@ -1,5 +1,1 @@
-[INFO ] 2022-06-17 01:30:56.513 [http-nio-4447-exec-1] EmployeeServiceImpl - Список EmployeeDto получен успешно
-[INFO ] 2022-06-17 01:30:56.521 [http-nio-4447-exec-1] ContractorServiceImpl - Успешно выполнен запрос на получение списка ContractorDto
-[INFO ] 2022-06-17 01:32:28.318 [http-nio-4447-exec-8] EmployeeServiceImpl - EmployeeDto c id: 1 получен успешно
-[INFO ] 2022-06-17 01:32:28.326 [http-nio-4447-exec-8] CallServiceImpl - Успешно выполнен запрос на получение списка CallDto
-[INFO ] 2022-06-17 01:32:28.362 [http-nio-4447-exec-8] ContractorServiceImpl - Успешно выполнен запрос на получение списка ContractorDto
+[INFO ] 2022-06-19 21:45:30.636 [http-nio-4447-exec-4] LegalDetailServiceImpl - Успешно выполнен запрос на получение списка LegalDetailDto
