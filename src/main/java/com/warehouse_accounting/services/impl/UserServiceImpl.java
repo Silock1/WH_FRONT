@@ -15,12 +15,12 @@ import java.io.IOException;
 
 @Service
 @Log4j2
-public class UserServiceImp implements UserService {
+public class UserServiceImpl implements UserService {
 
     private final UserApi userApi;
     private final String url;
 
-    public UserServiceImp(@Value("${retrofit.restServices.user_url}") String url, Retrofit retrofit) {
+    public UserServiceImpl(@Value("${retrofit.restServices.user_url}") String url, Retrofit retrofit) {
         this.userApi = retrofit.create(UserApi.class);
         this.url = url;
     }
