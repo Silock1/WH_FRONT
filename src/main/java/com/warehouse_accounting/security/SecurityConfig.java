@@ -20,7 +20,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // Vaadin обрабатывает CSRF внутри компании
+        // Vaadin обрабатывает CSRF внутренне
         http.csrf().disable()
                 // Ограничить доступ к нашему приложени
                 .authorizeRequests()
