@@ -1,6 +1,5 @@
 package com.warehouse_accounting.components.contragents.form;
 
-
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.accordion.AccordionPanel;
@@ -603,4 +602,3 @@ public class FormEditCotragent extends VerticalLayout {
         this.parent = parent;
     }
 }
-

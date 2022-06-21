@@ -34,7 +34,7 @@ retrofit:
     language_url: api/language
     legal_detail_url: api/legal_details
     movement_url: api/movements   # []
-    priceList_url: api/priceLists   # []
+    priceList_url: api/price_list   # []
     printing_documents_url: api/printing_documents
     payments_url: api/payments    #todo проверить связь с taskDto
     position_url: api/positions
@@ -57,6 +57,7 @@ retrofit:
     units_of_measure_url: api/unitsOfMeasure
     goods_to_realize_get_url: api/goodstorealizeget
     goods_to_realize_give_url: api/goodstorealizegive
+    invoice_received_url: api/invoice_received
     #    customer_order_url: api/customer_orders
     tasks_url: api/tasks_employee
 
