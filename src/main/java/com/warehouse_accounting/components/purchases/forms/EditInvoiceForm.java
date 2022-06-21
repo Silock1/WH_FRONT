@@ -28,6 +28,7 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.warehouse_accounting.components.purchases.grids.SupplierInvoiceGridLayout;
+import com.warehouse_accounting.components.util.DateConvertor;
 import com.warehouse_accounting.models.dto.SupplierInvoiceDto;
 import com.warehouse_accounting.services.impl.SupplierInvoiceServiceImpl;
 import com.warehouse_accounting.services.interfaces.SupplierInvoiceService;
@@ -35,7 +36,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 @CssImport(value = "./css/invoiceForm.css")
 public class EditInvoiceForm extends VerticalLayout {
@@ -47,7 +47,6 @@ public class EditInvoiceForm extends VerticalLayout {
     private Tab related_documents = new Tab("Связанные документы");
     private VerticalLayout documentPage = new VerticalLayout();
     private Notification notification;
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private TextField fieldInvoiceNumber; //Input формы Номер счета поставщика
     private DatePicker datePickerInvoiceNumber; //Input datePicker Счет поставщика от
@@ -136,7 +135,7 @@ public class EditInvoiceForm extends VerticalLayout {
         datePickerPay = new DatePicker();
         datePickerPay.setClearButtonVisible(true);
         if(supplierInvoiceDto.getDatePay() != null){
-            LocalDate date = LocalDate.parse(supplierInvoiceDto.getDatePay(), formatter);
+            LocalDate date = DateConvertor.fromTextDate(supplierInvoiceDto.getDateInvoiceNumber());
             datePickerPay.setValue(date);
         }
 
@@ -162,7 +161,7 @@ public class EditInvoiceForm extends VerticalLayout {
         dateIncomingNumber = new DatePicker();
         dateIncomingNumber.setClearButtonVisible(true);
         if(supplierInvoiceDto.getDateIncomingNumber() != null){
-            LocalDate date = LocalDate.parse(supplierInvoiceDto.getDateIncomingNumber(), formatter);
+            LocalDate date = DateConvertor.fromTextDate(supplierInvoiceDto.getDateInvoiceNumber());
             dateIncomingNumber.setValue(date);
         }
 
@@ -303,7 +302,7 @@ public class EditInvoiceForm extends VerticalLayout {
         datePickerInvoiceNumber = new DatePicker();
         datePickerInvoiceNumber.setClearButtonVisible(true);
         if(supplierInvoiceDto.getDateInvoiceNumber() != null){
-            LocalDate date = LocalDate.parse(supplierInvoiceDto.getDateInvoiceNumber(), formatter);
+            LocalDate date = DateConvertor.fromTextDate(supplierInvoiceDto.getDateInvoiceNumber());
             datePickerInvoiceNumber.setValue(date);
         }
 

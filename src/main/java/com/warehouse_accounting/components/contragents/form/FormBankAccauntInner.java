@@ -8,6 +8,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.warehouse_accounting.models.dto.BankAccountDto;
+import com.warehouse_accounting.models.dto.dadataDto.Address;
 import com.warehouse_accounting.services.interfaces.BankAccountService;
 
 public class FormBankAccauntInner {
@@ -85,7 +86,9 @@ public class FormBankAccauntInner {
     public BankAccountDto getBankAccount(){
         bankAccountDto.setRcbic(bic.getValue());
         bankAccountDto.setBank(bank.getValue());
-        bankAccountDto.setAddress(address.getValue());
+        Address tmpAddress = new Address();
+        tmpAddress.setValue(address.getValue());
+        bankAccountDto.setAddress(tmpAddress); // temporary
         bankAccountDto.setCorrespondentAccount(correspondentAccount.getValue());
         bankAccountDto.setAccount(account.getValue());
         bankAccountDto.setMainAccount(checkbox.getValue());
