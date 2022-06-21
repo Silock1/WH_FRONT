@@ -78,7 +78,6 @@ public class GoodsGridLayout extends HorizontalLayout {
         ColumnToggleContextMenu columnToggleContextMenu = new ColumnToggleContextMenu(menuButton);
 
         columnToggleContextMenu.addColumnToggleItem("Id", idColumn);
-
         columnToggleContextMenu.addColumnToggleItem("Наименование", nameColumn);
         columnToggleContextMenu.addColumnToggleItem("Масса", weightColumn);
         columnToggleContextMenu.addColumnToggleItem("Объем", volumeColumn);
