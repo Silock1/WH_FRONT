@@ -30,11 +30,12 @@ retrofit:
     image_url: api/images
     invoice_edit_url: api/invoice_edits   #404
     invoice_product_url: api/invoice_products   # []
+    invoice_received_url: api/invoice_received
     invoice_url: api/invoices   # []
     language_url: api/language
     legal_detail_url: api/legal_details
     movement_url: api/movements   # []
-    priceList_url: api/priceLists   # []
+    priceList_url: api/price_list   # []
     printing_documents_url: api/printing_documents
     payments_url: api/payments    #todo проверить связь с taskDto
     position_url: api/positions
@@ -55,8 +56,10 @@ retrofit:
     type_of_price_url: api/type_of_prices
     unit_url: api/units
     units_of_measure_url: api/unitsOfMeasure
+    writeOffs_url: /api/writeOffs
     goods_to_realize_get_url: api/goodstorealizeget
     goods_to_realize_give_url: api/goodstorealizegive
+    invoice_received_url: api/invoice_received
     #    customer_order_url: api/customer_orders
     tasks_url: api/tasks_employee
 

@@ -31,11 +31,11 @@ public class PurchasesSubMenuView extends VerticalLayout {
 
     private final Div pageContent = new Div();
     private PurchasesOrders purchasesOrders;
-    //private AccountsPayable accountsPayable;
+    private AccountsPayable accountsPayable;
     private Acceptances acceptances;
     private Return returns;
 
-    //private AccountsPayableFilter accountsPayableFilter;
+    private AccountsPayableFilter accountsPayableFilter;
     private final WarehouseService warehouseService;
     private final ContractService contractService;
     private final ContractorService contractorService;
@@ -83,7 +83,7 @@ public class PurchasesSubMenuView extends VerticalLayout {
                     break;
                 case "Счета поставщиков":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Счета поставщиков"));
+                    pageContent.add(initAccountsPayable(pageContent));
                     break;
                 case "Приемки":
                     pageContent.removeAll();
@@ -116,16 +116,13 @@ public class PurchasesSubMenuView extends VerticalLayout {
         }
         return purchasesOrders;
     }
-/*
     private AccountsPayable initAccountsPayable(Div pageContent){
         if (Objects.isNull(accountsPayable)){
-            accountsPayable = new AccountsPayable(pageContent, warehouseService, contractService, contractorService,
-                    projectService, employeeService, departmentService, productService, companyService);
+            accountsPayable = new AccountsPayable(pageContent);
         }
         return accountsPayable;
     }
 
- */
 
     private Acceptances initAcceptances(Div pageContent){
         if (Objects.isNull(acceptances)) {

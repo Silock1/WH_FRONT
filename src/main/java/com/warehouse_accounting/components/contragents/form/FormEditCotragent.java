@@ -1,6 +1,5 @@
 package com.warehouse_accounting.components.contragents.form;
 
-
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.accordion.AccordionPanel;
@@ -50,6 +49,7 @@ public class FormEditCotragent extends VerticalLayout {
     private TypeOfContractorService typeOfContractorService;
     private ContractorService contractorService;
     private BankAccountService bankAccountService;
+    private TypeOfPriceService typeOfPriceService;
     private ContragentsList parent;
     private ContractorDto contractorDto;
     private DadataService dadata;
@@ -73,8 +73,10 @@ public class FormEditCotragent extends VerticalLayout {
     private TextArea comment;
     private TextField code;
     private TextField outerCode;
+    private TextField discountCard;
+    private Select<String> typeOfPrice;
 
-    // Поля для LegalDetais
+    // Поля для LegalDetails
     private TextField lastName;
     private TextField firstName;
     private TextField middleName;
@@ -92,12 +94,13 @@ public class FormEditCotragent extends VerticalLayout {
     private List<FormBankAccauntInner> formsBankAccount;
     private List<FormForFaceContactInner> formsFacesContact;
 
-    public FormEditCotragent(ContractorService contractorService, DadataService dadata, TypeOfContractorService typeOfContractorService, ContractorGroupService contractorGroupService, BankAccountService bankAccountService) {
+    public FormEditCotragent(ContractorService contractorService, DadataService dadata, TypeOfContractorService typeOfContractorService, ContractorGroupService contractorGroupService, BankAccountService bankAccountService, TypeOfPriceService typeOfPriceService) {
         this.contractorService = contractorService;
         this.typeOfContractorService = typeOfContractorService;
         this.contractorGroupService = contractorGroupService;
         this.dadata = dadata;
         this.bankAccountService = bankAccountService;
+        this.typeOfPriceService = typeOfPriceService;
     }
     public void bild(ContractorDto contractorDto){
         removeAll();
@@ -161,6 +164,7 @@ public class FormEditCotragent extends VerticalLayout {
             } else {
                 contractorDto.setOuterCode(outerCode.getValue());
             }
+
             // получение Данные LegalDetails
             contractorDto.getLegalDetailDto().setLastName(lastName.getValue());
             contractorDto.getLegalDetailDto().setFirstName(firstName.getValue());
@@ -603,4 +607,3 @@ public class FormEditCotragent extends VerticalLayout {
         this.parent = parent;
     }
 }
-

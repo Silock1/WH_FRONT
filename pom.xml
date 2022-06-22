@@ -104,6 +104,13 @@
             <artifactId>vaadin-avatar-flow</artifactId>
             <version>18.0.7</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.vaadin/vaadin-maven-plugin -->
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-maven-plugin</artifactId>
+            <version>14.4.6</version>
+        </dependency>
+
 
     </dependencies>
     <dependencyManagement>
