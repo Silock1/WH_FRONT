@@ -1,5 +1,6 @@
 package com.warehouse_accounting.models.dto;
 
+import com.warehouse_accounting.models.dto.dadataDto.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,9 +18,8 @@ public class BankAccountDto {
 
     private String bank;
 
-
-    private String address;
-//    public Address address;
+//    private String address;
+    public Address address;
 
     private String correspondentAccount;
 
