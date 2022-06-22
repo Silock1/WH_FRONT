@@ -2,16 +2,22 @@ package com.warehouse_accounting.components.tasks.grids;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.TemplateRenderer;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.tasks.forms.TasksEditForm;
+import com.warehouse_accounting.models.dto.EmployeeDto;
 import com.warehouse_accounting.models.dto.TasksDto;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.TasksService;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,13 +35,17 @@ public class TasksGrid extends HorizontalLayout {
     private Grid<TasksDto> taskDtoGrid = new Grid<>(TasksDto.class, false);
     private List<TasksDto> tasksDto;
     private TasksService tasksService;
-    private TasksEditForm tasksEditForm;
+    private TextField numberText;
+
+    @Autowired
+    private EmployeeService employeeService;
 
 
 
     @Autowired
-    public TasksGrid(TasksService tasksService) {
-        this.tasksEditForm = getTasksEditForm();
+    public TasksGrid(TasksService tasksService, EmployeeService employeeService) {
+//        this.tasksEditForm = getTasksEditForm();
+        this.employeeService = employeeService;
         this.tasksService = tasksService;
         tasksDto = tasksService.getAll();
         taskDtoGrid.setItems(tasksDto);
@@ -82,10 +92,10 @@ public class TasksGrid extends HorizontalLayout {
                 .withEventHandler("handleClick", this::deleteButton);
     }
     private void editButton(TasksDto tasksDto1){
-        Button edit = new Button("Edit");
-        edit.addClickListener(event -> {
+        removeAll();
+        TasksEditForm tasksEditForm = new TasksEditForm(employeeService, tasksService);
+        add(tasksEditForm);
 
-        });
     }
 
     private  void deleteButton(TasksDto tasksDto){
