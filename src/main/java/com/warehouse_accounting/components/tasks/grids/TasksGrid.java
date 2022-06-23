@@ -17,12 +17,15 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.tasks.forms.TasksEditForm;
 import com.warehouse_accounting.models.dto.EmployeeDto;
 import com.warehouse_accounting.models.dto.TasksDto;
+import com.warehouse_accounting.services.interfaces.ContractorService;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.TasksService;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -36,15 +39,16 @@ public class TasksGrid extends HorizontalLayout {
     private List<TasksDto> tasksDto;
     private TasksService tasksService;
     private TextField numberText;
+    private List <TasksDto> tasksDtoList = new ArrayList<>();
+    private ContractorService contractorService;
 
-    @Autowired
     private EmployeeService employeeService;
 
 
 
     @Autowired
-    public TasksGrid(TasksService tasksService, EmployeeService employeeService) {
-//        this.tasksEditForm = getTasksEditForm();
+    public TasksGrid(TasksService tasksService, EmployeeService employeeService, ContractorService contractorService) {
+        this.contractorService = contractorService;
         this.employeeService = employeeService;
         this.tasksService = tasksService;
         tasksDto = tasksService.getAll();
@@ -93,9 +97,9 @@ public class TasksGrid extends HorizontalLayout {
     }
     private void editButton(TasksDto tasksDto1){
         removeAll();
-        TasksEditForm tasksEditForm = new TasksEditForm(employeeService, tasksService);
-        add(tasksEditForm);
 
+        TasksEditForm tasksEditForm = new TasksEditForm(employeeService, tasksService, contractorService);
+        add(tasksEditForm);
     }
 
     private  void deleteButton(TasksDto tasksDto){

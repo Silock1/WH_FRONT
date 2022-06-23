@@ -1,10 +1,13 @@
 package com.warehouse_accounting.components.tasks.forms;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -14,39 +17,55 @@ import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.tasks.grids.TasksGrid;
+import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.models.dto.EmployeeDto;
 import com.warehouse_accounting.models.dto.TaskDto;
 import com.warehouse_accounting.models.dto.TasksDto;
+import com.warehouse_accounting.services.impl.TasksServiceImpl;
+import com.warehouse_accounting.services.interfaces.ContractorService;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.TasksService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 @UIScope
 @SpringComponent
 @Log4j2
 public class TasksEditForm extends VerticalLayout {
 
-
     private TextField numberText;
     private DatePicker deadline;
     private ComboBox<EmployeeDto> comboBox;
-    private Notification notification;
     private Checkbox accessCheckbox;
-    private EmployeeService employeeService;
-    private TasksDto tasksDto;
-    private TasksService tasksService;
-    private Binder<TasksDto> taskEditFormBinder = new Binder<>(TasksDto.class);
+    private final EmployeeService employeeService;
+    private final TasksService tasksService;
+    private final Binder<TasksDto> taskEditFormBinder = new Binder<>(TasksDto.class);
+
+    private ComboBox<ContractorDto> contractorDtoComboBox;
+
+    private final Grid<TasksDto> taskDtoGrid = new Grid<>(TasksDto.class, false);
+    private final List<TasksDto> tasksDtoList = new ArrayList<>();
+
+    private final ContractorService contractorService;
 
 
     @Autowired
-    public TasksEditForm(EmployeeService employeeService, TasksService tasksService) {
+    public TasksEditForm(EmployeeService employeeService, TasksService tasksService, ContractorService contractorService) {
+        this.contractorService = contractorService;
         this.employeeService = employeeService;
         this.tasksService = tasksService;
         createMenu();
     }
 
     private void createMenu() {
+        TasksGrid tasksGrid = new TasksGrid(tasksService, employeeService, contractorService);
         HorizontalLayout topLine = new HorizontalLayout();
         Button saveButton = new Button("Сохранить");
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
@@ -56,15 +75,32 @@ public class TasksEditForm extends VerticalLayout {
             }
 
             try {
-                taskEditFormBinder.writeBean(tasksDto);
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("http://localhost:4446")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+                TasksService tasksService = new TasksServiceImpl("/api/tasks_employee", retrofit);
+                TasksDto tasksDto = new TasksDto();
+                tasksDto.setId();
                 tasksDto.setDescription(numberText.getValue());
-                tasksDto.setContractorName(tasksDto.getContractorName());
-                tasksDto.setDeadline(deadline.toString());
+                tasksDto.setEmployeeId(comboBox.getValue().getId());
+                tasksDto.setEmployeeName(comboBox.getValue().getFirstName());
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+                String date = dtf.format(deadline.getValue());
+                tasksDto.setDeadline(date);
+
+                tasksDto.setContractorId(contractorDtoComboBox.getValue().getId());
+                tasksDto.setContractorName(contractorDtoComboBox.getValue().getName());
+
                 tasksDto.setIsDone(accessCheckbox.getValue());
                 System.out.println(tasksDto);
+                taskEditFormBinder.writeBean(tasksDto);
                 tasksService.update(tasksDto);
+                removeAll();
+                tasksGrid.refreshDate();
+                add(tasksGrid);
 
-            } catch (ValidationException e) {
+            } catch (Exception e) {
                 log.error("Ошибка валидации при создании нового этапа", e);
 
             }
@@ -72,10 +108,10 @@ public class TasksEditForm extends VerticalLayout {
         });
 
         Button closeButton = new Button("Отменить");
-        TasksGrid tasksGrid = new TasksGrid(tasksService, employeeService);
         closeButton.addClickListener(c -> {
             removeAll();
             tasksGrid.refreshDate();
+            add(tasksGrid);
         });
         topLine.add(saveButton, closeButton);
 
@@ -121,7 +157,18 @@ public class TasksEditForm extends VerticalLayout {
 
         line3.add(left, right);
 
-        add(line1, line2, line3, topLine);
+//      линия 4, контрагенты
+
+        HorizontalLayout line4 = new HorizontalLayout();
+
+        contractorDtoComboBox = new ComboBox<>("Свяжите с контрагентом");
+        contractorDtoComboBox.setItems(contractorService.getAll());
+        contractorDtoComboBox.setItemLabelGenerator(ContractorDto::getName);
+        contractorDtoComboBox.setWidth("300px");
+        right.add(contractorDtoComboBox);
+        line4.add(left, right);
+
+        add(topLine, line1, line2, line3, line4);
     }
 
 //    public void build(TasksDto tasksDto1) {

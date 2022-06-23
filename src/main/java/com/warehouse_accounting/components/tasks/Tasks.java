@@ -37,7 +37,7 @@ public class Tasks extends VerticalLayout {
         this.filterLayout = filterLayout;
         this.employeeService = employeeService;
         this.contractorService = contractorService;
-        tasksGrid = new TasksGrid(tasksService, employeeService);
+        tasksGrid = new TasksGrid(tasksService, employeeService, contractorService);
         Div pageContent = new Div();
         pageContent.add(tasksGrid);
         filterLayout.setTasks(this);//оно
