@@ -13,7 +13,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
-
+import com.warehouse_accounting.components.util.DateConvertor;
 import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.models.dto.EmployeeDto;
 import com.warehouse_accounting.models.dto.TasksDto;
@@ -23,9 +23,6 @@ import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.TasksService;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import java.time.format.DateTimeFormatter;
-import java.util.stream.Collectors;
 
 
 public class TasksForm extends VerticalLayout {
@@ -75,8 +72,7 @@ public class TasksForm extends VerticalLayout {
                 tasksDto.setDescription(numberText.getValue());
                 tasksDto.setEmployeeId(comboBox.getValue().getId());
                 tasksDto.setEmployeeName(comboBox.getValue().getFirstName());
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-                String date = dtf.format(deadline.getValue());
+                String date = DateConvertor.asText(deadline.getValue());
                 tasksDto.setDeadline(date);
                 tasksDto.setContractorId(contractorDtoComboBox.getValue().getId());
                 tasksDto.setContractorName(contractorDtoComboBox.getValue().getName());
