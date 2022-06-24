@@ -73,7 +73,6 @@ public class FormEditCotragent extends VerticalLayout {
     private TextField code;
     private TextField outerCode;
 
-
     // Поля для LegalDetails
     private TextField lastName;
     private TextField firstName;
