@@ -7,7 +7,6 @@ retrofit:
 
   restServices:
     user_url: api/v1/auth/login
-    invoice_received_url: api/invoice_received
     acceptance_url: api/acceptances   #404
     adjustments_url: api/adjustments
     application_url: api/applications
@@ -16,7 +15,7 @@ retrofit:
     bankAccount_url: api/bankAccounts   #404
     call_url: api/calls
     city_url: api/cities    #404
-    company_url : api/companies
+    company_url: api/companies
     comissioner_reports_url: api/commission_reports
     contract_url: api/contracts
     contractor_group_url: api/contractor_groups
@@ -30,7 +29,6 @@ retrofit:
     image_url: api/images
     invoice_edit_url: api/invoice_edits   #404
     invoice_product_url: api/invoice_products   # []
-    invoice_received_url: api/invoice_received
     invoice_url: api/invoices   # []
     language_url: api/language
     legal_detail_url: api/legal_details
@@ -57,14 +55,15 @@ retrofit:
     unit_url: api/units
     units_of_measure_url: api/unitsOfMeasure
     writeOffs_url: /api/writeOffs
+    production_order_url: api/production_orders
+
     goods_to_realize_get_url: api/goodstorealizeget
     goods_to_realize_give_url: api/goodstorealizegive
     invoice_received_url: api/invoice_received
-    #    customer_order_url: api/customer_orders
-    tasks_url: api/tasks_employee
-
     warehouse_url: api/warehouses
     sales_channels_url: api/sales_channels
+    #    customer_order_url: api/customer_orders
+    tasks_url: api/tasks_employee
 
 retrofit2:
   baseUrl: https://suggestions.dadata.ru/suggestions/
