@@ -9,6 +9,7 @@ import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.production.ProductionProcessTechnology;
 import com.warehouse_accounting.components.production.ProductionSteps;
 import com.warehouse_accounting.components.production.ProductionTasks;
+import com.warehouse_accounting.components.production.ProductionOrders;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
@@ -27,7 +28,10 @@ public class ProductionSubMenuView extends VerticalLayout {
     private final ProductionSteps productionSteps;
     private final ProductionProcessTechnology productionProcessTechnology;
 
-    public ProductionSubMenuView(ProductionTasks productionTasks, ProductionSteps productionSteps, ProductionProcessTechnology productionProcessTechnology) {
+    private final ProductionOrders productionOrders;
+
+    public ProductionSubMenuView(ProductionOrders productionOrders, ProductionTasks productionTasks, ProductionSteps productionSteps, ProductionProcessTechnology productionProcessTechnology) {
+        this.productionOrders = productionOrders;
         this.productionTasks = productionTasks;
         this.productionSteps = productionSteps;
         this.productionProcessTechnology = productionProcessTechnology;
@@ -49,7 +53,7 @@ public class ProductionSubMenuView extends VerticalLayout {
                     break;
                 case "Заказы на производство":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Заказы на производство"));
+                    pageContent.add(productionOrders);
                     break;
                 case "Тех. операции":
                     pageContent.removeAll();
