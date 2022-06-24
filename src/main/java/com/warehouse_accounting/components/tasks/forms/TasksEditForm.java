@@ -30,6 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -50,13 +52,8 @@ public class TasksEditForm extends VerticalLayout {
 
     private ComboBox<ContractorDto> contractorDtoComboBox;
 
-    private final Grid<TasksDto> taskDtoGrid = new Grid<>(TasksDto.class, false);
-    private final List<TasksDto> tasksDtoList = new ArrayList<>();
-
     private final ContractorService contractorService;
 
-
-    @Autowired
     public TasksEditForm(EmployeeService employeeService, TasksService tasksService, ContractorService contractorService) {
         this.contractorService = contractorService;
         this.employeeService = employeeService;
@@ -94,7 +91,6 @@ public class TasksEditForm extends VerticalLayout {
 
                 tasksDto.setIsDone(accessCheckbox.getValue());
                 System.out.println(tasksDto);
-                taskEditFormBinder.writeBean(tasksDto);
                 tasksService.update(tasksDto);
                 removeAll();
                 tasksGrid.refreshDate();
@@ -120,9 +116,10 @@ public class TasksEditForm extends VerticalLayout {
         HorizontalLayout line1 = new HorizontalLayout();
         VerticalLayout left = new VerticalLayout();
         VerticalLayout right = new VerticalLayout();
-
         TextField numberText = new TextField();
-        numberText.setPlaceholder("Описание Задачи");
+        numberText.setValue(tasksService.getAll().stream().findFirst().get().getDescription());
+
+//        numberText.setPlaceholder(tasksService.getAll().stream().findFirst().get().getDescription());
         numberText.setWidth("500px");
         this.numberText = numberText;
         left.add(numberText);
@@ -138,6 +135,7 @@ public class TasksEditForm extends VerticalLayout {
 
         comboBox = new ComboBox<>("Исполниель");
         comboBox.setItems(employeeService.getAll());
+        comboBox.setValue(employeeService.getAll().stream().findFirst().get());
         comboBox.setItemLabelGenerator(EmployeeDto::getFirstName);
         comboBox.setWidth("300px");
         right.add(comboBox);
@@ -148,6 +146,9 @@ public class TasksEditForm extends VerticalLayout {
         HorizontalLayout line3 = new HorizontalLayout();
 
         deadline = new DatePicker();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        LocalDate localDate = LocalDate.parse(tasksService.getAll().stream().findFirst().get().getDeadline(), formatter);
+        deadline.setValue(localDate);
         deadline.setLabel("Срок");
         deadline.setPlaceholder("Не ограничен");
         deadline.setWidth("300px");
@@ -163,6 +164,7 @@ public class TasksEditForm extends VerticalLayout {
 
         contractorDtoComboBox = new ComboBox<>("Свяжите с контрагентом");
         contractorDtoComboBox.setItems(contractorService.getAll());
+        contractorDtoComboBox.setValue(contractorService.getAll().stream().findFirst().get());
         contractorDtoComboBox.setItemLabelGenerator(ContractorDto::getName);
         contractorDtoComboBox.setWidth("300px");
         right.add(contractorDtoComboBox);
