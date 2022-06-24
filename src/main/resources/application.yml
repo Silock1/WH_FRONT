@@ -15,7 +15,7 @@ retrofit:
     bankAccount_url: api/bankAccounts   #404
     call_url: api/calls
     city_url: api/cities    #404
-    company_url : api/companies
+    company_url: api/companies
     comissioner_reports_url: api/commission_reports
     contract_url: api/contracts
     contractor_group_url: api/contractor_groups
@@ -57,6 +57,8 @@ retrofit:
     unit_url: api/units
     units_of_measure_url: api/unitsOfMeasure
     writeOffs_url: /api/writeOffs
+    production_order_url: api/production_orders
+
     goods_to_realize_get_url: api/goodstorealizeget
     goods_to_realize_give_url: api/goodstorealizegive
     #    customer_order_url: api/customer_orders

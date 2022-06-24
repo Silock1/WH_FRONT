@@ -30,8 +30,10 @@ import com.warehouse_accounting.models.dto.LegalDetailDto;
 import com.warehouse_accounting.models.dto.TypeOfPriceDto;
 import com.warehouse_accounting.models.dto.dadataDto.Example2;
 import com.warehouse_accounting.services.interfaces.BankAccountService;
+import com.warehouse_accounting.services.interfaces.ContractorGroupService;
 import com.warehouse_accounting.services.interfaces.ContractorService;
 import com.warehouse_accounting.services.interfaces.DadataService;
+import com.warehouse_accounting.services.interfaces.TypeOfContractorService;
 import com.warehouse_accounting.services.interfaces.TypeOfPriceService;
 
 import java.util.ArrayList;
@@ -266,7 +268,7 @@ public class FormEditCotragent extends VerticalLayout {
     }
     private VerticalLayout leftGroupFormLayout() {
         VerticalLayout leftLayout = new VerticalLayout();
-        leftLayout.add(getContragentAccordion(), getFaceContactAccordion(), getLegalDetailAccordion(),getSalasEndPriceAccordion(), getAccessAccordion());
+        leftLayout.add(getContragentAccordion(), getFaceContactAccordion(),getLegalDetailAccordion(),getSalasEndPriceAccordion(), getAccessAccordion());
         leftLayout.setWidth("450px");
         return leftLayout;
     }
@@ -289,6 +291,7 @@ public class FormEditCotragent extends VerticalLayout {
     }
     //Блок о контрагенте
     private AccordionPanel getContragentAccordion(){
+        FormLayout main = new FormLayout();
 
         status = new ComboBox<>();
         status.setItems("Новый", "Выслано предложение","Переговоры", "Сделка заключена", "Сделка не заключена");
