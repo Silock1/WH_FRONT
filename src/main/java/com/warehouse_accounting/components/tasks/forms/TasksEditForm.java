@@ -119,7 +119,6 @@ public class TasksEditForm extends VerticalLayout {
         TextField numberText = new TextField();
         numberText.setValue(tasksService.getAll().stream().findFirst().get().getDescription());
 
-//        numberText.setPlaceholder(tasksService.getAll().stream().findFirst().get().getDescription());
         numberText.setWidth("500px");
         this.numberText = numberText;
         left.add(numberText);
