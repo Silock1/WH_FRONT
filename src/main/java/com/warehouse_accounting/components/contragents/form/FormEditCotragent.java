@@ -53,7 +53,6 @@ public class FormEditCotragent extends VerticalLayout {
     private ContragentsList parent;
     private ContractorDto contractorDto;
     private DadataService dadata;
-    private TypeOfPriceService typeOfPriceService;
     private boolean newForm = false;
 
 
@@ -73,8 +72,6 @@ public class FormEditCotragent extends VerticalLayout {
     private TextArea comment;
     private TextField code;
     private TextField outerCode;
-    private TextField discountCard;
-    private Select<String> typeOfPrice;
 
     // Поля для LegalDetails
     private TextField lastName;
