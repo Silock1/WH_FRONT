@@ -7,6 +7,7 @@ retrofit:
 
   restServices:
     user_url: api/v1/auth/login
+    invoice_received_url: api/invoice_received
     acceptance_url: api/acceptances   #404
     adjustments_url: api/adjustments
     application_url: api/applications
@@ -57,7 +58,6 @@ retrofit:
     writeOffs_url: /api/writeOffs
     goods_to_realize_get_url: api/goodstorealizeget
     goods_to_realize_give_url: api/goodstorealizegive
-    invoice_received_url: api/invoice_received
     #    customer_order_url: api/customer_orders
     tasks_url: api/tasks_employee
 

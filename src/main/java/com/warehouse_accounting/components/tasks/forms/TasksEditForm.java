@@ -81,7 +81,7 @@ public class TasksEditForm extends VerticalLayout {
                         .build();
                 TasksService tasksService = new TasksServiceImpl("/api/tasks_employee", retrofit);
                 TasksDto tasksDto = new TasksDto();
-                tasksDto.setId();
+                tasksDto.setId(tasksService.getAll().stream().findFirst().get().getId());
                 tasksDto.setDescription(numberText.getValue());
                 tasksDto.setEmployeeId(comboBox.getValue().getId());
                 tasksDto.setEmployeeName(comboBox.getValue().getFirstName());
@@ -171,8 +171,5 @@ public class TasksEditForm extends VerticalLayout {
         add(topLine, line1, line2, line3, line4);
     }
 
-//    public void build(TasksDto tasksDto1) {
-//
-//    }
 }
 
