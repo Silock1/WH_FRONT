@@ -18,17 +18,24 @@ import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.contragents.grids.ContractsFilterLayout;
+import com.warehouse_accounting.components.contragents.grids.ContractsGridLayot;
 
 @SpringComponent
 @UIScope
 public class ContractsOrder extends VerticalLayout {
 
+    private final ContractsGridLayot contractsGridLayot;
     private final ContractsFilterLayout filterLayout;
 
-    public ContractsOrder(ContractsFilterLayout filterLayout) {
-        this.filterLayout = filterLayout;
+    private HorizontalLayout buttons;
 
-        add(getGroupButton(), filterLayout);
+    public ContractsOrder(ContractsGridLayot contractsGridLayot, ContractsFilterLayout filterLayout) {
+        this.contractsGridLayot = contractsGridLayot;
+        this.filterLayout = filterLayout;
+        this.buttons = getGroupButton();
+        this.contractsGridLayot.setParent(this);
+
+        add(buttons, filterLayout, contractsGridLayot);
     }
 
     private HorizontalLayout getGroupButton() {
@@ -50,7 +57,7 @@ public class ContractsOrder extends VerticalLayout {
         Button refreshButton = new Button(refresh);
         refreshButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         refreshButton.addClickListener(click -> {
-            System.out.println("перезагрузка");
+            contractsGridLayot.refreshDate();
         });
 
         Image image = new Image("icons/plus.png", "Plus");
@@ -128,5 +135,17 @@ public class ContractsOrder extends VerticalLayout {
         return horizontalLayout;
     }
 
+    public void showButtonEndGrid(Boolean refreshGrid) {
+        buttons.setVisible(true);
+        if (refreshGrid) {
+            contractsGridLayot.refreshDate();
+        }
+        contractsGridLayot.setVisible(true);
+    }
 
+    public void hideButtonEndGrid() {
+        buttons.setVisible(false);
+        contractsGridLayot.setVisible(false);
+        contractsGridLayot.setVisible(false);
+    }
 }
