@@ -66,6 +66,7 @@ retrofit:
 
     warehouse_url: api/warehouses
     sales_channels_url: api/sales_channels
+    scripts_url: api/scripts
 
 retrofit2:
   baseUrl: https://suggestions.dadata.ru/suggestions/
