@@ -29,6 +29,7 @@ retrofit:
     image_url: api/images
     invoice_edit_url: api/invoice_edits   #404
     invoice_product_url: api/invoice_products   # []
+    invoice_received_url: api/invoice_received
     invoice_url: api/invoices   # []
     language_url: api/language
     legal_detail_url: api/legal_details
@@ -39,6 +40,7 @@ retrofit:
     position_url: api/positions
     product_group_url: api/product_groups
     product_url: api/products
+    production_tasks_url: api/production_tasks
     project_url: api/projects
     recycleBin_url: api/recycle_bin
     return_url: api/returns   # []
@@ -59,11 +61,11 @@ retrofit:
 
     goods_to_realize_get_url: api/goodstorealizeget
     goods_to_realize_give_url: api/goodstorealizegive
-    invoice_received_url: api/invoice_received
-    warehouse_url: api/warehouses
-    sales_channels_url: api/sales_channels
     #    customer_order_url: api/customer_orders
     tasks_url: api/tasks_employee
+
+    warehouse_url: api/warehouses
+    sales_channels_url: api/sales_channels
 
 retrofit2:
   baseUrl: https://suggestions.dadata.ru/suggestions/

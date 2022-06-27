@@ -38,21 +38,19 @@ import com.warehouse_accounting.services.interfaces.TypeOfPriceService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
 @SpringComponent
 @UIScope
 public class FormEditCotragent extends VerticalLayout {
-
-    private ContractorGroupService contractorGroupService;
-    private TypeOfContractorService typeOfContractorService;
-    private ContractorService contractorService;
-    private BankAccountService bankAccountService;
-    private TypeOfPriceService typeOfPriceService;
+    private final transient ContractorService contractorService;
+    private final transient BankAccountService bankAccountService;
+    private final transient TypeOfPriceService typeOfPriceService;
     private ContragentsList parent;
-    private ContractorDto contractorDto;
-    private DadataService dadata;
+    private transient ContractorDto contractorDto;
+    private final transient DadataService dadata;
     private boolean newForm = false;
 
 
@@ -88,13 +86,14 @@ public class FormEditCotragent extends VerticalLayout {
     private Select <String>typeOfContractor;
 
     // Формы для множественных внутренних обьектов.
-    private List<FormBankAccauntInner> formsBankAccount;
-    private List<FormForFaceContactInner> formsFacesContact;
+    private transient List<FormBankAccauntInner> formsBankAccount;
+    private transient List<FormForFaceContactInner> formsFacesContact;
 
-    public FormEditCotragent(ContractorService contractorService, DadataService dadata, TypeOfContractorService typeOfContractorService, ContractorGroupService contractorGroupService, BankAccountService bankAccountService, TypeOfPriceService typeOfPriceService) {
+    public FormEditCotragent(ContractorService contractorService,
+                             DadataService dadata,
+                             BankAccountService bankAccountService,
+                             TypeOfPriceService typeOfPriceService) {
         this.contractorService = contractorService;
-        this.typeOfContractorService = typeOfContractorService;
-        this.contractorGroupService = contractorGroupService;
         this.dadata = dadata;
         this.bankAccountService = bankAccountService;
         this.typeOfPriceService = typeOfPriceService;
@@ -206,7 +205,7 @@ public class FormEditCotragent extends VerticalLayout {
                     }
                     if(!form2.isDeleted() && !form2.isNewAccount()){
                         for(BankAccountDto bankAccountOld : contractorDto.getBankAccountDtos()){
-                            if(bankAccountOld.getId() == accountDto1.getId()){
+                            if(Objects.equals(bankAccountOld.getId(), accountDto1.getId())){
                                 bankAccountOld.setRcbic(accountDto1.getRcbic());
                                 bankAccountOld.setBank(accountDto1.getBank());
                                 bankAccountOld.setAddress(accountDto1.getAddress());
@@ -227,7 +226,7 @@ public class FormEditCotragent extends VerticalLayout {
                     }
                     if(!form3.isDeleted() && !form3.isNewFaceContact()){
                         for(ContractorFaceContactDto contactOld : contractorDto.getContacts()){
-                            if(contactOld.getId() == contact.getId()){
+                            if(Objects.equals(contactOld.getId(), contact.getId())){
                                 contactOld.setAllNames(contact.getAllNames());
                                 contactOld.setPosition(contact.getPosition());
                                 contactOld.setPhone(contactOld.getPhone());
@@ -255,7 +254,6 @@ public class FormEditCotragent extends VerticalLayout {
             });
             button.add(close,edit);
             button.setAlignItems(Alignment.CENTER);
-//        return button;
         });
         return button;
     }
@@ -270,7 +268,7 @@ public class FormEditCotragent extends VerticalLayout {
     }
     private VerticalLayout leftGroupFormLayout() {
         VerticalLayout leftLayout = new VerticalLayout();
-        leftLayout.add(getContragentAccordion(), getFaceContactAccordion(),getLegаlDetailAccordion(),getSalasEndPriceAccordion(), getAccessAccordion());
+        leftLayout.add(getContragentAccordion(), getFaceContactAccordion(),getLegalDetailAccordion(),getSalasEndPriceAccordion(), getAccessAccordion());
         leftLayout.setWidth("450px");
         return leftLayout;
     }
@@ -360,7 +358,7 @@ public class FormEditCotragent extends VerticalLayout {
         return faceContacts;
     }
     //<Блок реквизиты
-    private AccordionPanel getLegаlDetailAccordion(){
+    private AccordionPanel getLegalDetailAccordion(){
         if(contractorDto.getLegalDetailDto() == null) contractorDto.setLegalDetailDto(new LegalDetailDto());
 
         VerticalLayout main = new VerticalLayout();
@@ -525,7 +523,7 @@ public class FormEditCotragent extends VerticalLayout {
         button.addClickListener(e->{
             Example2 example2 = dadata.getExample(inn.getValue());
 
-            if (example2.getSuggestions().size() == 0) {
+            if (example2.getSuggestions().isEmpty()) {
                 showError("По данному ИНН ничего не найдено");
             } else {
                 if (typeOfContractor.getValue().equals("Индивидуальный предприниматель")) {
@@ -572,9 +570,7 @@ public class FormEditCotragent extends VerticalLayout {
         Button closeButton = new Button(new Icon("lumo", "cross"));
         closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
         closeButton.getElement().setAttribute("aria-label", "Close");
-        closeButton.addClickListener(event -> {
-            notification.close();
-        });
+        closeButton.addClickListener(event -> notification.close());
         HorizontalLayout layout = new HorizontalLayout(text, closeButton);
         layout.setAlignItems(Alignment.CENTER);
         notification.add(layout);

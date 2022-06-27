@@ -18,6 +18,7 @@ import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.production.grids.ProductionTasksFilterLayout;
+import com.warehouse_accounting.components.production.grids.ProductionTasksGridLayout;
 
 @SpringComponent
 @UIScope
@@ -25,10 +26,14 @@ public class ProductionTasks extends VerticalLayout {
 
     private final ProductionTasksFilterLayout productionTasksFilterLayout;
 
-    public ProductionTasks(ProductionTasksFilterLayout productionTasksFilterLayout) {
-        this.productionTasksFilterLayout = productionTasksFilterLayout;
+    private final ProductionTasksGridLayout productionTasksGridLayout;
 
-        add(getGroupButton(), productionTasksFilterLayout);
+    public ProductionTasks(ProductionTasksFilterLayout productionTasksFilterLayout,
+                           ProductionTasksGridLayout productionTasksGridLayout) {
+        this.productionTasksFilterLayout = productionTasksFilterLayout;
+        this.productionTasksGridLayout = productionTasksGridLayout;
+
+        add(getGroupButton(), this.productionTasksFilterLayout, this.productionTasksGridLayout);
     }
 
     private HorizontalLayout getGroupButton() {
@@ -46,9 +51,7 @@ public class ProductionTasks extends VerticalLayout {
         refresh.setColor("silver");
         Button refreshButton = new Button(refresh);
         refreshButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        refreshButton.addClickListener(click -> {
-            System.out.println("перезагрузка");
-        });
+        refreshButton.addClickListener(click -> System.out.println("перезагрузка"));
         Image image = new Image("icons/plus.png", "Plus");
         image.setWidth("15px");
         Button exercise = new Button("Задание", image);
@@ -56,13 +59,7 @@ public class ProductionTasks extends VerticalLayout {
 
         Button filter = new Button("Фильтр");
         filter.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        filter.addClickListener(e -> {
-            if (productionTasksFilterLayout.isVisible()) {
-                productionTasksFilterLayout.setVisible(false);
-            } else {
-                productionTasksFilterLayout.setVisible(true);
-            }
-        });
+        filter.addClickListener(e -> productionTasksFilterLayout.setVisible(!productionTasksFilterLayout.isVisible()));
 
         TextField textField = new TextField();
         textField.setPlaceholder("Номер и комментарий");
