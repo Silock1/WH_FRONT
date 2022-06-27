@@ -12,16 +12,20 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.user.settings.SettingsView;
+import com.warehouse_accounting.models.dto.ScriptDto;
+import com.warehouse_accounting.services.interfaces.ScriptService;
 
 @PageTitle("Сценарии")
 @Route(value = "scripttemplate", layout = SettingsView.class)
 public class ScriptView extends VerticalLayout {
 
-//    private Grid<Object> scriptGreed = new Grid<>();
+    private Grid<ScriptDto> scriptGreed = new Grid<>(ScriptDto.class, false);
+    private ScriptService scriptService;
 
-    public ScriptView() {
+    public ScriptView(ScriptService scriptService) {
+        this.scriptService = scriptService;
         add(getGroupButtons());
-//        add(scriptGrid());
+        add(scriptGrid());
     }
 
     private VerticalLayout getGroupButtons() {
@@ -48,24 +52,18 @@ public class ScriptView extends VerticalLayout {
         Button allScript = new Button("Все сценарии");
         Button activeScript = new Button("Только активные");
 
-        Button text = new Button("Сценарии неактивны. Необходимо подключить опцию в рамках подписки.");
-        text.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-
         HorizontalLayout one = new HorizontalLayout(helpButton, script, reload, script_template, allScript, activeScript);
-        HorizontalLayout two = new HorizontalLayout(text);
-        verticalLayout.add(one, two);
+        verticalLayout.add(one);
         return verticalLayout;
     }
-/*
-    private HorizontalLayout scriptGrid(){
+
+    private HorizontalLayout scriptGrid() {
         var horizontalLayout = new HorizontalLayout();
         scriptGreed.setSelectionMode(Grid.SelectionMode.MULTI);
-        scriptGreed.setItems(addService.getAll());
-        scriptGreed.setColumnOrder(scriptGreed.getColumnByKey("activity").setHeader("Активность")),
-        scriptGreed.getColumnByKey("name").setHeader("Наименование");
+        scriptGreed.setItems(scriptService.getAll());
+        scriptGreed.addColumn(ScriptDto::getActivity).setHeader("Активность");
+        scriptGreed.addColumn(ScriptDto::getName).setHeader("Наименование");
         add(scriptGreed);
         return horizontalLayout;
     }
-*/
-
 }
