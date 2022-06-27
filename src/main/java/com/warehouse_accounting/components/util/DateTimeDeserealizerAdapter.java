@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public class DateTimeDeserealizerAdapter implements JsonDeserializer<LocalDate> {
     public LocalDate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
             throws JsonParseException {
-        String[] date = json.getAsJsonPrimitive().getAsString().split("\\.");
-        return LocalDate.of(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0]));
+        String[] date = json.getAsJsonPrimitive().getAsString().split("\\-");
+        return LocalDate.of(Integer.parseInt(date[0]), Integer.parseInt(date[1]), Integer.parseInt(date[2]));
     }
 }
