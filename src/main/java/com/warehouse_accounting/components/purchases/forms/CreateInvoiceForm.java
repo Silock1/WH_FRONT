@@ -63,6 +63,7 @@ public class CreateInvoiceForm extends VerticalLayout {
     private TextArea textArea; //Input формы Комментарий
     private Checkbox checkboxNDS; //Input c чек-бокса НДС
     private Checkbox checkboxOnNDS; //Input c чек-бокса Цена включает НДС
+    private SupplierInvoiceGridLayout supplierInvoiceGridLayout = new SupplierInvoiceGridLayout();
 
     public CreateInvoiceForm(Div parentLayer, Component returnLayer) {
         this.parentLayer = parentLayer;
@@ -182,13 +183,13 @@ public class CreateInvoiceForm extends VerticalLayout {
                 notification.setPosition(Notification.Position.BOTTOM_STRETCH);
             }
             parentLayer.removeAll();
-            parentLayer.add(returnLayer, SupplierInvoiceGridLayout.initSupplierInvoiceGrid());
+            parentLayer.add(returnLayer, supplierInvoiceGridLayout.initSupplierInvoiceGrid()); // здесь статика была
         });
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_SMALL);
 
         Button close = new Button("Закрыть", e -> {
             parentLayer.removeAll();
-            parentLayer.add(returnLayer, SupplierInvoiceGridLayout.initSupplierInvoiceGrid());
+            parentLayer.add(returnLayer, supplierInvoiceGridLayout.initSupplierInvoiceGrid()); // здесь статика была
         });
         close.addThemeVariants(ButtonVariant.LUMO_CONTRAST, ButtonVariant.LUMO_SMALL);
 
