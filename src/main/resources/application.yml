@@ -8,13 +8,14 @@ retrofit:
   restServices:
     user_url: api/v1/auth/login
     acceptance_url: api/acceptances   #404
+    address_url: api/addresses
     adjustments_url: api/adjustments
     application_url: api/applications
     attribute_of_calculation_object_url: api/attribute_of_calculation_objects   #[]
     bank_account_url: api/bank_accounts
     bankAccount_url: api/bankAccounts   #404
     call_url: api/calls
-    city_url: api/cities    #404
+    city_url: api/cities
     company_url: api/companies
     comissioner_reports_url: api/commission_reports
     contract_url: api/contracts
@@ -41,12 +42,13 @@ retrofit:
     product_url: api/products
     project_url: api/projects
     recycleBin_url: api/recycle_bin
+    region_url: api/regions
     return_url: api/returns   # []
     retail_url: api/retail
     role_url: api/roles
     settings_url: api/settings
     start_screen_url: api/start_screen
-    street_url: api/streets   #404
+    street_url: api/streets
     subscription_url: api/subscription
     supplier_invoice_url: api/supplier_invoices
     tax_system_url: api/tax_systems
