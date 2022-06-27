@@ -1,8 +1,11 @@
 package com.warehouse_accounting.components.production.forms;
 
 import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -10,6 +13,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -33,6 +37,14 @@ public class ProductionOrdersForm extends VerticalLayout {
     private final List<ProductionOrderDto> productionOrderDtoList;
     private Binder<ProductionOrderDto> productionOrderDtoBinder = new Binder<>(ProductionOrderDto.class);
     private ProductionOrderDto productionOrderDto;
+
+    private Select<String> formTechMap; //Input формы тех карта
+    private Select<String> formWareHouse; //Input формы склад для материалов
+    private TextField formVolume;
+
+   private TextField formNumber;
+    private DatePicker dateIncomingNumber;
+
 
 
     public ProductionOrdersForm(
@@ -66,14 +78,19 @@ public class ProductionOrdersForm extends VerticalLayout {
         Button continueButton = new Button("Продолжить");
         continueButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
         continueButton.addClickListener(c -> {
-            if (!productionOrderDtoBinder.validate().isOk()) {
-                return;
-            }
+            productionOrderService.create(
+                    ProductionOrderDto.builder()
+                            .id(productionOrderDto.getId())
+                            .number(formNumber.getValue())
+                            .technologicalMapName((formTechMap.getValue()))
+                            .warehouseName(formWareHouse.getValue())
+                            .build()
+            );
+            UI.getCurrent().navigate(ProductionOrders.class);
 
-            if (selectStage.getComponentCount() < 1) {
-                showErrorNotification("Технологическая карта не может быть пустым");
-                return;
-            }
+            productionOrders.removeAll();
+            productionOrders.add(returnDiv);
+
 
         });
         return continueButton;
@@ -91,41 +108,60 @@ public class ProductionOrdersForm extends VerticalLayout {
     }
 
     private VerticalLayout createInputFieldForm() {
+        VerticalLayout verticalLayout = new VerticalLayout();
+
+//Первая строка с номером
+        FormLayout formLayout1 = new FormLayout();
+
+        formNumber = new TextField();
+        formNumber.setWidth("270px");
 
 
-        TextField numberField = new TextField();
-        numberField.setLabel("Номер");
-        numberField.setMinWidth("300px");
+        formLayout1.addFormItem(formNumber, "Номер");
+        formLayout1.addClassName("formLayout1");
+
         productionOrderDtoBinder
-                .forField(numberField)
-                .asRequired("Наименование не должно быть пустым!")
+                .forField(formNumber)
                 .bind(ProductionOrderDto::getNumber, ProductionOrderDto::setNumber);
-        numberField.setValue(productionOrderDto.getNumber() == null ? "" : productionOrderDto.getNumber());
 
-        //field data
-        TextField dataField = new TextField();
-        numberField.setLabel("Номер");
-        numberField.setMinWidth("300px");
 
-        //field tech map
-        TextField techMapField = new TextField();
-        numberField.setLabel("Номер");
-        numberField.setMinWidth("300px");
+        //Вторая строка с датой
+        FormLayout formLayout2 = new FormLayout();
+        dateIncomingNumber = new DatePicker();
 
-        //field volume
-        TextField volumeField = new TextField();
-        numberField.setLabel("Номер");
-        numberField.setMinWidth("300px");
+        formLayout2.addFormItem(dateIncomingNumber, "Дата");
+        formLayout2.addClassName("formLayout2");
 
-        //field warehouse
-        TextField warehouseField = new TextField();
-        numberField.setLabel("Номер");
-        numberField.setMinWidth("300px");
+        //Третья строка с тех картой
+        FormLayout formLayout3 = new FormLayout();
+        formTechMap = new Select<>();
+        formTechMap.setItems("Технологическая карта 1", "Технологическая карта 2", "Технологическая карта 3");
+        formTechMap.setWidth("270px");
 
-        VerticalLayout returnLayout = new VerticalLayout();
-        returnLayout.setAlignItems(Alignment.START);
-        returnLayout.add(numberField, dataField, techMapField, volumeField, warehouseField);
-        return returnLayout;
+        formLayout3.addFormItem(formTechMap, "Технологическая карта");
+        formLayout3.addClassName("formLayout3");
+
+        //Четвертая строка с объемом
+        FormLayout formLayout4 = new FormLayout();
+
+        formVolume = new TextField();
+        formVolume.setWidth("270px");
+
+        formLayout4.addFormItem(formVolume, "Объем");
+        formLayout4.addClassName("formLayout4");
+
+        //Пятая строка с склад
+        FormLayout formLayout5 = new FormLayout();
+        formWareHouse = new Select<>();
+        formWareHouse.setItems("Основной склад", "Резервный склад");
+        formWareHouse.setWidth("270px");
+
+        formLayout5.addFormItem(formWareHouse, "Склад для материалов");
+        formLayout5.addClassName("formLayout5");
+
+        verticalLayout.add(formLayout1, formLayout2, formLayout3, formLayout4, formLayout5);
+        return verticalLayout;
+
     }
 
 
@@ -149,6 +185,14 @@ public class ProductionOrdersForm extends VerticalLayout {
 
         notification.add(layout);
         notification.open();
+    }
+
+    private HorizontalLayout spaceGenerator(int count) {
+        HorizontalLayout space = new HorizontalLayout();
+        for (int i = 0; i < count; i++) {
+            space.add(new HorizontalLayout());
+        }
+        return space;
     }
 }
 
