@@ -79,6 +79,7 @@ public class TasksForm extends VerticalLayout {
 
 
                 tasksDto.setIsDone(accessCheckbox.getValue());
+                System.out.println(tasksDto);
                 tasksService.create(tasksDto);
 
             } catch (Exception ex) {

@@ -28,9 +28,27 @@ public class ContractDto {
 
     private BigDecimal amount;
 
+    private BigDecimal paid;
+
+    private BigDecimal done;
+
+    private Boolean isSharedAccess;
+
+    private DepartmentDto ownerDepartment;
+
+    private EmployeeDto ownerEmployee;
+
+    private Boolean isSend;
+
+    private Boolean isPrint;
+
     private Boolean archive;
 
     private String comment;
+
+    private LocalDate whenChange;
+
+    private EmployeeDto whoChange;
 
     private LegalDetailDto legalDetailDto;
 }
