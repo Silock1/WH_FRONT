@@ -6,13 +6,13 @@ import java.util.List;
 
 public interface CityService {
 
-    List<CityDto> getAll();
+    List<CityDto> getAll(String regionCode);
+
+    List<CityDto> getSlice(int offset, int limit, String name);
+
+    int getCount(String name);
 
     CityDto getById(Long id);
 
-    void create(CityDto cityDto);
-
-    void update(CityDto cityDto);
-
-    void deleteById(Long id);
+    CityDto getByCode(String code);
 }

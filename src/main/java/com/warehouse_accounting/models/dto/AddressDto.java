@@ -13,21 +13,29 @@ public class AddressDto {
 
     private Long id;
 
-    private CountryDto country;
+    private Long countryId;
 
     private String postCode;
 
-    private RegionDto region;
+    private Long regionId;
 
-    private CityDto city;
+    private Long cityId;
 
-    private StreetDto street;
+    private String cityName;
 
-    private String building;
+    private Long streetId;
+
+    private String streetName;
+
+    private Long buildingId;
+
+    private String buildingName;
 
     private String office;
 
     private String fullAddress;
 
     private String other;
+
+    private String comment;
 }

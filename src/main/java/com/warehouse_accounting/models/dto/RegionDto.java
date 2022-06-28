@@ -18,5 +18,15 @@ public class RegionDto {
 
     private String code;
 
-    private String ocatd;
+    public String getNameSocr() {
+        if (socr == null || socr.isEmpty()) {
+            return name;
+        } else {
+            return new StringBuilder()
+                    .append(name)
+                    .append(" ")
+                    .append(socr)
+                    .toString();
+        }
+    }
 }

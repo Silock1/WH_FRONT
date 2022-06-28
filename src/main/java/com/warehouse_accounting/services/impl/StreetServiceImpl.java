@@ -1,5 +1,6 @@
 package com.warehouse_accounting.services.impl;
 
+import com.warehouse_accounting.models.dto.CityDto;
 import com.warehouse_accounting.models.dto.StreetDto;
 import com.warehouse_accounting.services.interfaces.StreetService;
 import com.warehouse_accounting.services.interfaces.api.StreetApi;
@@ -27,9 +28,9 @@ public class StreetServiceImpl implements StreetService {
     }
 
     @Override
-    public List<StreetDto> getAll() {
+    public List<StreetDto> getAll(String regionCityCode) {
         List<StreetDto> dtoList = Collections.emptyList();
-        Call<List<StreetDto>> apiAll = api.getAll(url);
+        Call<List<StreetDto>> apiAll = api.getAll(url, regionCityCode);
         try {
             Response<List<StreetDto>> response = apiAll.execute();
             if (response.isSuccessful()) {
@@ -42,6 +43,42 @@ public class StreetServiceImpl implements StreetService {
             log.error("Произошла ошибка при выполнении запроса на получение списка StreetDto", e);
         }
         return dtoList;
+    }
+
+    @Override
+    public List<StreetDto> getSlice(int offset, int limit, String name) {
+        List<StreetDto> dtoList = Collections.emptyList();
+        Call<List<StreetDto>> request = api.getSlice(url, offset, limit, name);
+        try {
+            Response<List<StreetDto>> response = request.execute();
+            if (response.isSuccessful()) {
+                dtoList = response.body();
+                log.info("Успешно выполнен запрос на получение slice StreetDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на получение slice StreetDto по offset: {}, limit: {}, name: {}", response.code(), offset, limit, name);
+            }
+        } catch (IOException e) {
+            log.error("Произошла ошибка при выполнении запроса на получение slice StreetDto по offset: {}, limit: {}, name: {}", offset, limit, name, e);
+        }
+        return dtoList;
+    }
+
+    @Override
+    public int getCount(String name) {
+        int count = 0;
+        Call<Integer> callSync = api.getCount(url, name);
+        try {
+            Response<Integer> response = callSync.execute();
+            if (response.isSuccessful()) {
+                count = response.body();
+                log.info("Успешно выполнен запрос на получение count Street по name: {}", name);
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на получение count Street по name {}", response.code(), name);
+            }
+        } catch (Exception e) {
+            log.error("Произошла ошибка при выполнении запроса на получение count Street по name", e);
+        }
+        return count;
     }
 
     @Override
@@ -60,50 +97,5 @@ public class StreetServiceImpl implements StreetService {
             log.error("Произошла ошибка при выполнении запроса на получение StreetDto по id", e);
         }
         return dto;
-    }
-
-    @Override
-    public void create(StreetDto dto) {
-        Call<Void> call = api.create(url, dto);
-        try {
-            Response<Void> response = call.execute();
-            if (response.isSuccessful()) {
-                log.info("Успешно выполнен запрос на создание StreetDto");
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на создании StreetDto", response.code());
-            }
-        } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на создании StreetDto", e);
-        }
-    }
-
-    @Override
-    public void update(StreetDto dto) {
-        Call<Void> call = api.update(url, dto);
-        try {
-            Response<Void> response = call.execute();
-            if (response.isSuccessful()) {
-                log.info("Успешно выполнен запрос на изменение StreetDto");
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на изменение StreetDto", response.code());
-            }
-        } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на изменение StreetDto", e);
-        }
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        Call<Void> call = api.deleteById(url, id);
-        try {
-            Response<Void> response = call.execute();
-            if (response.isSuccessful()) {
-                log.info("Успешно выполнен запрос на удаление StreetDto");
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на удаление StreetDto", response.code());
-            }
-        } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на удаление StreetDto по id", e);
-        }
     }
 }

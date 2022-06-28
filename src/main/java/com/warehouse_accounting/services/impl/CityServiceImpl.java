@@ -27,9 +27,9 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public List<CityDto> getAll() {
+    public List<CityDto> getAll(String regionCode) {
         List<CityDto> dtoList = Collections.emptyList();
-        Call<List<CityDto>> apiAll = api.getAll(url);
+        Call<List<CityDto>> apiAll = api.getAll(url, regionCode);
         try {
             Response<List<CityDto>> response = apiAll.execute();
             if (response.isSuccessful()) {
@@ -42,6 +42,42 @@ public class CityServiceImpl implements CityService {
             log.error("Произошла ошибка при выполнении запроса на получение списка CityDto", e);
         }
         return dtoList;
+    }
+
+    @Override
+    public List<CityDto> getSlice(int offset, int limit, String name) {
+        List<CityDto> dtoList = Collections.emptyList();
+        Call<List<CityDto>> request = api.getSlice(url, offset, limit, name);
+        try {
+            Response<List<CityDto>> response = request.execute();
+            if (response.isSuccessful()) {
+                dtoList = response.body();
+                log.info("Успешно выполнен запрос на получение slice CityDto");
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на получение slice CityDto по offset: {}, limit: {}, name: {}", response.code(), offset, limit, name);
+            }
+        } catch (IOException e) {
+            log.error("Произошла ошибка при выполнении запроса на получение slice CityDto по offset: {}, limit: {}, name: {}", offset, limit, name, e);
+        }
+        return dtoList;
+    }
+
+    @Override
+    public int getCount(String name) {
+        int count = 0;
+        Call<Integer> callSync = api.getCount(url, name);
+        try {
+            Response<Integer> response = callSync.execute();
+            if (response.isSuccessful()) {
+                count = response.body();
+                log.info("Успешно выполнен запрос на получение count City по name: {}", name);
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на получение count City по name {}", response.code(), name);
+            }
+        } catch (Exception e) {
+            log.error("Произошла ошибка при выполнении запроса на получение count City по name", e);
+        }
+        return count;
     }
 
     @Override
@@ -63,47 +99,20 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public void create(CityDto dto) {
-        Call<Void> call = api.create(url, dto);
+    public CityDto getByCode(String code) {
+        CityDto dto = null;
+        Call<CityDto> callSync = api.getByCode(url, code);
         try {
-            Response<Void> response = call.execute();
+            Response<CityDto> response = callSync.execute();
             if (response.isSuccessful()) {
-                log.info("Успешно выполнен запрос на создание CityDto");
+                dto = response.body();
+                log.info("Успешно выполнен запрос на получение CityDto по code: {}", code);
             } else {
-                log.error("Произошла ошибка {} при выполнении запроса на создании CityDto", response.code());
+                log.error("Произошла ошибка {} при выполнении запроса на получение CityDto по code {}", response.code(), code);
             }
-        } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на создании CityDto", e);
+        } catch (Exception e) {
+            log.error("Произошла ошибка при выполнении запроса на получение CityDto по code", e);
         }
-    }
-
-    @Override
-    public void update(CityDto dto) {
-        Call<Void> call = api.update(url, dto);
-        try {
-            Response<Void> response = call.execute();
-            if (response.isSuccessful()) {
-                log.info("Успешно выполнен запрос на изменение CityDto");
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на изменение CityDto", response.code());
-            }
-        } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на изменение CityDto", e);
-        }
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        Call<Void> call = api.deleteById(url, id);
-        try {
-            Response<Void> response = call.execute();
-            if (response.isSuccessful()) {
-                log.info("Успешно выполнен запрос на удаление CityDto");
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на удаление CityDto", response.code());
-            }
-        } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на удаление CityDto по id", e);
-        }
+        return dto;
     }
 }

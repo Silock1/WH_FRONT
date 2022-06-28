@@ -1,10 +1,10 @@
 package com.warehouse_accounting.services.impl;
 
 import com.warehouse_accounting.models.dto.AddressDto;
-import com.warehouse_accounting.models.dto.StreetDto;
 import com.warehouse_accounting.services.interfaces.AddressService;
 import com.warehouse_accounting.services.interfaces.api.AddressApi;
 import lombok.extern.log4j.Log4j2;
+import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
@@ -14,6 +14,7 @@ import retrofit2.Retrofit;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Log4j2
 @Service

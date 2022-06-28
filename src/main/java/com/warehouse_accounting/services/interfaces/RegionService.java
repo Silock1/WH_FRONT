@@ -10,9 +10,5 @@ public interface RegionService {
 
     RegionDto getById(Long id);
 
-    void create(RegionDto regionDto);
-
-    void update(RegionDto regionDto);
-
-    void deleteById(Long id);
+    RegionDto getByCode(String code);
 }
