@@ -18,6 +18,7 @@ import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.ProductService;
 import com.warehouse_accounting.services.interfaces.ProjectService;
 import com.warehouse_accounting.services.interfaces.WarehouseService;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.Arrays;
 import java.util.List;
@@ -50,7 +51,7 @@ public class PurchasesSubMenuView extends VerticalLayout {
                                 ContractService contractService, ContractorService contractorService,
                                 ProjectService projectService, EmployeeService employeeService,
                                 DepartmentService departmentService, ProductService productService,
-                                CompanyService companyService, InvoicesReceived invoicesReceived) {
+                                CompanyService companyService, @Qualifier("invoicesReceived") InvoicesReceived invoicesReceived) {
         this.warehouseService = warehouseService;
         this.contractService = contractService;
         this.contractorService = contractorService;
@@ -118,7 +119,7 @@ public class PurchasesSubMenuView extends VerticalLayout {
     }
     private AccountsPayable initAccountsPayable(Div pageContent){
         if (Objects.isNull(accountsPayable)){
-            accountsPayable = new AccountsPayable(pageContent);
+            accountsPayable = new AccountsPayable(pageContent, accountsPayableFilter);
         }
         return accountsPayable;
     }
