@@ -17,8 +17,10 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.components.AppView;
 import com.warehouse_accounting.components.production.forms.ProductionOrdersForm;
 import com.warehouse_accounting.components.production.grids.ProductionOrdersGridLayout;
 import com.warehouse_accounting.models.dto.ProductionOrderDto;
@@ -30,7 +32,7 @@ import lombok.extern.log4j.Log4j2;
 @SpringComponent
 @UIScope
 @Log4j2
-
+@Route(value = "ProductionOrders", layout = AppView.class)
 public class ProductionOrders extends VerticalLayout {
     private final ProductionOrderService productionOrderService;
     private final TextField textField = new TextField();

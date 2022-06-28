@@ -87,7 +87,7 @@ public class SettingsView extends AppLayout {
         tabsList.put("Сотрудники", "employee");
         tabsList.put("Склады", "warehouse");
         tabsList.put("Каналы продаж", "saleschannel");
-        tabsList.put("Валюты", "currency");
+        tabsList.put("Валюты", "currencies");
         tabsList.put("Проекты", "project");
         tabsList.put("Страны", "country");
         tabsList.put("Единицы измерения", "uom");
