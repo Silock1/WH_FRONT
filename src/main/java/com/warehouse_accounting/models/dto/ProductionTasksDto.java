@@ -5,8 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
+import java.time.LocalDate;
 @Data
 @Builder
 @AllArgsConstructor
@@ -15,24 +14,24 @@ public class ProductionTasksDto {
 
     private Long id;
     private Long taskId;
-    private Date dateOfCreate;
+    private LocalDate dateOfCreate;
     private String organization;
-    private Date plannedDate;
+    private LocalDate plannedDate;
     private Long materialWarehouseId;
     private String materialWarehouseName;
     private Long productionWarehouseId;
     private String productionWarehouseName;
-    private Date dateOfStart;
-    private Date dateOfEnd;
+    private LocalDate dateOfStart;
+    private LocalDate dateOfEnd;
     private Boolean isAccessed;
     private Long ownerDepartmentId;
     private String ownerDepartmentName;
     private Long ownerEmployeeId;
     private String ownerEmployeeName;
-    private Date dateOfSend;
-    private Date dateOfPrint;
+    private LocalDate dateOfSend;
+    private LocalDate dateOfPrint;
     private String description;
-    private Date dateOfEdit;
+    private LocalDate dateOfEdit;
     private Long editEmployeeId;
     private String editEmployeeName;
 
