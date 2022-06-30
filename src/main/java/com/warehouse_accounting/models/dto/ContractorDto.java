@@ -42,6 +42,7 @@ public class ContractorDto {
     private List<ContractorFaceContactDto> contacts;  // Не создаются на беке
     private List<BankAccountDto> bankAccountDtos;  // Не создаются на беке
     private LegalDetailDto legalDetailDto;
+    private List<Long> callIds;
 
     public String getName() {
         return name == null ? "Contractor with id: " + id : name;
