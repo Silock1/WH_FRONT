@@ -48,7 +48,11 @@ public class GoodsSubMenuView extends VerticalLayout {
     private final ProductGroupService productGroupService;
 
 
-    public GoodsSubMenuView(PriceList priceList, MovementView movementView, GoodsAndServiceView goodsAndService, GoodsFilter goodsFilter, ProductService productService, EmployeeService employeeService, DepartmentService departmentService, ContractorService contractorService, ProductGroupService productGroupService, WriteOffs writeOffs,Inventory inventory, InternalOrderView internalOrderView) {
+    public GoodsSubMenuView(PriceList priceList, MovementView movementView, GoodsAndServiceView goodsAndService,
+                            GoodsFilter goodsFilter, ProductService productService, EmployeeService employeeService,
+                            DepartmentService departmentService, ContractorService contractorService,
+                            ProductGroupService productGroupService, WriteOffs writeOffs,
+                            Inventory inventory, InternalOrderView internalOrderView) {
         this.priceList = priceList;
         this.movementView = movementView;
         this.writeOffs = writeOffs;
