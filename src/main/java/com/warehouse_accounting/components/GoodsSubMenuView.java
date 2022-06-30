@@ -6,19 +6,25 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.warehouse_accounting.components.contragents.movements.MovementView;
 import com.warehouse_accounting.components.goods.GoodsAndServiceView;
+import com.warehouse_accounting.components.goods.Inventory;
 import com.warehouse_accounting.components.goods.InternalOrderView;
 import com.warehouse_accounting.components.goods.WriteOffs;
 import com.warehouse_accounting.components.goods.filter.GoodsFilter;
+import com.warehouse_accounting.components.contragents.movements.MovementView;
 import com.warehouse_accounting.components.priceList.PriceList;
-import com.warehouse_accounting.services.interfaces.*;
+import com.warehouse_accounting.services.interfaces.ContractorService;
+import com.warehouse_accounting.services.interfaces.DepartmentService;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
+import com.warehouse_accounting.services.interfaces.ProductGroupService;
+import com.warehouse_accounting.services.interfaces.ProductService;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.List;
 
 import static com.warehouse_accounting.components.UtilView.subMenuTabs;
+
 
 
 @Route(value = "goods", layout = AppView.class)
@@ -28,6 +34,7 @@ public class GoodsSubMenuView extends VerticalLayout {
     private final MovementView movementView;
     private final PriceList priceList;
     private final WriteOffs writeOffs;
+    private final Inventory inventory;
     private GoodsAndServiceView goodsAndService;
 
     private final InternalOrderView internalOrderView;
@@ -41,14 +48,15 @@ public class GoodsSubMenuView extends VerticalLayout {
     private final ProductGroupService productGroupService;
 
 
-    public GoodsSubMenuView(PriceList priceList, MovementView movementView,
-                            GoodsAndServiceView goodsAndService, GoodsFilter goodsFilter,
-                            ProductService productService, EmployeeService employeeService,
+    public GoodsSubMenuView(PriceList priceList, MovementView movementView, GoodsAndServiceView goodsAndService,
+                            GoodsFilter goodsFilter, ProductService productService, EmployeeService employeeService,
                             DepartmentService departmentService, ContractorService contractorService,
-                            ProductGroupService productGroupService, WriteOffs writeOffs, InternalOrderView internalOrderView) {
+                            ProductGroupService productGroupService, WriteOffs writeOffs,
+                            Inventory inventory, InternalOrderView internalOrderView) {
         this.priceList = priceList;
         this.movementView = movementView;
         this.writeOffs = writeOffs;
+        this.inventory = inventory;
         this.goodsAndService = goodsAndService;
         this.goodsFilter = goodsFilter;
         this.productService = productService;
@@ -90,7 +98,7 @@ public class GoodsSubMenuView extends VerticalLayout {
                     break;
                 case "Инвентаризация":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Инвентаризация"));
+                    pageContent.add(inventory);
                     break;
                 case "Внутренние заказы":
                     pageContent.removeAll();
@@ -118,7 +126,7 @@ public class GoodsSubMenuView extends VerticalLayout {
     }
 
     @PostConstruct
-    public void setMainDiv() {
+    public void setMainDiv(){
         goodsAndService.setMainDiv(pageContent);
     }
 
