@@ -68,6 +68,7 @@ retrofit:
     sales_channels_url: api/sales_channels
     scripts_url: api/scripts
     shipments_url: api/rest_shipments
+    internal_order-url: api/internal_orders
 
 retrofit2:
   baseUrl: https://suggestions.dadata.ru/suggestions/
