@@ -12,6 +12,7 @@ import retrofit2.Retrofit;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -27,13 +28,13 @@ public class ProductionOperationsServiceImpl implements ProductionOperationsServ
 
     @Override
     public List<ProductionOperationsDto> getAll() {
-        List <ProductionOperationsDto> productionOperationsDtoList = new ArrayList<>();
+        List <ProductionOperationsDto> productionOperationsDtoList = Collections.emptyList();
         Call <List<ProductionOperationsDto>> listCall = api.getAll(url);
         try {
             Response <List<ProductionOperationsDto>> response = listCall.execute();
             if (response.isSuccessful()) {
-                productionOperationsDtoList = listCall.execute().body();
-                log.info("Успешно выполнен запрон на получение списка");
+                productionOperationsDtoList = response.body();
+                log.info("Успешно выполнен запроc на получение списка");
             } else  {
                 log.error("Произошла ошибка {} при выполнении запроса на получение списка", response.code());
             }

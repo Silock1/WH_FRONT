@@ -6,6 +6,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.warehouse_accounting.components.production.ProductionOperations;
 import com.warehouse_accounting.components.production.ProductionProcessTechnology;
 import com.warehouse_accounting.components.production.ProductionSteps;
 import com.warehouse_accounting.components.production.ProductionTasks;
@@ -27,14 +28,17 @@ public class ProductionSubMenuView extends VerticalLayout {
     private final ProductionTasks productionTasks;
     private final ProductionSteps productionSteps;
     private final ProductionProcessTechnology productionProcessTechnology;
+    private final ProductionOperations productionOperations;
 
     //private final ProductionOrders productionOrders;
 
     public ProductionSubMenuView(//ProductionOrders productionOrders,
                                  ProductionTasks productionTasks,
                                  ProductionSteps productionSteps,
-                                 ProductionProcessTechnology productionProcessTechnology) {
+                                 ProductionProcessTechnology productionProcessTechnology,
+                                 ProductionOperations productionOperations) {
         //this.productionOrders = productionOrders;
+        this.productionOperations = productionOperations;
         this.productionTasks = productionTasks;
         this.productionSteps = productionSteps;
         this.productionProcessTechnology = productionProcessTechnology;
@@ -60,7 +64,7 @@ public class ProductionSubMenuView extends VerticalLayout {
                     break;
                 case "Тех. операции":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Тех. операции"));
+                    pageContent.add(productionOperations);
                     break;
                 case "Производственные задания":
                     pageContent.removeAll();

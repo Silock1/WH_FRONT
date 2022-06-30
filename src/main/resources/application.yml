@@ -41,7 +41,7 @@ retrofit:
     product_group_url: api/product_groups
     product_url: api/products
     production_tasks_url: api/production_tasks
-    production_operations_url: api/productions
+    production_operations_url: api/productions_operations
     project_url: api/projects
     recycleBin_url: api/recycle_bin
     return_url: api/returns   # []

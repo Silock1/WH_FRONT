@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface ProductionOperationsApi {
     @Headers("Accept: application/json")
-    @GET
+    @GET("{url}")
     Call<List<ProductionOperationsDto>> getAll (@Path(value = "url", encoded = true) String url);
 
     @Headers("Accept: application/json")

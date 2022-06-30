@@ -107,7 +107,7 @@ public class ProductionOperations extends VerticalLayout {
         buttonIcon.setWidth("14px");
         Button addProductionOperationButton = new Button("Операция", buttonIcon);
         addProductionOperationButton.addClickListener(buttonClickEvent -> {
-            add(new ProductionOperationsForm(pageContent));
+            add(new ProductionOperationsForm(this, new ProductionOperationsDto(), productionOperationsService));
         });
         return addProductionOperationButton;
     }
@@ -211,7 +211,8 @@ public class ProductionOperations extends VerticalLayout {
     }
     private HorizontalLayout mainContent() {
         productionOperationsGridLayout.getProductionOperationsDtoGrid().addItemClickListener(productionOperationsDtoItemClickEvent -> {
-            add(new ProductionOperationsForm(this));
+            add(new ProductionOperationsForm(this, productionOperationsDtoItemClickEvent.getItem(), productionOperationsService));
         });
+        return productionOperationsGridLayout;
     }
 }

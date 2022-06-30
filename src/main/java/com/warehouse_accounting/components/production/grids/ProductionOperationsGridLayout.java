@@ -1,10 +1,21 @@
 package com.warehouse_accounting.components.production.grids;
 
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.contextmenu.ContextMenu;
+import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.components.production.ProductionOperations;
 import com.warehouse_accounting.models.dto.ProductionOperationsDto;
+import com.warehouse_accounting.models.dto.ProductionProcessTechnologyDto;
 import com.warehouse_accounting.services.interfaces.ProductionOperationsService;
 import lombok.Getter;
 
@@ -41,8 +52,47 @@ public class ProductionOperationsGridLayout extends HorizontalLayout {
         productionOperationsDtoList = productionOperationsService.getAll();
         productionOperationsDtoList.sort(Comparator.comparingLong(ProductionOperationsDto::getId));
         productionOperationsDtoGrid.setItems(productionOperationsDtoList);
-
         productionOperationsDtoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
 
+
+        Button menuButton = new Button(new Icon(VaadinIcon.COG));
+        menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+
+        ProductionOperationsGridLayout.ColumnToggleContextMenu columnToggleContextMenu = new ProductionOperationsGridLayout.ColumnToggleContextMenu(
+                menuButton);
+        columnToggleContextMenu.addColumnToggleItem("Id", idColumn);
+        columnToggleContextMenu.addColumnToggleItem("Company Name", companyName);
+        columnToggleContextMenu.addColumnToggleItem("ProjectName", projectName);
+
+        columnToggleContextMenu.addColumnToggleItem("TechnologicalMapName", technologicalMapName);
+        columnToggleContextMenu.addColumnToggleItem("TechnologicalMapId", warehouseForMaterialsName);
+        columnToggleContextMenu.addColumnToggleItem("WarehouseForMaterialsName", warehouseForProductName);
+        columnToggleContextMenu.addColumnToggleItem("Tasks", tasks);
+
+        setSizeFull();
+        add(productionOperationsDtoGrid);
+
+    }
+    public void updateGrid() {
+        productionOperationsDtoList = productionOperationsService.getAll();
+        productionOperationsDtoList.sort(Comparator.comparingLong(ProductionOperationsDto::getId));
+        productionOperationsDtoGrid.getDataProvider().refreshAll();
+        productionOperationsDtoGrid.setItems(productionOperationsDtoList);
+        productionOperationsDtoGrid.getDataProvider().refreshAll();
+    }
+
+    private static class ColumnToggleContextMenu extends ContextMenu {
+        public ColumnToggleContextMenu(Component target) {
+            super(target);
+            setOpenOnClick(true);
+        }
+
+        void addColumnToggleItem(String label, Grid.Column<ProductionOperationsDto> column) {
+            MenuItem menuItem = this.addItem(label, e -> {
+                column.setVisible(e.getSource().isChecked());
+            });
+            menuItem.setCheckable(true);
+            menuItem.setChecked(column.isVisible());
+        }
     }
 }
