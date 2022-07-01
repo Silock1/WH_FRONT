@@ -79,7 +79,7 @@ public class ComplectForm extends VerticalLayout {
         form.add(descriptionField);
 
         TextField groupField = new TextField("Группа","введите группу товару");
-        productDtoBinder.forField(groupField).bind(ProductDto::getGroup, ProductDto::setGroup);
+        productDtoBinder.forField(groupField).bind(ProductDto::getProductGroup, ProductDto::setProductGroup);
         form.add(groupField);
 
         TextField countryField = new TextField("Страна","");

@@ -21,7 +21,11 @@ public class InvoiceProductDto {
 
     private BigDecimal count = BigDecimal.valueOf(0);
 
+    private Float nds = 0f;
+
     private BigDecimal price = BigDecimal.valueOf(0);
 
     private BigDecimal sum = count.multiply(price);
+
+    private Float discount = 0f;
 }

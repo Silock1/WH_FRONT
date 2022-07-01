@@ -14,15 +14,7 @@ import com.warehouse_accounting.components.sales.Shipments;
 import com.warehouse_accounting.components.sales.filter.CustomerOrdersFilter;
 import com.warehouse_accounting.components.sales.filter.GoodsToRealizeFilter;
 import com.warehouse_accounting.components.sales.filter.SalesShipmentsFilter;
-import com.warehouse_accounting.services.interfaces.CompanyService;
-import com.warehouse_accounting.services.interfaces.ContractService;
-import com.warehouse_accounting.services.interfaces.ContractorService;
-import com.warehouse_accounting.services.interfaces.DepartmentService;
-import com.warehouse_accounting.services.interfaces.EmployeeService;
-import com.warehouse_accounting.services.interfaces.GoodsToRealizeGetService;
-import com.warehouse_accounting.services.interfaces.GoodsToRealizeGiveService;
-import com.warehouse_accounting.services.interfaces.ProjectService;
-import com.warehouse_accounting.services.interfaces.WarehouseService;
+import com.warehouse_accounting.services.interfaces.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -56,13 +48,16 @@ public class SalesSubMenuView extends VerticalLayout {
     private WarehouseService warehouseService;
     private DepartmentService departmentService;
     private EmployeeService employeeService;
+    private final ProductService productService;
+    private final InvoiceService invoiceService;
 
     public SalesSubMenuView(SalesShipmentsFilter salesShipmentsFilter,
                             CustomerOrdersFilter customerOrdersFilter, GoodsToRealizeGiveService goodsToRealizeGiveService,
                             GoodsToRealizeGetService goodsToRealizeGetService, CompanyService companyService,
                             ContractorService contractorService, ContractService contractService, ProjectService projectService,
                             WarehouseService warehouseService, DepartmentService departmentService, EmployeeService employeeService,
-                            GoodsToRealizeFilter filterLayout, GoodsToRealizeFilter goodsToRealizeFilter) {
+                            GoodsToRealizeFilter filterLayout, GoodsToRealizeFilter goodsToRealizeFilter,
+                            ProductService productService, InvoiceService invoiceService) {
         this.goodsToRealizeFilter = goodsToRealizeFilter;
         this.customerOrdersFilter = customerOrdersFilter;
         this.companyService = companyService;
@@ -73,7 +68,8 @@ public class SalesSubMenuView extends VerticalLayout {
         this.employeeService = employeeService;
         this.departmentService = departmentService;
         this.salesShipmentsFilter = salesShipmentsFilter;
-
+        this.productService = productService;
+        this.invoiceService = invoiceService;
 
         pageContent.setSizeFull();
         this.goodsToRealizeGetService = goodsToRealizeGetService;
@@ -145,7 +141,7 @@ public class SalesSubMenuView extends VerticalLayout {
     private CustomerOrders initCustomerOrders(Div pageContent){
         if (Objects.isNull(customerOrders)) {
             customerOrders = new CustomerOrders(pageContent, companyService, contractorService, contractService,
-                    projectService, warehouseService, employeeService, departmentService);
+                    projectService, warehouseService, employeeService, departmentService, productService, invoiceService);
         }
         return customerOrders;
     }

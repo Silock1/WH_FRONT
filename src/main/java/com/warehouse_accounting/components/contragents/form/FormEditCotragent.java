@@ -186,11 +186,11 @@ public class FormEditCotragent extends VerticalLayout {
             contractorDto.getLegalDetailDto().setTypeOfContractorName(typeOfContractor.getValue());
 
 
-            BankAccountDto accountDto;
+            BankAccountDto bankAccountDto;
             for (FormBankAccauntInner form : formsBankAccount) {
-                accountDto = form.getBankAccount();
+                bankAccountDto = form.getBankAccount();
                 if (!form.isDeleted() && form.isNewAccount()) {
-                    contractorDto.getBankAccountDtos().add(accountDto);
+                    contractorDto.getBankAccountDtos().add(bankAccountDto);
                 }
                 // получение Данные LegalDetails
                 contractorDto.getLegalDetailDto().setLastName(lastName.getValue());

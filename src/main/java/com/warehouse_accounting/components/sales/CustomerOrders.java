@@ -15,11 +15,9 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
-
-
 import com.warehouse_accounting.components.sales.filter.CustomerOrdersFilter;
-import com.warehouse_accounting.components.sales.filter.SalesShipmentsFilter;
 import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
+import com.warehouse_accounting.components.sales.forms.order.OrderPanel;
 import com.warehouse_accounting.services.interfaces.*;
 
 /*
@@ -38,13 +36,16 @@ public class CustomerOrders extends VerticalLayout {
     private WarehouseService warehouseService;
     private EmployeeService employeeService;
     private DepartmentService departmentService;
+    private final ProductService productService;
+    private final InvoiceService invoiceService;
 
 
 
 
     public CustomerOrders(Div parentLayer, CompanyService companyService, ContractorService contractorService,
                           ContractService contractService, ProjectService projectService, WarehouseService warehouseService,
-                          EmployeeService employeeService, DepartmentService departmentService) {
+                          EmployeeService employeeService, DepartmentService departmentService, ProductService productService,
+                          InvoiceService invoiceService) {
         this.parentLayer = parentLayer;
         this.companyService = companyService;
         this.contractorService = contractorService;
@@ -53,19 +54,31 @@ public class CustomerOrders extends VerticalLayout {
         this.warehouseService = warehouseService;
         this.employeeService = employeeService;
         this.departmentService = departmentService;
+        this.productService = productService;
+        this.invoiceService = invoiceService;
         this.customerOrdersFilter = new CustomerOrdersFilter(companyService, contractorService, contractService,
                 projectService, warehouseService, employeeService, departmentService);
         salesGridLayout = new SalesGridLayout(textFieldGridSelected);
 
+//        Div pageContent = new Div();
+//        pageContent.add(salesGridLayout);
+//
+//        pageContent.setSizeFull();
+//        add(getGroupButtons(this), customerOrdersFilter, pageContent);
+        initPage();
+    }
+
+    private void initPage() {
+        removeAll();
         Div pageContent = new Div();
         pageContent.add(salesGridLayout);
 
         pageContent.setSizeFull();
-        add(getGroupButtons(), customerOrdersFilter, pageContent);
+        add(getGroupButtons(pageContent), customerOrdersFilter, pageContent);
     }
 
 
-    private HorizontalLayout getGroupButtons() {
+    private HorizontalLayout getGroupButtons(Div pageContent) {
         HorizontalLayout groupControl = new HorizontalLayout();
 
         Button helpButton = new Button(new Icon(VaadinIcon.QUESTION_CIRCLE));
@@ -79,6 +92,13 @@ public class CustomerOrders extends VerticalLayout {
 
         Button addOrderButton = new Button("Заказ", new Icon(VaadinIcon.PLUS));
         addOrderButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        addOrderButton.addClickListener(event -> {
+            pageContent.removeAll();
+            OrderPanel orderPanel = new OrderPanel(companyService, contractorService, productService, warehouseService,
+                    contractService, projectService, invoiceService);
+            orderPanel.setOnCloseHandler(() -> initPage());
+            pageContent.add(orderPanel);
+        });
 
         Button addFilterButton = new Button("Фильтр");
         addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
