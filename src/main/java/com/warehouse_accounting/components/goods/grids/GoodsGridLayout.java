@@ -68,7 +68,7 @@ public class GoodsGridLayout extends HorizontalLayout {
         Grid.Column<ProductDto> contractorColumn = productDtoGrid.addColumn(ProductDto::getContractor).setHeader("Подрядчик");
         Grid.Column<ProductDto> taxColumn = productDtoGrid.addColumn(ProductDto::getTaxSystem).setHeader("Налоговая система");
         Grid.Column<ProductDto> purchasePriceColumn = productDtoGrid.addColumn(ProductDto::getPurchasePrice).setHeader("Цена");
-        Grid.Column<ProductDto> groupColumn = productDtoGrid.addColumn(ProductDto::getGroup).setHeader("Группа");
+        Grid.Column<ProductDto> groupColumn = productDtoGrid.addColumn(ProductDto::getProductGroup).setHeader("Группа");
         Grid.Column<ProductDto> attributeOfCalculationObjectColumn = productDtoGrid.addColumn(ProductDto::getAttributeOfCalculationObject).setHeader("Объект рассчетов");
 
         productDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI);

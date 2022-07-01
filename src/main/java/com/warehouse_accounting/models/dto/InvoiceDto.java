@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /*
+ * Это заказ, счёт.
  * ИНФОРМАЦИЯ ДЛЯ ФРОНТ-РАЗРАБОТЧИКА
  * Для снижения количества запросов к базе при передаче на фронт объектов типа Invoice
  * класс InvoiceDto реконструирован: там, где это было возможно, вместо полей-объектов
@@ -31,7 +32,7 @@ public class InvoiceDto {
     private Long id;
     private String number;
     private LocalDateTime invoiceDateTime;
-    private String type;
+    private String type; // TypeOfInvoice.RECEIPT...
     private boolean isPosted;
 
     private Long invoiceAuthorId;

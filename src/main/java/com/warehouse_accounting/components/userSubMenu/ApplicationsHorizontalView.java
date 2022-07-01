@@ -15,7 +15,7 @@ import com.warehouse_accounting.models.dto.ApplicationDto;
 import java.util.ArrayList;
 import java.util.List;
 
-@CssImport(value = "./css/application.css")
+//@CssImport(value = "./css/common.css")
 public class ApplicationsHorizontalView extends HorizontalLayout {
 
     public static List<HorizontalLayout> horizontalDivFill(List<ApplicationDto> listDto) {

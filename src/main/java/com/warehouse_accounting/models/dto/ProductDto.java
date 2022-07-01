@@ -18,8 +18,6 @@ public class ProductDto {
 
     private String name;
 
-    private String group;
-
     private String country;
 
     private String articul;
@@ -36,9 +34,15 @@ public class ProductDto {
 
     private BigDecimal purchasePrice;
 
+    private Float nds;
+
     private String description;
 
     private Boolean archive = false;
+
+    private String productGroup;
+
+    private ContractorDto contractor = new ContractorDto();
 
     private List<ImageDto> images;
 
@@ -49,13 +53,11 @@ public class ProductDto {
         Если добавить обработчик ситуации по месту,то изменяя объект ДТО нам придется изменять и обработчик,
         а если обработчиков будет несколько?
     */
-    private UnitDto unit = new UnitDto();
+    private UnitDto unit = new UnitDto(); // что это? склад? Если склад, то нужен список ИД
 
-    private ContractorDto contractor = new ContractorDto();
+//    private ProductGroupDto productGroup = new ProductGroupDto();
 
-    private TaxSystemDto taxSystem = new TaxSystemDto();
+    private TaxSystemDto taxSystem = new TaxSystemDto(); // Штрихкоды товара?
 
-    private ProductGroupDto productGroup = new ProductGroupDto();
-
-    private AttributeOfCalculationObjectDto attributeOfCalculationObject = new AttributeOfCalculationObjectDto();
+    private AttributeOfCalculationObjectDto attributeOfCalculationObject = new AttributeOfCalculationObjectDto(); // особенности учёта?
 }

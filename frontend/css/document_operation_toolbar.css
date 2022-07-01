@@ -1,0 +1,45 @@
+.dtb-green {
+    background: #cce255;
+    background: -moz-linear-gradient(center top,#cce255,#a1b900) repeat scroll 0 0 transparent;
+    background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#cce255),color-stop(100%,#a1b900));
+    background: -webkit-linear-gradient(top,#cce255,#a1b900);
+    background: -o-linear-gradient(top,#cce255,#a1b900);
+    background: -ms-linear-gradient(top,#cce255,#a1b900);
+    background: linear-gradient(top,#cce255,#a1b900);
+    margin: 0 10px 0 0;
+    border-color: #a1b900;
+    border: 1px solid #666;
+    border-radius: 3px;
+    color: #000000;
+    font: 12px "Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+}
+
+.dtb-gray {
+    background: #fff;
+    background: linear-gradient(center top,#fff,#e6e6e6) repeat scroll 0 0 transparent;
+    background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#fff),color-stop(100%,#e6e6e6));
+    background: -webkit-linear-gradient(top,#fff,#e6e6e6);
+    background: -o-linear-gradient(top,#fff,#e6e6e6);
+    background: -ms-linear-gradient(top,#fff,#e6e6e6);
+    background: linear-gradient(top,#fff,#e6e6e6);
+    margin: 0 10px 0 0;
+    border: 1px solid #666;
+    border-radius: 3px;
+    color: #000000;
+    font: 12px "Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+}
+
+.dtb-common {
+    background: #fff;
+    background: linear-gradient(center top,#fff,#e6e6e6) repeat scroll 0 0 transparent;
+    background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#fff),color-stop(100%,#e6e6e6));
+    background: -webkit-linear-gradient(top,#fff,#e6e6e6);
+    background: -o-linear-gradient(top,#fff,#e6e6e6);
+    background: -ms-linear-gradient(top,#fff,#e6e6e6);
+    background: linear-gradient(top,#fff,#e6e6e6);
+    margin: 0;
+    border: 1px solid #666;
+    border-radius: 3px;
+    color: #000000;
+    font: 12px "Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+}

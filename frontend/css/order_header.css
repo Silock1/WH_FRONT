@@ -1,0 +1,28 @@
+.dtb-baseline {
+    align-items: center;
+    padding: 5px 0;
+}
+
+.dtb-contentwide {
+    padding: 5px 10px;
+    font: 12px "Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+    border: 1px solid #666;
+    min-height: 12px;
+    background: white;
+    color: black;
+}
+
+.dtb-pending {
+    padding: 0 5px;
+    margin: 0 5px 0 0;
+}
+
+.dtb-flag {
+    margin-left: 0;
+}
+
+.dtb-question {
+    color: cornflowerblue;
+    margin: 0 0px 0 5px;
+    max-height: 14px;
+}
