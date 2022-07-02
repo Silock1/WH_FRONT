@@ -15,6 +15,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.user.sales_channels.forms.SalesChannelsAddView;
 import com.warehouse_accounting.components.user.settings.SettingsView;
+import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.SalesChannelDto;
 import com.warehouse_accounting.services.interfaces.SalesChannelsService;
 
@@ -24,7 +25,8 @@ import java.util.List;
 @Route(value = "saleschannel", layout = SettingsView.class)
 public class SalesChannelsList extends VerticalLayout {
 
-    private  Grid<SalesChannelDto> grid;
+    private Grid<SalesChannelDto> grid;
+
     public SalesChannelsList(SalesChannelsService salesChannelsService) {
 
         H2 tableName = new H2("Каналы продаж");
@@ -39,9 +41,9 @@ public class SalesChannelsList extends VerticalLayout {
 
         grid = new Grid<>(SalesChannelDto.class, false);
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
-        grid.addColumn(SalesChannelDto::getName).setHeader("Наименование");
-        grid.addColumn(SalesChannelDto::getType).setHeader("Тип");
-        grid.addColumn(SalesChannelDto::getDescription).setHeader("Описание");
+        Grid.Column<SalesChannelDto> name = grid.addColumn(SalesChannelDto::getName).setHeader("Наименование");
+        Grid.Column<SalesChannelDto> type = grid.addColumn(SalesChannelDto::getType).setHeader("Тип");
+        Grid.Column<SalesChannelDto> description = grid.addColumn(SalesChannelDto::getDescription).setHeader("Описание");
         grid.addSelectionListener(selection -> delete.setEnabled(selection.getAllSelectedItems().size() != 0));
 
         delete.addClickListener(buttonClickEvent -> {
@@ -57,7 +59,7 @@ public class SalesChannelsList extends VerticalLayout {
 
         Button addChannels = new Button("Добавить канал", new Icon(VaadinIcon.PLUS));
         addChannels.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        addChannels.addClickListener(e-> UI.getCurrent().navigate(SalesChannelsAddView.class));
+        addChannels.addClickListener(e -> UI.getCurrent().navigate(SalesChannelsAddView.class));
 
         Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH));
         refreshButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
@@ -66,8 +68,19 @@ public class SalesChannelsList extends VerticalLayout {
         setPadding(false);
         setAlignItems(Alignment.STRETCH);
 
+        Button menuButton = new Button(new Icon(VaadinIcon.COG));
+        menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        ColumnToggleContextMenu<SalesChannelDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(menuButton);
+
+        columnToggleContextMenu.addColumnToggleItem("Наименование", name);
+        columnToggleContextMenu.addColumnToggleItem("Тип", type);
+        columnToggleContextMenu.addColumnToggleItem("Описание", description);
+
         header.add(tableName, refreshButton, addChannels, delete);
 
-        add(header, grid);
+        HorizontalLayout gridAndCog = new HorizontalLayout();
+        gridAndCog.add(grid, menuButton);
+
+        add(header, gridAndCog);
     }
 }

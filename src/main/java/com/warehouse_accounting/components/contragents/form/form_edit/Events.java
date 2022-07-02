@@ -34,9 +34,9 @@ public class Events extends VerticalLayout {
     private Grid<CallDto> initTable() {
         Grid<CallDto> grid = new Grid<>(CallDto.class,false);
         grid.setItems(contractorDto.getCallIds().stream().map(x -> callService.getById(x)).collect(Collectors.toList()));
-        grid.setColumns(CallsGridLayout.getVisibleColumn().keySet().toArray(String[]::new));
-
-        CallsGridLayout.getVisibleColumn().forEach((key, value) -> grid.getColumnByKey(key).setHeader(value));
+//        grid.setColumns(CallsGridLayout.getVisibleColumn().keySet().toArray(String[]::new));
+//
+//        CallsGridLayout.getVisibleColumn().forEach((key, value) -> grid.getColumnByKey(key).setHeader(value));
 
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_ROW_STRIPES);
         return grid;

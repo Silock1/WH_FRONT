@@ -16,7 +16,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.warehouse_accounting.components.purchases.forms.CreateInvoiceForm;
-import com.warehouse_accounting.components.purchases.grids.AccountsPayableGridLayout;
 import com.warehouse_accounting.components.purchases.grids.SupplierInvoiceGridLayout;
 
 /*
@@ -31,10 +30,11 @@ public class AccountsPayable extends VerticalLayout {
     public AccountsPayable(Div parentLayer) {
         this.parentLayer = parentLayer;
         this.supplierInvoiceGridLayout = new SupplierInvoiceGridLayout();
-        Div pageContent = new Div();
-        pageContent.add(supplierInvoiceGridLayout.initSupplierInvoiceGrid()); // здесь статика была
-        pageContent.setSizeFull();
-        add(getGroupButtons(), pageContent);
+//        Div pageContent = new Div();
+//        pageContent.add(supplierInvoiceGridLayout.settingButton);
+//        pageContent.add(supplierInvoiceGridLayout.initSupplierInvoiceGrid()); // здесь статика была
+//        pageContent.setSizeFull();
+        add(getGroupButtons());
         add(supplierInvoiceGridLayout);
     }
 
@@ -77,7 +77,11 @@ public class AccountsPayable extends VerticalLayout {
         });
 
         Button settingButton = new Button(new Icon(VaadinIcon.COG));
-        refreshButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        settingButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        settingButton.addClickListener(event -> {
+
+        });
+
 
         HorizontalLayout editMenuBar = getEditMenuBar();
         HorizontalLayout statusMenuBar = getStatusMenuBar();

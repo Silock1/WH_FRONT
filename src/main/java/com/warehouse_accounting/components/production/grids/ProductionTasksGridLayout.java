@@ -1,10 +1,7 @@
 package com.warehouse_accounting.components.production.grids;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.contextmenu.ContextMenu;
-import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -12,7 +9,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import com.warehouse_accounting.models.dto.ProductionProcessTechnologyDto;
+import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.ProductionTasksDto;
 import com.warehouse_accounting.services.interfaces.ProductionTasksService;
 import lombok.Getter;
@@ -95,14 +92,13 @@ public class ProductionTasksGridLayout extends HorizontalLayout {
 
         Button menuButton = new Button(new Icon(VaadinIcon.COG));
         menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        ProductionTasksGridLayout.ColumnToggleContextMenu columnToggleContextMenu =
-                new ProductionTasksGridLayout.ColumnToggleContextMenu(
-                menuButton);
+        ColumnToggleContextMenu<ProductionTasksDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(menuButton);
+
         columnToggleContextMenu.addColumnToggleItem("Id", idColumn);
         columnToggleContextMenu.addColumnToggleItem("Номер", taskIdColumn);
         columnToggleContextMenu.addColumnToggleItem("Время", timeColumn);
         columnToggleContextMenu.addColumnToggleItem("Организация", organizationColumn);
-        columnToggleContextMenu.addColumnToggleItem("План. дата производства",plannedDateColumn);
+        columnToggleContextMenu.addColumnToggleItem("План. дата производства", plannedDateColumn);
         columnToggleContextMenu.addColumnToggleItem("Склад для материалов", materialWarehouseColumn);
         columnToggleContextMenu.addColumnToggleItem("Склад для продукции", productionWarehouseColumn);
         columnToggleContextMenu.addColumnToggleItem("Начало производства", startColumn);
@@ -131,20 +127,4 @@ public class ProductionTasksGridLayout extends HorizontalLayout {
         productionTasksDtoGrid.setItems(productionTasksDtoList);
         productionTasksDtoGrid.getDataProvider().refreshAll();
     }
-
-
-    private static class ColumnToggleContextMenu extends ContextMenu {
-        public ColumnToggleContextMenu(Component target) {
-            super(target);
-            setOpenOnClick(true);
-        }
-
-        void addColumnToggleItem(String label, Grid.Column<ProductionTasksDto> column) {
-            MenuItem menuItem = this.addItem(label, e -> column.setVisible(e.getSource().isChecked()));
-            menuItem.setCheckable(true);
-            menuItem.setChecked(column.isVisible());
-        }
-    }
-
-
 }

@@ -17,13 +17,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.warehouse_accounting.components.sales.filter.SalesShipmentsFilter;
 import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
-import com.warehouse_accounting.services.interfaces.CompanyService;
-import com.warehouse_accounting.services.interfaces.ContractService;
-import com.warehouse_accounting.services.interfaces.ContractorService;
-import com.warehouse_accounting.services.interfaces.DepartmentService;
-import com.warehouse_accounting.services.interfaces.EmployeeService;
-import com.warehouse_accounting.services.interfaces.ProjectService;
-import com.warehouse_accounting.services.interfaces.WarehouseService;
+import com.warehouse_accounting.services.interfaces.*;
 
 public class Shipments extends VerticalLayout {
 
@@ -53,7 +47,7 @@ public class Shipments extends VerticalLayout {
         this.departmentService = departmentService;
         this.parentLayer = parentLayer;
         this.salesShipmentsFilter = new SalesShipmentsFilter(companyService, contractorService, contractService,
-                        projectService, warehouseService, employeeService, departmentService);
+                projectService, warehouseService, employeeService, departmentService);
         salesGridLayout = new SalesGridLayout(textFieldGridSelected);
         Div pageContent = new Div();
         pageContent.add(salesGridLayout);
@@ -88,7 +82,7 @@ public class Shipments extends VerticalLayout {
 
         Button addFilterButton = new Button("Фильтр");
         addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        addFilterButton.addClickListener(e->
+        addFilterButton.addClickListener(e ->
                 salesShipmentsFilter.setVisible(!salesShipmentsFilter.isVisible())
         );
 
@@ -104,8 +98,14 @@ public class Shipments extends VerticalLayout {
         HorizontalLayout createMenuBar = getCreateMenuBar();
         HorizontalLayout printMenuBar = getPrintMenuBar();
 
+        Button setting = new Button(new Icon(VaadinIcon.COG));
+        setting.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        setting.addClickListener(event -> {
+
+        });
+
         groupControl.add(helpButton, textProducts, refreshButton, addOrderButton,
-                addFilterButton, searchField, editMenuBar, statusMenuBar, createMenuBar, printMenuBar);
+                addFilterButton, searchField, editMenuBar, statusMenuBar, createMenuBar, printMenuBar, setting);
         setSizeFull();
         return groupControl;
     }
@@ -157,6 +157,7 @@ public class Shipments extends VerticalLayout {
         groupEdit.setAlignItems(Alignment.CENTER);
         return groupEdit;
     }
+
     private HorizontalLayout getStatusMenuBar() {
         Icon caretDownIcon = new Icon(VaadinIcon.CARET_DOWN);
         caretDownIcon.setSize("12px");
@@ -240,14 +241,14 @@ public class Shipments extends VerticalLayout {
         print.getSubMenu().addItem("Список отгрузок", e -> {
 
         });
-        print.getSubMenu().addItem("УПД с прослеживаемостью", e-> {
+        print.getSubMenu().addItem("УПД с прослеживаемостью", e -> {
 
         });
-        print.getSubMenu().addItem("УПД без прослеживаемости", e->{
+        print.getSubMenu().addItem("УПД без прослеживаемости", e -> {
 
         });
 
-        print.getSubMenu().addItem("Акт", e->{
+        print.getSubMenu().addItem("Акт", e -> {
 
         });
 

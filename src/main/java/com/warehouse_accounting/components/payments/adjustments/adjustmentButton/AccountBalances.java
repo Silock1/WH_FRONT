@@ -1,4 +1,4 @@
-package com.warehouse_accounting.components.adjustments.adjustmentButton;
+package com.warehouse_accounting.components.payments.adjustments.adjustmentButton;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -6,7 +6,6 @@ import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
@@ -14,12 +13,12 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
-public class CashBalance extends VerticalLayout{
+public class AccountBalances extends VerticalLayout {
 
     private final Div parentLayer ;
     private final Component returnLayer;
 
-    public CashBalance(Div parentLayer, Component returnLayer) {
+    public AccountBalances(Div parentLayer, Component returnLayer) {
         this.parentLayer = parentLayer;
         this.returnLayer = returnLayer;
 
@@ -79,73 +78,30 @@ public class CashBalance extends VerticalLayout{
         groupButton.add(save,close, accountBalances);
 
         FormLayout form = getFormLayout();
-        FormLayout form1 = getFormLayout1();
         HorizontalLayout groupForm = new HorizontalLayout();
-        HorizontalLayout groupForm1 = new HorizontalLayout();
-
         groupForm.add(form);
-        groupForm1.add(form1);
-        verticalLayout.add(groupButton, groupForm ,groupForm1);
-
-
+        verticalLayout.add(groupButton, groupForm);
         return verticalLayout;
     }
 
     private FormLayout getFormLayout() {
         FormLayout form = new FormLayout();
-
-        Label l1 = new Label("Корректировка остатков в кассе №");
-
         TextField nameField = new TextField();
+        nameField.setLabel("Корректировка остатков на счете №");
         nameField.setPlaceholder("");
-        nameField.setWidth("10%");
-
-        Label l2 = new Label("от");
-
         TextField codField = new TextField();
         codField.setLabel("");
         codField.setPlaceholder("");
+        TextField articleField = new TextField();
+        articleField.setLabel("Организация");
+        articleField.setPlaceholder("");
 
-        form.add(l1, nameField, l2 ,codField);
+        form.add(nameField, codField, articleField);
 
-            form.setResponsiveSteps(
-                    new FormLayout.ResponsiveStep("120em", 1),
-                    new FormLayout.ResponsiveStep("50em", 2),
-                    new FormLayout.ResponsiveStep("50em", 3),
-                    new FormLayout.ResponsiveStep("50em", 4));
+        form.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("25em", 1),
+                new FormLayout.ResponsiveStep("10em", 2),
+                new FormLayout.ResponsiveStep("40em", 3));
         return form;
-    }
-
-    private FormLayout getFormLayout1() {
-        FormLayout form1 = new FormLayout();
-
-        Label l1 = new Label("Организация");
-        l1.setWidth("10%");
-
-        TextField nameField = new TextField();
-        nameField.setPlaceholder("");
-
-        Label l2 = new Label("Текущий остаток");
-        l2.setWidth("10%");
-
-        TextField codField = new TextField();
-        codField.setLabel("");
-
-        Label l3 = new Label("Сумма корректировки");
-        l3.setWidth("10%");
-
-        TextField nameField1 = new TextField();
-        nameField1.setPlaceholder("");
-
-        Label l4 = new Label("Итоговый остаток");
-        l4.setWidth("10%");
-
-        TextField codField1 = new TextField();
-        codField1.setLabel("");
-
-        form1.add(l1, nameField, l2 ,codField , l3 ,nameField1 ,l4 ,codField1);
-
-
-        return form1;
     }
 }

@@ -2,8 +2,6 @@ package com.warehouse_accounting.components.contragents.grids;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.contextmenu.ContextMenu;
-import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
@@ -12,6 +10,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.contragents.ContractsOrder;
+import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.ContractDto;
 import com.warehouse_accounting.services.interfaces.ContractService;
 
@@ -21,7 +20,7 @@ public class ContractsGridLayot extends HorizontalLayout {
 
     private final ContractService contractService;
 
-    private Button settingButton = new Button(new Icon(VaadinIcon.COG_O));
+    private Button settingButton = new Button(new Icon(VaadinIcon.COG));
     private Grid<ContractDto> contractDtoGrid;
     private ContractsOrder parent;
 
@@ -68,7 +67,8 @@ public class ContractsGridLayot extends HorizontalLayout {
         contractDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI);
 
         settingButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        ContractsGridLayot.ColumnToggleContextMenu columnToggleContextMenu = new ContractsGridLayot.ColumnToggleContextMenu(settingButton);
+        ColumnToggleContextMenu<ContractDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(settingButton);
+
         columnToggleContextMenu.addColumnToggleItem("Номер", numberColumn);
         columnToggleContextMenu.addColumnToggleItem("Код", codColumn);
         columnToggleContextMenu.addColumnToggleItem("Время", dateColumn);
@@ -86,22 +86,6 @@ public class ContractsGridLayot extends HorizontalLayout {
         columnToggleContextMenu.addColumnToggleItem("Когда изменен", whenChangeColumn);
         columnToggleContextMenu.addColumnToggleItem("Кто изменил", whoChangeColumn);
         return contractDtoGrid;
-    }
-
-    private static class ColumnToggleContextMenu extends ContextMenu {
-
-        public ColumnToggleContextMenu(com.vaadin.flow.component.Component target) { //com.vaadin.flow.component.
-            super(target);
-            setOpenOnClick(true); //Если true то принимает "click"
-        }
-
-        void addColumnToggleItem(String label, Grid.Column<ContractDto> column) {
-            MenuItem menuItem = this.addItem(label, e -> {
-                column.setVisible(e.getSource().isChecked());
-            });
-            menuItem.setCheckable(true);
-            menuItem.setChecked(column.isVisible());
-        }
     }
 
     public void setParent(ContractsOrder parent) {

@@ -2,8 +2,6 @@ package com.warehouse_accounting.components.goods.grids;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.contextmenu.ContextMenu;
-import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
@@ -20,6 +18,7 @@ import com.warehouse_accounting.components.AppView;
 import com.warehouse_accounting.components.goods.GoodsAndServiceView;
 import com.warehouse_accounting.components.goods.forms.GoodUpdateForm;
 import com.warehouse_accounting.components.goods.forms.GroupForm;
+import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.ProductDto;
 import com.warehouse_accounting.models.dto.ProductGroupDto;
 import com.warehouse_accounting.services.interfaces.ProductGroupService;
@@ -75,7 +74,8 @@ public class GoodsGridLayout extends HorizontalLayout {
 
         Button menuButton = new Button(new Icon(VaadinIcon.COG));
         menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        ColumnToggleContextMenu columnToggleContextMenu = new ColumnToggleContextMenu(menuButton);
+
+        ColumnToggleContextMenu<ProductDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(menuButton);
 
         columnToggleContextMenu.addColumnToggleItem("Id", idColumn);
         columnToggleContextMenu.addColumnToggleItem("Наименование", nameColumn);
@@ -94,22 +94,6 @@ public class GoodsGridLayout extends HorizontalLayout {
         headerLayout.setAlignItems(FlexComponent.Alignment.BASELINE);
         headerLayout.setFlexGrow(1);
         add(productDtoGrid, headerLayout);
-    }
-
-    private static class ColumnToggleContextMenu extends ContextMenu {
-
-        public ColumnToggleContextMenu(com.vaadin.flow.component.Component target) { //com.vaadin.flow.component.
-            super(target);
-            setOpenOnClick(true); //Если true то принимает "click"
-        }
-
-        void addColumnToggleItem(String label, Grid.Column<ProductDto> column) {
-            MenuItem menuItem = this.addItem(label, e -> {
-                column.setVisible(e.getSource().isChecked());
-            });
-            menuItem.setCheckable(true);
-            menuItem.setChecked(column.isVisible());
-        }
     }
 
     public void initThreeGrid(Long groupId) {
@@ -151,7 +135,8 @@ public class GoodsGridLayout extends HorizontalLayout {
                     productGroupLine.add(edit, name);
                 }
                 name.addClickListener(spanClickEvent -> treeGrid.select(productGroupDto));
-                productGroupLine.getElement().addEventListener("click", e -> {})
+                productGroupLine.getElement().addEventListener("click", e -> {
+                        })
                         .addEventData("event.stopPropagation()");
                 return productGroupLine;
             });

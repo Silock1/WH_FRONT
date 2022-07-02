@@ -12,6 +12,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.user.settings.SettingsView;
+import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.ScriptDto;
 import com.warehouse_accounting.services.interfaces.ScriptService;
 
@@ -61,9 +62,27 @@ public class ScriptView extends VerticalLayout {
         var horizontalLayout = new HorizontalLayout();
         scriptGreed.setSelectionMode(Grid.SelectionMode.MULTI);
         scriptGreed.setItems(scriptService.getAll());
-        scriptGreed.addColumn(ScriptDto::getActivity).setHeader("Активность");
-        scriptGreed.addColumn(ScriptDto::getName).setHeader("Наименование");
-        add(scriptGreed);
+
+        Grid.Column<ScriptDto> activ = scriptGreed.addColumn(ScriptDto::getActivity).setHeader("Активность").setAutoWidth(true);
+        Grid.Column<ScriptDto> name = scriptGreed.addColumn(ScriptDto::getName).setHeader("Наименование").setAutoWidth(true);
+
+        Button menuButton = new Button(new Icon(VaadinIcon.COG));
+        menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        ColumnToggleContextMenu<ScriptDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(menuButton);
+
+        columnToggleContextMenu.addColumnToggleItem("Активность", activ);
+        columnToggleContextMenu.addColumnToggleItem("Наименование", name);
+
+        HorizontalLayout headerLayout = new HorizontalLayout();
+        headerLayout.setAlignItems(Alignment.BASELINE);
+        headerLayout.setFlexGrow(1);
+        scriptGreed.setHeightByRows(true);
+        headerLayout.setWidthFull();
+        headerLayout.add(scriptGreed,  menuButton);
+        setSizeFull();
+
+
+        add(headerLayout);
         return horizontalLayout;
     }
 }

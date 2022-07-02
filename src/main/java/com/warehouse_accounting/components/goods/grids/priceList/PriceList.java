@@ -1,7 +1,8 @@
-package com.warehouse_accounting.components.contragents.movements;
+package com.warehouse_accounting.components.goods.grids.priceList;
 
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -15,46 +16,61 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
-import com.warehouse_accounting.models.dto.MovementDto;
-import com.warehouse_accounting.services.interfaces.MovementService;
+import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
+import com.warehouse_accounting.models.dto.PriceListDto;
+import com.warehouse_accounting.services.interfaces.PriceListService;
 import org.springframework.stereotype.Component;
-import org.vaadin.olli.FileDownloadWrapper;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Component
 @UIScope
-@Route(value = "movement", layout = AppView.class)
-public class MovementView extends VerticalLayout {
+@Route(value = "priceList", layout = AppView.class)
+public class PriceList extends VerticalLayout {
 
     private HorizontalLayout horizontalToolPanelLayout = new HorizontalLayout();
-    private Grid<MovementDto> grid = new Grid<>(MovementDto.class);
-    private MovementService movementService;
+    private Grid<PriceListDto> grid = new Grid<>(PriceListDto.class);
 
-    public MovementView(MovementService movementService) {
-        this.movementService = movementService;
+    private Button settingButton = new Button(new Icon(VaadinIcon.COG));
+    private PriceListService priceListService;
+
+    public PriceList(PriceListService priceListService) {
+        this.priceListService = priceListService;
         horizontalToolPanelLayout.setAlignItems(Alignment.CENTER);
 
-        // Здесь настройка грида
-        grid.setSelectionMode(Grid.SelectionMode.MULTI);
-        grid.setItems(movementService.getAll());
-        grid.setColumnOrder(grid.getColumnByKey("id").setHeader("№"),
-                grid.getColumnByKey("dateTime").setHeader("Время"),
-                grid.getColumnByKey("warehouseFrom").setHeader("Со склада"),
-                grid.getColumnByKey("warehouseTo").setHeader("На склад"),
-                grid.getColumnByKey("company").setHeader("Организация"),
-                grid.getColumnByKey("sum").setHeader("Сумма"),
-                grid.getColumnByKey("moved").setHeader("Отправлено"),
-                grid.getColumnByKey("printed").setHeader("Напечатано"),
-                grid.getColumnByKey("comment").setHeader("Комментарий"));
         configToolPanel();
+        initGrid();
 
-        add(horizontalToolPanelLayout);
-        add(grid);
+    }
+
+    private void initGrid() {
+        grid.setSelectionMode(Grid.SelectionMode.MULTI);
+        grid.setItems(priceListService.getAll());
+        Grid.Column<PriceListDto> id = grid.getColumnByKey("id").setHeader("№");
+        Grid.Column<PriceListDto> dateTime = grid.getColumnByKey("dateTime").setHeader("Время");
+        Grid.Column<PriceListDto> org = grid.getColumnByKey("company").setHeader("Организация");
+        Grid.Column<PriceListDto> send = grid.getColumnByKey("moved").setHeader("Отправлено");
+        Grid.Column<PriceListDto> print = grid.getColumnByKey("printed").setHeader("Напечатано");
+        Grid.Column<PriceListDto> comment = grid.getColumnByKey("comment").setHeader("Комментарий");
+        grid.setColumnOrder(id, dateTime, org, send, print, comment);
+
+        settingButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        ColumnToggleContextMenu<PriceListDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(settingButton);
+
+
+        columnToggleContextMenu.addColumnToggleItem("№", id);
+        columnToggleContextMenu.addColumnToggleItem("Время", dateTime);
+        columnToggleContextMenu.addColumnToggleItem("Организация", org);
+        columnToggleContextMenu.addColumnToggleItem("Отправлено", send);
+        columnToggleContextMenu.addColumnToggleItem("Напечатано", print);
+        columnToggleContextMenu.addColumnToggleItem("Комментарий", comment);
+
+        HorizontalLayout headerLayout = new HorizontalLayout();
+        headerLayout.add(grid, settingButton);
+        grid.setHeightByRows(true);
+        headerLayout.setWidthFull();
+
+        add(headerLayout);
     }
 
     // Здесь настройка панели инструментов
@@ -67,14 +83,14 @@ public class MovementView extends VerticalLayout {
         dialog.setWidth("400px");
         dialog.setHeight("150px");
 
-        Span text = new Span("Перемещения");
+        Span text = new Span("Прайс-листы");
         text.setClassName("pageTitle");
 
         Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH), event -> {
             //TODO повод поработать этот функционал
         });
 
-        Button addMovementButton = new Button("Перемещение", new Icon(VaadinIcon.PLUS), event -> {
+        Button addPriceListButton = new Button("Прайс-лист", new Icon(VaadinIcon.PLUS), event -> {
             //TODO повод поработать этот функционал
         });
 
@@ -122,10 +138,6 @@ public class MovementView extends VerticalLayout {
         undoOperate.addClickListener(event -> {
             //TODO повод поработать этот функционал
         });
-        MenuItem combine = changeSubMenu.addItem("Снять проведение");
-        combine.addClickListener(event -> {
-            //TODO повод поработать этот функционал
-        });
 
         SubMenu statusSubMenu = status.getSubMenu();
         MenuItem configureStatus = statusSubMenu.addItem("Настроить...");
@@ -134,14 +146,24 @@ public class MovementView extends VerticalLayout {
         });
 
         SubMenu printSubMenu = print.getSubMenu();
-        MenuItem movementList = printSubMenu.addItem("Список перемещений");
-        movementList.addClickListener(event -> {
+        MenuItem priceListList = printSubMenu.addItem("Список прайс-листов");
+        priceListList.addClickListener(event -> {
             //TODO повод поработать этот функционал
         });
-        MenuItem torg13 = printSubMenu.addItem("ТОРГ-13");
-        torg13.addClickListener(event -> {
+
+        MenuItem priceTags2x3 = printSubMenu.addItem("Ценники 2x3");
+        priceTags2x3.addClickListener(event -> {
             //TODO повод поработать этот функционал
         });
+        MenuItem priceTags = printSubMenu.addItem("Ценники");
+        priceTags.addClickListener(event -> {
+            //TODO повод поработать этот функционал
+        });
+        MenuItem priceList = printSubMenu.addItem("Прайс-лист");
+        priceList.addClickListener(event -> {
+            //TODO повод поработать этот функционал
+        });
+
         MenuItem kit = printSubMenu.addItem("Комплект...");
         kit.addClickListener(event -> {
             //TODO повод поработать этот функционал
@@ -152,15 +174,12 @@ public class MovementView extends VerticalLayout {
         });
 
         Button settingsButton = new Button(new Icon(VaadinIcon.COG));
+        settingsButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         settingsButton.addClickListener(event -> {
             //TODO повод поработать этот функционал
         });
 
-        FileDownloadWrapper buttonWrapper = new FileDownloadWrapper(
-                new StreamResource(LocalDate.now().toString() + " someSheet.xlsx",
-                        () -> movementService.getExcel().byteStream()));
-        buttonWrapper.wrapComponent(new Button("Скачать XLSX", new Icon(VaadinIcon.DOWNLOAD)));
-
-        horizontalToolPanelLayout.add(helpButton, text, refreshButton, addMovementButton, filterButton, searchField, numberField, menuBar, settingsButton, buttonWrapper);
+        horizontalToolPanelLayout.add(helpButton, text, refreshButton, addPriceListButton, filterButton, searchField, numberField, menuBar, settingsButton);
+        add(horizontalToolPanelLayout);
     }
 }

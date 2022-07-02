@@ -1,4 +1,4 @@
-package com.warehouse_accounting.components.adjustments;
+package com.warehouse_accounting.components.payments.adjustments;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -17,9 +17,9 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
-import com.warehouse_accounting.components.adjustments.adjustmentButton.AccountBalances;
-import com.warehouse_accounting.components.adjustments.adjustmentButton.CashBalance;
-import com.warehouse_accounting.components.adjustments.grids.AdjustmentsGridsLayout;
+import com.warehouse_accounting.components.payments.adjustments.adjustmentButton.AccountBalances;
+import com.warehouse_accounting.components.payments.adjustments.adjustmentButton.CashBalance;
+import com.warehouse_accounting.components.payments.adjustments.grids.AdjustmentsGridsLayout;
 import com.warehouse_accounting.services.interfaces.AdjustmentsService;
 import org.springframework.stereotype.Component;
 
@@ -152,6 +152,7 @@ public class AdjustmentsView extends VerticalLayout{
 
 
         Button settingsButton = new Button(new Icon(VaadinIcon.COG));
+        settingsButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         settingsButton.addClickListener(event -> {
             //TODO повод поработать этот функционал
         });
