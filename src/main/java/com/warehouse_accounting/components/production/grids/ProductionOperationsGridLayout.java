@@ -6,31 +6,30 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import com.warehouse_accounting.components.production.ProductionOperations;
-import com.warehouse_accounting.models.dto.ProductionOperationsDto;
-import com.warehouse_accounting.models.dto.ProductionProcessTechnologyDto;
+import com.warehouse_accounting.models.dto.TechnologicalOperationDto;
 import com.warehouse_accounting.services.interfaces.ProductionOperationsService;
+import lombok.Data;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-@UIScope
 @SpringComponent
+@UIScope
+@Log4j2
 public class ProductionOperationsGridLayout extends HorizontalLayout {
     private ProductionOperationsService productionOperationsService;
-    private List<ProductionOperationsDto> productionOperationsDtoList = new ArrayList<>();
+    private List<TechnologicalOperationDto> technologicalOperationDtoList = new ArrayList<>();
 
     @Getter
-    private Grid<ProductionOperationsDto> productionOperationsDtoGrid = new Grid<>(ProductionOperationsDto.class, false);
+    private Grid<TechnologicalOperationDto> productionOperationsDtoGrid = new Grid<>(TechnologicalOperationDto.class, false);
 
     public ProductionOperationsGridLayout(ProductionOperationsService productionOperationsService) {
         this.productionOperationsService = productionOperationsService;
@@ -38,20 +37,20 @@ public class ProductionOperationsGridLayout extends HorizontalLayout {
     }
 
     public void initializingGrid () {
-        Grid.Column<ProductionOperationsDto> idColumn = productionOperationsDtoGrid.addColumn(ProductionOperationsDto::getId).setHeader("Id");
+        Grid.Column<TechnologicalOperationDto> idColumn = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getId).setHeader("Id");
         idColumn.setVisible(false);
-        Grid.Column<ProductionOperationsDto> companyName = productionOperationsDtoGrid.addColumn(ProductionOperationsDto::getCompanyName).setHeader("Company Name");
-        Grid.Column<ProductionOperationsDto> projectName = productionOperationsDtoGrid.addColumn(ProductionOperationsDto::getProjectName).setHeader("ProjectName");
-        Grid.Column<ProductionOperationsDto> technologicalMapName = productionOperationsDtoGrid.addColumn(ProductionOperationsDto::getTechnologicalMapName).setHeader("TechnologicalMapName");
-        Grid.Column<ProductionOperationsDto> technologicalMapId = productionOperationsDtoGrid.addColumn(ProductionOperationsDto::getTechnologicalMapId).setHeader("TechnologicalMapId");
+        Grid.Column<TechnologicalOperationDto> technologicalMapName = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getTechnologicalMapName).setHeader("TechnologicalMapName");
+        Grid.Column<TechnologicalOperationDto> technologicalMapId = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getTechnologicalMapId).setHeader("TechnologicalMapId");
         technologicalMapId.setVisible(false);
-        Grid.Column<ProductionOperationsDto> warehouseForMaterialsName = productionOperationsDtoGrid.addColumn(ProductionOperationsDto::getWarehouseForMaterialsName).setHeader("WarehouseForMaterialsName");
-        Grid.Column<ProductionOperationsDto> warehouseForProductName = productionOperationsDtoGrid.addColumn(ProductionOperationsDto::getWarehouseForProductName).setHeader("WarehouseForProductName");
-        Grid.Column<ProductionOperationsDto> tasks = productionOperationsDtoGrid.addColumn(ProductionOperationsDto::getTasks).setHeader("Tasks");
+        Grid.Column<TechnologicalOperationDto> warehouseForMaterialsName = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getWarehouseForMaterialsName).setHeader("WarehouseForMaterialsName");
+        Grid.Column<TechnologicalOperationDto> warehouseForProductName = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getWarehouseForProductName).setHeader("WarehouseForProductName");
+//        Grid.Column<TechnologicalOperationDto> tasks = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getTasks).setHeader("Tasks");
 
-        productionOperationsDtoList = productionOperationsService.getAll();
-        productionOperationsDtoList.sort(Comparator.comparingLong(ProductionOperationsDto::getId));
-        productionOperationsDtoGrid.setItems(productionOperationsDtoList);
+        productionOperationsDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI);
+
+        technologicalOperationDtoList = productionOperationsService.getAll();
+        technologicalOperationDtoList.sort(Comparator.comparingLong(TechnologicalOperationDto::getId));
+        productionOperationsDtoGrid.setItems(technologicalOperationDtoList);
         productionOperationsDtoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
 
 
@@ -61,24 +60,19 @@ public class ProductionOperationsGridLayout extends HorizontalLayout {
         ProductionOperationsGridLayout.ColumnToggleContextMenu columnToggleContextMenu = new ProductionOperationsGridLayout.ColumnToggleContextMenu(
                 menuButton);
         columnToggleContextMenu.addColumnToggleItem("Id", idColumn);
-        columnToggleContextMenu.addColumnToggleItem("Company Name", companyName);
-        columnToggleContextMenu.addColumnToggleItem("ProjectName", projectName);
-
         columnToggleContextMenu.addColumnToggleItem("TechnologicalMapName", technologicalMapName);
         columnToggleContextMenu.addColumnToggleItem("TechnologicalMapId", warehouseForMaterialsName);
         columnToggleContextMenu.addColumnToggleItem("WarehouseForMaterialsName", warehouseForProductName);
-        columnToggleContextMenu.addColumnToggleItem("Tasks", tasks);
+//        columnToggleContextMenu.addColumnToggleItem("Tasks", tasks);
 
         setSizeFull();
         add(productionOperationsDtoGrid);
 
     }
     public void updateGrid() {
-        productionOperationsDtoList = productionOperationsService.getAll();
-        productionOperationsDtoList.sort(Comparator.comparingLong(ProductionOperationsDto::getId));
-        productionOperationsDtoGrid.getDataProvider().refreshAll();
-        productionOperationsDtoGrid.setItems(productionOperationsDtoList);
-        productionOperationsDtoGrid.getDataProvider().refreshAll();
+        technologicalOperationDtoList = productionOperationsService.getAll();
+        technologicalOperationDtoList.sort(Comparator.comparingLong(TechnologicalOperationDto::getId));
+        productionOperationsDtoGrid.setItems(technologicalOperationDtoList);
     }
 
     private static class ColumnToggleContextMenu extends ContextMenu {
@@ -87,7 +81,7 @@ public class ProductionOperationsGridLayout extends HorizontalLayout {
             setOpenOnClick(true);
         }
 
-        void addColumnToggleItem(String label, Grid.Column<ProductionOperationsDto> column) {
+        void addColumnToggleItem(String label, Grid.Column<TechnologicalOperationDto> column) {
             MenuItem menuItem = this.addItem(label, e -> {
                 column.setVisible(e.getSource().isChecked());
             });

@@ -1,13 +1,13 @@
 package com.warehouse_accounting.services.interfaces;
 
-import com.warehouse_accounting.models.dto.ProductionOperationsDto;
+import com.warehouse_accounting.models.dto.TechnologicalOperationDto;
 
 import java.util.List;
 
 public interface ProductionOperationsService {
-    List <ProductionOperationsDto> getAll();
-    ProductionOperationsDto getById(Long id);
-    void create (ProductionOperationsDto productionOperationsDto);
-    void update (ProductionOperationsDto productionOperationsDto);
+    List <TechnologicalOperationDto> getAll();
+    TechnologicalOperationDto getById(Long id);
+    void create (TechnologicalOperationDto technologicalOperationDto);
+    void update (TechnologicalOperationDto technologicalOperationDto);
     void deleteById(Long id);
 }

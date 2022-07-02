@@ -22,8 +22,9 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
 import com.warehouse_accounting.components.production.forms.ProductionOperationsForm;
 import com.warehouse_accounting.components.production.grids.ProductionOperationsGridLayout;
-import com.warehouse_accounting.models.dto.ProductionOperationsDto;
+import com.warehouse_accounting.models.dto.TechnologicalOperationDto;
 import com.warehouse_accounting.services.interfaces.ProductionOperationsService;
+import com.warehouse_accounting.services.interfaces.ProductionStageService;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
@@ -32,11 +33,10 @@ import static com.vaadin.flow.component.button.ButtonVariant.LUMO_TERTIARY_INLIN
 
 @SpringComponent
 @UIScope
-@Log4j2
-@Route (value = "ProductionOperations", layout = AppView.class)
 public class ProductionOperations extends VerticalLayout {
-    private ProductionOperationsService productionOperationsService;
+    private final ProductionOperationsService productionOperationsService;
     private TextField textField;
+    private final ProductionStageService productionStageService;
 
     @Getter
     private final ProductionOperationsGridLayout productionOperationsGridLayout;
@@ -45,12 +45,15 @@ public class ProductionOperations extends VerticalLayout {
     @Setter
     private Div pageContent;
 
-    public ProductionOperations(ProductionOperationsService productionOperationsService, ProductionOperationsGridLayout productionOperationsGridLayout) {
+    public ProductionOperations(ProductionOperationsService productionOperationsService, ProductionOperationsGridLayout productionOperationsGridLayout,
+                                ProductionStageService productionStageService) {
+        this.productionStageService = productionStageService;
         this.productionOperationsGridLayout = productionOperationsGridLayout;
         this.productionOperationsService = productionOperationsService;
         this.pageContent = new Div();
         pageContent.setSizeFull();
         pageContent.add(createTopGroupElements(), mainContent());
+        add(pageContent);
     }
 
     private HorizontalLayout createTopGroupElements () {
@@ -107,7 +110,7 @@ public class ProductionOperations extends VerticalLayout {
         buttonIcon.setWidth("14px");
         Button addProductionOperationButton = new Button("Операция", buttonIcon);
         addProductionOperationButton.addClickListener(buttonClickEvent -> {
-            add(new ProductionOperationsForm(this, new ProductionOperationsDto(), productionOperationsService));
+            add(new ProductionOperationsForm(this, new TechnologicalOperationDto(), productionStageService, productionOperationsService));
         });
         return addProductionOperationButton;
     }
@@ -211,7 +214,7 @@ public class ProductionOperations extends VerticalLayout {
     }
     private HorizontalLayout mainContent() {
         productionOperationsGridLayout.getProductionOperationsDtoGrid().addItemClickListener(productionOperationsDtoItemClickEvent -> {
-            add(new ProductionOperationsForm(this, productionOperationsDtoItemClickEvent.getItem(), productionOperationsService));
+            add(new ProductionOperationsForm(this, productionOperationsDtoItemClickEvent.getItem(), productionStageService, productionOperationsService));
         });
         return productionOperationsGridLayout;
     }
