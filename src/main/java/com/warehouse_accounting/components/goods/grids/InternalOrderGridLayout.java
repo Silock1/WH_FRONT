@@ -3,7 +3,6 @@ package com.warehouse_accounting.components.goods.grids;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -23,7 +22,7 @@ public class InternalOrderGridLayout extends HorizontalLayout {
 
     private final InternalOrderService internalOrderService;
 
-    private Button settingButton = new Button(new Icon(VaadinIcon.COG_O));
+    private Button settingButton = new Button(new Icon(VaadinIcon.COG));
     private Grid<InternalOrderDto> internalOrderDtoGrid;
 
     private InternalOrderView parent;
@@ -98,6 +97,9 @@ public class InternalOrderGridLayout extends HorizontalLayout {
         columnToggleContextMenu.addColumnToggleItem("Комментарий", commentColumn);
         columnToggleContextMenu.addColumnToggleItem("Когда изменен", whenChangeColumn);
         columnToggleContextMenu.addColumnToggleItem("Кто изменил", whoChangeColumn);
+
+        orderDtoGrid.setSizeFull();
+        orderDtoGrid.setHeightByRows(true);
         return orderDtoGrid;
     }
 

@@ -1,11 +1,7 @@
 package com.warehouse_accounting.components.sales.grids;
 
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.contextmenu.ContextMenu;
-import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -13,13 +9,8 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.InvoiceDto;
-import com.warehouse_accounting.services.interfaces.InvoiceService;
-
-
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
 
 public class SalesInvoicesGridLayout extends HorizontalLayout {
 
@@ -53,8 +44,8 @@ public class SalesInvoicesGridLayout extends HorizontalLayout {
 
         Button menuButton = new Button(new Icon(VaadinIcon.COG));
         menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        ColumnToggleContextMenu columnToggleContextMenu = new ColumnToggleContextMenu(
-                menuButton);
+        ColumnToggleContextMenu<InvoiceDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(menuButton);
+
         columnToggleContextMenu.addColumnToggleItem("Id", idColumn);
         columnToggleContextMenu.addColumnToggleItem("Номер", numberColumn);
         columnToggleContextMenu.addColumnToggleItem("Время", invoiceDateTimeColumn);
@@ -86,20 +77,4 @@ public class SalesInvoicesGridLayout extends HorizontalLayout {
         headerLayout.setFlexGrow(1);
         add(invoiceDtoGrid, headerLayout);
     }
-
-    private static class ColumnToggleContextMenu extends ContextMenu {
-        public ColumnToggleContextMenu(Component target) {
-            super(target);
-            setOpenOnClick(true);
-        }
-
-        void addColumnToggleItem(String label, Grid.Column<InvoiceDto> column) {
-            MenuItem menuItem = this.addItem(label, e -> {
-                column.setVisible(e.getSource().isChecked());
-            });
-            menuItem.setCheckable(true);
-            menuItem.setChecked(column.isVisible());
-        }
-    }
-
 }

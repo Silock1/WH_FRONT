@@ -2,6 +2,7 @@ package com.warehouse_accounting.components.goods;
 
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -17,12 +18,10 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
+import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.InventoryDto;
 import com.warehouse_accounting.services.interfaces.InventoryService;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Component
 @UIScope
@@ -31,26 +30,48 @@ public class Inventory extends VerticalLayout {
 
     private HorizontalLayout horizontalToolPanelLayout = new HorizontalLayout();
     private Grid<InventoryDto> grid = new Grid<>(InventoryDto.class);
+
+    private Button settingButton = new Button(new Icon(VaadinIcon.COG));
     private InventoryService inventoryService;
 
     public Inventory(InventoryService inventoryService) {
         this.inventoryService = inventoryService;
         horizontalToolPanelLayout.setAlignItems(Alignment.CENTER);
 
+        configToolPanel();
+        initGrid();
+    }
+
+    private void initGrid() {
         // Здесь настройка грида
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
         grid.setItems(inventoryService.getAll());
-        grid.setColumnOrder(grid.getColumnByKey("id").setHeader("№"),
-                grid.getColumnByKey("dateTime").setHeader("Время"),
-                grid.getColumnByKey("warehouseFrom").setHeader("Со склада"),
-                grid.getColumnByKey("company").setHeader("Организация"),
-                grid.getColumnByKey("moved").setHeader("Отправлено"),
-                grid.getColumnByKey("printed").setHeader("Напечатано"),
-                grid.getColumnByKey("comment").setHeader("Комментарий"));
-        configToolPanel();
+        Grid.Column<InventoryDto> id = grid.getColumnByKey("id").setHeader("№");
+        Grid.Column<InventoryDto> dateTime = grid.getColumnByKey("dateTime").setHeader("Время");
+        Grid.Column<InventoryDto> warehouseName = grid.getColumnByKey("warehouseFrom").setHeader("Со склада");
+        Grid.Column<InventoryDto> org = grid.getColumnByKey("company").setHeader("Организация");
+        Grid.Column<InventoryDto> send = grid.getColumnByKey("moved").setHeader("Отправлено");
+        Grid.Column<InventoryDto> print = grid.getColumnByKey("printed").setHeader("Напечатано");
+        Grid.Column<InventoryDto> comment = grid.getColumnByKey("comment").setHeader("Комментарий");
+        grid.setColumnOrder(id, dateTime, warehouseName, org, send, print, comment);
 
-        add(horizontalToolPanelLayout);
-        add(grid);
+        settingButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        ColumnToggleContextMenu<InventoryDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(settingButton);
+
+        columnToggleContextMenu.addColumnToggleItem("№", id);
+        columnToggleContextMenu.addColumnToggleItem("Время", dateTime);
+        columnToggleContextMenu.addColumnToggleItem("Со склада", warehouseName);
+        columnToggleContextMenu.addColumnToggleItem("Организация", org);
+        columnToggleContextMenu.addColumnToggleItem("Отправлено", send);
+        columnToggleContextMenu.addColumnToggleItem("Напечатано", print);
+        columnToggleContextMenu.addColumnToggleItem("Комментарий", comment);
+
+        HorizontalLayout headerLayout = new HorizontalLayout();
+        headerLayout.add(grid, settingButton);
+        grid.setHeightByRows(true);
+        headerLayout.setWidthFull();
+
+        add(headerLayout);
     }
 
     // Здесь настройка панели инструментов
@@ -112,7 +133,6 @@ public class Inventory extends VerticalLayout {
         });
 
 
-
         SubMenu statusSubMenu = status.getSubMenu();
         MenuItem configureStatus = statusSubMenu.addItem("Настроить...");
         configureStatus.addClickListener(event -> {
@@ -146,9 +166,15 @@ public class Inventory extends VerticalLayout {
             //TODO повод поработать этот функционал
         });
 
+        Button setting = new Button(new Icon(VaadinIcon.COG));
+        setting.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        setting.addClickListener(event -> {
 
+        });
 
-        horizontalToolPanelLayout.add(helpButton, text, refreshButton, addInventoryButton, filterButton, searchField, numberField, menuBar, settingsButton);
+        horizontalToolPanelLayout.add(helpButton, text, refreshButton, addInventoryButton, filterButton, searchField,
+                numberField, menuBar, setting);
+        add(horizontalToolPanelLayout);
     }
 }
 

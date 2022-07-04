@@ -13,18 +13,17 @@ import com.warehouse_accounting.services.interfaces.CallService;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 @SpringComponent
 @UIScope
 public class CallsGridLayout extends HorizontalLayout {
-    private final transient CallService service;
-    private final Button settingButton = new Button(new Icon(VaadinIcon.COG_O));
+    private final CallService service;
+    private Button settingButton = new Button(new Icon(VaadinIcon.COG));
     private final Grid<CallDto> callDtoGrid = new Grid<>(CallDto.class, false);
 
     public CallsGridLayout(CallService service) {
         this.service = service;
-        callDtoGrid.setItems(this.service.getAll());
+        callDtoGrid.setItems(service.getAll());
         add(initGrid(), settingButton);
         setSizeFull();
     }
@@ -38,7 +37,7 @@ public class CallsGridLayout extends HorizontalLayout {
         return callDtoGrid;
     }
 
-    public static Map<String, String> getVisibleColumn() {
+    private HashMap<String, String> getVisibleColumn() {
         HashMap<String, String> fieldNameColumnName = new LinkedHashMap<>();
         fieldNameColumnName.put("callTime", "Время");
         fieldNameColumnName.put("type", "Тип");

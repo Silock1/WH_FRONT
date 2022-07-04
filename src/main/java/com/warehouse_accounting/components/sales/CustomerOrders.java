@@ -16,8 +16,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.warehouse_accounting.components.sales.filter.CustomerOrdersFilter;
-import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
 import com.warehouse_accounting.components.sales.forms.order.OrderPanel;
+import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
 import com.warehouse_accounting.services.interfaces.*;
 
 /*
@@ -38,8 +38,6 @@ public class CustomerOrders extends VerticalLayout {
     private DepartmentService departmentService;
     private final ProductService productService;
     private final InvoiceService invoiceService;
-
-
 
 
     public CustomerOrders(Div parentLayer, CompanyService companyService, ContractorService contractorService,
@@ -102,7 +100,7 @@ public class CustomerOrders extends VerticalLayout {
 
         Button addFilterButton = new Button("Фильтр");
         addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        addFilterButton.addClickListener(e->
+        addFilterButton.addClickListener(e ->
                 customerOrdersFilter.setVisible(!customerOrdersFilter.isVisible())
         );
 
@@ -118,8 +116,14 @@ public class CustomerOrders extends VerticalLayout {
         HorizontalLayout createMenuBar = getCreateMenuBar();
         HorizontalLayout printMenuBar = getPrintMenuBar();
 
+        Button setting = new Button(new Icon(VaadinIcon.COG));
+        setting.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        setting.addClickListener(event -> {
+
+        });
+
         groupControl.add(helpButton, textProducts, refreshButton, addOrderButton,
-                addFilterButton, searchField, editMenuBar, statusMenuBar, createMenuBar, printMenuBar);
+                addFilterButton, searchField, editMenuBar, statusMenuBar, createMenuBar, printMenuBar, setting);
         setSizeFull();
         return groupControl;
     }
@@ -175,6 +179,7 @@ public class CustomerOrders extends VerticalLayout {
         groupEdit.setAlignItems(Alignment.CENTER);
         return groupEdit;
     }
+
     private HorizontalLayout getStatusMenuBar() {
         Icon caretDownIcon = new Icon(VaadinIcon.CARET_DOWN);
         caretDownIcon.setSize("12px");

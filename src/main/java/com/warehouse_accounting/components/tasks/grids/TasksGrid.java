@@ -5,6 +5,8 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -12,6 +14,7 @@ import com.vaadin.flow.data.renderer.TemplateRenderer;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.tasks.forms.TasksEditForm;
+import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.TasksDto;
 import com.warehouse_accounting.services.interfaces.ContractorService;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
@@ -34,10 +37,9 @@ public class TasksGrid extends HorizontalLayout {
     private List<TasksDto> tasksDto;
     private TasksService tasksService;
     private TextField numberText;
-    private List <TasksDto> tasksDtoList = new ArrayList<>();
+    private List<TasksDto> tasksDtoList = new ArrayList<>();
     private ContractorService contractorService;
     private EmployeeService employeeService;
-
 
 
     @Autowired
@@ -47,20 +49,40 @@ public class TasksGrid extends HorizontalLayout {
         this.tasksService = tasksService;
         tasksDto = tasksService.getAll();
         taskDtoGrid.setItems(tasksDto);
-        add(initGrid());
+        initGrid();
     }
 
 
     private Grid<TasksDto> initGrid() {
         taskDtoGrid.setColumns(getVisibleColumn().keySet().toArray(String[]::new));
-        getVisibleColumn().forEach((key, value) -> taskDtoGrid.getColumnByKey(key).setHeader(value));
+
+        Button menuButton = new Button(new Icon(VaadinIcon.COG));
+        menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        ColumnToggleContextMenu<TasksDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(menuButton);
+
+        getVisibleColumn().forEach((key, value) -> {
+            Grid.Column<TasksDto> tasksDtoColumn = taskDtoGrid.getColumnByKey(key).setHeader(value);
+            columnToggleContextMenu.addColumnToggleItem(value, tasksDtoColumn);
+        });
         taskDtoGrid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_ROW_STRIPES);
-        taskDtoGrid.addColumn((editMethod())).setHeader("Редактировать").setSortable(true).setAutoWidth(true);
-        taskDtoGrid.addColumn(deleteMethod()).setHeader("Удалить").setSortable(true).setAutoWidth(true);
+        Grid.Column<TasksDto> edit = taskDtoGrid.addColumn((editMethod())).setHeader("Редактировать").setSortable(true).setAutoWidth(true);
+        Grid.Column<TasksDto> delete = taskDtoGrid.addColumn(deleteMethod()).setHeader("Удалить").setSortable(true).setAutoWidth(true);
+
+
+        columnToggleContextMenu.addColumnToggleItem("Редактировать", edit);
+        columnToggleContextMenu.addColumnToggleItem("Удалить", delete);
+
+        HorizontalLayout headerLayout = new HorizontalLayout(menuButton);
+        headerLayout.setAlignItems(Alignment.BASELINE);
+        headerLayout.setFlexGrow(1);
+
+        setSizeFull();
+        add(taskDtoGrid, headerLayout);
+
         return taskDtoGrid;
     }
 
-    public void refreshDate(){
+    public void refreshDate() {
         removeAll();
         taskDtoGrid.setItems(tasksService.getAll());
         add(taskDtoGrid);
@@ -78,30 +100,31 @@ public class TasksGrid extends HorizontalLayout {
         return fieldNameColumnName;
     }
 
-   private TemplateRenderer<TasksDto> editMethod(){
+    private TemplateRenderer<TasksDto> editMethod() {
         return TemplateRenderer.<TasksDto>of(
                         "<vaadin-button theme=\"tertiary\" on-click=\"handleClick\">Редактировать</vaadin-button>")
                 .withEventHandler("handleClick", this::editButton);
     }
 
-    private  TemplateRenderer<TasksDto> deleteMethod() {
+    private TemplateRenderer<TasksDto> deleteMethod() {
         return TemplateRenderer.<TasksDto>of(
                         "<vaadin-button theme=\"tertiary\" on-click=\"handleClick\">Удалить</vaadin-button>")
                 .withEventHandler("handleClick", this::deleteButton);
     }
-    private void editButton(TasksDto tasksDto1){
+
+    private void editButton(TasksDto tasksDto1) {
         removeAll();
 
         TasksEditForm tasksEditForm = new TasksEditForm(employeeService, tasksService, contractorService);
         add(tasksEditForm);
     }
 
-    private  void deleteButton(TasksDto tasksDto){
+    private void deleteButton(TasksDto tasksDto) {
 
         Button delete = new Button("Удалить");
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
         Button cancel = new Button("Отмена");
-        HorizontalLayout buttonLayout = new HorizontalLayout(cancel,delete);
+        HorizontalLayout buttonLayout = new HorizontalLayout(cancel, delete);
 
         Dialog dialog = new Dialog();
         dialog.add("Подтвердите удаление");
@@ -120,8 +143,6 @@ public class TasksGrid extends HorizontalLayout {
             dialog.close();
         });
     }
-
-
 
 
 }

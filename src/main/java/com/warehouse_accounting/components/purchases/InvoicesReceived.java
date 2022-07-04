@@ -3,6 +3,7 @@ package com.warehouse_accounting.components.purchases;
 
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -11,6 +12,7 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
@@ -18,6 +20,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
+import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.InvoicesReceivedDto;
 import com.warehouse_accounting.services.interfaces.InvoicesReceivedService;
 import org.springframework.stereotype.Component;
@@ -28,7 +31,10 @@ import org.springframework.stereotype.Component;
 public class InvoicesReceived extends VerticalLayout {
 
     private HorizontalLayout horizontalToolPanelLayout = new HorizontalLayout();
+    private HorizontalLayout horizontalToolPanelLayout2 = new HorizontalLayout();
     private Grid<InvoicesReceivedDto> grid = new Grid<>(InvoicesReceivedDto.class);
+
+    private Button settingButton = new Button(new Icon(VaadinIcon.COG));
     private InvoicesReceivedService invoicesReceivedService;
 
     public InvoicesReceived(InvoicesReceivedService invoicesReceivedService) {
@@ -37,20 +43,44 @@ public class InvoicesReceived extends VerticalLayout {
 
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
         grid.setItems(invoicesReceivedService.getAll());
-        grid.setColumnOrder(grid.getColumnByKey("id").setHeader("№"),
-                grid.getColumnByKey("data").setHeader("Время"),
-                grid.getColumnByKey("contractor").setHeader("Контрагент"),
-                grid.getColumnByKey("company").setHeader("Организация"),
-                grid.getColumnByKey("sum").setHeader("Сумма"),
-                grid.getColumnByKey("incomingNumber").setHeader("Входящий номер"),
-                grid.getColumnByKey("dateIncomingNumber").setHeader("Входящая дата"),
-                grid.getColumnByKey("sent").setHeader("Отправлено"),
-                grid.getColumnByKey("printed").setHeader("Напечатано"),
-                grid.getColumnByKey("comment").setHeader("Комментарий"));
+        Grid.Column<InvoicesReceivedDto> id = grid.getColumnByKey("id").setHeader("№").setAutoWidth(true);
+        Grid.Column<InvoicesReceivedDto> dateTime = grid.getColumnByKey("data").setHeader("Время").setAutoWidth(true);
+        Grid.Column<InvoicesReceivedDto> contrAgent = grid.getColumnByKey("contractor").setHeader("Контрагент").setAutoWidth(true);
+        Grid.Column<InvoicesReceivedDto> org = grid.getColumnByKey("company").setHeader("Организация").setAutoWidth(true);
+        Grid.Column<InvoicesReceivedDto> sum = grid.getColumnByKey("sum").setHeader("Сумма").setAutoWidth(true);
+        Grid.Column<InvoicesReceivedDto> number = grid.getColumnByKey("incomingNumber").setHeader("Входящий номер").setAutoWidth(true);
+        Grid.Column<InvoicesReceivedDto> incomeDate = grid.getColumnByKey("dateIncomingNumber").setHeader("Входящая дата").setAutoWidth(true);
+        Grid.Column<InvoicesReceivedDto> sent = grid.getColumnByKey("sent").setHeader("Отправлено").setAutoWidth(true);
+        Grid.Column<InvoicesReceivedDto> print = grid.getColumnByKey("printed").setHeader("Напечатано").setAutoWidth(true);
+        Grid.Column<InvoicesReceivedDto> comment = grid.getColumnByKey("comment").setHeader("Комментарий").setAutoWidth(true);
+        grid.setColumnOrder(id, dateTime, contrAgent, org, sum, number, incomeDate, sent, print, comment);
+
+        settingButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+
+        ColumnToggleContextMenu<InvoicesReceivedDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(settingButton);
+
+        columnToggleContextMenu.addColumnToggleItem("№", id);
+        columnToggleContextMenu.addColumnToggleItem("Время", dateTime);
+        columnToggleContextMenu.addColumnToggleItem("Контрагент", contrAgent);
+        columnToggleContextMenu.addColumnToggleItem("Организация", org);
+        columnToggleContextMenu.addColumnToggleItem("Сумма", sum);
+        columnToggleContextMenu.addColumnToggleItem("Входящий номер", number);
+        columnToggleContextMenu.addColumnToggleItem("Входящая дата", incomeDate);
+        columnToggleContextMenu.addColumnToggleItem("Отправлено", sent);
+        columnToggleContextMenu.addColumnToggleItem("Напечатано", print);
+        columnToggleContextMenu.addColumnToggleItem("Комментарий", comment);
+
+        horizontalToolPanelLayout2.setAlignItems(FlexComponent.Alignment.BASELINE);
+        horizontalToolPanelLayout2.setFlexGrow(1);
+        grid.setHeightByRows(true);
+        horizontalToolPanelLayout2.setWidthFull();
+        horizontalToolPanelLayout2.add(grid, settingButton);
+
         configToolPanel();
 
-        add(horizontalToolPanelLayout);
-        add(grid);
+        add(horizontalToolPanelLayout, horizontalToolPanelLayout2);
+
+
     }
 
     private void configToolPanel() {
@@ -154,13 +184,12 @@ public class InvoicesReceived extends VerticalLayout {
         });
 
         Button settingsButton = new Button(new Icon(VaadinIcon.COG));
+        settingsButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         settingsButton.addClickListener(event -> {
 
         });
 
         horizontalToolPanelLayout.add(helpButton, text, refreshButton, filterButton, searchField, numberField, menuBar, settingsButton);
     }
-
-
 }
 

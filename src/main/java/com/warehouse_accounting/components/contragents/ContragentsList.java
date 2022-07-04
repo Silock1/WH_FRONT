@@ -40,9 +40,9 @@ public class ContragentsList extends VerticalLayout {
     public ContragentsList(ContragentsListGridLayout contragentsListGridLayout,
                            ContragentsFilterLayout contragentsFilterLayout,
                            FormNewContragent formNewContragent,
-                           FormEditCotragent formEditCotragent ) {
+                           FormEditCotragent formEditCotragent) {
 
-        this.contragentsListGridLayout=contragentsListGridLayout;
+        this.contragentsListGridLayout = contragentsListGridLayout;
         this.contragentsFilterLayout = contragentsFilterLayout;
         this.formNewContragent = formNewContragent;
         this.formEditCotragent = formEditCotragent;
@@ -59,24 +59,24 @@ public class ContragentsList extends VerticalLayout {
 
         Button helpButton = new Button(new Image("icons/helpApp.svg", "helpApp"));
         helpButton.addThemeVariants(ButtonVariant.LUMO_LARGE, ButtonVariant.LUMO_TERTIARY);
-        helpButton.addClickListener(c-> Notification.show("В разделе представлен список ваших поставщиков и покупателей." +
+        helpButton.addClickListener(c -> Notification.show("В разделе представлен список ваших поставщиков и покупателей." +
                 " Для них можно настраивать индивидуальные цены и скидки, также можно им звонить и отправлять " +
                 "документы прямо из МоегоСклада.\n" +
                 "Список контрагентов можно импортировать и экспортировать.\n" +
-                "Читать инструкцию: Контрагенты\n"+
-                "Видео: Контрагенты",4000,Notification.Position.TOP_START));
+                "Читать инструкцию: Контрагенты\n" +
+                "Видео: Контрагенты", 4000, Notification.Position.TOP_START));
 
         Label textLabel = new Label("Контрагенты");
         textLabel.setWidth("150px");
 
         Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH));
         refreshButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
-        refreshButton.addClickListener(e-> {
+        refreshButton.addClickListener(e -> {
             contragentsListGridLayout.refreshDate();
         });
         Button addContragent = new Button(("Контрагент"), new Icon(VaadinIcon.PLUS));
         addContragent.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        addContragent.addClickListener(e->{
+        addContragent.addClickListener(e -> {
             hideButtonEndGrid();
             formEditCotragent.bild(null);
             add(formEditCotragent);
@@ -84,7 +84,7 @@ public class ContragentsList extends VerticalLayout {
 
         Button filter = new Button("Фильтр");
         filter.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        filter.addClickListener(e->{
+        filter.addClickListener(e -> {
             contragentsFilterLayout.setVisible(!contragentsFilterLayout.isVisible());
         });
 
@@ -134,29 +134,38 @@ public class ContragentsList extends VerticalLayout {
         statusSubMenu.addItem("Сделка не заключена");
         statusSubMenu.addItem("Настроить...");
 
-        HorizontalLayout printVision = new HorizontalLayout(new Text("Печать"),caretDownPrint);
+        HorizontalLayout printVision = new HorizontalLayout(new Text("Печать"), caretDownPrint);
         printVision.setSpacing(false);
         MenuItem print = menuBar.addItem(printVision);
         SubMenu printSubMenu = print.getSubMenu();
         printSubMenu.addItem("Список контрагентов");
         printSubMenu.addItem("Настроить");
 
+        Button setting = new Button(new Icon(VaadinIcon.COG));
+        setting.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        setting.addClickListener(event -> {
+
+        });
+
         controlButton.add(helpButton, textLabel, refreshButton, addContragent, filter, textField,
-                menuBar, mailingLists, importButton, exportButton);
+                menuBar, mailingLists, importButton, exportButton, setting);
         setSizeFull();
         return controlButton;
     }
-    public void showButtonEndGrid(Boolean refreshGrid){
+
+    public void showButtonEndGrid(Boolean refreshGrid) {
         buttons.setVisible(true);
-        if(refreshGrid)contragentsListGridLayout.refreshDate();
+        if (refreshGrid) contragentsListGridLayout.refreshDate();
         contragentsListGridLayout.setVisible(true);
     }
-    public void hideButtonEndGrid(){
+
+    public void hideButtonEndGrid() {
         buttons.setVisible(false);
         contragentsListGridLayout.setVisible(false);
         contragentsFilterLayout.setVisible(false);
     }
-    public void editFormActivate(ContractorDto contractorDto){
+
+    public void editFormActivate(ContractorDto contractorDto) {
         formEditCotragent.bild(contractorDto);
         hideButtonEndGrid();
         add(formEditCotragent);
