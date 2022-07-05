@@ -7,7 +7,7 @@ retrofit:
 
   restServices:
     user_url: api/v1/auth/login
-    acceptance_url: api/acceptances   #404
+    acceptance_url: api/acceptances
     adjustments_url: api/adjustments
     application_url: api/applications
     attribute_of_calculation_object_url: api/attribute_of_calculation_objects   #[]
