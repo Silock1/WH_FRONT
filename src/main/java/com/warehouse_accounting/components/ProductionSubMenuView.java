@@ -30,14 +30,14 @@ public class ProductionSubMenuView extends VerticalLayout {
     private final ProductionProcessTechnology productionProcessTechnology;
     private final ProductionOperations productionOperations;
 
-    //private final ProductionOrders productionOrders;
+    private final ProductionOrders productionOrders;
 
-    public ProductionSubMenuView(//ProductionOrders productionOrders,
+    public ProductionSubMenuView(ProductionOrders productionOrders,
                                  ProductionTasks productionTasks,
                                  ProductionSteps productionSteps,
                                  ProductionProcessTechnology productionProcessTechnology,
                                  ProductionOperations productionOperations) {
-        //this.productionOrders = productionOrders;
+        this.productionOrders = productionOrders;
         this.productionOperations = productionOperations;
         this.productionTasks = productionTasks;
         this.productionSteps = productionSteps;
@@ -60,7 +60,7 @@ public class ProductionSubMenuView extends VerticalLayout {
                     break;
                 case "Заказы на производство":
                     pageContent.removeAll();
-                    //pageContent.add(productionOrders);
+                    pageContent.add(productionOrders);
                     break;
                 case "Тех. операции":
                     pageContent.removeAll();
