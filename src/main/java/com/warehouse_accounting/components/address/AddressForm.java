@@ -17,21 +17,17 @@ import com.warehouse_accounting.services.interfaces.CountryService;
 import com.warehouse_accounting.services.interfaces.RegionService;
 import com.warehouse_accounting.services.interfaces.StreetService;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class AddressForm {
-    private Long id = null;
-
     private final CountryService countryService;
     private final RegionService regionService;
     private final CityService cityService;
     private final StreetService streetService;
     private final BuildingService buildingService;
 
-    private List<CityDto> cities;
-    private List<StreetDto> streets;
-    private List<BuildingDto> buildings;
+    private Long id = null;
+    private String cityName;
+    private String streetName;
+    private String buildingName;
 
     private final TextArea fullAddressTextArea;
     private final TextArea postCodeTextArea;
@@ -88,11 +84,13 @@ public class AddressForm {
         streetComboBox = new ComboBox<>();
         streetComboBox.setItemLabelGenerator(StreetDto::getNameSocr);
         streetComboBox.setAllowCustomValue(true);
+        streetComboBox.setDataProvider(getStreetDataProvider());
         form.addFormItem(streetComboBox, "Улица");
 
         buildingComboBox = new ComboBox<>();
         buildingComboBox.setItemLabelGenerator(BuildingDto::getName);
         buildingComboBox.setAllowCustomValue(true);
+        buildingComboBox.setDataProvider(getBuildingDataProvider());
         form.addFormItem(buildingComboBox, "Дом");
 
         officeTextField = new TextField();
@@ -115,73 +113,22 @@ public class AddressForm {
         });
 
         regionComboBox.addValueChangeListener(e -> {
-            if (regionComboBox.getValue() != null) {
-                cityComboBox.setItems(this.cityService.getAll(regionComboBox.getValue().getCode()));
-            } else {
-                cityComboBox.setItems();
-            }
-
-            generateFullName();
-        });
-
-        cityComboBox.addValueChangeListener(e -> {
-            if (cityComboBox.getValue() != null) {
-                streetComboBox.setItems(this.streetService.getAll(cityComboBox.getValue().getCode()));
-            } else {
-                streetComboBox.setItems();
-            }
-
             generateFullName();
         });
 
         cityComboBox.addCustomValueSetListener(e -> {
-            CityDto custom = CityDto.builder().name(e.getDetail()).build();
-
-            if (cities == null) {
-                cities = new ArrayList<>();
-            }
-            cities.add(custom);
-
-            cityComboBox.setItems(cities);
-            cityComboBox.setValue(custom);
-        });
-
-        streetComboBox.addValueChangeListener(e -> {
-            if (streetComboBox.getValue() != null) {
-                buildingComboBox.setItems(this.buildingService.getAll(streetComboBox.getValue().getCode()));
-            } else {
-                buildingComboBox.setItems();
-            }
-
+            cityName = e.getDetail();
             generateFullName();
         });
 
         streetComboBox.addCustomValueSetListener(e -> {
-            StreetDto custom = StreetDto.builder().name(e.getDetail()).build();
-
-            if (streets == null) {
-                streets = new ArrayList<>();
-            }
-            streets.add(custom);
-
-            streetComboBox.setItems(streets);
-            streetComboBox.setValue(custom);
-        });
-
-        buildingComboBox.addValueChangeListener(e -> {
+            streetName = e.getDetail();
             generateFullName();
         });
 
         buildingComboBox.addCustomValueSetListener(e -> {
-            BuildingDto custom = BuildingDto.builder().name(e.getDetail()).build();
-
-            if (buildings == null) {
-                buildings = new ArrayList<>();
-            }
-            buildings.add(custom);
-
-            buildingComboBox.setItems(buildings);
-            buildingComboBox.setValue(custom);
+            buildingName = e.getDetail();
+            generateFullName();
         });
 
         officeTextField.addValueChangeListener(e -> {
@@ -200,11 +147,11 @@ public class AddressForm {
                 .postCode(postCodeTextArea.getValue())
                 .regionId((regionComboBox.getValue() == null) ? null : regionComboBox.getValue().getId())
                 .cityId((cityComboBox.getValue() == null) ? null : cityComboBox.getValue().getId())
-                .cityName((cityComboBox.getValue() == null) ? null : cityComboBox.getValue().getName())
+                .cityName(cityName)
                 .streetId((streetComboBox.getValue() == null) ? null : streetComboBox.getValue().getId())
-                .streetName((streetComboBox.getValue() == null) ? null : streetComboBox.getValue().getName())
+                .streetName(streetName)
                 .buildingId((buildingComboBox.getValue() == null) ? null : buildingComboBox.getValue().getId())
-                .buildingName((buildingComboBox.getValue() == null) ? null : buildingComboBox.getValue().getName())
+                .buildingName(buildingName)
                 .office(officeTextField.getValue())
                 .fullAddress(fullAddressTextArea.getValue())
                 .other(otherTextField.getValue())
@@ -221,53 +168,40 @@ public class AddressForm {
 
         postCodeTextArea.setValue(model.getPostCode());
 
-        countryComboBox.setValue(this.countryService.getById(model.getCountryId()));
+        if (model.getCountryId() != null) {
+            countryComboBox.setValue(this.countryService.getById(model.getCountryId()));
+        }
 
-        RegionDto region = this.regionService.getById(model.getRegionId());
-        regionComboBox.setValue(region);
+        if (model.getRegionId() != null) {
+            RegionDto region = this.regionService.getById(model.getRegionId());
+            regionComboBox.setValue(region);
+        }
 
         CityDto city;
         if (model.getCityId() != null) {
             city = this.cityService.getById(model.getCityId());
-            cities = this.cityService.getAll(region.getCode());
         } else {
             city = CityDto.builder().name(model.getCityName()).build();
-            cities = new ArrayList<>();
-            cities.add(city);
         }
-        cityComboBox.setItems(cities);
+        cityName = model.getCityName();
         cityComboBox.setValue(city);
 
         StreetDto street;
         if (model.getStreetId() != null) {
             street = this.streetService.getById(model.getStreetId());
-            if (city.getCode() == null) {
-                streets = new ArrayList<>();
-            } else {
-                streets = this.streetService.getAll(city.getCode());
-            }
         } else {
             street = StreetDto.builder().name(model.getStreetName()).build();
-            streets = new ArrayList<>();
-            streets.add(street);
         }
-        streetComboBox.setItems(streets);
+        streetName = model.getStreetName();
         streetComboBox.setValue(street);
 
         BuildingDto building;
         if (model.getBuildingId() != null) {
             building = this.buildingService.getById(model.getBuildingId());
-            if (street.getCode() == null) {
-                buildings = new ArrayList<>();
-            } else {
-                buildings = this.buildingService.getAll(street.getCode());
-            }
         } else {
             building = BuildingDto.builder().name(model.getBuildingName()).build();
-            buildings = new ArrayList<>();
-            buildings.add(building);
         }
-        buildingComboBox.setItems(buildings);
+        buildingName = model.getBuildingName();
         buildingComboBox.setValue(building);
 
         officeTextField.setValue(model.getOffice());
@@ -275,6 +209,8 @@ public class AddressForm {
         otherTextField.setValue(model.getOther());
 
         commentTextField.setValue(model.getComment());
+
+        fullAddressTextArea.setValue(model.getFullAddress());
     }
 
     private void generateFullName() {
@@ -282,9 +218,9 @@ public class AddressForm {
                 .append((postCodeTextArea.getValue().isEmpty()) ? "" : postCodeTextArea.getValue() + ", ")
                 .append((countryComboBox.getValue() == null) ? "" : countryComboBox.getValue().getShortName() + ", ")
                 .append((regionComboBox.getValue() == null) ? "" : regionComboBox.getValue().getNameSocr() + ", ")
-                .append((cityComboBox.getValue() == null) ? "" : cityComboBox.getValue().getNameSocr() + ", ")
-                .append((streetComboBox.getValue() == null) ? "" : streetComboBox.getValue().getNameSocr() + ", ")
-                .append((buildingComboBox.getValue() == null) ? "" : buildingComboBox.getValue().getName() + ", ")
+                .append((cityName == null) ? "" : cityName + ", ")
+                .append((streetName == null) ? "" : streetName + ", ")
+                .append((buildingName == null) ? "" : buildingName + ", ")
                 .append((officeTextField.getValue().isEmpty()) ? "" : officeTextField.getValue() + ", ")
                 .append((otherTextField.getValue().isEmpty()) ? "" : otherTextField.getValue() + ", ");
 
@@ -295,16 +231,74 @@ public class AddressForm {
         fullAddressTextArea.setValue(str.toString());
     }
 
-    private DataProvider<CityDto, String> getCityDataProvider()
-    {
+    private DataProvider<CityDto, String> getCityDataProvider() {
         return DataProvider.fromFilteringCallbacks(
                 query -> {
                     String filter = query.getFilter().orElse(null);
-                    return cityService.getSlice(query.getOffset(), query.getLimit(), filter).stream();
+                    return cityService.getSlice(
+                            query.getOffset(),
+                            query.getLimit(),
+                            filter,
+                            (regionComboBox.getValue() == null) ? "" : regionComboBox.getValue().getCode()
+                    ).stream();
                     },
                 query -> {
                     String filter = query.getFilter().orElse(null);
-                    return cityService.getCount(filter);
+                    return cityService.getCount(
+                            filter,
+                            (regionComboBox.getValue() == null) ? "" : regionComboBox.getValue().getCode()
+                    );
                 });
+    }
+
+    private DataProvider<StreetDto, String> getStreetDataProvider() {
+        return DataProvider.fromFilteringCallbacks(
+                query -> {
+                    String filter = query.getFilter().orElse(null);
+                    return streetService.getSlice(query.getOffset(), query.getLimit(), filter, getCodeForStreetDataProvider()).stream();
+                },
+                query -> {
+                    String filter = query.getFilter().orElse(null);
+                    return streetService.getCount(filter, getCodeForStreetDataProvider());
+                });
+    }
+
+    private String getCodeForStreetDataProvider() {
+        if (cityComboBox.getValue() != null) {
+            return cityComboBox.getValue().getCode();
+        } else if (regionComboBox.getValue() != null) {
+            return regionComboBox.getValue().getCode();
+        } else {
+            return "";
+        }
+    }
+
+    private DataProvider<BuildingDto, String> getBuildingDataProvider() {
+        return DataProvider.fromFilteringCallbacks(
+                query -> {
+                    String filter = query.getFilter().orElse(null);
+                    return buildingService.getSlice(
+                            query.getOffset(),
+                            query.getLimit(),
+                            filter,
+                            getCodeForBuildingDataProvider()
+                    ).stream();
+                },
+                query -> {
+                    String filter = query.getFilter().orElse(null);
+                    return buildingService.getCount(filter, getCodeForBuildingDataProvider());
+                });
+    }
+
+    private String getCodeForBuildingDataProvider() {
+        if (streetComboBox.getValue() != null) {
+            return streetComboBox.getValue().getCode();
+        } else if (cityComboBox.getValue() != null) {
+            return cityComboBox.getValue().getCode();
+        } else if (regionComboBox.getValue() != null) {
+            return regionComboBox.getValue().getCode();
+        } else {
+            return "";
+        }
     }
 }

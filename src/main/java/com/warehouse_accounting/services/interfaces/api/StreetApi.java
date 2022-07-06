@@ -25,14 +25,16 @@ public interface StreetApi {
             @Path(value = "url", encoded = true) String url,
             @Query("offset") int offset,
             @Query("limit") int limit,
-            @Query("name") String name
+            @Query("name") String name,
+            @Query("regionCityCode") String regionCityCode
     );
 
     @Headers("Accept: application/json")
     @GET("{url}/count")
     Call<Integer> getCount(
             @Path(value = "url", encoded = true) String url,
-            @Query("name") String name
+            @Query("name") String name,
+            @Query("regionCityCode") String regionCityCode
     );
 
     @Headers("Accept: application/json")

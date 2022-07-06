@@ -9,9 +9,9 @@ public interface StreetService {
 
     List<StreetDto> getAll(String regionCityCode);
 
-    List<StreetDto> getSlice(int offset, int limit, String name);
+    List<StreetDto> getSlice(int offset, int limit, String name, String regionCityCode);
 
-    int getCount(String name);
+    int getCount(String name, String regionCityCode);
 
     StreetDto getById(Long id);
 }

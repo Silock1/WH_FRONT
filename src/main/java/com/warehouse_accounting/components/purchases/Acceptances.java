@@ -78,7 +78,10 @@ public class Acceptances extends VerticalLayout {
         });
 
         Button settingButton = new Button(new Icon(VaadinIcon.COG));
-        refreshButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        settingButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        settingButton.addClickListener(event -> {
+
+        });
 
         HorizontalLayout editMenuBar = getEditMenuBar();
         HorizontalLayout statusMenuBar = getStatusMenuBar();

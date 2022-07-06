@@ -8,9 +8,9 @@ public interface CityService {
 
     List<CityDto> getAll(String regionCode);
 
-    List<CityDto> getSlice(int offset, int limit, String name);
+    List<CityDto> getSlice(int offset, int limit, String name, String regionCode);
 
-    int getCount(String name);
+    int getCount(String name, String regionCode);
 
     CityDto getById(Long id);
 

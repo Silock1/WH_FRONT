@@ -69,11 +69,35 @@ public class AddressView extends VerticalLayout {
         add(open);
 
 
-        Button submit = new Button("Отправить");
+        Button submit = new Button("Save new");
         submit.addClickListener(e -> {
-            addressService.create(addressForm.getValue());
+            if (addressForm.getValue().getId() == null) {
+                addressService.create(addressForm.getValue());
+            } else {
+                System.out.println("Не удалось сохранить new, так как ключ не ноль (объект нужно обновить)");
+            }
         });
         add(submit);
+
+        Button update = new Button("Save update");
+        update.addClickListener(e -> {
+            if (addressForm.getValue().getId() != null) {
+                addressService.update(addressForm.getValue());
+            } else {
+                System.out.println("Не удалось обновить, так как ключ ноль (объект нужно сохранить new)");
+            }
+        });
+        add(update);
+
+        Button delete = new Button("Del");
+        delete.addClickListener(e -> {
+            if (addressForm.getValue().getId() != null) {
+                addressService.deleteById(addressForm.getValue().getId());
+            } else {
+                System.out.println("Не удалось удалить, так как ключ ноль (объект нужно сохранить new)");
+            }
+        });
+        add(delete);
 
     }
 }

@@ -5,12 +5,15 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.user.settings.SettingsView;
+import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.UnitsOfMeasureDto;
 import com.warehouse_accounting.services.interfaces.UnitsOfMeasureService;
 
@@ -39,10 +42,20 @@ public class UnitsOfMeasureView extends VerticalLayout {
 
         Grid<UnitsOfMeasureDto> grid = new Grid<>(UnitsOfMeasureDto.class, false);
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
-        grid.addColumn(UnitsOfMeasureDto::getType).setHeader("Тип");
-        grid.addColumn(UnitsOfMeasureDto::getName).setHeader("Краткое наименование");
-        grid.addColumn(UnitsOfMeasureDto::getFullName).setHeader("Полное наименование");
-        grid.addColumn(UnitsOfMeasureDto::getCode).setHeader("Цифровой код");
+        Grid.Column<UnitsOfMeasureDto> type = grid.addColumn(UnitsOfMeasureDto::getType).setHeader("Тип");
+        Grid.Column<UnitsOfMeasureDto> shortName = grid.addColumn(UnitsOfMeasureDto::getName).setHeader("Краткое наименование");
+        Grid.Column<UnitsOfMeasureDto> fullName = grid.addColumn(UnitsOfMeasureDto::getFullName).setHeader("Полное наименование");
+        Grid.Column<UnitsOfMeasureDto> digitCode = grid.addColumn(UnitsOfMeasureDto::getCode).setHeader("Цифровой код");
+
+        Button menuButton = new Button(new Icon(VaadinIcon.COG));
+        menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        ColumnToggleContextMenu<UnitsOfMeasureDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(menuButton);
+
+        columnToggleContextMenu.addColumnToggleItem("Тип", type);
+        columnToggleContextMenu.addColumnToggleItem("Краткое наименование", shortName);
+        columnToggleContextMenu.addColumnToggleItem("Полное наименование", fullName);
+        columnToggleContextMenu.addColumnToggleItem("Цифровой код", digitCode);
+
         grid.addSelectionListener(selection -> {
             int size = selection.getAllSelectedItems().size();
             boolean isSingleSelection = size == 1;
@@ -64,6 +77,10 @@ public class UnitsOfMeasureView extends VerticalLayout {
         grid.setItems(people);
         setPadding(false);
         setAlignItems(Alignment.STRETCH);
-        add(header, grid, footer);
+
+        HorizontalLayout gridAndCog = new HorizontalLayout();
+        gridAndCog.add(grid, menuButton);
+
+        add(header, footer, gridAndCog);
     }
 }

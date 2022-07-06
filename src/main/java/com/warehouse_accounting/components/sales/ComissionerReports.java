@@ -347,7 +347,7 @@ public class ComissionerReports extends VerticalLayout {
         Icon settingsIcon = new Icon(VaadinIcon.COG);
         settingsIcon.setSize("22px");
         Button settingsButton = new Button(settingsIcon);
-
+        settingsButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         settingsButton.addClickListener(event -> {
 
         });

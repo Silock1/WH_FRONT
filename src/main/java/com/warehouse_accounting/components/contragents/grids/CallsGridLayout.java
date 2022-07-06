@@ -18,7 +18,7 @@ import java.util.LinkedHashMap;
 @UIScope
 public class CallsGridLayout extends HorizontalLayout {
     private final CallService service;
-    private Button settingButton = new Button(new Icon(VaadinIcon.COG_O));
+    private Button settingButton = new Button(new Icon(VaadinIcon.COG));
     private final Grid<CallDto> callDtoGrid = new Grid<>(CallDto.class, false);
 
     public CallsGridLayout(CallService service) {

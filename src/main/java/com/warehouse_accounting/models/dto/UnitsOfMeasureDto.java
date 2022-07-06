@@ -9,15 +9,15 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UnitsOfMeasureDto {
+public class UnitsOfMeasureDto { // единица количества товара
 
     private Long id;
 
-    private String type;
+    private String type; // ?
 
-    private String name;
+    private String name; // шт.
 
-    private  String fullName;
+    private  String fullName; // Штука
 
     private String code;
 

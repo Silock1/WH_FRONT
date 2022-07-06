@@ -2,6 +2,7 @@ package com.warehouse_accounting;
 
 import com.google.gson.GsonBuilder;
 import com.warehouse_accounting.components.util.DateTimeDeserealizerAdapter;
+import com.warehouse_accounting.components.util.LocalDateSerializerAdapter;
 import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +26,10 @@ public class AppConfig {
                 )
                 //anyway it doesn't works :(
                 .addConverterFactory(GsonConverterFactory.create(
-                        new GsonBuilder().registerTypeAdapter(LocalDate.class, new DateTimeDeserealizerAdapter()).serializeNulls().create()))
+                        new GsonBuilder()
+                                .registerTypeAdapter(LocalDate.class, new DateTimeDeserealizerAdapter())
+                                .registerTypeAdapter(LocalDate.class, new LocalDateSerializerAdapter())
+                                .serializeNulls().create()))
                 .build();
     }
 

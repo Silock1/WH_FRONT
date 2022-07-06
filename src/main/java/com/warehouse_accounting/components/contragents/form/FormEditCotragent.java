@@ -10,6 +10,7 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.details.DetailsVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -23,6 +24,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.contragents.ContragentsList;
+import com.warehouse_accounting.components.contragents.form.form_edit.Events;
+import com.warehouse_accounting.components.contragents.grids.CallsGridLayout;
 import com.warehouse_accounting.models.dto.BankAccountDto;
 import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.models.dto.ContractorFaceContactDto;
@@ -30,10 +33,9 @@ import com.warehouse_accounting.models.dto.LegalDetailDto;
 import com.warehouse_accounting.models.dto.TypeOfPriceDto;
 import com.warehouse_accounting.models.dto.dadataDto.Example2;
 import com.warehouse_accounting.services.interfaces.BankAccountService;
-import com.warehouse_accounting.services.interfaces.ContractorGroupService;
+import com.warehouse_accounting.services.interfaces.CallService;
 import com.warehouse_accounting.services.interfaces.ContractorService;
 import com.warehouse_accounting.services.interfaces.DadataService;
-import com.warehouse_accounting.services.interfaces.TypeOfContractorService;
 import com.warehouse_accounting.services.interfaces.TypeOfPriceService;
 
 import java.util.ArrayList;
@@ -48,10 +50,15 @@ public class FormEditCotragent extends VerticalLayout {
     private final transient ContractorService contractorService;
     private final transient BankAccountService bankAccountService;
     private final transient TypeOfPriceService typeOfPriceService;
+
+    private final transient CallService callService;
     private ContragentsList parent;
     private transient ContractorDto contractorDto;
     private final transient DadataService dadata;
     private boolean newForm = false;
+
+    //Поля для правого блока
+    private Events events;
 
 
     private Button edit = new Button ("Изменить");
@@ -64,7 +71,7 @@ public class FormEditCotragent extends VerticalLayout {
     private TextField discountCard;
     private Select <String> typeOfPrice;
     private TextField fax;
-    private TextField emil;
+    private TextField email;
     private TextArea address;
     private TextArea commentToAddress;
     private TextArea comment;
@@ -92,11 +99,13 @@ public class FormEditCotragent extends VerticalLayout {
     public FormEditCotragent(ContractorService contractorService,
                              DadataService dadata,
                              BankAccountService bankAccountService,
-                             TypeOfPriceService typeOfPriceService) {
+                             TypeOfPriceService typeOfPriceService,
+                             CallService callService) {
         this.contractorService = contractorService;
         this.dadata = dadata;
         this.bankAccountService = bankAccountService;
         this.typeOfPriceService = typeOfPriceService;
+        this.callService = callService;
     }
     public void bild(ContractorDto contractorDto){
         removeAll();
@@ -124,6 +133,7 @@ public class FormEditCotragent extends VerticalLayout {
         if(contractorDto.getBankAccountDtos() == null)contractorDto.setBankAccountDtos(new ArrayList<>());
         if(contractorDto.getContacts() == null) contractorDto.setContacts(new ArrayList<>());
         this.contractorDto = contractorDto;
+        this.events = new Events(callService, contractorDto);
         add(createButton(contractorDto), getNameContragent(contractorDto),groupBlockLayout());
     }
     private HorizontalLayout createButton(ContractorDto contractorDto){
@@ -141,7 +151,7 @@ public class FormEditCotragent extends VerticalLayout {
             contractorDto.setContractorGroupName(group.getValue());
             contractorDto.setPhone(phone.getValue());
             contractorDto.setFax(fax.getValue());
-            contractorDto.setEmail(emil.getValue());
+            contractorDto.setEmail(email.getValue());
             contractorDto.setAddress(address.getValue());
             contractorDto.setCommentToAddress(commentToAddress.getValue());
             contractorDto.setComment(comment.getValue());
@@ -176,11 +186,11 @@ public class FormEditCotragent extends VerticalLayout {
             contractorDto.getLegalDetailDto().setTypeOfContractorName(typeOfContractor.getValue());
 
 
-            BankAccountDto accountDto;
+            BankAccountDto bankAccountDto;
             for (FormBankAccauntInner form : formsBankAccount) {
-                accountDto = form.getBankAccount();
+                bankAccountDto = form.getBankAccount();
                 if (!form.isDeleted() && form.isNewAccount()) {
-                    contractorDto.getBankAccountDtos().add(accountDto);
+                    contractorDto.getBankAccountDtos().add(bankAccountDto);
                 }
                 // получение Данные LegalDetails
                 contractorDto.getLegalDetailDto().setLastName(lastName.getValue());
@@ -247,14 +257,15 @@ public class FormEditCotragent extends VerticalLayout {
                 removeAll();
                 parent.showButtonEndGrid(true);
             }
-            close = new Button("Закрыть");
-            close.addClickListener(e1 -> {
-                removeAll();
-                parent.showButtonEndGrid(false);
-            });
-            button.add(close,edit);
-            button.setAlignItems(Alignment.CENTER);
+
         });
+        close = new Button("Закрыть");
+        close.addClickListener(e1 -> {
+            removeAll();
+            parent.showButtonEndGrid(false);
+        });
+        button.add(close,edit);
+        button.setAlignItems(Alignment.CENTER);
         return button;
     }
     private HorizontalLayout getNameContragent(ContractorDto contractorDto) {
@@ -268,20 +279,57 @@ public class FormEditCotragent extends VerticalLayout {
     }
     private VerticalLayout leftGroupFormLayout() {
         VerticalLayout leftLayout = new VerticalLayout();
-        leftLayout.add(getContragentAccordion(), getFaceContactAccordion(),getLegalDetailAccordion(),getSalasEndPriceAccordion(), getAccessAccordion());
+        leftLayout.add(getContragentAccordion(),
+                getFaceContactAccordion(),
+                getLegalDetailAccordion(),
+                getSalasEndPriceAccordion(),
+                getAccessAccordion());
         leftLayout.setWidth("450px");
         return leftLayout;
     }
     private VerticalLayout rightGroupButtonLayout() {
         VerticalLayout rightLayout = new VerticalLayout();
         rightLayout.setWidth("500px");
-        Tab details = new Tab("События");
-        Tab payment = new Tab("Задачи");
-        Tab shipping = new Tab("Документы");
-        Tab files = new Tab("Файлы");
-        Tab indicators = new Tab("Показатели");
+        final String eventsName = "События";
+        final String tasksName = "Задачи";
+        final String documentsName = "Документы";
+        final String filesName = "Файлы";
+        final String indicatorsName = "Показатели";
+        Tab details = new Tab(eventsName);
+        Tab payment = new Tab(tasksName);
+        Tab shipping = new Tab(documentsName);
+        Tab files = new Tab(filesName);
+        Tab indicators = new Tab(indicatorsName);
         Tabs tabs = new Tabs(details, payment, shipping, files, indicators);
-        rightLayout.add(tabs);
+        Div tabContent = new Div();
+        tabContent.setSizeFull();
+        tabs.addSelectedChangeListener(event -> {
+            switch (event.getSelectedTab().getLabel()) {
+                case eventsName:
+                    tabContent.removeAll();
+                    tabContent.add(events);
+                    break;
+                case tasksName:
+                    tabContent.removeAll();
+                    tabContent.add(new Span(tasksName));
+                    break;
+                case documentsName:
+                    tabContent.removeAll();
+                    tabContent.add(new Span(documentsName));
+                    break;
+                case filesName:
+                    tabContent.removeAll();
+                    tabContent.add(new Span(filesName));
+                    break;
+                case indicatorsName:
+                    tabContent.removeAll();
+                    tabContent.add(new Span(indicatorsName));
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + event.getSelectedTab().getLabel());
+            }
+        });
+        rightLayout.add(tabs,tabContent);
         return rightLayout;
     }
     private HorizontalLayout groupBlockLayout() {
@@ -302,8 +350,8 @@ public class FormEditCotragent extends VerticalLayout {
         if(contractorDto.getPhone() != null) phone.setValue(contractorDto.getPhone());
         fax = new TextField();
         if(contractorDto.getFax() != null) fax.setValue(contractorDto.getFax());
-        emil = new TextField();
-        if(contractorDto.getEmail() != null) emil.setValue(contractorDto.getEmail());
+        email = new TextField();
+        if(contractorDto.getEmail() != null) email.setValue(contractorDto.getEmail());
         address = new TextArea();
         if(contractorDto.getAddress() != null) address.setValue(contractorDto.getAddress());
         commentToAddress = new TextArea();
@@ -320,9 +368,9 @@ public class FormEditCotragent extends VerticalLayout {
         form.addFormItem(group, "Группы");
         form.addFormItem(phone, "Телефон");
         form.addFormItem(fax, "Факс");
-        form.addFormItem(emil, "Электронная почта");
-        form.addFormItem(address, "Адресс");
-        form.addFormItem(commentToAddress, "Комментарий к Адресу");
+        form.addFormItem(email, "Электронная почта");
+        form.addFormItem(address, "Адрес");
+        form.addFormItem(commentToAddress, "Комментарий к адресу");
         form.addFormItem(comment, "Комментарий");
         form.addFormItem(code, "Код");
         form.addFormItem(outerCode, "Внешний код");
@@ -393,7 +441,7 @@ public class FormEditCotragent extends VerticalLayout {
 
         main.add(typeOfContractor, forms);
         Accordion accordion = new Accordion();
-        AccordionPanel legailDetails = accordion.add("Реквезиты", main);
+        AccordionPanel legailDetails = accordion.add("Реквизиты", main);
         legailDetails.addThemeVariants(DetailsVariant.FILLED);
         legailDetails.setOpened(true);
         return legailDetails;

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UnitDto {
+public class UnitDto { // валюта, файл "Валюта.xlsx" не содержит единицы валют, это копия UnitsOfMeasure.xls
 
     private Long id;
 

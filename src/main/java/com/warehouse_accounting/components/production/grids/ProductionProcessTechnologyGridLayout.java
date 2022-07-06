@@ -1,10 +1,7 @@
 package com.warehouse_accounting.components.production.grids;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.contextmenu.ContextMenu;
-import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -13,14 +10,11 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.ProductionProcessTechnologyDto;
-import com.warehouse_accounting.models.dto.ProductionStageDto;
 import com.warehouse_accounting.services.interfaces.ProductionProcessTechnologyService;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.log4j.Log4j2;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -59,8 +53,8 @@ public class ProductionProcessTechnologyGridLayout extends HorizontalLayout {
 
         Button menuButton = new Button(new Icon(VaadinIcon.COG));
         menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        ProductionProcessTechnologyGridLayout.ColumnToggleContextMenu columnToggleContextMenu = new ProductionProcessTechnologyGridLayout.ColumnToggleContextMenu(
-                menuButton);
+        ColumnToggleContextMenu<ProductionProcessTechnologyDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(menuButton);
+
         columnToggleContextMenu.addColumnToggleItem("Id", idColumn);
         columnToggleContextMenu.addColumnToggleItem("Наименование", nameColumn);
         columnToggleContextMenu.addColumnToggleItem("Описание", descriptionColumn);
@@ -88,22 +82,4 @@ public class ProductionProcessTechnologyGridLayout extends HorizontalLayout {
         productionProcessTechnologyDtoGrid.setItems(productionProcessTechnologyDtoList);
         productionProcessTechnologyDtoGrid.getDataProvider().refreshAll();
     }
-
-
-    private static class ColumnToggleContextMenu extends ContextMenu {
-        public ColumnToggleContextMenu(Component target) {
-            super(target);
-            setOpenOnClick(true);
-        }
-
-        void addColumnToggleItem(String label, Grid.Column<ProductionProcessTechnologyDto> column) {
-            MenuItem menuItem = this.addItem(label, e -> {
-                column.setVisible(e.getSource().isChecked());
-            });
-            menuItem.setCheckable(true);
-            menuItem.setChecked(column.isVisible());
-        }
-    }
-
-
 }

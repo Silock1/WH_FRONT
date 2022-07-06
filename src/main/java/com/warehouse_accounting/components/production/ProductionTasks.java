@@ -5,6 +5,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -17,23 +18,46 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.components.production.forms.ProductionTasksForm;
 import com.warehouse_accounting.components.production.grids.ProductionTasksFilterLayout;
 import com.warehouse_accounting.components.production.grids.ProductionTasksGridLayout;
+import com.warehouse_accounting.models.dto.ProductionTasksDto;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
+import com.warehouse_accounting.services.interfaces.ProductionTasksService;
+import com.warehouse_accounting.services.interfaces.WarehouseService;
+import lombok.Getter;
+import lombok.Setter;
 
 @SpringComponent
 @UIScope
 public class ProductionTasks extends VerticalLayout {
 
+    private final transient ProductionTasksService productionTasksService;
+
+    private final transient WarehouseService warehouseService;
+
     private final ProductionTasksFilterLayout productionTasksFilterLayout;
 
+    @Getter
     private final ProductionTasksGridLayout productionTasksGridLayout;
 
+    @Getter
+    @Setter
+    private Div mainContent;
+
     public ProductionTasks(ProductionTasksFilterLayout productionTasksFilterLayout,
-                           ProductionTasksGridLayout productionTasksGridLayout) {
+                           ProductionTasksGridLayout productionTasksGridLayout,
+                           ProductionTasksService productionTasksService,
+                           WarehouseService warehouseService) {
         this.productionTasksFilterLayout = productionTasksFilterLayout;
         this.productionTasksGridLayout = productionTasksGridLayout;
+        this.productionTasksService = productionTasksService;
+        this.warehouseService = warehouseService;
 
-        add(getGroupButton(), this.productionTasksFilterLayout, this.productionTasksGridLayout);
+        mainContent = new Div();
+        mainContent.setSizeFull();
+        mainContent.add(getGroupButton(), this.productionTasksFilterLayout, this.productionTasksGridLayout);
+        add(mainContent);
     }
 
     private HorizontalLayout getGroupButton() {
@@ -44,18 +68,29 @@ public class ProductionTasks extends VerticalLayout {
                         "продукции по техкартам и рассчитать расходы. Тут же можно отмечать выполнение производственных этапов" +
                         "и контролировать результаты."+
                 "\n" +
-                "Читать инструкцию: Расширенный учет производственных операций" + "Видео: Расширенный способ", 3000, Notification.Position.MIDDLE));
+                "Читать инструкцию: Расширенный учет производственных операций" + "Видео: Расширенный способ", 5000, Notification.Position.MIDDLE));
 
         Text productionTasks = new Text("Производственные задания");
         Icon refresh = new Icon(VaadinIcon.REFRESH);
         refresh.setColor("silver");
         Button refreshButton = new Button(refresh);
         refreshButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        refreshButton.addClickListener(click -> System.out.println("перезагрузка"));
+        refreshButton.addClickListener(click -> productionTasksGridLayout.updateGrid());
         Image image = new Image("icons/plus.png", "Plus");
         image.setWidth("15px");
         Button exercise = new Button("Задание", image);
         exercise.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        exercise.addClickListener(click -> add(new ProductionTasksForm(this,
+                ProductionTasksDto.builder()
+                        .taskId(1L)
+                        .productionWarehouseId(1L)
+                        .materialWarehouseId(1L)
+                        .editEmployeeId(1L)
+                        .ownerDepartmentId(1L)
+                        .ownerEmployeeId(1L)
+                        .isAccessed(true).build(),
+                productionTasksService,
+                warehouseService)));
 
         Button filter = new Button("Фильтр");
         filter.addThemeVariants(ButtonVariant.LUMO_PRIMARY);

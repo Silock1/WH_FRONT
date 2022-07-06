@@ -1,11 +1,9 @@
 package com.warehouse_accounting.components.user.legalDetail;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
@@ -24,6 +22,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.user.legalDetail.forms.LegalDetailForm;
 import com.warehouse_accounting.components.user.settings.SettingsView;
+import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.LegalDetailDto;
 import com.warehouse_accounting.services.interfaces.LegalDetailService;
 
@@ -162,8 +161,8 @@ public class LegalDetailSettingsView extends VerticalLayout {
 
         Button menuButton = new Button(new Icon(VaadinIcon.COG));
         menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        LegalDetailSettingsView.ColumnToggleContextMenu columnToggleContextMenu = new LegalDetailSettingsView.ColumnToggleContextMenu(
-                menuButton);
+        ColumnToggleContextMenu<LegalDetailDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(menuButton);
+
         columnToggleContextMenu.addColumnToggleItem("Id", idColumn);
         columnToggleContextMenu.addColumnToggleItem("Фамилия", lastNameColumn);
         columnToggleContextMenu.addColumnToggleItem("Имя", firstNameColumn);
@@ -180,26 +179,12 @@ public class LegalDetailSettingsView extends VerticalLayout {
         List<LegalDetailDto> legalDetailDtoList = legalDetailService.getAll();
         legalDetailDtoGrid.setItems(legalDetailDtoList);
 
-        HorizontalLayout headerLayout = new HorizontalLayout(menuButton);
+        HorizontalLayout headerLayout = new HorizontalLayout();
         headerLayout.setAlignItems(FlexComponent.Alignment.BASELINE);
         headerLayout.setFlexGrow(1);
-
-        add(legalDetailDtoGrid, headerLayout);
-    }
-
-    private static class ColumnToggleContextMenu extends ContextMenu {
-        public ColumnToggleContextMenu(Component target) {
-            super(target);
-            setOpenOnClick(true);
-        }
-
-        void addColumnToggleItem(String label, Grid.Column<LegalDetailDto> column) {
-            MenuItem menuItem = this.addItem(label, e -> {
-                column.setVisible(e.getSource().isChecked());
-            });
-            menuItem.setCheckable(true);
-            menuItem.setChecked(column.isVisible());
-        }
+        legalDetailDtoGrid.setHeightByRows(true);
+        headerLayout.add(legalDetailDtoGrid, menuButton);
+        add(headerLayout);
     }
 
     private HorizontalLayout createNewLegalDetail() {

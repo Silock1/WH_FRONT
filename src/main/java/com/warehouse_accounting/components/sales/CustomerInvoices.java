@@ -14,11 +14,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
-import com.vaadin.flow.spring.annotation.UIScope;
-import com.warehouse_accounting.components.goods.forms.GoodsForm;
 import com.warehouse_accounting.components.sales.forms.InvoiceForm;
 import com.warehouse_accounting.components.sales.grids.SalesInvoicesGridLayout;
-import org.springframework.stereotype.Component;
 
 /*
 Продажи / счета клиентам
@@ -38,7 +35,6 @@ public class CustomerInvoices extends VerticalLayout {
         pageContent.setSizeFull();
         add(getGroupButtons(), pageContent);
     }
-
 
 
     private HorizontalLayout getGroupButtons() {
@@ -64,7 +60,6 @@ public class CustomerInvoices extends VerticalLayout {
         });
 
 
-
         Button addFilterButton = new Button("Фильтр");
         addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
@@ -80,8 +75,14 @@ public class CustomerInvoices extends VerticalLayout {
         HorizontalLayout createMenuBar = getCreateMenuBar();
         HorizontalLayout printMenuBar = getPrintMenuBar();
 
+        Button setting = new Button(new Icon(VaadinIcon.COG));
+        setting.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        setting.addClickListener(event -> {
+
+        });
+
         groupControl.add(helpButton, textProducts, refreshButton, addOrderButton,
-                addFilterButton, searchField, editMenuBar, statusMenuBar, createMenuBar, printMenuBar);
+                addFilterButton, searchField, editMenuBar, statusMenuBar, createMenuBar, printMenuBar, setting);
         setSizeFull();
         return groupControl;
     }
@@ -127,6 +128,7 @@ public class CustomerInvoices extends VerticalLayout {
         groupEdit.setAlignItems(Alignment.CENTER);
         return groupEdit;
     }
+
     private HorizontalLayout getStatusMenuBar() {
         Icon caretDownIcon = new Icon(VaadinIcon.CARET_DOWN);
         caretDownIcon.setSize("12px");

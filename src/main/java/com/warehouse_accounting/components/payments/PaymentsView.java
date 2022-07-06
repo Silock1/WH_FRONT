@@ -17,6 +17,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
+import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.PaymentsDto;
 import com.warehouse_accounting.services.interfaces.PaymentsService;
 import org.springframework.stereotype.Component;
@@ -28,40 +29,68 @@ public class PaymentsView extends VerticalLayout {
 
     private HorizontalLayout horizontalToolPanelLayout = new HorizontalLayout();
     private Grid<PaymentsDto> grid = new Grid<>(PaymentsDto.class);
+
+    private Button settingButton = new Button(new Icon(VaadinIcon.COG));
     private PaymentsService paymentsService;
 
-    public PaymentsView(PaymentsService paymentsService ) {
+    public PaymentsView(PaymentsService paymentsService) {
         this.paymentsService = paymentsService;
         horizontalToolPanelLayout.setAlignItems(Alignment.CENTER);
 
+        configToolPanel();
+        initGrid();
+    }
+
+    private void initGrid() {
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
         grid.setItems(paymentsService.getAll());
-        grid.setColumnOrder(grid.getColumnByKey("typeOfPayment").setHeader("Тип документа"),
-        grid.getColumnByKey("id").setHeader("№"),
-        grid.getColumnByKey("date").setHeader("Время"),
-        grid.getColumnByKey("company").setHeader("Организация"),
-        grid.getColumnByKey("contract").setHeader("Счет организации"),
-        grid.getColumnByKey("contractor").setHeader("Контрагент"),
-        grid.getColumnByKey("tax").setHeader("Счет контрагента"),
-        grid.getColumnByKey("amount").setHeader("Приход"),
-        grid.getColumnByKey("paymentExpenditure").setHeader("Расход"),
-        grid.getColumnByKey("number").setHeader("Назначение платежа"),
-        grid.getColumnByKey("isDone").setHeader("Статус"),
-        grid.getColumnByKey("project").setHeader("Отправлено"),
-        grid.getColumnByKey("purpose").setHeader("Напечатано"),
-        grid.getColumnByKey("comment").setHeader("Комментарий"));
 
-        configToolPanel();
+        Grid.Column<PaymentsDto> typeOfPayment = grid.getColumnByKey("typeOfPayment").setHeader("Тип документа");
+        Grid.Column<PaymentsDto> id = grid.getColumnByKey("id").setHeader("№");
+        Grid.Column<PaymentsDto> dateTime = grid.getColumnByKey("date").setHeader("Время");
+        Grid.Column<PaymentsDto> org = grid.getColumnByKey("company").setHeader("Организация");
+        Grid.Column<PaymentsDto> invoiceOrg = grid.getColumnByKey("contract").setHeader("Счет организации");
+        Grid.Column<PaymentsDto> contrAgent = grid.getColumnByKey("contractor").setHeader("Контрагент");
+        Grid.Column<PaymentsDto> invoiceContrAgent = grid.getColumnByKey("tax").setHeader("Счет контрагента");
+        Grid.Column<PaymentsDto> amount = grid.getColumnByKey("amount").setHeader("Приход");
+        Grid.Column<PaymentsDto> paymentExpenditure = grid.getColumnByKey("paymentExpenditure").setHeader("Расход");
+        Grid.Column<PaymentsDto> target = grid.getColumnByKey("number").setHeader("Назначение платежа");
+        Grid.Column<PaymentsDto> status = grid.getColumnByKey("isDone").setHeader("Статус");
+        Grid.Column<PaymentsDto> send = grid.getColumnByKey("project").setHeader("Отправлено");
+        Grid.Column<PaymentsDto> print = grid.getColumnByKey("purpose").setHeader("Напечатано");
+        Grid.Column<PaymentsDto> comment = grid.getColumnByKey("comment").setHeader("Комментарий");
+        grid.setColumnOrder(typeOfPayment, id, dateTime, org, invoiceOrg, contrAgent, invoiceContrAgent, amount, paymentExpenditure, target, status, send, print, comment);
+        settingButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        ColumnToggleContextMenu<PaymentsDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(settingButton);
 
-        add(horizontalToolPanelLayout);
-        add(grid);
+        columnToggleContextMenu.addColumnToggleItem("Тип документа", typeOfPayment);
+        columnToggleContextMenu.addColumnToggleItem("№", id);
+        columnToggleContextMenu.addColumnToggleItem("Время", dateTime);
+        columnToggleContextMenu.addColumnToggleItem("Организация", org);
+        columnToggleContextMenu.addColumnToggleItem("Счет организации", invoiceOrg);
+        columnToggleContextMenu.addColumnToggleItem("Контрагент", contrAgent);
+        columnToggleContextMenu.addColumnToggleItem("Счет контрагента", invoiceContrAgent);
+        columnToggleContextMenu.addColumnToggleItem("Приход", amount);
+        columnToggleContextMenu.addColumnToggleItem("Расход", paymentExpenditure);
+        columnToggleContextMenu.addColumnToggleItem("Назначение платежа", target);
+        columnToggleContextMenu.addColumnToggleItem("Статус", status);
+        columnToggleContextMenu.addColumnToggleItem("Отправлено", send);
+        columnToggleContextMenu.addColumnToggleItem("Напечатано", print);
+        columnToggleContextMenu.addColumnToggleItem("Комментарий", comment);
+
+        HorizontalLayout headerLayout = new HorizontalLayout();
+        headerLayout.add(grid, settingButton);
+        grid.setHeightByRows(true);
+        headerLayout.setWidthFull();
+
+        add(headerLayout);
     }
 
     // Здесь настройка панели инструментов
     private void configToolPanel() {
         Button helpButton = new Button(new Icon(VaadinIcon.QUESTION_CIRCLE));
         helpButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
-        helpButton.addClickListener(e->{
+        helpButton.addClickListener(e -> {
             Notification.show("На основе платежей формируются взаиморасчеты с контрагентами.\n" +
                     "\n" +
                     "Входящий и исходящий платежи изменяют баланс на расчетных\n" +
@@ -205,10 +234,13 @@ public class PaymentsView extends VerticalLayout {
 
 
         Button settingsButton = new Button(new Icon(VaadinIcon.COG));
+        settingsButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         settingsButton.addClickListener(event -> {
             //TODO повод поработать этот функционал
         });
 
-        horizontalToolPanelLayout.add(helpButton, importList, export, text, refreshButton, addExpensesButton, addPaymentsButton, addExpensesButton, filterButton, searchField, numberField, menuBar, settingsButton);
+        horizontalToolPanelLayout.add(helpButton, importList, export, text, refreshButton, addExpensesButton,
+                addPaymentsButton, addExpensesButton, filterButton, searchField, numberField, menuBar, settingsButton);
+        add(horizontalToolPanelLayout);
     }
 }

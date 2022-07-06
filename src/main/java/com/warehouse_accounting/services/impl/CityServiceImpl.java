@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.http.Query;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -45,34 +46,34 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public List<CityDto> getSlice(int offset, int limit, String name) {
+    public List<CityDto> getSlice(int offset, int limit, String name, String regionCode) {
         List<CityDto> dtoList = Collections.emptyList();
-        Call<List<CityDto>> request = api.getSlice(url, offset, limit, name);
+        Call<List<CityDto>> request = api.getSlice(url, offset, limit, name, regionCode);
         try {
             Response<List<CityDto>> response = request.execute();
             if (response.isSuccessful()) {
                 dtoList = response.body();
-                log.info("Успешно выполнен запрос на получение slice CityDto");
+                log.info("Успешно выполнен запрос на получение slice CityDto по offset: {}, limit: {}, name: {}, code {}", offset, limit, name, regionCode);
             } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение slice CityDto по offset: {}, limit: {}, name: {}", response.code(), offset, limit, name);
+                log.error("Произошла ошибка {} при выполнении запроса на получение slice CityDto по offset: {}, limit: {}, name: {}, code {}", response.code(), offset, limit, name, regionCode);
             }
         } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение slice CityDto по offset: {}, limit: {}, name: {}", offset, limit, name, e);
+            log.error("Произошла ошибка при выполнении запроса на получение slice CityDto по offset: {}, limit: {}, name: {}, code {}", offset, limit, name, regionCode, e);
         }
         return dtoList;
     }
 
     @Override
-    public int getCount(String name) {
+    public int getCount(String name, String regionCode) {
         int count = 0;
-        Call<Integer> callSync = api.getCount(url, name);
+        Call<Integer> callSync = api.getCount(url, name, regionCode);
         try {
             Response<Integer> response = callSync.execute();
             if (response.isSuccessful()) {
                 count = response.body();
-                log.info("Успешно выполнен запрос на получение count City по name: {}", name);
+                log.info("Успешно выполнен запрос на получение count City по name: {}, code {}", name, regionCode);
             } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение count City по name {}", response.code(), name);
+                log.error("Произошла ошибка {} при выполнении запроса на получение count City по name {}, code {}", response.code(), name, regionCode);
             }
         } catch (Exception e) {
             log.error("Произошла ошибка при выполнении запроса на получение count City по name", e);

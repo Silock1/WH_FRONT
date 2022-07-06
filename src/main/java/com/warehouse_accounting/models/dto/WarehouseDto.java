@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -23,8 +21,13 @@ public class WarehouseDto {
         return warehouseDto.name == null ? "Warehouse number: " + warehouseDto.id : warehouseDto.name;
     }
 
+    public String getName() {
+        if(name == null) return "ERROR: warehouse name ID=" + id; // todo: фикс на беке
+        return name;
+    }
+
     @Override
     public String toString() {
-        return name == null ? "Company number: " + id : name;
+        return name == null ? "Warehouse number: " + id : name;
     }
 }

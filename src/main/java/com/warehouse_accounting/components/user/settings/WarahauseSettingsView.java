@@ -1,13 +1,11 @@
 package com.warehouse_accounting.components.user.settings;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -20,8 +18,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.WarehouseDto;
-import com.warehouse_accounting.services.impl.WarehouseServiceImpl;
 import com.warehouse_accounting.services.interfaces.WarehouseService;
 
 import java.util.List;
@@ -67,7 +65,7 @@ public class WarahauseSettingsView extends VerticalLayout {
 
         addFilterButton.addClickListener(buttonClickEvent -> {
 //      Вызов формы фильтра
-            if(formLayout.isVisible()){
+            if (formLayout.isVisible()) {
                 formLayout.setVisible(false);
             } else {
                 formLayout.setVisible(true);
@@ -131,7 +129,7 @@ public class WarahauseSettingsView extends VerticalLayout {
         return groupEdit;
     }
 
-    private HorizontalLayout getSetting(){
+    private HorizontalLayout getSetting() {
         Icon cogIcon = new Icon(VaadinIcon.COG);
         Button settingButton = new Button(cogIcon);
         settingButton.addClickListener(buttonClickEvent -> {
@@ -144,7 +142,7 @@ public class WarahauseSettingsView extends VerticalLayout {
         return setting;
     }
 
-    private void warehouseDtoGridSet(){
+    private void warehouseDtoGridSet() {
         Grid.Column<WarehouseDto> idColumn = warehouseDtoGrid.addColumn(WarehouseDto::getId).setHeader("Id");
         Grid.Column<WarehouseDto> nameColumn = warehouseDtoGrid.addColumn(WarehouseDto::getName).setHeader("Склад");
         Grid.Column<WarehouseDto> addressColumn = warehouseDtoGrid.addColumn(WarehouseDto::getAddress).setHeader("Адрес");
@@ -155,8 +153,8 @@ public class WarahauseSettingsView extends VerticalLayout {
 
         Button menuButton = new Button(new Icon(VaadinIcon.COG));
         menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        ColumnToggleContextMenu columnToggleContextMenu = new ColumnToggleContextMenu(
-                menuButton);
+        ColumnToggleContextMenu<WarehouseDto> columnToggleContextMenu = new ColumnToggleContextMenu(menuButton);
+
         columnToggleContextMenu.addColumnToggleItem("Id", idColumn);
         columnToggleContextMenu.addColumnToggleItem("Склад", nameColumn);
         columnToggleContextMenu.addColumnToggleItem("Адрес", addressColumn);
@@ -169,26 +167,12 @@ public class WarahauseSettingsView extends VerticalLayout {
         HorizontalLayout headerLayout = new HorizontalLayout(menuButton);
         headerLayout.setAlignItems(FlexComponent.Alignment.BASELINE);
         headerLayout.setFlexGrow(1);
-
-        add(warehouseDtoGrid, headerLayout);
+        warehouseDtoGrid.setHeightByRows(true);
+        headerLayout.add(warehouseDtoGrid, menuButton);
+        add(headerLayout);
     }
 
-    private static class ColumnToggleContextMenu extends ContextMenu {
-        public ColumnToggleContextMenu(Component target) {
-            super(target);
-            setOpenOnClick(true);
-        }
-
-        void addColumnToggleItem(String label, Grid.Column<WarehouseDto> column) {
-            MenuItem menuItem = this.addItem(label, e -> {
-                column.setVisible(e.getSource().isChecked());
-            });
-            menuItem.setCheckable(true);
-            menuItem.setChecked(column.isVisible());
-        }
-    }
-
-    private HorizontalLayout ctreateNewWarehouse(){
+    private HorizontalLayout ctreateNewWarehouse() {
         HorizontalLayout firstLine = new HorizontalLayout();
 
         Button findWarehousButton = new Button("Найти");
