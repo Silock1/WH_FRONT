@@ -10,18 +10,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CurrencyDto {
-
     private Long id;
-
-    private String shortName;
-
-    private String fullName;
-
-    private String digitalCode;
-
-    private String letterCode;
-
-    private String sortNumber;
+    private String numcode;
+    private String charcode;
+    private int nominal;
+    private String name;
+    private String _Value;
+    private double value;
 }
 
 

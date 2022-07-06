@@ -31,7 +31,6 @@ public class CurrencySettingsView extends VerticalLayout {
 
     private final CurrencyService currencyService;
     private Grid<CurrencyDto> grid;
-
     private final HorizontalLayout filterCurrencyLayout;
 
     public CurrencySettingsView(CurrencyService currencyService) {
@@ -50,11 +49,11 @@ public class CurrencySettingsView extends VerticalLayout {
 
         grid = new Grid<>(CurrencyDto.class, false);
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
-        grid.addColumn(CurrencyDto::getShortName).setHeader("Короткое наименование");
-        grid.addColumn(CurrencyDto::getFullName).setHeader("Полное наименование");
-        grid.addColumn(CurrencyDto::getDigitalCode).setHeader("Цифровой код");
-        grid.addColumn(CurrencyDto::getLetterCode).setHeader("Буквенный код");
-        grid.addColumn(CurrencyDto::getSortNumber).setHeader("Курс");
+        grid.addColumn(CurrencyDto::getCharcode).setHeader("Короткое наименование");
+        grid.addColumn(CurrencyDto::getName).setHeader("Полное наименование");
+        grid.addColumn(CurrencyDto::getNumcode).setHeader("Цифровой код");
+        grid.addColumn(CurrencyDto::getNominal).setHeader("Номинал");
+        grid.addColumn(CurrencyDto::getValue).setHeader("Курс");
         grid.addSelectionListener(selection -> delete.setEnabled(selection.getAllSelectedItems().size() != 0));
 
         delete.addClickListener(buttonClickEvent -> {
