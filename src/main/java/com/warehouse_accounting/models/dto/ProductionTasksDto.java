@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -34,5 +36,7 @@ public class ProductionTasksDto {
     private LocalDate dateOfEdit;
     private Long editEmployeeId;
     private String editEmployeeName;
+    private List<Long> additionalFieldsIds;
+    private List<String> additionalFieldsNames;
 
 }
