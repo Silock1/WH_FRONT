@@ -9,6 +9,7 @@ import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.goods.GoodsAndServiceView;
 import com.warehouse_accounting.components.goods.Inventory;
 import com.warehouse_accounting.components.goods.InternalOrderView;
+import com.warehouse_accounting.components.goods.Posting;
 import com.warehouse_accounting.components.goods.WriteOffs;
 import com.warehouse_accounting.components.goods.filter.GoodsFilter;
 import com.warehouse_accounting.components.goods.grids.movements.MovementView;
@@ -33,6 +34,7 @@ public class GoodsSubMenuView extends VerticalLayout {
 
     private final MovementView movementView;
     private final PriceList priceList;
+    private final Posting posting;
     private final WriteOffs writeOffs;
     private final Inventory inventory;
     private GoodsAndServiceView goodsAndService;
@@ -48,12 +50,13 @@ public class GoodsSubMenuView extends VerticalLayout {
     private final ProductGroupService productGroupService;
 
 
-    public GoodsSubMenuView(PriceList priceList, MovementView movementView, GoodsAndServiceView goodsAndService,
+    public GoodsSubMenuView(PriceList priceList, Posting posting, MovementView movementView, GoodsAndServiceView goodsAndService,
                             GoodsFilter goodsFilter, ProductService productService, EmployeeService employeeService,
                             DepartmentService departmentService, ContractorService contractorService,
                             ProductGroupService productGroupService, WriteOffs writeOffs,
                             Inventory inventory, InternalOrderView internalOrderView) {
         this.priceList = priceList;
+        this.posting = posting;
         this.movementView = movementView;
         this.writeOffs = writeOffs;
         this.inventory = inventory;
@@ -90,7 +93,7 @@ public class GoodsSubMenuView extends VerticalLayout {
                     break;
                 case "Оприходования":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Оприходования"));
+                    pageContent.add(posting);
                     break;
                 case "Списания":
                     pageContent.removeAll();

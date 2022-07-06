@@ -38,6 +38,7 @@ retrofit:
     printing_documents_url: api/printing_documents
     payments_url: api/payments    #todo проверить связь с taskDto
     position_url: api/positions
+    posting_url: api/posting
     product_group_url: api/product_groups
     product_url: api/products
     production_tasks_url: api/production_tasks
