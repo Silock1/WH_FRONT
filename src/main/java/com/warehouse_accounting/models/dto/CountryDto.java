@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigInteger;
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -19,7 +17,7 @@ public class CountryDto {
 
     private String longName;
 
-    private BigInteger code;
+    private Short code;
 
     private String codeOne;
 

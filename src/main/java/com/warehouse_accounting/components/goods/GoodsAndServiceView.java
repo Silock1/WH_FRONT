@@ -20,20 +20,16 @@ import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
-//import com.warehouse_accounting.components.goods.forms.ComplectForm;
 import com.warehouse_accounting.components.goods.filter.GoodsFilter;
 import com.warehouse_accounting.components.goods.forms.ComplectForm;
 import com.warehouse_accounting.components.goods.forms.GoodsForm;
 import com.warehouse_accounting.components.goods.forms.GroupForm;
 import com.warehouse_accounting.components.goods.forms.ServiceForm;
 import com.warehouse_accounting.components.goods.grids.GoodsGridLayout;
+import com.warehouse_accounting.components.sales.forms.order.components.DocumentOperationsToolbar;
 import com.warehouse_accounting.models.dto.ProductDto;
 import com.warehouse_accounting.models.dto.ProductGroupDto;
-import com.warehouse_accounting.services.interfaces.ContractorService;
-import com.warehouse_accounting.services.interfaces.DepartmentService;
-import com.warehouse_accounting.services.interfaces.EmployeeService;
-import com.warehouse_accounting.services.interfaces.ProductGroupService;
-import com.warehouse_accounting.services.interfaces.ProductService;
+import com.warehouse_accounting.services.interfaces.*;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -53,6 +49,12 @@ public class GoodsAndServiceView extends VerticalLayout {
     private EmployeeService employeeService;
     private DepartmentService departmentService;
     private ContractorService contractorService;
+    private CountryService countryService;
+    private UnitsOfMeasureService unitsOfMeasureService;
+    private TaxSystemService taxSystemService;
+    private ImageService imageService;
+    private AttributeOfCalculationObjectService attributeService;
+    private  UnitService unitService;
     private GoodsFilter goodsFilter;
     private Long rootGroupId = 1L;
 
@@ -62,12 +64,25 @@ public class GoodsAndServiceView extends VerticalLayout {
                                ProductGroupService productGroupService,
                                DepartmentService departmentService,
                                ContractorService contractorService,
-                               EmployeeService employeeService) {
+                               EmployeeService employeeService,
+                               CountryService countryService,
+                               UnitsOfMeasureService unitsOfMeasureService,
+                               TaxSystemService taxSystemService,
+                               ImageService imageService,
+                               AttributeOfCalculationObjectService attributeService,
+                               UnitService unitService) {
         this.productGroupService = productGroupService;
         this.productService = productService;
         this.employeeService = employeeService;
         this.departmentService = departmentService;
         this.contractorService = contractorService;
+        this.countryService = countryService;
+        this.unitsOfMeasureService = unitsOfMeasureService;
+        this.taxSystemService = taxSystemService;
+        this.imageService = imageService;
+        this.attributeService = attributeService;
+        this.unitService = unitService;
+
         this.goodsFilter = new GoodsFilter(productGroupService, employeeService, departmentService, contractorService);
         goodsGridLayout = new GoodsGridLayout(productGroupService, productService, this);
         Div pageContent = new Div();
@@ -76,7 +91,6 @@ public class GoodsAndServiceView extends VerticalLayout {
         this.pageContent = pageContent;
         add(initGroupButtons(), this.goodsFilter, pageContent);
     }
-
 
     private HorizontalLayout initGroupButtons() {
         HorizontalLayout groupControl = new HorizontalLayout();
@@ -113,9 +127,18 @@ public class GoodsAndServiceView extends VerticalLayout {
         Button addProductButton = new Button("Товар", new Icon(VaadinIcon.PLUS));
         addProductButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         addProductButton.addClickListener(event -> {
-            GoodsForm goodsForm = new GoodsForm(mainDiv, this, productService);
+            final GoodsForm goodsForm = new GoodsForm(productService, countryService, unitsOfMeasureService,
+                    contractorService, taxSystemService, imageService, productGroupService, attributeService,
+                    unitService);
             mainDiv.removeAll();
-            mainDiv.add(goodsForm);
+            DocumentOperationsToolbar menu = new DocumentOperationsToolbar();
+            menu.setCloseHandler(() -> { goodsForm.close();
+                                        mainDiv.removeAll();
+                                        mainDiv.add(this);})
+                .setSaveHandler(() -> { goodsForm.save();
+                                        mainDiv.removeAll();
+                                        mainDiv.add(this); });
+            mainDiv.add(menu, goodsForm);
         });
 
         //TODO не сделана. не работает
@@ -131,7 +154,7 @@ public class GoodsAndServiceView extends VerticalLayout {
         Button addComplectButton = new Button("Комплект", new Icon(VaadinIcon.PLUS));
         addComplectButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         addComplectButton.addClickListener(event -> {
-            ComplectForm complectForm = new ComplectForm(mainDiv, this, productService);
+            ComplectForm complectForm = new ComplectForm(mainDiv, this, productService, productGroupService);
             mainDiv.removeAll();
             mainDiv.add(complectForm);
         });

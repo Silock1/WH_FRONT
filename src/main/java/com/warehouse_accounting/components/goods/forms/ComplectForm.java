@@ -3,6 +3,7 @@ package com.warehouse_accounting.components.goods.forms;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -12,6 +13,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.warehouse_accounting.models.dto.ProductDto;
+import com.warehouse_accounting.models.dto.ProductGroupDto;
+import com.warehouse_accounting.services.interfaces.ProductGroupService;
 import com.warehouse_accounting.services.interfaces.ProductService;
 import lombok.extern.log4j.Log4j2;
 
@@ -22,13 +25,16 @@ public class ComplectForm extends VerticalLayout {
     private final Div parentLayer;
     private final Component returnLayer;
     private ProductService productService;
+    private final ProductGroupService productGroupService;
     private ProductDto productDto;
     private Binder<ProductDto> productDtoBinder;
 
-    public ComplectForm(Div parentLayer, Component returnLayer, ProductService productService) {
+    public ComplectForm(Div parentLayer, Component returnLayer, ProductService productService,
+                        ProductGroupService productGroupService) {
         this.parentLayer = parentLayer;
         this.returnLayer = returnLayer;
         this.productService = productService;
+        this.productGroupService = productGroupService;
         this.productDto = new ProductDto();
         this.productDtoBinder = new Binder<>(ProductDto.class);
         VerticalLayout form = initForm();
@@ -78,8 +84,9 @@ public class ComplectForm extends VerticalLayout {
         productDtoBinder.forField(descriptionField).bind(ProductDto::getDescription, ProductDto::setDescription);
         form.add(descriptionField);
 
-        TextField groupField = new TextField("Группа","введите группу товару");
-        productDtoBinder.forField(groupField).bind(ProductDto::getProductGroup, ProductDto::setProductGroup);
+        ComboBox<ProductGroupDto> groupField = new ComboBox<>("Группа", productGroupService.getAll());
+        groupField.setAllowCustomValue(false);
+        groupField.addValueChangeListener(event -> productDto.setProductGroup(event.getValue()));
         form.add(groupField);
 
         TextField countryField = new TextField("Страна","");

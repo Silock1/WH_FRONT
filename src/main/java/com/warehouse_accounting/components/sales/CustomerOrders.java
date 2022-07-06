@@ -16,19 +16,14 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.warehouse_accounting.components.sales.filter.CustomerOrdersFilter;
-import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
 import com.warehouse_accounting.components.sales.forms.order.OrderPanel;
+import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
 import com.warehouse_accounting.services.interfaces.*;
 
 /*
 Эта страница должна быть главной страницей Продаж, а не CustomerOrder
  */
 public class CustomerOrders extends VerticalLayout {
-
-    private SalesGridLayout salesGridLayout;
-    private final TextField textFieldGridSelected = new TextField();
-    private final Div parentLayer;
-    private final CustomerOrdersFilter customerOrdersFilter;
     private CompanyService companyService;
     private ContractorService contractorService;
     private ContractService contractService;
@@ -38,7 +33,10 @@ public class CustomerOrders extends VerticalLayout {
     private DepartmentService departmentService;
     private final ProductService productService;
     private final InvoiceService invoiceService;
-
+    private final Div parentLayer;
+    private final CustomerOrdersFilter customerOrdersFilter;
+    private final SalesGridLayout salesGridLayout;
+    private final TextField textFieldGridSelected = new TextField();
 
 
 
@@ -56,29 +54,21 @@ public class CustomerOrders extends VerticalLayout {
         this.departmentService = departmentService;
         this.productService = productService;
         this.invoiceService = invoiceService;
-        this.customerOrdersFilter = new CustomerOrdersFilter(companyService, contractorService, contractService,
+
+        customerOrdersFilter = new CustomerOrdersFilter(companyService, contractorService, contractService,
                 projectService, warehouseService, employeeService, departmentService);
         salesGridLayout = new SalesGridLayout(textFieldGridSelected);
-
-//        Div pageContent = new Div();
-//        pageContent.add(salesGridLayout);
-//
-//        pageContent.setSizeFull();
-//        add(getGroupButtons(this), customerOrdersFilter, pageContent);
         initPage();
     }
 
     private void initPage() {
         removeAll();
-        Div pageContent = new Div();
-        pageContent.add(salesGridLayout);
-
-        pageContent.setSizeFull();
-        add(getGroupButtons(pageContent), customerOrdersFilter, pageContent);
+        salesGridLayout.setSizeFull();
+        add(getGroupButtons(), customerOrdersFilter, salesGridLayout);
+        customerOrdersFilter.setVisible(false);
     }
 
-
-    private HorizontalLayout getGroupButtons(Div pageContent) {
+    private HorizontalLayout getGroupButtons() {
         HorizontalLayout groupControl = new HorizontalLayout();
 
         Button helpButton = new Button(new Icon(VaadinIcon.QUESTION_CIRCLE));
@@ -93,18 +83,16 @@ public class CustomerOrders extends VerticalLayout {
         Button addOrderButton = new Button("Заказ", new Icon(VaadinIcon.PLUS));
         addOrderButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         addOrderButton.addClickListener(event -> {
-            pageContent.removeAll();
+            removeAll();
             OrderPanel orderPanel = new OrderPanel(companyService, contractorService, productService, warehouseService,
                     contractService, projectService, invoiceService);
             orderPanel.setOnCloseHandler(() -> initPage());
-            pageContent.add(orderPanel);
+            add(orderPanel);
         });
 
         Button addFilterButton = new Button("Фильтр");
         addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        addFilterButton.addClickListener(e->
-                customerOrdersFilter.setVisible(!customerOrdersFilter.isVisible())
-        );
+        addFilterButton.addClickListener(e-> customerOrdersFilter.setVisible(!customerOrdersFilter.isVisible()));
 
         TextField searchField = new TextField();
         searchField.setPlaceholder("Номер или комментарий");

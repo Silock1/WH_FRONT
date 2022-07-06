@@ -15,7 +15,7 @@ public class InvoiceProductDto {
 
     private Long id;
 
-    private InvoiceDto invoiceDto = new InvoiceDto();
+//    private InvoiceDto invoiceDto = new InvoiceDto();
 
     private ProductDto productDto = new ProductDto();
 
