@@ -42,7 +42,7 @@ public class OrderGridFooter extends HorizontalLayout implements GridSummaryReci
         TextArea comment = new TextArea();
         comment.setWidthFull();
         comment.setPlaceholder("Комментарий");
-        comment.addValueChangeListener(event -> {Notification.show("Ololo"); invoiceDto.setComment(event.getValue());});
+        comment.addValueChangeListener(event -> invoiceDto.setComment(event.getValue()));
 
         TextField outerCode = new TextField();
         outerCode.setEnabled(false);
