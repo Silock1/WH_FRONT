@@ -52,6 +52,7 @@ public class GoodsAndServiceView extends VerticalLayout {
     private Long rootGroupId = 1L;
 
 
+
     public GoodsAndServiceView(GoodsFilter goodsFilter,
                                ProductService productService,
                                ProductGroupService productGroupService,

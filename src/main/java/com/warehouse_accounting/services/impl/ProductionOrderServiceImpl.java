@@ -21,7 +21,7 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
     private final ProductionOrderApi api;
     private final String url;
 
-    public ProductionOrderServiceImpl(Retrofit retrofit, @Value("${retrofit.restServices.production_order_url}") String url) {
+    public ProductionOrderServiceImpl(Retrofit retrofit, @Value("api/production_order") String url) {
         this.api = retrofit.create(ProductionOrderApi.class);
         this.url = url;
     }
@@ -34,7 +34,7 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
         try {
             Response<List<ProductionOrderDto>> response = listCall.execute();
             if (response.isSuccessful()) {
-                productionOrderDtoList = listCall.execute().body();
+                productionOrderDtoList = response.body();
                 log.info("Успешно выполнен запрон на получение списка");
             } else {
                 log.error("Произошла ошибка {} при выполнении запроса на получение списка", response.code());
