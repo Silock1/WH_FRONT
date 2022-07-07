@@ -20,8 +20,8 @@ public class AppConfig {
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(new OkHttpClient.Builder()
-                        .readTimeout(60, TimeUnit.SECONDS)
-                        .connectTimeout(60, TimeUnit.SECONDS)
+                        .readTimeout(160, TimeUnit.SECONDS)
+                        .connectTimeout(160, TimeUnit.SECONDS)
                         .build()
                 )
                 //anyway it doesn't works :(
@@ -38,8 +38,8 @@ public class AppConfig {
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(new OkHttpClient.Builder()
-                        .readTimeout(60, TimeUnit.SECONDS)
-                        .connectTimeout(60, TimeUnit.SECONDS)
+                        .readTimeout(160, TimeUnit.SECONDS)
+                        .connectTimeout(160, TimeUnit.SECONDS)
                         .build()
                 )
                 .addConverterFactory(GsonConverterFactory.create(

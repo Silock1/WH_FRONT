@@ -38,4 +38,9 @@ public class AddressDto {
     private String other;
 
     private String comment;
+
+    @Override
+    public String toString() {
+        return fullAddress;
+    }
 }

@@ -5,18 +5,24 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.DataProvider;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.warehouse_accounting.models.dto.AddressDto;
 import com.warehouse_accounting.models.dto.BuildingDto;
 import com.warehouse_accounting.models.dto.CityDto;
 import com.warehouse_accounting.models.dto.CountryDto;
 import com.warehouse_accounting.models.dto.RegionDto;
 import com.warehouse_accounting.models.dto.StreetDto;
+import com.warehouse_accounting.services.impl.CountryServiceImpl;
 import com.warehouse_accounting.services.interfaces.BuildingService;
 import com.warehouse_accounting.services.interfaces.CityService;
 import com.warehouse_accounting.services.interfaces.CountryService;
 import com.warehouse_accounting.services.interfaces.RegionService;
 import com.warehouse_accounting.services.interfaces.StreetService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 
+@SpringComponent
+@Scope("prototype")
 public class AddressForm {
     private final CountryService countryService;
     private final RegionService regionService;
@@ -30,14 +36,23 @@ public class AddressForm {
     private String buildingName;
 
     private final TextArea fullAddressTextArea;
+    private final String postCodeLabel;
     private final TextArea postCodeTextArea;
+    private final String countryLabel;
     private final ComboBox<CountryDto> countryComboBox;
+    private final String regionLabel;
     private final ComboBox<RegionDto> regionComboBox;
+    private final String cityLabel;
     private final ComboBox<CityDto> cityComboBox;
+    private final String streetLabel;
     private final ComboBox<StreetDto> streetComboBox;
+    private final String buildingLabel;
     private final ComboBox<BuildingDto> buildingComboBox;
+    private final String officeLabel;
     private final TextField officeTextField;
+    private final String otherLabel;
     private final TextField otherTextField;
+    private final String commentLabel;
     private final TextField commentTextField;
 
     public AddressForm(
@@ -45,9 +60,7 @@ public class AddressForm {
             RegionService regionService,
             CityService cityService,
             StreetService streetService,
-            BuildingService buildingService,
-            String title,
-            FormLayout form
+            BuildingService buildingService
     ) {
         this.countryService = countryService;
         this.regionService = regionService;
@@ -58,51 +71,50 @@ public class AddressForm {
         fullAddressTextArea = new TextArea();
         fullAddressTextArea.getStyle().set("resize", "both");
         fullAddressTextArea.getStyle().set("overflow", "auto");
-        form.addFormItem(fullAddressTextArea, title);
 
+        postCodeLabel = "Индекс";
         postCodeTextArea = new TextArea();
-        form.addFormItem(postCodeTextArea, "Индекс");
 
+        countryLabel = "Страна";
         countryComboBox = new ComboBox<>();
         countryComboBox.setItems(this.countryService.getAll());
         countryComboBox.setItemLabelGenerator(CountryDto::getShortName);
         countryComboBox.setClearButtonVisible(true);
-        form.addFormItem(countryComboBox, "Страна");
 
+        regionLabel = "Регион";
         regionComboBox = new ComboBox<>();
         regionComboBox.setItems(this.regionService.getAll());
         regionComboBox.setItemLabelGenerator(RegionDto::getNameSocr);
         regionComboBox.setClearButtonVisible(true);
-        form.addFormItem(regionComboBox, "Регион");
 
+        cityLabel = "Город";
         cityComboBox = new ComboBox<>();
         cityComboBox.setItemLabelGenerator(CityDto::getNameSocr);
         cityComboBox.setAllowCustomValue(true);
         cityComboBox.setDataProvider(getCityDataProvider());
-        form.addFormItem(cityComboBox, "Город");
 
+        streetLabel = "Улица";
         streetComboBox = new ComboBox<>();
         streetComboBox.setItemLabelGenerator(StreetDto::getNameSocr);
         streetComboBox.setAllowCustomValue(true);
         streetComboBox.setDataProvider(getStreetDataProvider());
-        form.addFormItem(streetComboBox, "Улица");
 
+        buildingLabel = "Дом";
         buildingComboBox = new ComboBox<>();
         buildingComboBox.setItemLabelGenerator(BuildingDto::getName);
         buildingComboBox.setAllowCustomValue(true);
         buildingComboBox.setDataProvider(getBuildingDataProvider());
-        form.addFormItem(buildingComboBox, "Дом");
 
+        officeLabel = "Квартира/Офис";
         officeTextField = new TextField();
-        form.addFormItem(officeTextField, "Квартира/Офис");
 
+        otherLabel = "Другое";
         otherTextField = new TextField();
-        form.addFormItem(otherTextField, "Другое");
 
+        commentLabel = "Комментарий к адресу";
         commentTextField = new TextField();
         commentTextField.getStyle().set("resize", "both");
         commentTextField.getStyle().set("overflow", "auto");
-        form.addFormItem(commentTextField, "Комментарий к адресу");
 
         postCodeTextArea.addValueChangeListener(e -> {
             generateFullName();
@@ -138,6 +150,29 @@ public class AddressForm {
         otherTextField.addValueChangeListener(e -> {
             generateFullName();
         });
+    }
+
+    public FormLayout getNewForm(String title) {
+        FormLayout form = new FormLayout();
+        fillForm(title, form);
+        return form;
+    }
+
+    public void addToForm(String title, FormLayout form) {
+        fillForm(title, form);
+    }
+
+    private void fillForm(String title, FormLayout form) {
+        form.addFormItem(fullAddressTextArea, title);
+        form.addFormItem(postCodeTextArea, postCodeLabel);
+        form.addFormItem(countryComboBox, countryLabel);
+        form.addFormItem(regionComboBox, regionLabel);
+        form.addFormItem(cityComboBox, cityLabel);
+        form.addFormItem(streetComboBox, streetLabel);
+        form.addFormItem(buildingComboBox, buildingLabel);
+        form.addFormItem(officeTextField, officeLabel);
+        form.addFormItem(otherTextField, otherLabel);
+        form.addFormItem(commentTextField, commentLabel);
     }
 
     public AddressDto getValue() {
@@ -300,5 +335,81 @@ public class AddressForm {
         } else {
             return "";
         }
+    }
+
+    public TextArea getFullAddressTextArea() {
+        return fullAddressTextArea;
+    }
+
+    public String getPostCodeLabel() {
+        return postCodeLabel;
+    }
+
+    public TextArea getPostCodeTextArea() {
+        return postCodeTextArea;
+    }
+
+    public String getCountryLabel() {
+        return countryLabel;
+    }
+
+    public ComboBox<CountryDto> getCountryComboBox() {
+        return countryComboBox;
+    }
+
+    public String getRegionLabel() {
+        return regionLabel;
+    }
+
+    public ComboBox<RegionDto> getRegionComboBox() {
+        return regionComboBox;
+    }
+
+    public String getCityLabel() {
+        return cityLabel;
+    }
+
+    public ComboBox<CityDto> getCityComboBox() {
+        return cityComboBox;
+    }
+
+    public String getStreetLabel() {
+        return streetLabel;
+    }
+
+    public ComboBox<StreetDto> getStreetComboBox() {
+        return streetComboBox;
+    }
+
+    public String getBuildingLabel() {
+        return buildingLabel;
+    }
+
+    public ComboBox<BuildingDto> getBuildingComboBox() {
+        return buildingComboBox;
+    }
+
+    public String getOfficeLabel() {
+        return officeLabel;
+    }
+
+    public TextField getOfficeTextField() {
+        return officeTextField;
+    }
+
+    public String getOtherLabel() {
+        return otherLabel;
+    }
+
+    public TextField getOtherTextField() {
+        return otherTextField;
+    }
+
+    public String getCommentLabel() {
+        return commentLabel;
+    }
+
+    public TextField getCommentTextField() {
+        return commentTextField;
     }
 }

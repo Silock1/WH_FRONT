@@ -19,8 +19,7 @@ public class LegalDetailDto {
     private String lastName;
     private String firstName;
     private String middleName;
-    private String address;
-    private String commentToAddress;
+    private AddressDto address;
     private String inn;
     private String okpo;
     private String ogrnip;

@@ -1,6 +1,5 @@
 package com.warehouse_accounting.components.contragents.form;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -13,14 +12,17 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.components.address.AddressForm;
 import com.warehouse_accounting.components.contragents.ContragentsList;
 import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.models.dto.ContractorGroupDto;
 import com.warehouse_accounting.services.impl.ContractorServiceImpl;
 import com.warehouse_accounting.services.interfaces.ContractorService;
+import org.springframework.beans.factory.annotation.Autowired;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -35,12 +37,11 @@ public class FormNewContragent extends VerticalLayout {
     private TextField telTextField;
     private TextField faxTextField;
     private TextField emailTextField;
-    private TextField actualAddress;
+    private AddressForm actualAddressForm;
+    private TextArea commentTextArea;
     private ComboBox<String> typeEmployee;
     private TextField innEmployee;
-    private TextField fullNameEmployee;
-    private TextField legalAddress;
-    private TextField commentToTheAddress;
+    private AddressForm legalAddressForm;
     private TextField kppEmployee;
     private TextField ogrnEmployee;
     private TextField okpoEmployee;
@@ -53,7 +54,15 @@ public class FormNewContragent extends VerticalLayout {
 
     private ContragentsList contragentsList;
 
-    public FormNewContragent() {}
+
+    @Autowired
+    public FormNewContragent(
+            AddressForm actualAddressForm,
+            AddressForm legalAddressForm
+    ) {
+        this.actualAddressForm = actualAddressForm;
+        this.legalAddressForm = legalAddressForm;
+    }
 
     public void refres (){
         removeAll();
@@ -72,9 +81,10 @@ public class FormNewContragent extends VerticalLayout {
             contractorDto.setPhone(telTextField.getValue());
             contractorDto.setFax(faxTextField.getValue());
             contractorDto.setEmail(emailTextField.getValue());
-            contractorDto.setComment(commentToTheAddress.getValue());
+            contractorDto.setAddress(actualAddressForm.getValue());
+            contractorDto.setComment(commentTextArea.getValue());
             contractorDto.setNumberDiscountCard(discountCard.getValue());
-            contractorDto.setLegalDetailAddress(legalAddress.getValue());
+            contractorDto.setLegalDetailAddress(legalAddressForm.getValue());
             contractorDto.setLegalDetailInn(innEmployee.getValue());
             contractorDto.setLegalDetailKpp(kppEmployee.getValue());
             contractorDto.setLegalDetailTypeOfContractorName(typeEmployee.getValue());
@@ -117,14 +127,15 @@ public class FormNewContragent extends VerticalLayout {
         telTextField = new TextField();
         faxTextField = new TextField();
         emailTextField = new TextField();
-        actualAddress = new TextField();
+        commentTextArea = new TextArea();
 
         formContragent.addFormItem(statusContragent, "Статус");
         formContragent.addFormItem(groupContragent, "Группы");
         formContragent.addFormItem(telTextField,"Телефон");
         formContragent.addFormItem(faxTextField,"Факс");
         formContragent.addFormItem(emailTextField,"E-mail");
-        formContragent.addFormItem(actualAddress, "Фактический адрес");
+        actualAddressForm.addToForm("Фактический адрес", formContragent);
+        formContragent.addFormItem(commentTextArea, "Комментарий");
         formContragent.setWidth("400px");
         /*
         Контактные лица
@@ -144,9 +155,7 @@ public class FormNewContragent extends VerticalLayout {
         typeEmployee = new ComboBox<>();
         typeEmployee.setItems("Поставщик", "Покупатель");
         innEmployee = new TextField();
-        fullNameEmployee = new TextField();
-        legalAddress = new TextField();
-        commentToTheAddress = new TextField();
+        TextField fullNameEmployee = new TextField();
         kppEmployee = new TextField();
         ogrnEmployee = new TextField();
         okpoEmployee = new TextField();
@@ -156,8 +165,7 @@ public class FormNewContragent extends VerticalLayout {
         formRequisites.addFormItem(typeEmployee, "Тип контрагента");
         formRequisites.addFormItem(innEmployee, "ИНН");
         formRequisites.addFormItem(fullNameEmployee, "Полное наименование");
-        formRequisites.addFormItem(legalAddress, "Юридический адрес");
-        formRequisites.addFormItem(commentToTheAddress,"Комментарий к адресу");
+        legalAddressForm.addToForm("Юридический адрес", formRequisites);
         formRequisites.addFormItem(kppEmployee, "КПП");
         formRequisites.addFormItem(ogrnEmployee, "ОГРН");
         formRequisites.addFormItem(okpoEmployee, "ОКПО");
