@@ -70,16 +70,16 @@ public class TechnologicalMap extends VerticalLayout {
         refreshButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
 
 
-        Button addtextTechnologicalMapButton = new Button("Техкарты", new Icon(VaadinIcon.PLUS));
-        addtextTechnologicalMapButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        addtextTechnologicalMapButton.addClickListener(buttonClickEvent -> {
-            UI.getCurrent().navigate(TechnologicalMapForm.class);
+        Button addTextTechnologicalMapButton = new Button("Техкарты", new Icon(VaadinIcon.PLUS));
+        addTextTechnologicalMapButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        addTextTechnologicalMapButton.addClickListener(buttonClickEvent -> {
+//            UI.getCurrent().navigate(TechnologicalMapForm.class);
         });
 
         Button addtextTechnologicalMapGroupButton = new Button("Группа", new Icon(VaadinIcon.PLUS));
         addtextTechnologicalMapGroupButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         addtextTechnologicalMapGroupButton.addClickListener(buttonClickEvent -> {
-            UI.getCurrent().navigate(TechnologicalMapGroupForm.class);
+//            UI.getCurrent().navigate(TechnologicalMapGroupForm.class);
         });
 
 
@@ -102,7 +102,7 @@ public class TechnologicalMap extends VerticalLayout {
         HorizontalLayout editMenuBar = getEditMenuBar();
         HorizontalLayout setting = getSetting();
 
-        groupControl.add(helpButton, textTechnologicalMap, refreshButton, addtextTechnologicalMapButton,
+        groupControl.add(helpButton, textTechnologicalMap, refreshButton, addTextTechnologicalMapButton,
                 addtextTechnologicalMapGroupButton, addFilterButton, searchField, editMenuBar, setting);
         setSizeFull();
         return groupControl;
