@@ -18,7 +18,6 @@ import com.warehouse_accounting.services.interfaces.CurrencyService;
 @PageTitle("Добавить валюту")
 @Route(value = "add_currencies", layout = SettingsView.class)
 public class CurrencySettingsAddView extends VerticalLayout {
-
     private TextField charcodeField;
     private ComboBox<String> nameField;
     private TextField numcodeField;

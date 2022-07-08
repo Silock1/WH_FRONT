@@ -28,7 +28,6 @@ import java.util.List;
 @PageTitle("Настройки")
 @Route(value = "currencies", layout = SettingsView.class)
 public class CurrencySettingsView extends VerticalLayout {
-
     private final CurrencyService currencyService;
     private Grid<CurrencyDto> grid;
     private final HorizontalLayout filterCurrencyLayout;
