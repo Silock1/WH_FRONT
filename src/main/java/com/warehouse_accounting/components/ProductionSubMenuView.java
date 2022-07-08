@@ -11,6 +11,7 @@ import com.warehouse_accounting.components.production.ProductionProcessTechnolog
 import com.warehouse_accounting.components.production.ProductionSteps;
 import com.warehouse_accounting.components.production.ProductionTasks;
 import com.warehouse_accounting.components.production.ProductionOrders;
+import com.warehouse_accounting.components.production.TechnologicalMap;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
@@ -29,14 +30,15 @@ public class ProductionSubMenuView extends VerticalLayout {
     private final ProductionSteps productionSteps;
     private final ProductionProcessTechnology productionProcessTechnology;
     private final ProductionOperations productionOperations;
-
     private final ProductionOrders productionOrders;
+    private final TechnologicalMap technologicalMap;
 
     public ProductionSubMenuView(ProductionOrders productionOrders,
                                  ProductionTasks productionTasks,
                                  ProductionSteps productionSteps,
                                  ProductionProcessTechnology productionProcessTechnology,
-                                 ProductionOperations productionOperations) {
+                                 ProductionOperations productionOperations, TechnologicalMap technologicalMap) {
+        this.technologicalMap = technologicalMap;
         this.productionOrders = productionOrders;
         this.productionOperations = productionOperations;
         this.productionTasks = productionTasks;
@@ -56,7 +58,7 @@ public class ProductionSubMenuView extends VerticalLayout {
             switch (event.getSelectedTab().getLabel()) {
                 case "Тех. карты":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Тех. карты"));
+                    pageContent.add(technologicalMap);
                     break;
                 case "Заказы на производство":
                     pageContent.removeAll();
