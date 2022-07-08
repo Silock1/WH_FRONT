@@ -9,19 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequisitesDto {
-
+public class BuildingDto {
     private Long id;
 
-    private String organization;
+    private String name;
 
-    private AddressDto legalAddress;
-
-    private Integer INN;
-
-    private Integer KPP;
-
-    private Integer BIK;
-
-    private Integer checkingAccount;
+    private String code;
 }

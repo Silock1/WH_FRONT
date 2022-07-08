@@ -10,6 +10,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.warehouse_accounting.components.address.AddressForm;
 import com.warehouse_accounting.components.user.legalDetail.LegalDetailSettingsView;
 import com.warehouse_accounting.components.user.settings.SettingsView;
 import com.warehouse_accounting.models.dto.LegalDetailDto;
@@ -24,11 +25,13 @@ public class LegalDetailForm extends VerticalLayout {
     private LegalDetailService legalDetailService;
     private LegalDetailDto legalDetailDto;
     private Binder<LegalDetailDto> legalDetailDtoBinder;
+    private AddressForm addressForm;
 
     public LegalDetailForm(LegalDetailService legalDetailService) {
         this.legalDetailService = legalDetailService;
         this.legalDetailDto = new LegalDetailDto();
         this.legalDetailDtoBinder = new Binder<>(LegalDetailDto.class);
+        this.addressForm = addressForm;
         initForm();
         VerticalLayout form = initForm();
         add(form);
@@ -77,9 +80,7 @@ public class LegalDetailForm extends VerticalLayout {
         legalDetailDtoBinder.forField(middleNameField).asRequired().bind(LegalDetailDto::getMiddleName, LegalDetailDto::setMiddleName);
         form.add(middleNameField);
 
-        TextField commentField = new TextField("Комментарий");
-        legalDetailDtoBinder.forField(commentField).asRequired().bind(LegalDetailDto::getCommentToAddress, LegalDetailDto::setCommentToAddress);
-        form.add(commentField);
+        addressForm.addToForm("Комментарий", form);
 
         TextField inn = new TextField("ИНН");
         legalDetailDtoBinder.forField(inn).asRequired().bind(LegalDetailDto::getInn, LegalDetailDto::setInn);

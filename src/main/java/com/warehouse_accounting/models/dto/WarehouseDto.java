@@ -13,8 +13,7 @@ public class WarehouseDto {
     private Long id;
     private String name;
     private String sortNumber;
-    private String address;
-    private String commentToAddress;
+    private AddressDto address;
     private String comment;
 
     public String getName(WarehouseDto warehouseDto) {
