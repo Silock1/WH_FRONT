@@ -31,12 +31,12 @@ public class CurrencySettingsAddView extends VerticalLayout {
         initForm();
     }
 
-    private  void initForm() {
+    private void initForm() {
         VerticalLayout layout = new VerticalLayout();
 
         charcodeField = new TextField("Короткое название");
         nameField = new ComboBox<>();
-        nameField.setItems("Азербайджанский манат (AZN)", "Армянский драм (AMD)","Белорусский рубль (BYN)", "Доллар США (USD)", "Евро (EUR)", "Казахстанский тенге (KZT)", "Китайский юань (CNY)", "Другая...");
+        nameField.setItems("Азербайджанский манат (AZN)", "Армянский драм (AMD)", "Белорусский рубль (BYN)", "Доллар США (USD)", "Евро (EUR)", "Казахстанский тенге (KZT)", "Китайский юань (CNY)", "Другая...");
         nameField.setLabel("Выберите валюту");
         numcodeField = new TextField("Цифровой код");
         nominalField = new TextField("Номинал");

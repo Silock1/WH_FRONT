@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CurrencyDto {
+
     private Long id;
     private String numcode;
     private String charcode;
@@ -18,5 +19,4 @@ public class CurrencyDto {
     private String _Value;
     private double value;
 }
-
 

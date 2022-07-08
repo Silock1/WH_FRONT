@@ -19,7 +19,6 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.user.currency.forms.CurrencySettingsAddView;
 import com.warehouse_accounting.components.user.settings.SettingsView;
-import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.components.util.QuestionButton;
 import com.warehouse_accounting.models.dto.CurrencyDto;
 import com.warehouse_accounting.services.interfaces.CurrencyService;
@@ -41,7 +40,7 @@ public class CurrencySettingsView extends VerticalLayout {
         HorizontalLayout header = new HorizontalLayout();
 
         H2 tableName = new H2("Валюты");
-        tableName.getStyle().set("margin-top", "11px");
+        tableName.getStyle().set("margin-top","11px");
 
         Button delete = new Button("Удалить");
         delete.setEnabled(false);
@@ -50,22 +49,12 @@ public class CurrencySettingsView extends VerticalLayout {
 
         grid = new Grid<>(CurrencyDto.class, false);
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
-        Grid.Column<CurrencyDto> shortName = grid.addColumn(CurrencyDto::getShortName).setHeader("Короткое наименование");
-        Grid.Column<CurrencyDto> fullName = grid.addColumn(CurrencyDto::getFullName).setHeader("Полное наименование");
-        Grid.Column<CurrencyDto> digitalCode = grid.addColumn(CurrencyDto::getDigitalCode).setHeader("Цифровой код");
-        Grid.Column<CurrencyDto> letterCode = grid.addColumn(CurrencyDto::getLetterCode).setHeader("Буквенный код");
-        Grid.Column<CurrencyDto> course = grid.addColumn(CurrencyDto::getSortNumber).setHeader("Курс");
+        grid.addColumn(CurrencyDto::getCharcode).setHeader("Короткое наименование");
+        grid.addColumn(CurrencyDto::getName).setHeader("Полное наименование");
+        grid.addColumn(CurrencyDto::getNumcode).setHeader("Цифровой код");
+        grid.addColumn(CurrencyDto::getNominal).setHeader("Номинал");
+        grid.addColumn(CurrencyDto::getValue).setHeader("Курс");
         grid.addSelectionListener(selection -> delete.setEnabled(selection.getAllSelectedItems().size() != 0));
-
-        Button menuButton = new Button(new Icon(VaadinIcon.COG));
-        menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        ColumnToggleContextMenu<CurrencyDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(menuButton);
-
-        columnToggleContextMenu.addColumnToggleItem("Короткое наименование", shortName);
-        columnToggleContextMenu.addColumnToggleItem("Полное наименование", fullName);
-        columnToggleContextMenu.addColumnToggleItem("Цифровой код", digitalCode);
-        columnToggleContextMenu.addColumnToggleItem("Буквенный код", letterCode);
-        columnToggleContextMenu.addColumnToggleItem("Курс", course);
 
         delete.addClickListener(buttonClickEvent -> {
             grid.getSelectedItems().forEach(selected -> currencyService.deleteById(selected.getId()));
@@ -80,7 +69,7 @@ public class CurrencySettingsView extends VerticalLayout {
 
         Button addCurrencies = new Button("Добавить валюту", new Icon(VaadinIcon.PLUS));
         addCurrencies.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        addCurrencies.addClickListener(e -> UI.getCurrent().navigate(CurrencySettingsAddView.class));
+        addCurrencies.addClickListener(e-> UI.getCurrent().navigate(CurrencySettingsAddView.class));
 
         Button addFilterButton = new Button("Фильтр");
         addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -106,11 +95,7 @@ public class CurrencySettingsView extends VerticalLayout {
 
         header.add(buttonQuestion("МойСклад позволяет работать с контрагентами в разных валютах. Валюта учета — это обычно валюта страны, где зарегистрирована ваша компания. В валюте учета рассчитывается себестоимость товаров, прибыль и взаиморасчеты с контрагентами. По умолчанию в МоемСкладе за валюту учета принят российский рубль. Вы можете изменить валюту учета в справочнике валют. Если вы хотите использовать несколько валют, то решите, какая валюта будет у вас валютой учета. Откройте настройки валюты учета и выберите нужную валюту. После этого добавьте другие валюты."),
                 tableName, refreshButton, addCurrencies, addFilterButton, searchField, delete);
-
-        HorizontalLayout gridAndCog = new HorizontalLayout();
-        gridAndCog.add(grid, menuButton);
-
-        add(header, gridAndCog);
+        add(header, grid);
     }
 
     private Button buttonQuestion(String text) {
