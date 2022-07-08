@@ -2,6 +2,7 @@ package com.warehouse_accounting.components.user;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -11,14 +12,22 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.user.settings.SettingsView;
+import com.warehouse_accounting.models.dto.DiscountDto;
+import com.warehouse_accounting.services.interfaces.DiscountService;
+
 
 
 @PageTitle("Скидки")
 @Route(value = "discount", layout = SettingsView.class)
 public class DiscountView extends VerticalLayout {
 
-    public DiscountView() {
+    private Grid<DiscountDto> discountGrid = new Grid<>(DiscountDto.class, false);
+    private DiscountService discountService;
+
+    public DiscountView(DiscountService discountService) {
+        this.discountService = discountService;
         add(getGroupButtons());
+        add(discountGrid());
     }
 
     private VerticalLayout getGroupButtons() {
@@ -34,24 +43,34 @@ public class DiscountView extends VerticalLayout {
                 "В разделе Розница → Точки продаж можно ограничить скидки, которые кассир может установить в приложении Касса МойСклад.\n" +
                 "Читать инструкцию: Скидки", 7000, Notification.Position.TOP_START));
 
-        Span script = new Span("Скидки");
-        script.getElement().getThemeList().add("badge contrast");
+        Span discount = new Span("Скидки");
+        discount.getElement().getThemeList().add("badge contrast");
 
         Button reload = new Button((new Icon("lumo", "reload")));
         reload.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
-        Button script_template = new Button("Скидки", new Icon(VaadinIcon.PLUS));
-        script_template.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        Button discount_t = new Button("Скидки", new Icon(VaadinIcon.PLUS));
+        discount_t.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
-        Button allScript = new Button("Все скидки");
-        Button activeScript = new Button("Только активные");
+        Button allDiscount = new Button("Все скидки");
+        Button activeDiscount = new Button("Только активные");
 
         Button text = new Button("Активных скидок нет");
         text.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
-        HorizontalLayout one = new HorizontalLayout(helpButton, script, reload, script_template, allScript, activeScript);
+        HorizontalLayout one = new HorizontalLayout(helpButton, discount, reload, discount_t, allDiscount, activeDiscount);
         HorizontalLayout two = new HorizontalLayout(text);
         verticalLayout.add(one, two);
         return verticalLayout;
+    }
+
+    private HorizontalLayout discountGrid() {
+        var horizontalLayout = new HorizontalLayout();
+        discountGrid.setSelectionMode(Grid.SelectionMode.MULTI);
+        discountGrid.setItems(discountService.getAll());
+        discountGrid.addColumn(DiscountDto::getActive).setHeader("Активность");
+        discountGrid.addColumn(DiscountDto::getName).setHeader("Наименование");
+        add(discountGrid);
+        return horizontalLayout;
     }
 }

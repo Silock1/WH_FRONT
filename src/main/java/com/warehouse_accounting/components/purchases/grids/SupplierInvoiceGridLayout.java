@@ -7,12 +7,16 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.TemplateRenderer;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.purchases.forms.EditInvoiceForm;
+import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
+import com.warehouse_accounting.models.dto.InternalOrderDto;
 import com.warehouse_accounting.models.dto.SupplierInvoiceDto;
 import com.warehouse_accounting.models.dto.TasksDto;
 import com.warehouse_accounting.services.impl.SupplierInvoiceServiceImpl;
@@ -35,9 +39,13 @@ public class SupplierInvoiceGridLayout extends HorizontalLayout {
     public Component returnLayer; //
     @Autowired
     SupplierInvoiceService supplierInvoiceService;
+
+    public Button settingButton = new Button(new Icon(VaadinIcon.COG));
     Grid<SupplierInvoiceDto> supplierInvoiceDtoGrid = new Grid<>(SupplierInvoiceDto.class, false);
 
     public SupplierInvoiceGridLayout() {
+        add(initSupplierInvoiceGrid(), settingButton);
+        setSizeFull();
 //        initSupplierInvoiceGrid();
     }
 
@@ -59,21 +67,40 @@ public class SupplierInvoiceGridLayout extends HorizontalLayout {
         SupplierInvoiceService supplierInvoiceService = new SupplierInvoiceServiceImpl("/api/supplier_invoices",retrofit);
 
         supplierInvoiceDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI); //Добавляет чекбоксы в первый столбец.
-        supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getId).setHeader("ID").setSortable(true).setAutoWidth(true);
-        supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getInvoiceNumber).setHeader("Счет поставщика №").setSortable(true).setAutoWidth(true);
-        supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getDateInvoiceNumber).setHeader("От даты").setSortable(true).setAutoWidth(true);
-        supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getOrganization).setHeader("Организация").setSortable(true).setAutoWidth(true);
-        supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getWarehouse).setHeader("Склад").setSortable(true).setAutoWidth(true);
-        supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getContrAgent).setHeader("Контрагент").setSortable(true).setAutoWidth(true);
-        supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getContract).setHeader("Договор").setSortable(true).setAutoWidth(true);
-        supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getDatePay).setHeader("Дата оплаты").setSortable(true).setAutoWidth(true);
-        supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getProject).setHeader("Проект").setSortable(true).setAutoWidth(true);
-        supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getIncomingNumber).setHeader("Входящий номер").setSortable(true).setAutoWidth(true);
-        supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getDateIncomingNumber).setHeader("От даты").setSortable(true).setAutoWidth(true);
-        supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getAddPosition).setHeader("Наименование позиции").setSortable(true).setAutoWidth(true);
-        supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getAddComment).setHeader("Комментарий").setSortable(true).setAutoWidth(true);
-        supplierInvoiceDtoGrid.addColumn(rowEdit(supplierInvoiceService)).setHeader("Изменить").setSortable(true).setAutoWidth(true);;
-        supplierInvoiceDtoGrid.addColumn(rowDelete(supplierInvoiceService)).setHeader("Удалить").setSortable(true).setAutoWidth(true);;
+        Grid.Column<SupplierInvoiceDto> id = supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getId).setHeader("ID").setSortable(true).setAutoWidth(true);
+        Grid.Column<SupplierInvoiceDto> supplierInvoiceDtoColumn = supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getInvoiceNumber).setHeader("Счет поставщика №").setSortable(true).setAutoWidth(true);
+        Grid.Column<SupplierInvoiceDto> width = supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getDateInvoiceNumber).setHeader("От даты").setSortable(true).setAutoWidth(true);
+        Grid.Column<SupplierInvoiceDto> organization = supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getOrganization).setHeader("Организация").setSortable(true).setAutoWidth(true);
+        Grid.Column<SupplierInvoiceDto> warehouse = supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getWarehouse).setHeader("Склад").setSortable(true).setAutoWidth(true);
+        Grid.Column<SupplierInvoiceDto> contrAgent = supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getContrAgent).setHeader("Контрагент").setSortable(true).setAutoWidth(true);
+        Grid.Column<SupplierInvoiceDto> contract = supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getContract).setHeader("Договор").setSortable(true).setAutoWidth(true);
+        Grid.Column<SupplierInvoiceDto> paymentDate = supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getDatePay).setHeader("Дата оплаты").setSortable(true).setAutoWidth(true);
+        Grid.Column<SupplierInvoiceDto> project =  supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getProject).setHeader("Проект").setSortable(true).setAutoWidth(true);
+        Grid.Column<SupplierInvoiceDto> numbr = supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getIncomingNumber).setHeader("Входящий номер").setSortable(true).setAutoWidth(true);
+        Grid.Column<SupplierInvoiceDto> withDate = supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getDateIncomingNumber).setHeader("От даты").setSortable(true).setAutoWidth(true);
+        Grid.Column<SupplierInvoiceDto> position = supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getAddPosition).setHeader("Наименование позиции").setSortable(true).setAutoWidth(true);
+        Grid.Column<SupplierInvoiceDto> comment = supplierInvoiceDtoGrid.addColumn(SupplierInvoiceDto::getAddComment).setHeader("Комментарий").setSortable(true).setAutoWidth(true);
+        Grid.Column<SupplierInvoiceDto> edit = supplierInvoiceDtoGrid.addColumn(rowEdit(supplierInvoiceService)).setHeader("Изменить").setSortable(true).setAutoWidth(true);;
+        Grid.Column<SupplierInvoiceDto> delete = supplierInvoiceDtoGrid.addColumn(rowDelete(supplierInvoiceService)).setHeader("Удалить").setSortable(true).setAutoWidth(true);;
+
+        settingButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        ColumnToggleContextMenu<SupplierInvoiceDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(settingButton);
+
+        columnToggleContextMenu.addColumnToggleItem("ID", id);
+        columnToggleContextMenu.addColumnToggleItem("Счет поставщика №", supplierInvoiceDtoColumn);
+        columnToggleContextMenu.addColumnToggleItem("От даты", width);
+        columnToggleContextMenu.addColumnToggleItem("Организация", organization);
+        columnToggleContextMenu.addColumnToggleItem("Склад", warehouse);
+        columnToggleContextMenu.addColumnToggleItem("Контрагент", contrAgent);
+        columnToggleContextMenu.addColumnToggleItem("Договор", contract);
+        columnToggleContextMenu.addColumnToggleItem("Дата оплаты", paymentDate);
+        columnToggleContextMenu.addColumnToggleItem("Проект", project);
+        columnToggleContextMenu.addColumnToggleItem("Входящий номер", numbr);
+        columnToggleContextMenu.addColumnToggleItem("От даты", withDate);
+        columnToggleContextMenu.addColumnToggleItem("Наименование позиции", position);
+        columnToggleContextMenu.addColumnToggleItem("Комментарий", comment);
+        columnToggleContextMenu.addColumnToggleItem("Изменить", edit);
+        columnToggleContextMenu.addColumnToggleItem("Удалить", delete);
 
         supplierInvoiceDtoGrid.setItems(supplierInvoiceService.getAll()); //Отображает данные на странице.
 

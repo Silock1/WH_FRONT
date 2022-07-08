@@ -62,8 +62,14 @@ public class CustomerGoodsToRealize extends VerticalLayout {
         HorizontalLayout getGridMenuGive = getGridMenuGive();
         HorizontalLayout printMenuBar = getPrintMenuBar();
 
+        Button setting = new Button(new Icon(VaadinIcon.COG));
+        setting.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        setting.addClickListener(event -> {
+
+        });
+
         groupControl.add(helpButton, textProducts, getGridMenuGet, getGridMenuGive,
-                filterButton, printMenuBar);
+                filterButton, printMenuBar, setting);
         groupControl.setAlignItems(FlexComponent.Alignment.CENTER);
         setSizeFull();
         return groupControl;

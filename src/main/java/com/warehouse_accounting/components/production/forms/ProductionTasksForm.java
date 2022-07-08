@@ -1,6 +1,5 @@
 package com.warehouse_accounting.components.production.forms;
 
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -9,12 +8,9 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
@@ -35,7 +31,6 @@ import lombok.extern.log4j.Log4j2;
 import java.time.LocalDate;
 import java.util.Arrays;
 
-import static com.vaadin.flow.component.button.ButtonVariant.LUMO_TERTIARY_INLINE;
 import static com.warehouse_accounting.components.UtilView.subMenuTabs;
 
 
@@ -102,7 +97,7 @@ public class ProductionTasksForm extends VerticalLayout {
                 productionTasks.removeAll();
                 productionTasks.add(returnDiv);
             } catch (ValidationException e) {
-                System.out.println("Ошибка валидации");
+                log.error("Ошибка валидации");
             }
         });
         return saveButton;
@@ -142,35 +137,6 @@ public class ProductionTasksForm extends VerticalLayout {
         groupEdit.setSpacing(false);
         groupEdit.setAlignItems(Alignment.CENTER);
         return groupEdit;
-    }
-
-    private Button createHelpButton(String showText) {
-        Button helpButton = new Button(new Image("icons/helpApp.svg", "helpApp"));
-        helpButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_LARGE);
-
-        Notification helpNotification = new Notification();
-        helpNotification.setPosition(Notification.Position.TOP_START);
-
-        Button closeBtn = new Button(
-                VaadinIcon.CLOSE_SMALL.create(),
-                clickEvent -> helpNotification.close());
-        closeBtn.addThemeVariants(LUMO_TERTIARY_INLINE);
-
-        HorizontalLayout layout = new HorizontalLayout();
-        layout.add(new Text(showText),closeBtn);
-        layout.setMaxWidth("350px");
-
-        helpNotification.add(layout);
-
-        helpButton.addClickListener(c -> {
-            if (helpNotification.isOpened()) {
-                helpNotification.close();
-            } else {
-                helpNotification.open();
-            }
-        });
-
-        return helpButton;
     }
 
     private Button createSupplyButton() {
@@ -318,13 +284,14 @@ public class ProductionTasksForm extends VerticalLayout {
         formLayout.add(statusMenuBar);
 
         HorizontalLayout helpCheckboxLayout = new HorizontalLayout(
-                createHelpButton("Непроведенный документ — это черновик. Он не учитывается в отчетах."),
+                UtilView.createHelpButton(
+                        "Непроведенный документ — это черновик. Он не учитывается в отчетах."),
                 new Checkbox("Проведено"));
         helpCheckboxLayout.setAlignItems(Alignment.CENTER);
         formLayout.add(helpCheckboxLayout);
 
         HorizontalLayout reserveCheckboxLayout = new HorizontalLayout(
-                createHelpButton("Резерв действует на все материалы в документе."),
+                UtilView.createHelpButton("Резерв действует на все материалы в документе."),
                 new Checkbox("Резерв"));
         reserveCheckboxLayout.setAlignItems(Alignment.CENTER);
         formLayout.add(reserveCheckboxLayout);

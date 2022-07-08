@@ -7,14 +7,16 @@ retrofit:
 
   restServices:
     user_url: api/v1/auth/login
-    acceptance_url: api/acceptances   #404
+    acceptance_url: api/acceptances
+    address_url: api/addresses
     adjustments_url: api/adjustments
     application_url: api/applications
     attribute_of_calculation_object_url: api/attribute_of_calculation_objects   #[]
     bank_account_url: api/bank_accounts
     bankAccount_url: api/bankAccounts   #404
+    building_url: api/buildings
     call_url: api/calls
-    city_url: api/cities    #404
+    city_url: api/cities
     company_url: api/companies
     comissioner_reports_url: api/commission_reports
     contract_url: api/contracts
@@ -38,17 +40,21 @@ retrofit:
     printing_documents_url: api/printing_documents
     payments_url: api/payments    #todo проверить связь с taskDto
     position_url: api/positions
+    posting_url: api/posting
     product_group_url: api/product_groups
     product_url: api/products
     production_tasks_url: api/production_tasks
+    production_tasks_additional_field_url: api/additional_field
+#    production_operations_url: api/productions_operations
     project_url: api/projects
     recycleBin_url: api/recycle_bin
+    region_url: api/regions
     return_url: api/returns   # []
     retail_url: api/retail
     role_url: api/roles
     settings_url: api/settings
     start_screen_url: api/start_screen
-    street_url: api/streets   #404
+    street_url: api/streets
     subscription_url: api/subscription
     supplier_invoice_url: api/supplier_invoices
     tax_system_url: api/tax_systems
@@ -57,7 +63,7 @@ retrofit:
     unit_url: api/units
     units_of_measure_url: api/unitsOfMeasure
     writeOffs_url: /api/writeOffs
-    production_order_url: api/production_orders
+#    production_order_url: api/production_orders
 
     goods_to_realize_get_url: api/goodstorealizeget
     goods_to_realize_give_url: api/goodstorealizegive

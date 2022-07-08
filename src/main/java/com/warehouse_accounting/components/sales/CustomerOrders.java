@@ -38,8 +38,6 @@ public class CustomerOrders extends VerticalLayout {
     private final SalesGridLayout salesGridLayout;
     private final TextField textFieldGridSelected = new TextField();
 
-
-
     public CustomerOrders(Div parentLayer, CompanyService companyService, ContractorService contractorService,
                           ContractService contractService, ProjectService projectService, WarehouseService warehouseService,
                           EmployeeService employeeService, DepartmentService departmentService, ProductService productService,
@@ -92,7 +90,9 @@ public class CustomerOrders extends VerticalLayout {
 
         Button addFilterButton = new Button("Фильтр");
         addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        addFilterButton.addClickListener(e-> customerOrdersFilter.setVisible(!customerOrdersFilter.isVisible()));
+        addFilterButton.addClickListener(e ->
+                customerOrdersFilter.setVisible(!customerOrdersFilter.isVisible())
+        );
 
         TextField searchField = new TextField();
         searchField.setPlaceholder("Номер или комментарий");
@@ -106,8 +106,14 @@ public class CustomerOrders extends VerticalLayout {
         HorizontalLayout createMenuBar = getCreateMenuBar();
         HorizontalLayout printMenuBar = getPrintMenuBar();
 
+        Button setting = new Button(new Icon(VaadinIcon.COG));
+        setting.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        setting.addClickListener(event -> {
+
+        });
+
         groupControl.add(helpButton, textProducts, refreshButton, addOrderButton,
-                addFilterButton, searchField, editMenuBar, statusMenuBar, createMenuBar, printMenuBar);
+                addFilterButton, searchField, editMenuBar, statusMenuBar, createMenuBar, printMenuBar, setting);
         setSizeFull();
         return groupControl;
     }
@@ -163,6 +169,7 @@ public class CustomerOrders extends VerticalLayout {
         groupEdit.setAlignItems(Alignment.CENTER);
         return groupEdit;
     }
+
     private HorizontalLayout getStatusMenuBar() {
         Icon caretDownIcon = new Icon(VaadinIcon.CARET_DOWN);
         caretDownIcon.setSize("12px");

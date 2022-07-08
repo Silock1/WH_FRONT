@@ -27,9 +27,7 @@ public class CompanyDto {
 
     private Boolean payerVat;
 
-    private String address;
-
-    private String commentToAddress;
+    private AddressDto address;
 
     private String leader;
 

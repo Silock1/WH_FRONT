@@ -1,11 +1,9 @@
 package com.warehouse_accounting.components.user;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -24,6 +22,7 @@ import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.user.settings.SettingsView;
+import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.DepartmentDto;
 import com.warehouse_accounting.models.dto.EmployeeDto;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
@@ -118,7 +117,7 @@ public class EmployeeSettingView extends VerticalLayout {
     }
 
     private HorizontalLayout getEditMenuBar() {
-        Button settingButton = new Button( new Icon(VaadinIcon.COG));
+        Button settingButton = new Button(new Icon(VaadinIcon.COG));
         settingButton.addClickListener(buttonClickEvent -> {
 
         });
@@ -128,7 +127,7 @@ public class EmployeeSettingView extends VerticalLayout {
         return horizontalLayout;
     }
 
-    private void employeeDtoGridSet(){
+    private void employeeDtoGridSet() {
         Grid.Column<EmployeeDto> idColumn = employeeDtoGrid.addColumn(EmployeeDto::getId).setHeader("ID");
         Grid.Column<EmployeeDto> lastName = employeeDtoGrid.addColumn(EmployeeDto::getLastName).setHeader("Фамилия");
         Grid.Column<EmployeeDto> name = employeeDtoGrid.addColumn(EmployeeDto::getFirstName).setHeader("Имя");
@@ -142,12 +141,13 @@ public class EmployeeSettingView extends VerticalLayout {
 
         Button menuButton = new Button(new Icon(VaadinIcon.COG));
         menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        ColumnToggleContextMenu columnToggleContextMenu = new ColumnToggleContextMenu(menuButton);
+        ColumnToggleContextMenu<EmployeeDto> columnToggleContextMenu = new ColumnToggleContextMenu(menuButton);
+
         columnToggleContextMenu.addColumnToggleItem("Id", idColumn);
         columnToggleContextMenu.addColumnToggleItem("Фамилия", lastName);
         columnToggleContextMenu.addColumnToggleItem("Имя", name);
         columnToggleContextMenu.addColumnToggleItem("Отчество", middleName);
-        columnToggleContextMenu.addColumnToggleItem("Email",email);
+        columnToggleContextMenu.addColumnToggleItem("Email", email);
         columnToggleContextMenu.addColumnToggleItem("Телефон", phone);
         columnToggleContextMenu.addColumnToggleItem("ИНН", inn);
         columnToggleContextMenu.addColumnToggleItem("Описание", description);
@@ -156,26 +156,15 @@ public class EmployeeSettingView extends VerticalLayout {
         List<EmployeeDto> employeeDtos = employeeService.getAll();
         employeeDtoGrid.setItems(employeeDtos);
 
-        HorizontalLayout headerLayout = new HorizontalLayout(menuButton);
+        HorizontalLayout headerLayout = new HorizontalLayout();
         headerLayout.setAlignItems(FlexComponent.Alignment.BASELINE);
         headerLayout.setFlexGrow(1);
-        add(headerLayout, employeeDtoGrid);
+        employeeDtoGrid.setHeightByRows(true);
+        headerLayout.add(employeeDtoGrid, menuButton);
+        add(headerLayout);
     }
 
-    private static class ColumnToggleContextMenu extends ContextMenu {
-        public ColumnToggleContextMenu(Component target) {
-            super(target);
-            setOpenOnClick(true);
-        }
-
-        void addColumnToggleItem(String label, Grid.Column<EmployeeDto> column) {
-            MenuItem menuItem = this.addItem(label, e -> column.setVisible(e.getSource().isChecked()));
-            menuItem.setCheckable(true);
-            menuItem.setChecked(column.isVisible());
-        }
-    }
-
-    private HorizontalLayout filterEmployee(){
+    private HorizontalLayout filterEmployee() {
 
         HorizontalLayout firstLine = new HorizontalLayout();
 

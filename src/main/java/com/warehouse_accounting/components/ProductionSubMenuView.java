@@ -6,10 +6,12 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.warehouse_accounting.components.production.ProductionOperations;
 import com.warehouse_accounting.components.production.ProductionProcessTechnology;
 import com.warehouse_accounting.components.production.ProductionSteps;
 import com.warehouse_accounting.components.production.ProductionTasks;
 import com.warehouse_accounting.components.production.ProductionOrders;
+import com.warehouse_accounting.components.production.TechnologicalMap;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
@@ -27,14 +29,18 @@ public class ProductionSubMenuView extends VerticalLayout {
     private final ProductionTasks productionTasks;
     private final ProductionSteps productionSteps;
     private final ProductionProcessTechnology productionProcessTechnology;
+    private final ProductionOperations productionOperations;
+    private final ProductionOrders productionOrders;
+    private final TechnologicalMap technologicalMap;
 
-    //private final ProductionOrders productionOrders;
-
-    public ProductionSubMenuView(//ProductionOrders productionOrders,
+    public ProductionSubMenuView(ProductionOrders productionOrders,
                                  ProductionTasks productionTasks,
                                  ProductionSteps productionSteps,
-                                 ProductionProcessTechnology productionProcessTechnology) {
-        //this.productionOrders = productionOrders;
+                                 ProductionProcessTechnology productionProcessTechnology,
+                                 ProductionOperations productionOperations, TechnologicalMap technologicalMap) {
+        this.technologicalMap = technologicalMap;
+        this.productionOrders = productionOrders;
+        this.productionOperations = productionOperations;
         this.productionTasks = productionTasks;
         this.productionSteps = productionSteps;
         this.productionProcessTechnology = productionProcessTechnology;
@@ -52,15 +58,15 @@ public class ProductionSubMenuView extends VerticalLayout {
             switch (event.getSelectedTab().getLabel()) {
                 case "Тех. карты":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Тех. карты"));
+                    pageContent.add(technologicalMap);
                     break;
                 case "Заказы на производство":
                     pageContent.removeAll();
-                    //pageContent.add(productionOrders);
+                    pageContent.add(productionOrders);
                     break;
                 case "Тех. операции":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Тех. операции"));
+                    pageContent.add(productionOperations);
                     break;
                 case "Производственные задания":
                     pageContent.removeAll();

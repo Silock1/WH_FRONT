@@ -15,7 +15,7 @@ public class RequisitesDto {
 
     private String organization;
 
-    private String legalAddress;
+    private AddressDto legalAddress;
 
     private Integer INN;
 
