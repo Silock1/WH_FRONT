@@ -62,13 +62,18 @@ public class GoodsGridLayout extends HorizontalLayout {
         Grid.Column<ProductDto> weightColumn = productDtoGrid.addColumn(ProductDto::getWeight).setHeader("Масса");
         Grid.Column<ProductDto> volumeColumn = productDtoGrid.addColumn(ProductDto::getVolume).setHeader("Объем");
         Grid.Column<ProductDto> descriptionColumn = productDtoGrid.addColumn(ProductDto::getDescription).setHeader("Описание");
-        Grid.Column<ProductDto> unitsOfMeasureColumn = productDtoGrid.addColumn(ProductDto::getUnitsOfMeasureDto).setHeader("Единица измерения");
+        Grid.Column<ProductDto> unitsOfMeasureColumn = productDtoGrid.addColumn(
+                dto -> dto.getUnitsOfMeasureDto().getName()).setHeader("Единица измерения");
         Grid.Column<ProductDto> archiveColumn = productDtoGrid.addColumn(ProductDto::getArchive).setHeader("В архиве");
-        Grid.Column<ProductDto> contractorColumn = productDtoGrid.addColumn(ProductDto::getContractor).setHeader("Подрядчик");
-        Grid.Column<ProductDto> taxColumn = productDtoGrid.addColumn(ProductDto::getTaxSystem).setHeader("Налоговая система");
+        Grid.Column<ProductDto> contractorColumn = productDtoGrid.addColumn(
+                dto -> dto.getContractor().getName()).setHeader("Подрядчик");
+        Grid.Column<ProductDto> taxColumn = productDtoGrid.addColumn(
+                dto -> dto.getTaxSystem().getName()).setHeader("Налоговая система");
         Grid.Column<ProductDto> purchasePriceColumn = productDtoGrid.addColumn(ProductDto::getPurchasePrice).setHeader("Цена");
-        Grid.Column<ProductDto> groupColumn = productDtoGrid.addColumn(ProductDto::getProductGroup).setHeader("Группа");
-        Grid.Column<ProductDto> attributeOfCalculationObjectColumn = productDtoGrid.addColumn(ProductDto::getAttributeOfCalculationObject).setHeader("Объект рассчетов");
+        Grid.Column<ProductDto> groupColumn = productDtoGrid.addColumn(
+                dto -> dto.getProductGroup().getName()).setHeader("Группа");
+        Grid.Column<ProductDto> attributeOfCalculationObjectColumn = productDtoGrid.addColumn(
+                dto -> dto.getAttributeOfCalculationObject().getName()).setHeader("Объект рассчетов");
 
         productDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI);
 

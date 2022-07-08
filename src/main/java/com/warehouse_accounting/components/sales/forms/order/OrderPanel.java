@@ -9,7 +9,6 @@ import com.warehouse_accounting.components.sales.forms.order.components.OrderHea
 import com.warehouse_accounting.components.sales.forms.order.components.OrderPositions;
 import com.warehouse_accounting.components.sales.forms.order.types.DocumentCloseHandler;
 import com.warehouse_accounting.models.dto.InvoiceDto;
-import com.warehouse_accounting.models.dto.InvoiceEditDto;
 import com.warehouse_accounting.models.dto.InvoiceProductDto;
 import com.warehouse_accounting.services.interfaces.*;
 import lombok.extern.log4j.Log4j2;
@@ -35,7 +34,7 @@ public class OrderPanel extends VerticalLayout {
     private final ProjectService projectService;
     private final InvoiceService invoiceService;
     private final DocumentOperationsToolbar documentToolbar = new DocumentOperationsToolbar();
-    private final InvoiceDto invoice = new InvoiceDto();
+    private final InvoiceDto invoiceDto = new InvoiceDto();
 
     public OrderPanel(CompanyService companyService, ContractorService contractorService, ProductService productService,
                       WarehouseService warehouseService, ContractService contractService, ProjectService projectService,
@@ -49,34 +48,32 @@ public class OrderPanel extends VerticalLayout {
         this.invoiceService = invoiceService;
 
         try {
-            OrderDetails orderDetails = new OrderDetails(companyService, contractorService, warehouseService, contractService, projectService, invoice);
-            OrderPositions orderPositions = new OrderPositions(productService);
-            OrderHeader orderHeader = new OrderHeader(invoice);
+            OrderDetails orderDetails = new OrderDetails(companyService, contractorService, warehouseService, contractService, projectService, invoiceDto);
+            OrderPositions orderPositions = new OrderPositions(productService, invoiceDto);
+            OrderHeader orderHeader = new OrderHeader(invoiceDto);
 
             documentToolbar.setSaveHandler(() -> {
                 // save invoice and orders
                 List<InvoiceProductDto> order = orderPositions.getOrder();
-                // order.forEach(product -> product.setInvoiceDto(invoice));
 
                 if(order.isEmpty()) { // todo: remove this
                     Notification.show("Список продуктов незаполнен или недостаточное количество продукта.");
                     return;
                 }
 
-                invoice.setProductDtos(order);
-                invoice.setEdits(List.of(InvoiceEditDto.builder().id(1L).build())); // todo: получать текущего пользователя?
-                invoice.setType("Приход");
-                invoice.setInvoiceAuthorId(1L);
-                invoice.setInvoiceAuthorFirstName("Test_author_FistName");
-                invoice.setInvoiceAuthorLastName("Test_author_LastName");
-                invoice.setComment(""); // todo: перенести в футер
+                invoiceDto.setProductDtos(order);
+//                invoice.setEdits(List.of(InvoiceEditDto.builder().id(1L).build())); // todo: получать текущего пользователя?
+                invoiceDto.setType("RECEIPT");
+                invoiceDto.setInvoiceAuthorId(1L);
+                invoiceDto.setInvoiceAuthorFirstName("Test_author_FistName");
+                invoiceDto.setInvoiceAuthorLastName("Test_author_LastName");
 
                 Notification.show("Сохранение заказа");
-                invoiceService.create(invoice);
+                invoiceService.create(invoiceDto);
             });
 
             add(documentToolbar, orderHeader, orderDetails, orderPositions);
-        } catch (IOException err) {
+        } catch (RuntimeException | IOException err) {
             log.error("Не удалось создать форму заказа");
             err.printStackTrace();
         }

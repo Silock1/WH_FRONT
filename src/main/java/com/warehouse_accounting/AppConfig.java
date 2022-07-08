@@ -1,6 +1,7 @@
 package com.warehouse_accounting;
 
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
+import com.warehouse_accounting.components.util.DateConvertor;
 import com.warehouse_accounting.components.util.DateTimeDeserealizerAdapter;
 import com.warehouse_accounting.components.util.LocalDateSerializerAdapter;
 import okhttp3.OkHttpClient;
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.concurrent.TimeUnit;
 
@@ -29,6 +31,7 @@ public class AppConfig {
                         new GsonBuilder()
                                 .registerTypeAdapter(LocalDate.class, new DateTimeDeserealizerAdapter())
                                 .registerTypeAdapter(LocalDate.class, new LocalDateSerializerAdapter())
+                                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializerAdapter())
                                 .serializeNulls().create()))
                 .build();
     }
@@ -45,5 +48,11 @@ public class AppConfig {
                 .addConverterFactory(GsonConverterFactory.create(
                         new GsonBuilder().serializeNulls().create()))
                 .build();
+    }
+}
+
+class LocalDateTimeSerializerAdapter implements JsonSerializer<LocalDateTime> {
+    public JsonElement serialize(LocalDateTime date, Type typeOfSrc, JsonSerializationContext context) {
+        return new JsonPrimitive(date.format(DateConvertor.dateTimeFormatter)); // "yyyy-mm-dd"
     }
 }

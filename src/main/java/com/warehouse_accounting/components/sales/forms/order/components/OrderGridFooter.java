@@ -10,6 +10,7 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.warehouse_accounting.components.sales.forms.order.types.GridSummaryReciver;
 import com.warehouse_accounting.components.sales.forms.order.types.OrderSummary;
+import com.warehouse_accounting.models.dto.InvoiceDto;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -31,19 +32,29 @@ public class OrderGridFooter extends HorizontalLayout implements GridSummaryReci
     private Span priceField = new Span("Промежуточный итог: 0.0");
     private Span totalPriceField = new Span("Итог: 0.0");
     private OrderGrid grid;
+    private final InvoiceDto invoiceDto;
 
-    public OrderGridFooter() {
+    public OrderGridFooter(InvoiceDto invoiceDto) {
+        this.invoiceDto = invoiceDto;
+
         setWidthFull();
+
         TextArea comment = new TextArea();
         comment.setWidthFull();
         comment.setPlaceholder("Комментарий");
+        comment.addValueChangeListener(event -> invoiceDto.setComment(event.getValue()));
 
         TextField outerCode = new TextField();
         outerCode.setEnabled(false);
         outerCode.addValueChangeListener(x -> Notification.show("Not implemented (" + x.getValue() + ")"));
 
         Checkbox outerCodeSwitch = new Checkbox("Внешний код");
-        outerCodeSwitch.addValueChangeListener(event -> { outerCode.setEnabled(event.getValue()); });
+        outerCodeSwitch.addValueChangeListener(event -> {
+            outerCode.setEnabled(event.getValue());
+            if(event.getValue()) {
+                // ?
+            }
+        });
 
         Checkbox ndsIncluded = new Checkbox("Цена включает НДС");
         ndsIncluded.addValueChangeListener(event -> {
@@ -69,8 +80,8 @@ public class OrderGridFooter extends HorizontalLayout implements GridSummaryReci
         );
     }
 
-    public OrderGridFooter(OrderGrid grid) {
-        this();
+    public OrderGridFooter(InvoiceDto invoiceDto, OrderGrid grid) {
+        this(invoiceDto);
         this.grid = grid;
     }
 
