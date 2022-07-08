@@ -23,8 +23,7 @@ public class ContractorDto {
     private String phone;
     private String fax;
     private String email;
-    private String address;
-    private String commentToAddress;
+    private AddressDto address;
     private String comment;
     private String typeOfPriceName;
     private Long contractorGroupId;
@@ -37,11 +36,12 @@ public class ContractorDto {
     private String legalDetailInn;
     private String legalDetailKpp;
     private String legalDetailTypeOfContractorName;
-    private String legalDetailAddress; // Сюда нужен Юр.Адресс
+    private AddressDto legalDetailAddress;
 
     private List<ContractorFaceContactDto> contacts;  // Не создаются на беке
     private List<BankAccountDto> bankAccountDtos;  // Не создаются на беке
     private LegalDetailDto legalDetailDto;
+    private List<Long> callIds;
 
     public String getName() {
         return name == null ? "Contractor with id: " + id : name;

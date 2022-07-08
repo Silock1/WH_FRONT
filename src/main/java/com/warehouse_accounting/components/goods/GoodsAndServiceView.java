@@ -20,7 +20,6 @@ import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
-//import com.warehouse_accounting.components.goods.forms.ComplectForm;
 import com.warehouse_accounting.components.goods.filter.GoodsFilter;
 import com.warehouse_accounting.components.goods.forms.ComplectForm;
 import com.warehouse_accounting.components.goods.forms.GoodsForm;
@@ -29,11 +28,7 @@ import com.warehouse_accounting.components.goods.forms.ServiceForm;
 import com.warehouse_accounting.components.goods.grids.GoodsGridLayout;
 import com.warehouse_accounting.models.dto.ProductDto;
 import com.warehouse_accounting.models.dto.ProductGroupDto;
-import com.warehouse_accounting.services.interfaces.ContractorService;
-import com.warehouse_accounting.services.interfaces.DepartmentService;
-import com.warehouse_accounting.services.interfaces.EmployeeService;
-import com.warehouse_accounting.services.interfaces.ProductGroupService;
-import com.warehouse_accounting.services.interfaces.ProductService;
+import com.warehouse_accounting.services.interfaces.*;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -55,6 +50,7 @@ public class GoodsAndServiceView extends VerticalLayout {
     private ContractorService contractorService;
     private GoodsFilter goodsFilter;
     private Long rootGroupId = 1L;
+
 
 
     public GoodsAndServiceView(GoodsFilter goodsFilter,
@@ -83,22 +79,24 @@ public class GoodsAndServiceView extends VerticalLayout {
 
         Button helpButton = new Button(new Icon(VaadinIcon.QUESTION_CIRCLE));
         helpButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
-        helpButton.addClickListener(buttonClickEvent -> {Notification.show("" +
-                "В разделе представлены все ваши товары, услуги и комплекты.\n" +
-                "\n" +
-                "Для удобства товары и услуги можно группировать. Различать товары с одинаковым артикулом по характеристикам (например, размеру или цвету) удобно с помощью модификаций. Несколько единиц одного товара можно продавать упаковками. А комплекты позволяют продавать наборы разных товаров и услуг как единое целое.\n" +
-                "\n" +
-                "Каталог товаров можно импортировать и экспортировать.\n" +
-                "\n" +
-                "Читать инструкции:\n" +
-                "\n" +
-                "Товары и услуги\n" +
-                "Импорт и экспорт\n" +
-                "Видео:\n" +
-                "\n" +
-                "Товары и остатки\n" +
-                "Импорт товаров из Excel\n" +
-                "Цены в МоемСкладе", 5000, Notification.Position.TOP_START);});
+        helpButton.addClickListener(buttonClickEvent -> {
+            Notification.show("" +
+                    "В разделе представлены все ваши товары, услуги и комплекты.\n" +
+                    "\n" +
+                    "Для удобства товары и услуги можно группировать. Различать товары с одинаковым артикулом по характеристикам (например, размеру или цвету) удобно с помощью модификаций. Несколько единиц одного товара можно продавать упаковками. А комплекты позволяют продавать наборы разных товаров и услуг как единое целое.\n" +
+                    "\n" +
+                    "Каталог товаров можно импортировать и экспортировать.\n" +
+                    "\n" +
+                    "Читать инструкции:\n" +
+                    "\n" +
+                    "Товары и услуги\n" +
+                    "Импорт и экспорт\n" +
+                    "Видео:\n" +
+                    "\n" +
+                    "Товары и остатки\n" +
+                    "Импорт товаров из Excel\n" +
+                    "Цены в МоемСкладе", 5000, Notification.Position.TOP_START);
+        });
 
         Label textProducts = new Label();
         textProducts.setText("Товары и услуги");
@@ -162,9 +160,15 @@ public class GoodsAndServiceView extends VerticalLayout {
         HorizontalLayout importMenuBar = getImportMenuBar();
         HorizontalLayout exportMenuBar = getExportMenuBar();
 
+        Button setting = new Button(new Icon(VaadinIcon.COG));
+        setting.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        setting.addClickListener(event -> {
+
+        });
+
         groupControl.add(helpButton, textProducts, refreshButton, addProductButton, addServiceButton,
                 addComplectButton, addGroupButton, addFilterButton, searchField, editMenuBar,
-                printMenuBar, importMenuBar, exportMenuBar);
+                printMenuBar, importMenuBar, exportMenuBar, setting);
         setSizeFull();
         return groupControl;
     }
@@ -191,7 +195,7 @@ public class GoodsAndServiceView extends VerticalLayout {
                     Notification.Position.MIDDLE);
             notification.open(); //TODO реализовать форму подтверждения удаления товара
             //TODO написать метод удаляющий группу продуктов одним запросом
-            goodsGridLayout .getProductGrid()
+            goodsGridLayout.getProductGrid()
                     .asMultiSelect()
                     .getSelectedItems()
                     .stream().forEach(productDto -> productService.deleteById(productDto.getId()));

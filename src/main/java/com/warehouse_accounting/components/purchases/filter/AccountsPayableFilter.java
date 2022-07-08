@@ -11,8 +11,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.components.purchases.AccountsPayable;
 import com.warehouse_accounting.models.dto.*;
 import com.warehouse_accounting.services.interfaces.*;
+import lombok.Setter;
 
 import java.io.IOException;
 import java.util.List;

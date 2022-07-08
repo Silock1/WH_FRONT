@@ -6,7 +6,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.warehouse_accounting.components.adjustments.AdjustmentsView;
+import com.warehouse_accounting.components.payments.adjustments.AdjustmentsView;
 import com.warehouse_accounting.components.payments.PaymentsSettlementsView;
 import com.warehouse_accounting.components.payments.PaymentsView;
 

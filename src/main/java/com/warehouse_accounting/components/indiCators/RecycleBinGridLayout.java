@@ -3,12 +3,10 @@ package com.warehouse_accounting.components.indiCators;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
@@ -24,15 +22,13 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
+import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.RecycleBinDto;
 import com.warehouse_accounting.services.interfaces.RecycleBinService;
 import org.springframework.stereotype.Component;
 import org.vaadin.olli.FileDownloadWrapper;
 
-import java.io.FileNotFoundException;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 @Component
 @UIScope
@@ -41,13 +37,21 @@ public class RecycleBinGridLayout extends VerticalLayout {
 
     private HorizontalLayout horizontalToolPanelLayout = new HorizontalLayout();
     private Grid<RecycleBinDto> grid = new Grid<>(RecycleBinDto.class, false);
+
+    private Button menuButton = new Button(new Icon(VaadinIcon.COG));
     private static RecycleBinService recycleBinService;
 
-    public RecycleBinGridLayout(RecycleBinService recycleBinService) throws FileNotFoundException {
+    public RecycleBinGridLayout(RecycleBinService recycleBinService) {
         this.recycleBinService = recycleBinService;
         horizontalToolPanelLayout.setAlignItems(Alignment.CENTER);
         grid.setItems(recycleBinService.getAll());
         configToolPanel();
+        add(horizontalToolPanelLayout);
+        initGrid();
+    }
+
+    private Grid<RecycleBinDto> initGrid() {
+        Grid<RecycleBinDto> grid = new Grid<>(RecycleBinDto.class, false);
 
         Grid.Column<RecycleBinDto> documentType = grid.addColumn(RecycleBinDto::getDocumentType).setHeader("Тип документа");
         Grid.Column<RecycleBinDto> number = grid.addColumn(RecycleBinDto::getNumber).setHeader("№");
@@ -63,12 +67,10 @@ public class RecycleBinGridLayout extends VerticalLayout {
         Grid.Column<RecycleBinDto> printed = grid.addColumn(RecycleBinDto::getPrinted).setHeader("Напечатано");
         Grid.Column<RecycleBinDto> comment = grid.addColumn(RecycleBinDto::getComment).setHeader("Комментарий");
 
-        grid.setSelectionMode(Grid.SelectionMode.MULTI); //
-
-        Button menuButton = new Button(new Icon(VaadinIcon.COG));
+        grid.setSelectionMode(Grid.SelectionMode.MULTI);
         menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        ColumnToggleContextMenu columnToggleContextMenu = new ColumnToggleContextMenu(
-                menuButton);
+
+        ColumnToggleContextMenu<RecycleBinDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(menuButton);
 
         columnToggleContextMenu.addColumnToggleItem("Тип документа", documentType);
         columnToggleContextMenu.addColumnToggleItem("№", number);
@@ -83,59 +85,15 @@ public class RecycleBinGridLayout extends VerticalLayout {
         columnToggleContextMenu.addColumnToggleItem("Отправлено", shipped);
         columnToggleContextMenu.addColumnToggleItem("Напечатано", printed);
         columnToggleContextMenu.addColumnToggleItem("Комментарий", comment);
-        horizontalToolPanelLayout.add(menuButton);
-        add(horizontalToolPanelLayout);
-        add(grid);
 
-    }
+        HorizontalLayout headerLayout = new HorizontalLayout();
+        headerLayout.add(grid, menuButton);
+        grid.setHeightByRows(true);
+        headerLayout.setWidthFull();
 
-    private static class ColumnToggleContextMenu extends ContextMenu {
-        public ColumnToggleContextMenu(com.vaadin.flow.component.Component target) {
-            super(target);
-            setOpenOnClick(true);
-        }
-
-        void addColumnToggleItem(String label, Grid.Column<RecycleBinDto> column) {
-            MenuItem menuItem = this.addItem(label, e -> {
-                column.setVisible(e.getSource().isChecked());
-            });
-            menuItem.setCheckable(true);
-            menuItem.setChecked(column.isVisible());
-        }
-    }
-
-
-
-
-    /*private Grid<RecycleBinDto> grid() {
-        grid.setColumns(getVisibleInvoiceColumn().keySet().toArray(String[]::new));
-        grid.setSelectionMode(Grid.SelectionMode.MULTI);
-
-
-        getVisibleInvoiceColumn().forEach((key, value) -> grid.getColumnByKey(key).setHeader(value));
-        grid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_ROW_STRIPES);
+        add(headerLayout);
         return grid;
     }
-
-    private HashMap<String, String> getVisibleInvoiceColumn() {
-        HashMap<String, String> fieldNameColumnName = new LinkedHashMap<>();
-        fieldNameColumnName.put("documentType", "Тип документа");
-        fieldNameColumnName.put("number", "№");
-        //  fieldNameColumnName.put("date","Время");  ошибка
-        fieldNameColumnName.put("sum", "Сумма");
-        fieldNameColumnName.put("warehouseName", "Со склада");
-        fieldNameColumnName.put("warehouseFrom", "На склад");
-        fieldNameColumnName.put("companyName", "Организация");
-        fieldNameColumnName.put("contractorName", "Контрагент");
-        fieldNameColumnName.put("status", "Статус");
-        fieldNameColumnName.put("projectName", "Проект");
-        fieldNameColumnName.put("shipped", "Отправлено");
-        fieldNameColumnName.put("printed", "Напечатано");
-        fieldNameColumnName.put("comment", "Комментарий");
-
-        return fieldNameColumnName;
-
-    }*/
 
     // Здесь настройка панели инструментов
     private void configToolPanel() {
@@ -187,7 +145,7 @@ public class RecycleBinGridLayout extends VerticalLayout {
         delete.addClickListener(event -> {
             //TODO повод поработать этот функционал
         });
-        MenuItem recover = changeSubMenu.addItem("Востановить");
+        MenuItem recover = changeSubMenu.addItem("Воcстановить");
         recover.addClickListener(event -> {
             //TODO повод поработать этот функционал
         });

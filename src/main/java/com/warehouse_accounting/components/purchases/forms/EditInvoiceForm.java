@@ -28,6 +28,7 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.warehouse_accounting.components.purchases.grids.SupplierInvoiceGridLayout;
+import com.warehouse_accounting.components.util.DateConvertor;
 import com.warehouse_accounting.models.dto.SupplierInvoiceDto;
 import com.warehouse_accounting.services.impl.SupplierInvoiceServiceImpl;
 import com.warehouse_accounting.services.interfaces.SupplierInvoiceService;
@@ -35,7 +36,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 @CssImport(value = "./css/invoiceForm.css")
 public class EditInvoiceForm extends VerticalLayout {
@@ -47,7 +47,6 @@ public class EditInvoiceForm extends VerticalLayout {
     private Tab related_documents = new Tab("Связанные документы");
     private VerticalLayout documentPage = new VerticalLayout();
     private Notification notification;
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private TextField fieldInvoiceNumber; //Input формы Номер счета поставщика
     private DatePicker datePickerInvoiceNumber; //Input datePicker Счет поставщика от
@@ -65,6 +64,7 @@ public class EditInvoiceForm extends VerticalLayout {
     private TextArea textArea; //Input формы Комментарий
     private Checkbox checkboxNDS; //Input c чек-бокса НДС
     private Checkbox checkboxOnNDS; //Input c чек-бокса Цена включает НДС
+    private SupplierInvoiceGridLayout supplierInvoiceGridLayout; // убрать
 
     Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl("http://localhost:4446")
@@ -136,7 +136,7 @@ public class EditInvoiceForm extends VerticalLayout {
         datePickerPay = new DatePicker();
         datePickerPay.setClearButtonVisible(true);
         if(supplierInvoiceDto.getDatePay() != null){
-            LocalDate date = LocalDate.parse(supplierInvoiceDto.getDatePay(), formatter);
+            LocalDate date = DateConvertor.fromTextDate(supplierInvoiceDto.getDateInvoiceNumber());
             datePickerPay.setValue(date);
         }
 
@@ -162,7 +162,7 @@ public class EditInvoiceForm extends VerticalLayout {
         dateIncomingNumber = new DatePicker();
         dateIncomingNumber.setClearButtonVisible(true);
         if(supplierInvoiceDto.getDateIncomingNumber() != null){
-            LocalDate date = LocalDate.parse(supplierInvoiceDto.getDateIncomingNumber(), formatter);
+            LocalDate date = DateConvertor.fromTextDate(supplierInvoiceDto.getDateInvoiceNumber());
             dateIncomingNumber.setValue(date);
         }
 
@@ -232,13 +232,13 @@ public class EditInvoiceForm extends VerticalLayout {
                 notification.setPosition(Notification.Position.BOTTOM_STRETCH);
             }
             parentLayer.removeAll();
-            parentLayer.add(returnLayer, SupplierInvoiceGridLayout.initSupplierInvoiceGrid());
+            parentLayer.add(returnLayer, supplierInvoiceGridLayout.initSupplierInvoiceGrid()); // здесь была статика
         });
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS,ButtonVariant.LUMO_SMALL);
 
         Button close = new Button("Закрыть", e -> {
             parentLayer.removeAll();
-            parentLayer.add(returnLayer, SupplierInvoiceGridLayout.initSupplierInvoiceGrid());
+            parentLayer.add(returnLayer, supplierInvoiceGridLayout.initSupplierInvoiceGrid()); // здесь была статика
         });
         close.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
 
@@ -303,7 +303,7 @@ public class EditInvoiceForm extends VerticalLayout {
         datePickerInvoiceNumber = new DatePicker();
         datePickerInvoiceNumber.setClearButtonVisible(true);
         if(supplierInvoiceDto.getDateInvoiceNumber() != null){
-            LocalDate date = LocalDate.parse(supplierInvoiceDto.getDateInvoiceNumber(), formatter);
+            LocalDate date = DateConvertor.fromTextDate(supplierInvoiceDto.getDateInvoiceNumber());
             datePickerInvoiceNumber.setValue(date);
         }
 

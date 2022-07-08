@@ -16,6 +16,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.warehouse_accounting.components.purchases.grids.AcceptancesGridLayout;
+import com.warehouse_accounting.services.interfaces.AcceptanceService;
 
 
 /*
@@ -26,9 +27,12 @@ public class Acceptances extends VerticalLayout {
     private final TextField textField = new TextField();
     private final Div parentLayer;
 
-    public Acceptances(Div parentLayer) {
+    private final AcceptanceService acceptanceService;
+
+    public Acceptances(Div parentLayer, AcceptanceService acceptanceService) {
         this.parentLayer = parentLayer;
-        this.acceptancesGridLayout = new AcceptancesGridLayout(textField);
+        this.acceptanceService = acceptanceService;
+        this.acceptancesGridLayout = new AcceptancesGridLayout(textField, acceptanceService);
         Div pageContent = new Div();
         pageContent.add(acceptancesGridLayout);
         pageContent.setSizeFull();
@@ -40,7 +44,7 @@ public class Acceptances extends VerticalLayout {
 
         Button helpButton = new Button(new Icon(VaadinIcon.QUESTION_CIRCLE));
         helpButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
-        helpButton.addClickListener(e->{
+        helpButton.addClickListener(e -> {
             Notification.show("Приемки позволяют учитывать закупки товаров. Приемку создают, когда покупают новый товар. Если товар уже лежит у вас на складе или вы не хотите указывать поставщиков, лучше воспользоваться оприходованием.\n" +
                     "\n" +
                     "В результате приемки увеличиваются остатки товаров в разделе Товары → Остатки и фиксируется долг перед поставщиком в разделе Деньги → Взаиморасчеты. Также на основе приемки формируется себестоимость товара.\n" +
@@ -78,7 +82,10 @@ public class Acceptances extends VerticalLayout {
         });
 
         Button settingButton = new Button(new Icon(VaadinIcon.COG));
-        refreshButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        settingButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        settingButton.addClickListener(event -> {
+
+        });
 
         HorizontalLayout editMenuBar = getEditMenuBar();
         HorizontalLayout statusMenuBar = getStatusMenuBar();
@@ -107,7 +114,7 @@ public class Acceptances extends VerticalLayout {
 
         MenuItem editMenu = editMenuBar.addItem(editItem);
         editMenu.getSubMenu().addItem("Удалить", menuItemClickEvent -> {
-            int selected = acceptancesGridLayout.getAcceptancesDtoGrid().asMultiSelect().getSelectedItems().size();
+            int selected = acceptancesGridLayout.getAcceptanceProductDtoGrid().asMultiSelect().getSelectedItems().size();
             Notification notification = new Notification(String.format("Выделено для удаления %d", selected),
                     3000, Notification.Position.MIDDLE);
             notification.open();

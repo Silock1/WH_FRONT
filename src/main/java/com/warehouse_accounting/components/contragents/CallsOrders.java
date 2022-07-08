@@ -17,7 +17,7 @@ import com.warehouse_accounting.components.contragents.grids.CallsGridLayout;
 
 @SpringComponent
 @UIScope
-public class CallsOrders extends VerticalLayout{
+public class CallsOrders extends VerticalLayout {
 
     private final CallsGridLayout gridLayout;
     private final CallsFilterLayout filterLayout;
@@ -57,9 +57,9 @@ public class CallsOrders extends VerticalLayout{
 
         Button addFilterButton = new Button("Фильтр");
         addFilterButton.addClickListener(click -> {
-            if(!filterLayout.isVisible()){
+            if (!filterLayout.isVisible()) {
                 filterLayout.setVisible(true);
-            }else {
+            } else {
                 filterLayout.setVisible(false);
             }
         });
@@ -68,8 +68,15 @@ public class CallsOrders extends VerticalLayout{
         searchField.setPlaceholder("Номер или комментарий");
         searchField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
 
+
+        Button setting = new Button(new Icon(VaadinIcon.COG));
+        setting.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        setting.addClickListener(event -> {
+
+        });
+
         groupControl.add(helpButton, textProducts, refreshButton,
-                addFilterButton, searchField);
+                addFilterButton, searchField, setting);
         setSizeFull();
         return groupControl;
     }

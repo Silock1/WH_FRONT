@@ -15,24 +15,45 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
-import com.warehouse_accounting.components.purchases.grids.AccountsPayableGridLayout;
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.components.purchases.filter.AccountsPayableFilter;
+import com.warehouse_accounting.components.purchases.forms.CreateInvoiceForm;
+import com.warehouse_accounting.components.purchases.grids.SupplierInvoiceGridLayout;
+import com.warehouse_accounting.components.tasks.filter.TasksFilter;
+import com.warehouse_accounting.services.interfaces.CompanyService;
+import com.warehouse_accounting.services.interfaces.ContractService;
+import com.warehouse_accounting.services.interfaces.ContractorService;
+import com.warehouse_accounting.services.interfaces.DepartmentService;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
+import com.warehouse_accounting.services.interfaces.ProductService;
+import com.warehouse_accounting.services.interfaces.ProjectService;
+import com.warehouse_accounting.services.interfaces.WarehouseService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /*
 Счета поставщиков
  */
 public class AccountsPayable extends VerticalLayout {
 
-    private AccountsPayableGridLayout accountsPayableGridLayout;
+    private SupplierInvoiceGridLayout supplierInvoiceGridLayout;
+    private AccountsPayableFilter filterLayout;
     private final TextField textField = new TextField();
     private final Div parentLayer;
 
-    public AccountsPayable(Div parentLayer) {
+
+
+
+    public AccountsPayable(Div parentLayer, AccountsPayableFilter filterLayout) {
+        this.filterLayout = filterLayout;
         this.parentLayer = parentLayer;
-        this.accountsPayableGridLayout = new AccountsPayableGridLayout(textField);
-        Div pageContent = new Div();
-        pageContent.add(accountsPayableGridLayout);
-        pageContent.setSizeFull();
-        add(getGroupButtons(), pageContent);
+        this.supplierInvoiceGridLayout = new SupplierInvoiceGridLayout();
+//        Div pageContent = new Div();
+//        pageContent.add(supplierInvoiceGridLayout.settingButton);
+//        pageContent.add(supplierInvoiceGridLayout.initSupplierInvoiceGrid()); // здесь статика была
+//        pageContent.setSizeFull();
+        add(getGroupButtons());
+        add(supplierInvoiceGridLayout);
     }
 
     private HorizontalLayout getGroupButtons() {
@@ -58,9 +79,14 @@ public class AccountsPayable extends VerticalLayout {
 
         Button addOrderButton = new Button("Счет", new Icon(VaadinIcon.PLUS));
         addOrderButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        addOrderButton.addClickListener(buttonClickEvent -> {
+            removeAll();
+            add(new CreateInvoiceForm(parentLayer, supplierInvoiceGridLayout));
+        });
 
         Button addFilterButton = new Button("Фильтр");
         addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        addFilterButton.addClickListener(e -> filterLayout.setVisible(!filterLayout.isVisible()));
 
         TextField searchField = new TextField();
         searchField.setPlaceholder("Номер или комментарий");
@@ -70,7 +96,11 @@ public class AccountsPayable extends VerticalLayout {
         });
 
         Button settingButton = new Button(new Icon(VaadinIcon.COG));
-        refreshButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        settingButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        settingButton.addClickListener(event -> {
+
+        });
+
 
         HorizontalLayout editMenuBar = getEditMenuBar();
         HorizontalLayout statusMenuBar = getStatusMenuBar();
@@ -96,32 +126,6 @@ public class AccountsPayable extends VerticalLayout {
         HorizontalLayout editItem = new HorizontalLayout(new Text("Изменить"), caretDownIcon);
         editItem.setSpacing(false);
         editItem.setAlignItems(Alignment.CENTER);
-
-        MenuItem editMenu = editMenuBar.addItem(editItem);
-        editMenu.getSubMenu().addItem("Удалить", menuItemClickEvent -> {
-            int selected = accountsPayableGridLayout.getInvoiceAccountsPayableDtoGrid().asMultiSelect().getSelectedItems().size();
-            Notification notification = new Notification(String.format("Выделено для удаления %d", selected),
-                    3000, Notification.Position.MIDDLE);
-            notification.open();
-        });
-
-        editMenu.getSubMenu().addItem("Копировать", menuItemClickEvent -> {
-
-        });
-
-        editMenu.getSubMenu().addItem("Массовое редактирование", menuItemClickEvent -> {
-
-        });
-        editMenu.getSubMenu().addItem("Провести", menuItemClickEvent -> {
-
-        });
-        editMenu.getSubMenu().addItem("Снять проведение", menuItemClickEvent -> {
-
-        });
-        editMenu.getSubMenu().addItem("Объединить", menuItemClickEvent -> {
-
-        });
-
 
         HorizontalLayout groupEdit = new HorizontalLayout();
         groupEdit.add(textField, editMenuBar);

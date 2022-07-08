@@ -8,16 +8,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.purchases.*;
 import com.warehouse_accounting.components.purchases.filter.AccountsPayableFilter;
-import com.warehouse_accounting.components.purchases.InvoicesReceived;
-import com.warehouse_accounting.components.purchases.grids.SupplierInvoiceGridLayout;
-import com.warehouse_accounting.services.interfaces.CompanyService;
-import com.warehouse_accounting.services.interfaces.ContractService;
-import com.warehouse_accounting.services.interfaces.ContractorService;
-import com.warehouse_accounting.services.interfaces.DepartmentService;
-import com.warehouse_accounting.services.interfaces.EmployeeService;
-import com.warehouse_accounting.services.interfaces.ProductService;
-import com.warehouse_accounting.services.interfaces.ProjectService;
-import com.warehouse_accounting.services.interfaces.WarehouseService;
+import com.warehouse_accounting.services.interfaces.*;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,11 +38,13 @@ public class PurchasesSubMenuView extends VerticalLayout {
     private final CompanyService companyService;
     private final InvoicesReceived invoicesReceived;
 
+    private final AcceptanceService acceptanceService;
+
     public PurchasesSubMenuView(WarehouseService warehouseService,
                                 ContractService contractService, ContractorService contractorService,
                                 ProjectService projectService, EmployeeService employeeService,
                                 DepartmentService departmentService, ProductService productService,
-                                CompanyService companyService, InvoicesReceived invoicesReceived) {
+                                CompanyService companyService, @Qualifier("invoicesReceived") InvoicesReceived invoicesReceived, AcceptanceService acceptanceService) {
         this.warehouseService = warehouseService;
         this.contractService = contractService;
         this.contractorService = contractorService;
@@ -60,6 +54,7 @@ public class PurchasesSubMenuView extends VerticalLayout {
         this.productService = productService;
         this.companyService = companyService;
         this.invoicesReceived = invoicesReceived;
+        this.acceptanceService = acceptanceService;
         pageContent.setSizeFull();
         pageContent.add(initPurchasesOrders(pageContent));
         add(initSubMenu(), pageContent);
@@ -110,28 +105,29 @@ public class PurchasesSubMenuView extends VerticalLayout {
         return subMenuTabs;
     }
 
-    private PurchasesOrders initPurchasesOrders(Div pageContent){
+    private PurchasesOrders initPurchasesOrders(Div pageContent) {
         if (Objects.isNull(purchasesOrders)) {
             purchasesOrders = new PurchasesOrders(pageContent);
         }
         return purchasesOrders;
     }
-    private AccountsPayable initAccountsPayable(Div pageContent){
-        if (Objects.isNull(accountsPayable)){
-            accountsPayable = new AccountsPayable(pageContent);
+
+    private AccountsPayable initAccountsPayable(Div pageContent) {
+        if (Objects.isNull(accountsPayable)) {
+            accountsPayable = new AccountsPayable(pageContent, accountsPayableFilter);
         }
         return accountsPayable;
     }
 
 
-    private Acceptances initAcceptances(Div pageContent){
+    private Acceptances initAcceptances(Div pageContent) {
         if (Objects.isNull(acceptances)) {
-            acceptances = new Acceptances(pageContent);
+            acceptances = new Acceptances(pageContent, acceptanceService);
         }
         return acceptances;
     }
 
-    private Return initReturn(Div pageContent){
+    private Return initReturn(Div pageContent) {
         if (Objects.isNull(returns)) {
             returns = new Return(pageContent);
         }
