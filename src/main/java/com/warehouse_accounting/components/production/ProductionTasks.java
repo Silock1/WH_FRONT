@@ -51,9 +51,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @SpringComponent
@@ -72,6 +74,8 @@ public class ProductionTasks extends VerticalLayout {
     private final ProductionTasksGridLayout productionTasksGridLayout;
 
     private transient List<ProductionTasksAdditionalFieldDto> customFields = new ArrayList<>();
+
+    private Accordion customFieldsAccordion = new Accordion();
 
     @Getter
     @Setter
@@ -114,17 +118,31 @@ public class ProductionTasks extends VerticalLayout {
         image.setWidth("15px");
         Button exercise = new Button("Задание", image);
         exercise.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
-        exercise.addClickListener(click -> add(new ProductionTasksForm(this,
-                ProductionTasksDto.builder()
-                        .taskId(1L)
-                        .productionWarehouseId(1L)
-                        .materialWarehouseId(1L)
-                        .editEmployeeId(1L)
-                        .ownerDepartmentId(1L)
-                        .ownerEmployeeId(1L)
-                        .isAccessed(true).build(),
-                productionTasksService,
-                warehouseService)));
+        exercise.addClickListener(click -> {
+            add(new ProductionTasksForm(this,
+                    ProductionTasksDto.builder()
+                            .taskId(1L)
+                            .productionWarehouseId(1L)
+                            .materialWarehouseId(1L)
+                            .editEmployeeId(1L)
+                            .ownerDepartmentId(1L)
+                            .ownerEmployeeId(1L)
+                            .isAccessed(true)
+                            .additionalFieldsIds(productionTasksService.getById(1L).getAdditionalFieldsIds().stream()
+                                    .map(productionTasksAdditionalFieldService::getById)
+                                    .map(x -> {
+                                        x.setId(null);
+                                        x.getProperty().remove("id");
+                                        x.getProperty().remove("value");
+                                        return x;
+                                    })
+                                    .map(productionTasksAdditionalFieldService::create)
+                                    .map(ProductionTasksAdditionalFieldDto::getId)
+                                    .collect(Collectors.toList()))
+                            .build(),
+                    productionTasksService,
+                    warehouseService));
+        });
 
         Button filter = new Button("Фильтр");
         filter.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -184,7 +202,13 @@ public class ProductionTasks extends VerticalLayout {
 
         Button setting = new Button(new Icon(VaadinIcon.COG)); // Настройки
         Dialog dialog = getCogDialog();
-        setting.addClickListener(click -> dialog.open());
+        setting.addClickListener(click -> {
+            ProductionTasksDto productionTasksDto = productionTasksService.getById(1L);
+            for (Long fieldId : productionTasksDto.getAdditionalFieldsIds()) {
+                customFieldsAccordion.add(createCurrentFieldForm(fieldId));
+            }
+            dialog.open();
+        });
         setting.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 
 
@@ -204,6 +228,7 @@ public class ProductionTasks extends VerticalLayout {
     }
 
     private VerticalLayout createDialogLayout(Dialog dialog) {
+
         H2 headline = new H2("Настройки производственных заданий");
         headline.getStyle().set("margin", "var(--lumo-space-m) 0 0 0")
                 .set("font-size", "1.5em").set("font-weight", "bold");
@@ -211,15 +236,49 @@ public class ProductionTasks extends VerticalLayout {
 
             List<ProductionTasksDto> productionTasksDtoList = productionTasksService.getAll();
             for (ProductionTasksDto productionTasksDto : productionTasksDtoList) {
-                productionTasksDto.setAdditionalFieldsIds(customFields.stream()
-                        .map(x -> productionTasksAdditionalFieldService.create(x).getId())
+                productionTasksDto.getAdditionalFieldsIds().addAll(customFields.stream()
+                        .map(x -> {
+                            if (productionTasksDto.getAdditionalFieldsNames().contains(x.getName())) {
+                                ProductionTasksAdditionalFieldDto dto =
+                                        productionTasksAdditionalFieldService
+                                                .getById(productionTasksDto.getAdditionalFieldsIds()
+                                                                .get(productionTasksDto
+                                                                .getAdditionalFieldsNames()
+                                                                .indexOf(x.getName()))
+                                                        );
+                                dto.setHide(x.getHide());
+                                dto.setDescription(x.getDescription());
+                                dto.setRequired(x.getRequired());
+                                productionTasksAdditionalFieldService.update(dto);
+                                return null;
+                            } else {
+                                return productionTasksAdditionalFieldService.create(x).getId();
+                            }
+                        })
+                        .filter(Objects::nonNull)
                         .collect(Collectors.toList()));
                 productionTasksService.update(productionTasksDto);
             }
-
+            productionTasksGridLayout.updateGrid();
+            for (ProductionTasksAdditionalFieldDto customField : customFields) {
+                if (productionTasksGridLayout.getProductionTasksDtoGrid().getColumnByKey(customField.getName()) == null)
+                {
+                    productionTasksGridLayout.getProductionTasksDtoGrid().addColumn(productionTasksDto ->
+                            productionTasksAdditionalFieldService.getById(productionTasksDto.getAdditionalFieldsIds()
+                                            .get(productionTasksDto
+                                                    .getAdditionalFieldsNames()
+                                                    .indexOf(customField.getName())))
+                                    .getProperty().get("value")
+                    ).setHeader(customField.getName()).setKey(customField.getName());
+                }
+            }
+            DialogCleanup();
             dialog.close();
         });
-        Button cancelButton = new Button("Отменить", e -> dialog.close());
+        Button cancelButton = new Button("Отменить", e -> {
+            DialogCleanup();
+            dialog.close();
+        });
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
         HorizontalLayout buttonLayout = new HorizontalLayout(saveButton, cancelButton);
 
@@ -258,8 +317,6 @@ public class ProductionTasks extends VerticalLayout {
                 "Если вы хотите сохранить информацию, для которой нет подходящего поля, вы можете создать дополнительные поля. Подробнее в центре поддержки."
         ), new H6("Дополнительные поля"));
         additionalFieldsHeader.setSpacing(false);
-
-        Accordion customFieldsAccordion = new Accordion();
 
         Button addFieldButton = UtilView.plusButton("Поле");
         addFieldButton.addClickListener(click -> customFieldsAccordion.add(createCustomFieldForm()));
@@ -350,5 +407,74 @@ public class ProductionTasks extends VerticalLayout {
         return accordionPanel;
     }
 
+    private AccordionPanel createCurrentFieldForm(Long fieldId) {
+        ProductionTasksAdditionalFieldDto productionTasksAdditionalFieldDto =
+                productionTasksAdditionalFieldService.getById(fieldId);
+        customFields.add(productionTasksAdditionalFieldDto);
+        FormLayout formLayout = new FormLayout();
+        TextField fieldName = new TextField();
+        fieldName.setValue(productionTasksAdditionalFieldDto.getName());
+        fieldName.setReadOnly(true);
+        formLayout.addFormItem(fieldName,"Название");
+        Select<String> select = new Select<>();
+        select.setItems("Строка", "Число целое", "Дата", "Справочник",
+                "Файл", "Число дробное", "Флажок", "Текст", "Ссылка");
+        select.setValue(AdditionalFieldConvertor
+                .convertFromType((String) productionTasksAdditionalFieldDto.getProperty().get("type")));
+        select.setReadOnly(true);
+        HorizontalLayout typeName = new HorizontalLayout(
+                UtilView.createHelpButton("Тип данных, которые могут храниться в поле."),
+                new Span("Тип")
+        );
+        typeName.setSpacing(false);
+        formLayout.addFormItem(select, typeName);
 
+        HorizontalLayout necessaryName = new HorizontalLayout(
+                UtilView.createHelpButton("Если включено, документ нельзя сохранить, не заполнив это поле."),
+                new Span("Обязательный")
+        );
+        necessaryName.setSpacing(false);
+        Checkbox necessaryNameCheckbox = new Checkbox();
+        necessaryNameCheckbox.setValue(productionTasksAdditionalFieldDto.getRequired());
+        formLayout.addFormItem(necessaryNameCheckbox, necessaryName);
+
+        HorizontalLayout hidingName = new HorizontalLayout(
+                UtilView.createHelpButton("Если включить, поле не будет показываться в карточке документа"),
+                new Span("Скрывать в карточке")
+        );
+        hidingName.setSpacing(false);
+        Checkbox hidingNameCheckbox = new Checkbox();
+        hidingNameCheckbox.setValue(productionTasksAdditionalFieldDto.getHide());
+        formLayout.addFormItem(hidingNameCheckbox, hidingName);
+
+        HorizontalLayout descriptionName = new HorizontalLayout(
+                UtilView.createHelpButton("Этот текст будет подсказкой, как данный текст."),
+                new Span("Описание")
+        );
+        descriptionName.setSpacing(false);
+        TextArea descriptionNameTextArea = new TextArea();
+        descriptionNameTextArea.setValue(productionTasksAdditionalFieldDto.getDescription());
+        formLayout.addFormItem(descriptionNameTextArea, descriptionName);
+
+        AccordionPanel accordionPanel = new AccordionPanel(productionTasksAdditionalFieldDto.getName(), formLayout);
+
+        necessaryNameCheckbox.addValueChangeListener(
+                click -> productionTasksAdditionalFieldDto.setRequired(necessaryNameCheckbox.getValue()));
+
+        hidingNameCheckbox.addValueChangeListener(
+                click -> productionTasksAdditionalFieldDto.setHide(hidingNameCheckbox.getValue()));
+
+        descriptionNameTextArea.addValueChangeListener(
+                click -> productionTasksAdditionalFieldDto.setDescription(descriptionNameTextArea.getValue()));
+
+        return accordionPanel;
+    }
+
+    private void DialogCleanup() {
+        customFields = new ArrayList<>();
+        VerticalLayout accordionParent = (VerticalLayout) customFieldsAccordion.getParent().get();
+        customFieldsAccordion.getElement().removeFromParent();
+        customFieldsAccordion = new Accordion();
+        accordionParent.add(customFieldsAccordion);
+    }
 }

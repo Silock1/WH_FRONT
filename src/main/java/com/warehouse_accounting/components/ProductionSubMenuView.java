@@ -29,15 +29,17 @@ public class ProductionSubMenuView extends VerticalLayout {
     private final ProductionSteps productionSteps;
     private final ProductionProcessTechnology productionProcessTechnology;
     private final ProductionOperations productionOperations;
+// ProductionOrders вызывает краш вкладки Производство, до исправления закомменчено
+//    private final ProductionOrders productionOrders;
 
-    private final ProductionOrders productionOrders;
-
-    public ProductionSubMenuView(ProductionOrders productionOrders,
+    // ProductionOrders вызывает краш вкладки Производство, до исправления закомменчено
+    public ProductionSubMenuView(//ProductionOrders productionOrders,
                                  ProductionTasks productionTasks,
                                  ProductionSteps productionSteps,
                                  ProductionProcessTechnology productionProcessTechnology,
                                  ProductionOperations productionOperations) {
-        this.productionOrders = productionOrders;
+        // ProductionOrders вызывает краш вкладки Производство, до исправления закомменчено
+//        this.productionOrders = productionOrders;
         this.productionOperations = productionOperations;
         this.productionTasks = productionTasks;
         this.productionSteps = productionSteps;
@@ -60,7 +62,8 @@ public class ProductionSubMenuView extends VerticalLayout {
                     break;
                 case "Заказы на производство":
                     pageContent.removeAll();
-                    pageContent.add(productionOrders);
+                    // ProductionOrders вызывает краш вкладки Производство, до исправления закомменчено
+//                    pageContent.add(productionOrders);
                     break;
                 case "Тех. операции":
                     pageContent.removeAll();

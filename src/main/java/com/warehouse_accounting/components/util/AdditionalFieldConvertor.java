@@ -14,4 +14,14 @@ public class AdditionalFieldConvertor {
         }
         return result;
     }
+
+    public static String convertFromType(String type) {
+        String result;
+        switch (type) {
+            case "String": result = "Строка"; break;
+            case "Integer": result = "Число целое"; break;
+            default: result = "";
+        }
+        return result;
+    }
 }

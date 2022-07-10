@@ -11,6 +11,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.ProductionTasksDto;
+import com.warehouse_accounting.services.interfaces.ProductionTasksAdditionalFieldService;
 import com.warehouse_accounting.services.interfaces.ProductionTasksService;
 import lombok.Getter;
 
@@ -22,13 +23,16 @@ import java.util.List;
 @SpringComponent
 public class ProductionTasksGridLayout extends HorizontalLayout {
     private final transient ProductionTasksService productionTasksService;
+    private final transient ProductionTasksAdditionalFieldService productionTasksAdditionalFieldService;
     private transient List<ProductionTasksDto> productionTasksDtoList = new ArrayList<>();
     @Getter
     private final Grid<ProductionTasksDto> productionTasksDtoGrid =
             new Grid<>(ProductionTasksDto.class, false);
 
-    public ProductionTasksGridLayout(ProductionTasksService productionTasksService) {
+    public ProductionTasksGridLayout(ProductionTasksService productionTasksService,
+                                     ProductionTasksAdditionalFieldService productionTasksAdditionalFieldService) {
         this.productionTasksService = productionTasksService;
+        this.productionTasksAdditionalFieldService = productionTasksAdditionalFieldService;
 
         initializingGrid();
     }
@@ -87,6 +91,13 @@ public class ProductionTasksGridLayout extends HorizontalLayout {
         productionTasksDtoList = productionTasksService.getAll();
         productionTasksDtoList.sort(Comparator.comparingLong(ProductionTasksDto::getId));
         productionTasksDtoGrid.setItems(productionTasksDtoList);
+        for (String customField : productionTasksDtoList.get(0).getAdditionalFieldsNames()) {
+            productionTasksDtoGrid.addColumn( productionTasksDto ->
+                    productionTasksAdditionalFieldService.getById(productionTasksDto.getAdditionalFieldsIds()
+                                    .get(productionTasksDto.getAdditionalFieldsNames().indexOf(customField)))
+                            .getProperty().get("value")
+            ).setHeader(customField).setKey(customField);
+        }
 
         productionTasksDtoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
 
