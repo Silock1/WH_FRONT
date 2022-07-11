@@ -40,19 +40,34 @@ public class Posting extends VerticalLayout {
         this.postingService = postingService;
         horizontalToolPanelLayout.setAlignItems(Alignment.CENTER);
 
+
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
         grid.setItems(postingService.getAll());
-        grid.setColumnOrder(grid.getColumnByKey("Id").setHeader("Id"),
-                grid.getColumnByKey("Наименование").setHeader("Наименование"),
-                grid.getColumnByKey("Масса").setHeader("Масса"),
-                grid.getColumnByKey("Объем").setHeader("Объем"),
-                grid.getColumnByKey("Описание").setHeader("Описание"),
-                grid.getColumnByKey("Единица измерения").setHeader("Единица измерения"),
-                grid.getColumnByKey("В архиве").setHeader("В архиве"),
-                grid.getColumnByKey("Подрядчик").setHeader("Подрядчик"),
-                grid.getColumnByKey("Цена").setHeader("Цена"),
-                grid.getColumnByKey("Группа").setHeader("Группа"),
-                grid.getColumnByKey("Объект рассчетов").setHeader("Объект рассчетов"));
+        grid.setColumns("id", "dateOfCreation", "warehouseTo.name", "company.name", "sum", "moved", "printed", "comment");
+        grid.setColumnOrder(grid.getColumnByKey("id").setHeader("Id"),
+                grid.getColumnByKey("dateOfCreation").setHeader("Время"),
+                grid.getColumnByKey("warehouseTo.name").setHeader("Склад"),
+                grid.getColumnByKey("company.name").setHeader("Организация"),
+                grid.getColumnByKey("sum").setHeader("Сумма"),
+                grid.getColumnByKey("moved").setHeader("Отправлено"),
+                grid.getColumnByKey("printed").setHeader("Напечатано"),
+                grid.getColumnByKey("comment").setHeader("Комментарий")
+        );
+
+
+//        grid.setSelectionMode(Grid.SelectionMode.MULTI);
+//        grid.setItems(postingService.getAll());
+//        grid.setColumnOrder(grid.getColumnByKey("Id").setHeader("Id"),
+//                grid.getColumnByKey("Наименование").setHeader("Наименование"),
+//                grid.getColumnByKey("Масса").setHeader("Масса"),
+//                grid.getColumnByKey("Объем").setHeader("Объем"),
+//                grid.getColumnByKey("Описание").setHeader("Описание"),
+//                grid.getColumnByKey("Единица измерения").setHeader("Единица измерения"),
+//                grid.getColumnByKey("В архиве").setHeader("В архиве"),
+//                grid.getColumnByKey("Подрядчик").setHeader("Подрядчик"),
+//                grid.getColumnByKey("Цена").setHeader("Цена"),
+//                grid.getColumnByKey("Группа").setHeader("Группа"),
+//                grid.getColumnByKey("Объект рассчетов").setHeader("Объект рассчетов"));
         configToolPanel();
 
 
