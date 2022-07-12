@@ -11,6 +11,7 @@ import com.warehouse_accounting.components.production.ProductionProcessTechnolog
 import com.warehouse_accounting.components.production.ProductionSteps;
 import com.warehouse_accounting.components.production.ProductionTasks;
 import com.warehouse_accounting.components.production.ProductionOrders;
+import com.warehouse_accounting.components.production.TechnologicalMap;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
@@ -29,17 +30,16 @@ public class ProductionSubMenuView extends VerticalLayout {
     private final ProductionSteps productionSteps;
     private final ProductionProcessTechnology productionProcessTechnology;
     private final ProductionOperations productionOperations;
-// ProductionOrders вызывает краш вкладки Производство, до исправления закомменчено
-//    private final ProductionOrders productionOrders;
+    private final ProductionOrders productionOrders;
+    private final TechnologicalMap technologicalMap;
 
-    // ProductionOrders вызывает краш вкладки Производство, до исправления закомменчено
-    public ProductionSubMenuView(//ProductionOrders productionOrders,
+    public ProductionSubMenuView(ProductionOrders productionOrders,
                                  ProductionTasks productionTasks,
                                  ProductionSteps productionSteps,
                                  ProductionProcessTechnology productionProcessTechnology,
-                                 ProductionOperations productionOperations) {
-        // ProductionOrders вызывает краш вкладки Производство, до исправления закомменчено
-//        this.productionOrders = productionOrders;
+                                 ProductionOperations productionOperations, TechnologicalMap technologicalMap) {
+        this.technologicalMap = technologicalMap;
+        this.productionOrders = productionOrders;
         this.productionOperations = productionOperations;
         this.productionTasks = productionTasks;
         this.productionSteps = productionSteps;
@@ -58,12 +58,11 @@ public class ProductionSubMenuView extends VerticalLayout {
             switch (event.getSelectedTab().getLabel()) {
                 case "Тех. карты":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Тех. карты"));
+                    pageContent.add(technologicalMap);
                     break;
                 case "Заказы на производство":
                     pageContent.removeAll();
-                    // ProductionOrders вызывает краш вкладки Производство, до исправления закомменчено
-//                    pageContent.add(productionOrders);
+                    pageContent.add(productionOrders);
                     break;
                 case "Тех. операции":
                     pageContent.removeAll();

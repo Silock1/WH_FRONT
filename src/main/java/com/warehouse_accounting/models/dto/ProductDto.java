@@ -40,8 +40,6 @@ public class ProductDto {
 
     private Boolean archive = false;
 
-    private String productGroup;
-
     private ContractorDto contractor = new ContractorDto();
 
     private List<ImageDto> images;
@@ -53,11 +51,11 @@ public class ProductDto {
         Если добавить обработчик ситуации по месту,то изменяя объект ДТО нам придется изменять и обработчик,
         а если обработчиков будет несколько?
     */
-    private UnitDto unit = new UnitDto(); // что это? склад? Если склад, то нужен список ИД
+    private UnitDto unit = new UnitDto(); // склад? (должно быть: название и количество товара в резерве)
 
-//    private ProductGroupDto productGroup = new ProductGroupDto();
+    private ProductGroupDto productGroup = new ProductGroupDto();
 
-    private TaxSystemDto taxSystem = new TaxSystemDto(); // Штрихкоды товара?
+    private TaxSystemDto taxSystem = new TaxSystemDto(); // Кассовый чек
 
-    private AttributeOfCalculationObjectDto attributeOfCalculationObject = new AttributeOfCalculationObjectDto(); // особенности учёта?
+    private AttributeOfCalculationObjectDto attributeOfCalculationObject = new AttributeOfCalculationObjectDto(); // Особенности учёта
 }

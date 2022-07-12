@@ -18,12 +18,11 @@ import com.warehouse_accounting.services.interfaces.CurrencyService;
 @PageTitle("Добавить валюту")
 @Route(value = "add_currencies", layout = SettingsView.class)
 public class CurrencySettingsAddView extends VerticalLayout {
-
-    private TextField shortnameField;
-    private ComboBox<String> fullField;
-    private TextField digitalcodeField;
-    private TextField lettercodeField;
-    private TextField sortField;
+    private TextField charcodeField;
+    private ComboBox<String> nameField;
+    private TextField numcodeField;
+    private TextField nominalField;
+    private TextField valueField;
     private CurrencyService currencyService;
 
     public CurrencySettingsAddView(CurrencyService currencyService) {
@@ -31,33 +30,33 @@ public class CurrencySettingsAddView extends VerticalLayout {
         initForm();
     }
 
-    private  void initForm() {
+    private void initForm() {
         VerticalLayout layout = new VerticalLayout();
 
-        shortnameField = new TextField("Короткое название");
-        fullField = new ComboBox<>();
-        fullField.setItems("Азербайджанский манат (AZN)", "Армянский драм (AMD)","Белорусский рубль (BYN)", "Доллар США (USD)", "Евро (EUR)", "Казахстанский тенге (KZT)", "Китайский юань (CNY)", "Другая...");
-        fullField.setLabel("Выберите валюту");
-        digitalcodeField = new TextField("Цифровой код");
-        lettercodeField = new TextField("Буквенный код");
-        sortField = new TextField("Курс");
+        charcodeField = new TextField("Короткое название");
+        nameField = new ComboBox<>();
+        nameField.setItems("Азербайджанский манат (AZN)", "Армянский драм (AMD)", "Белорусский рубль (BYN)", "Доллар США (USD)", "Евро (EUR)", "Казахстанский тенге (KZT)", "Китайский юань (CNY)", "Другая...");
+        nameField.setLabel("Выберите валюту");
+        numcodeField = new TextField("Цифровой код");
+        nominalField = new TextField("Номинал");
+        valueField = new TextField("Курс");
 
         FormLayout formLayout = new FormLayout(
-                shortnameField,
-                fullField,
-                digitalcodeField,
-                lettercodeField,
-                sortField
+                charcodeField,
+                nameField,
+                numcodeField,
+                nominalField,
+                valueField
         );
 
         Button create = new Button("Сохранить", buttonClickEvent -> {
             currencyService.create(
                     CurrencyDto.builder()
-                            .shortName(shortnameField.getValue())
-                            .fullName(fullField.getValue())
-                            .digitalCode(digitalcodeField.getValue())
-                            .letterCode(lettercodeField.getValue())
-                            .sortNumber(sortField.getValue())
+                            .charcode(charcodeField.getValue())
+                            .name(nameField.getValue())
+                            .numcode(numcodeField.getValue())
+                            .nominal(Integer.parseInt(nominalField.getValue()))
+                            .value(Double.parseDouble(valueField.getValue()))
                             .build()
             );
             UI.getCurrent().navigate(CurrencySettingsView.class);

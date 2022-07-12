@@ -23,15 +23,18 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.components.address.AddressForm;
 import com.warehouse_accounting.components.contragents.ContragentsList;
 import com.warehouse_accounting.components.contragents.form.form_edit.Events;
 import com.warehouse_accounting.components.contragents.grids.CallsGridLayout;
+import com.warehouse_accounting.models.dto.AddressDto;
 import com.warehouse_accounting.models.dto.BankAccountDto;
 import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.models.dto.ContractorFaceContactDto;
 import com.warehouse_accounting.models.dto.LegalDetailDto;
 import com.warehouse_accounting.models.dto.TypeOfPriceDto;
 import com.warehouse_accounting.models.dto.dadataDto.Example2;
+import com.warehouse_accounting.services.interfaces.AddressService;
 import com.warehouse_accounting.services.interfaces.BankAccountService;
 import com.warehouse_accounting.services.interfaces.CallService;
 import com.warehouse_accounting.services.interfaces.ContractorService;
@@ -72,8 +75,7 @@ public class FormEditCotragent extends VerticalLayout {
     private Select <String> typeOfPrice;
     private TextField fax;
     private TextField email;
-    private TextArea address;
-    private TextArea commentToAddress;
+    private AddressForm address;
     private TextArea comment;
     private TextField code;
     private TextField outerCode;
@@ -82,8 +84,7 @@ public class FormEditCotragent extends VerticalLayout {
     private TextField lastName;
     private TextField firstName;
     private TextField middleName;
-    private TextArea addressLegal;
-    private TextArea commentToAddressLegal;
+    private AddressForm addressLegal;
     private TextField inn;
     private TextField okpo;
     private TextField ogrnip;
@@ -100,12 +101,16 @@ public class FormEditCotragent extends VerticalLayout {
                              DadataService dadata,
                              BankAccountService bankAccountService,
                              TypeOfPriceService typeOfPriceService,
-                             CallService callService) {
+                             CallService callService,
+                             AddressForm address,
+                             AddressForm addressLegal) {
         this.contractorService = contractorService;
         this.dadata = dadata;
         this.bankAccountService = bankAccountService;
         this.typeOfPriceService = typeOfPriceService;
         this.callService = callService;
+        this.address = address;
+        this.addressLegal = addressLegal;
     }
     public void bild(ContractorDto contractorDto){
         removeAll();
@@ -118,8 +123,7 @@ public class FormEditCotragent extends VerticalLayout {
                     .contractorGroupName("")
                     .fax("")
                     .email("")
-                    .address("")
-                    .commentToAddress("")
+                    .address(new AddressDto())
                     .comment("")
                     .code("")
                     .outerCode("")
@@ -153,7 +157,6 @@ public class FormEditCotragent extends VerticalLayout {
             contractorDto.setFax(fax.getValue());
             contractorDto.setEmail(email.getValue());
             contractorDto.setAddress(address.getValue());
-            contractorDto.setCommentToAddress(commentToAddress.getValue());
             contractorDto.setComment(comment.getValue());
             contractorDto.setCode(code.getValue());
 
@@ -176,7 +179,6 @@ public class FormEditCotragent extends VerticalLayout {
             contractorDto.getLegalDetailDto().setFirstName(firstName.getValue());
             contractorDto.getLegalDetailDto().setMiddleName(middleName.getValue());
             contractorDto.getLegalDetailDto().setAddress(addressLegal.getValue());
-            contractorDto.getLegalDetailDto().setCommentToAddress(commentToAddressLegal.getValue());
             contractorDto.getLegalDetailDto().setInn(inn.getValue());
             contractorDto.getLegalDetailDto().setOkpo(okpo.getValue());
             contractorDto.getLegalDetailDto().setOgrnip(ogrnip.getValue());
@@ -197,7 +199,6 @@ public class FormEditCotragent extends VerticalLayout {
                 contractorDto.getLegalDetailDto().setFirstName(firstName.getValue());
                 contractorDto.getLegalDetailDto().setMiddleName(middleName.getValue());
                 contractorDto.getLegalDetailDto().setAddress(addressLegal.getValue());
-                contractorDto.getLegalDetailDto().setCommentToAddress(commentToAddressLegal.getValue());
                 contractorDto.getLegalDetailDto().setInn(inn.getValue());
                 contractorDto.getLegalDetailDto().setOkpo(okpo.getValue());
                 contractorDto.getLegalDetailDto().setOgrnip(ogrnip.getValue());
@@ -352,10 +353,7 @@ public class FormEditCotragent extends VerticalLayout {
         if(contractorDto.getFax() != null) fax.setValue(contractorDto.getFax());
         email = new TextField();
         if(contractorDto.getEmail() != null) email.setValue(contractorDto.getEmail());
-        address = new TextArea();
         if(contractorDto.getAddress() != null) address.setValue(contractorDto.getAddress());
-        commentToAddress = new TextArea();
-        if(contractorDto.getCommentToAddress() != null) commentToAddress.setValue(contractorDto.getCommentToAddress());
         comment = new TextArea();
         if(contractorDto.getComment() != null) comment.setValue(contractorDto.getComment());
         code = new TextField();
@@ -369,8 +367,7 @@ public class FormEditCotragent extends VerticalLayout {
         form.addFormItem(phone, "Телефон");
         form.addFormItem(fax, "Факс");
         form.addFormItem(email, "Электронная почта");
-        form.addFormItem(address, "Адрес");
-        form.addFormItem(commentToAddress, "Комментарий к адресу");
+        address.addToForm("Адрес", form);
         form.addFormItem(comment, "Комментарий");
         form.addFormItem(code, "Код");
         form.addFormItem(outerCode, "Внешний код");
@@ -496,8 +493,7 @@ public class FormEditCotragent extends VerticalLayout {
                     .lastName("")
                     .firstName("")
                     .middleName("")
-                    .address("")
-                    .commentToAddress("")
+                    .address(new AddressDto())
                     .inn("")
                     .okpo("")
                     .ogrnip("")
@@ -516,10 +512,7 @@ public class FormEditCotragent extends VerticalLayout {
         if(contractorDto.getLegalDetailDto().getFirstName() != null) firstName.setValue(contractorDto.getLegalDetailDto().getFirstName());
         middleName = new TextField();
         if(contractorDto.getLegalDetailDto().getMiddleName() != null) middleName.setValue(contractorDto.getLegalDetailDto().getMiddleName());
-        addressLegal = new TextArea();
         if(contractorDto.getLegalDetailDto().getAddress() != null) addressLegal.setValue(contractorDto.getLegalDetailDto().getAddress());
-        commentToAddressLegal = new TextArea();
-        if(contractorDto.getLegalDetailDto().getCommentToAddress() != null) commentToAddressLegal.setValue(contractorDto.getLegalDetailDto().getCommentToAddress());
         inn = new TextField();
         if(contractorDto.getLegalDetailDto().getInn() != null) inn.setValue(contractorDto.getLegalDetailDto().getInn());
         okpo = new TextField();
@@ -539,8 +532,7 @@ public class FormEditCotragent extends VerticalLayout {
                 formLayout.addFormItem(lastName, "Фамилия");
                 formLayout.addFormItem(firstName, "Имя");
                 formLayout.addFormItem(middleName, "Отчество");
-                formLayout.addFormItem(addressLegal, "Адрес регистрации");
-                formLayout.addFormItem(commentToAddressLegal, "Комментарий к аресу");
+                addressLegal.addToForm("Адрес регистрации", formLayout);
                 formLayout.addFormItem(okpo, "ОКПО");
                 formLayout.addFormItem(ogrnip, "ОГРНИП");
                 formLayout.addFormItem(numberOfTheCertificate, "Номер свидетельства");
@@ -552,15 +544,13 @@ public class FormEditCotragent extends VerticalLayout {
                 formLayout.addFormItem(lastName, "Фамилия");
                 formLayout.addFormItem(firstName, "Имя");
                 formLayout.addFormItem(middleName, "Отчество");
-                formLayout.addFormItem(addressLegal, "Адрес регистрации");
-                formLayout.addFormItem(commentToAddressLegal, "Комментарий к аресу");
+                addressLegal.addToForm("Адрес регистрации", formLayout);
                 break;
 
             case "Юридическое лицо":
                 formLayout.addFormItem(inn, "ИНН");
                 formLayout.addFormItem(firstName, "Полное наименование");
-                formLayout.addFormItem(addressLegal, "Юридический адрес");
-                formLayout.addFormItem(commentToAddressLegal, "Комментарий к аресу");
+                addressLegal.addToForm("Адрес регистрации", formLayout);
                 formLayout.addFormItem(kpp, "КПП");
                 formLayout.addFormItem(ogrnip, "ОГРН");
                 formLayout.addFormItem(okpo, "ОКПО");
@@ -582,7 +572,8 @@ public class FormEditCotragent extends VerticalLayout {
                         lastName.setValue(example2.getSuggestions().get(0).getData().getFio().getSurname());
                         firstName.setValue(example2.getSuggestions().get(0).getData().getFio().getName());
                         middleName.setValue(example2.getSuggestions().get(0).getData().getFio().getPatronymic());
-                        addressLegal.setValue(example2.getSuggestions().get(0).getData().getAddress().getUnrestrictedValue());
+                        //нужно исправить, ошибочно указан адрес из dadataDto, нужен AddressDto
+                        //addressLegal.setValue(example2.getSuggestions().get(0).getData().getAddress().getUnrestrictedValue());
                         okpo.setValue(example2.getSuggestions().get(0).getData().getOkpo());
                         ogrnip.setValue(example2.getSuggestions().get(0).getData().getOgrn());
                     }
@@ -593,7 +584,8 @@ public class FormEditCotragent extends VerticalLayout {
                     } else {
                         firstName.setValue(example2.getSuggestions().get(0).getData().getName().getShortWithOpf());
                         kpp.setValue(example2.getSuggestions().get(0).getData().getKpp());
-                        addressLegal.setValue(example2.getSuggestions().get(0).getData().getAddress().getUnrestrictedValue());
+                        ////нужно исправить, ошибочно указан адрес из dadataDto, нужен AddressDto
+                        //addressLegal.setValue(example2.getSuggestions().get(0).getData().getAddress().getUnrestrictedValue());
                         ogrnip.setValue(example2.getSuggestions().get(0).getData().getOgrn());
                         okpo.setValue(example2.getSuggestions().get(0).getData().getOkpo());
                     }

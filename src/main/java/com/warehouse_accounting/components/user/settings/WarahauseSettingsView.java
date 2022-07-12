@@ -146,7 +146,6 @@ public class WarahauseSettingsView extends VerticalLayout {
         Grid.Column<WarehouseDto> idColumn = warehouseDtoGrid.addColumn(WarehouseDto::getId).setHeader("Id");
         Grid.Column<WarehouseDto> nameColumn = warehouseDtoGrid.addColumn(WarehouseDto::getName).setHeader("Склад");
         Grid.Column<WarehouseDto> addressColumn = warehouseDtoGrid.addColumn(WarehouseDto::getAddress).setHeader("Адрес");
-        Grid.Column<WarehouseDto> commentToAddressColumn = warehouseDtoGrid.addColumn(WarehouseDto::getCommentToAddress).setHeader("Комментарии к адресу");
         Grid.Column<WarehouseDto> sortNumberColumn = warehouseDtoGrid.addColumn(WarehouseDto::getSortNumber).setHeader("№");
 
         warehouseDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI); //
@@ -158,7 +157,6 @@ public class WarahauseSettingsView extends VerticalLayout {
         columnToggleContextMenu.addColumnToggleItem("Id", idColumn);
         columnToggleContextMenu.addColumnToggleItem("Склад", nameColumn);
         columnToggleContextMenu.addColumnToggleItem("Адрес", addressColumn);
-        columnToggleContextMenu.addColumnToggleItem("Комментарии", commentToAddressColumn);
         columnToggleContextMenu.addColumnToggleItem("№", sortNumberColumn);
 
         List<WarehouseDto> warehouseDtos = warehouseService.getAll();

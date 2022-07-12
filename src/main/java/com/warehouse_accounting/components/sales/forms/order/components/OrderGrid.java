@@ -9,11 +9,13 @@ import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.ValidationException;
 import com.warehouse_accounting.components.sales.forms.order.types.GridSummaryReciver;
 import com.warehouse_accounting.components.sales.forms.order.types.OrderSummary;
 import com.warehouse_accounting.models.dto.InvoiceProductDto;
 import com.warehouse_accounting.models.dto.ProductDto;
 import com.warehouse_accounting.models.dto.UnitsOfMeasureDto;
+import lombok.extern.log4j.Log4j2;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -23,7 +25,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 // todo: валидации значений нет
-// todo: товары должны вставляться с изначальным количеством 1
 
 // Связанные дтошки: ProductDto, UnitsOfMeasureDto, ImageDto, UnitDto, InvoiceDto
 
@@ -59,11 +60,13 @@ import java.util.stream.Collectors;
  доступно, цена, ндс, скидка, сумма, контрол столбцов
 */
 
+@Log4j2
 public class OrderGrid extends Grid<InvoiceProductDto> {
     private boolean includeNds = false;
     private final List<Float> nds = List.of(0f, 10f, 18f, 20f);
     private List<InvoiceProductDto> orderPositions = new ArrayList<>();
     private GridSummaryReciver receiver;
+    private final Binder<InvoiceProductDto> binder;
 
     public OrderGrid() {
         super(InvoiceProductDto.class, false);
@@ -121,13 +124,14 @@ public class OrderGrid extends Grid<InvoiceProductDto> {
                 remainderColumn, reservedColumn, waitedColumn, weightColumn, volumeColumn, priceColumn, ndsColumn,
                 ndsSumColumn, discountColumn, totalColumn, gearColumn).forEach(x -> x.setAutoWidth(true));
 
-        Binder<InvoiceProductDto> binder = new Binder<>(InvoiceProductDto.class);
+        binder = new Binder<>(InvoiceProductDto.class);
         Editor<InvoiceProductDto> editor = getEditor().setBinder(binder);
 
         BigDecimalField amount = new BigDecimalField();
         binder.forField(amount)
                 .bind(InvoiceProductDto::getCount, InvoiceProductDto::setCount);
         setEditableColumn(editor, amountColumn, amount);
+        amount.setValue(BigDecimal.ONE);
 
         BigDecimalField price = new BigDecimalField();
         binder.forField(price)
@@ -136,6 +140,7 @@ public class OrderGrid extends Grid<InvoiceProductDto> {
 
         NumberField discount = new NumberField();
         binder.forField(discount)
+                .withValidator(value -> !(value < 0), "Discount must not be less 0")
                 .bind(order -> (double) order.getDiscount(), (order, value) -> order.setDiscount(value.floatValue()));
         setEditableColumn(editor, discountColumn, discount);
 
@@ -177,6 +182,13 @@ public class OrderGrid extends Grid<InvoiceProductDto> {
     }
 
     public List<InvoiceProductDto> getOrder() {
+        orderPositions.forEach(invoiceProduct -> {
+            try {
+                binder.writeBean(invoiceProduct);
+            } catch (ValidationException err) {
+                log.error("Ошибка валидации при заполнении списка заказанных товаров");
+            }
+        });
         return orderPositions.stream()
                 .filter(invoice -> invoice.getCount().compareTo(BigDecimal.ZERO) > 0)
                 .collect(Collectors.toList());
@@ -192,6 +204,8 @@ public class OrderGrid extends Grid<InvoiceProductDto> {
 
         invoice.setProductDto(product);
         invoice.setNds(product.getNds());
+        invoice.setCount(BigDecimal.ONE);
+        invoice.setDiscount(0f);
         orderPositions.add(invoice);
         setItems(orderPositions);
         collectSummary();
@@ -238,7 +252,8 @@ public class OrderGrid extends Grid<InvoiceProductDto> {
                 summary.setWeight(invoice.getProductDto().getWeight().multiply(invoice.getCount()).add(summary.getWeight()));
                 summary.setVolume(invoice.getProductDto().getVolume().multiply(invoice.getCount()).add(summary.getVolume()));
 
-                BigDecimal amountPrice = invoice.getCount().multiply(invoice.getProductDto().getPurchasePrice());
+                BigDecimal price = invoice.getProductDto().getPurchasePrice();
+                BigDecimal amountPrice = invoice.getCount().multiply(price != null ? price : BigDecimal.ZERO);
 
                 summary.setPriceWithoutNds(summary.getPriceWithoutNds()
                                 .add(amountPrice.multiply(BigDecimal.valueOf(1 - invoice.getDiscount()/100)))

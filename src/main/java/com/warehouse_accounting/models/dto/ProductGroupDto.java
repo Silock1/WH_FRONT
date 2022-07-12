@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductGroupDto {
+public class ProductGroupDto { // Возможно здесь нужно поле TaxSystemDto
 
     private Long id;
 

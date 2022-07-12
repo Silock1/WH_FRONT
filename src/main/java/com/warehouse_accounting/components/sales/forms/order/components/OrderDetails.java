@@ -18,8 +18,6 @@ import java.util.List;
 
 // Связанные дтошки InvoiceDto, InvoiceProductDto, ContractorDto, ProductDto, Companydto, AddressDto(нет её)
 
-// todo: Баг с начальным заполнением поля даты отгрузки: не устанавливается текущее значение.
-
 // todo: надо добавить такие контролы к полям
 //      new Icon(VaadinIcon.PENCIL); - создание нового покупателя, организации и т.п. (организация, контрагент, склад)
 //      new Icon(VaadinIcon.PLUS); - добавить к списку (канал продаж, договор, проект)
@@ -47,7 +45,7 @@ public class OrderDetails extends HorizontalLayout {
 
     public OrderDetails(CompanyService companyService, ContractorService contractorService,
                         WarehouseService warehouseService, ContractService contractService,
-                        ProjectService projectService,  InvoiceDto invoiceDto) throws IOException {
+                        ProjectService projectService, InvoiceDto invoiceDto) throws IOException {
 
         this.companyService = companyService;
         this.contractorService = contractorService;
@@ -93,7 +91,7 @@ public class OrderDetails extends HorizontalLayout {
             ContractDto contractDto = event.getValue();
             invoice.setContractId(contractDto.getId());
             invoice.setContractNumber(contractDto.getNumber());
-            invoice.setContractDate(contractDto.getContractDate());
+//            invoice.setContractDate(contractDto.getContractDate());
         });
 
         ComboBox<ContractorDto> agent = new ComboBox<>();
@@ -110,9 +108,11 @@ public class OrderDetails extends HorizontalLayout {
 
         Label balance = new Label("Баланс: 0,00 руб"); // todo: это должно быть изначально скрыто
 
-        DatePicker unloadDate = new DatePicker(LocalDate.now());
         invoice.setContractDate(LocalDate.now());
-        unloadDate.addValueChangeListener(event -> invoice.setContractDate(event.getValue()));
+        DatePicker unloadDate = new DatePicker(LocalDate.now());
+        unloadDate.addValueChangeListener(
+                event -> invoice.setContractDate(event.getValue() != null ? event.getValue() : LocalDate.now()));
+        unloadDate.setInitialPosition(LocalDate.now());
 
         ComboBox<String> channel = new ComboBox<>(); // todo: нет такого поля в InvoiceDto
 

@@ -148,7 +148,7 @@ public class LegalDetailSettingsView extends VerticalLayout {
         Grid.Column<LegalDetailDto> lastNameColumn = legalDetailDtoGrid.addColumn(LegalDetailDto::getLastName).setHeader("Фамилия");
         Grid.Column<LegalDetailDto> firstNameColumn = legalDetailDtoGrid.addColumn(LegalDetailDto::getFirstName).setHeader("Имя");
         Grid.Column<LegalDetailDto> middleNameColumn = legalDetailDtoGrid.addColumn(LegalDetailDto::getMiddleName).setHeader("Отчество");
-        Grid.Column<LegalDetailDto> commentToAddressColumn = legalDetailDtoGrid.addColumn(LegalDetailDto::getCommentToAddress).setHeader("Комментарии к адресу");
+        Grid.Column<LegalDetailDto> addressColumn = legalDetailDtoGrid.addColumn(LegalDetailDto::getAddress).setHeader("Комментарии к адресу");
         Grid.Column<LegalDetailDto> innColumn = legalDetailDtoGrid.addColumn(LegalDetailDto::getInn).setHeader("ИНН");
         Grid.Column<LegalDetailDto> okpoColumn = legalDetailDtoGrid.addColumn(LegalDetailDto::getOkpo).setHeader("ОКПО");
         Grid.Column<LegalDetailDto> ogrnipColumn = legalDetailDtoGrid.addColumn(LegalDetailDto::getOgrnip).setHeader("ОГРНИП");
@@ -167,7 +167,7 @@ public class LegalDetailSettingsView extends VerticalLayout {
         columnToggleContextMenu.addColumnToggleItem("Фамилия", lastNameColumn);
         columnToggleContextMenu.addColumnToggleItem("Имя", firstNameColumn);
         columnToggleContextMenu.addColumnToggleItem("Отчество", middleNameColumn);
-        columnToggleContextMenu.addColumnToggleItem("Комментарии к адресу", commentToAddressColumn);
+        columnToggleContextMenu.addColumnToggleItem("Комментарии к адресу", addressColumn);
         columnToggleContextMenu.addColumnToggleItem("ИНН", innColumn);
         columnToggleContextMenu.addColumnToggleItem("ОКПО", okpoColumn);
         columnToggleContextMenu.addColumnToggleItem("ОГРНИП", ogrnipColumn);
