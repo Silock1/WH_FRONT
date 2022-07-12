@@ -50,8 +50,8 @@ import com.warehouse_accounting.services.interfaces.WarehouseService;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +80,8 @@ public class ProductionTasks extends VerticalLayout {
     @Getter
     @Setter
     private Div mainContent;
+
+    private static final String USER_STRING_TYPE_LITERAL = "Строка";
 
     public ProductionTasks(ProductionTasksFilterLayout productionTasksFilterLayout,
                            ProductionTasksGridLayout productionTasksGridLayout,
@@ -118,31 +120,20 @@ public class ProductionTasks extends VerticalLayout {
         image.setWidth("15px");
         Button exercise = new Button("Задание", image);
         exercise.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
-        exercise.addClickListener(click -> {
-            add(new ProductionTasksForm(this,
-                    ProductionTasksDto.builder()
-                            .taskId(1L)
-                            .productionWarehouseId(1L)
-                            .materialWarehouseId(1L)
-                            .editEmployeeId(1L)
-                            .ownerDepartmentId(1L)
-                            .ownerEmployeeId(1L)
-                            .isAccessed(true)
-                            .additionalFieldsIds(productionTasksService.getById(1L).getAdditionalFieldsIds().stream()
-                                    .map(productionTasksAdditionalFieldService::getById)
-                                    .map(x -> {
-                                        x.setId(null);
-                                        x.getProperty().remove("id");
-                                        x.getProperty().remove("value");
-                                        return x;
-                                    })
-                                    .map(productionTasksAdditionalFieldService::create)
-                                    .map(ProductionTasksAdditionalFieldDto::getId)
-                                    .collect(Collectors.toList()))
-                            .build(),
-                    productionTasksService,
-                    warehouseService));
-        });
+        exercise.addClickListener(click -> add(new ProductionTasksForm(this,
+                ProductionTasksDto.builder()
+                        .taskId(1L)
+                        .productionWarehouseId(1L)
+                        .dateOfCreate(LocalDate.now())
+                        .materialWarehouseId(1L)
+                        .editEmployeeId(1L)
+                        .ownerDepartmentId(1L)
+                        .ownerEmployeeId(1L)
+                        .isAccessed(true)
+                        .build(),
+                productionTasksService,
+                productionTasksAdditionalFieldService,
+                warehouseService)));
 
         Button filter = new Button("Фильтр");
         filter.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -175,7 +166,21 @@ public class ProductionTasks extends VerticalLayout {
 
         MenuItem edit = menuBar.addItem(editVision);
         SubMenu editSubMenu = edit.getSubMenu();
-        editSubMenu.addItem("Удалить").onEnabledStateChanged(false);
+        Button deleteButton = new Button("Удалить");
+        deleteButton.addClickListener(click -> {
+            if (!productionTasksGridLayout.getProductionTasksDtoGrid().getSelectedItems().isEmpty()) {
+                ProductionTasksDto dto = (ProductionTasksDto) productionTasksGridLayout.getProductionTasksDtoGrid()
+                        .getSelectedItems().toArray()[0];
+                productionTasksService.delete(dto.getId());
+                for (Long id:
+                     dto.getAdditionalFieldsIds()) {
+                    productionTasksAdditionalFieldService.delete(id);
+                }
+                productionTasksGridLayout.updateGrid();
+            }
+
+        });
+        editSubMenu.addItem(deleteButton);
         editSubMenu.addItem("Копировать").onEnabledStateChanged(false);
         editSubMenu.addItem("Массовое редактирование");
         editSubMenu.addItem("Провести").onEnabledStateChanged(false);
@@ -272,11 +277,11 @@ public class ProductionTasks extends VerticalLayout {
                     ).setHeader(customField.getName()).setKey(customField.getName());
                 }
             }
-            DialogCleanup();
+            dialogCleanup();
             dialog.close();
         });
         Button cancelButton = new Button("Отменить", e -> {
-            DialogCleanup();
+            dialogCleanup();
             dialog.close();
         });
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
@@ -339,9 +344,9 @@ public class ProductionTasks extends VerticalLayout {
         TextField fieldName = new TextField();
         formLayout.addFormItem(fieldName,"Название");
         Select<String> select = new Select<>();
-        select.setItems("Строка", "Число целое", "Дата", "Справочник",
+        select.setItems(USER_STRING_TYPE_LITERAL, "Число целое", "Дата", "Справочник",
                 "Файл", "Число дробное", "Флажок", "Текст", "Ссылка");
-        select.setValue("Строка");
+        select.setValue(USER_STRING_TYPE_LITERAL);
         HorizontalLayout typeName = new HorizontalLayout(
                 UtilView.createHelpButton("Тип данных, которые могут храниться в поле."),
                 new Span("Тип")
@@ -417,7 +422,7 @@ public class ProductionTasks extends VerticalLayout {
         fieldName.setReadOnly(true);
         formLayout.addFormItem(fieldName,"Название");
         Select<String> select = new Select<>();
-        select.setItems("Строка", "Число целое", "Дата", "Справочник",
+        select.setItems(USER_STRING_TYPE_LITERAL, "Число целое", "Дата", "Справочник",
                 "Файл", "Число дробное", "Флажок", "Текст", "Ссылка");
         select.setValue(AdditionalFieldConvertor
                 .convertFromType((String) productionTasksAdditionalFieldDto.getProperty().get("type")));
@@ -470,9 +475,11 @@ public class ProductionTasks extends VerticalLayout {
         return accordionPanel;
     }
 
-    private void DialogCleanup() {
+    private void dialogCleanup() {
         customFields = new ArrayList<>();
-        VerticalLayout accordionParent = (VerticalLayout) customFieldsAccordion.getParent().get();
+        VerticalLayout accordionParent = (VerticalLayout) (customFieldsAccordion.getParent().isPresent()
+                ? customFieldsAccordion.getParent().get()
+                : new VerticalLayout());
         customFieldsAccordion.getElement().removeFromParent();
         customFieldsAccordion = new Accordion();
         accordionParent.add(customFieldsAccordion);
