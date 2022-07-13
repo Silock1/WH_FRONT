@@ -1,4 +1,4 @@
-package com.warehouse_accounting.components.indiCators;
+package com.warehouse_accounting.components.indiCators.grids;
 
 
 import com.vaadin.flow.component.button.Button;

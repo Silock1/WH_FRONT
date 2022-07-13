@@ -6,8 +6,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.warehouse_accounting.components.indiCators.IndicatorsGridLayout;
-import com.warehouse_accounting.components.indiCators.RecycleBinGridLayout;
+import com.warehouse_accounting.components.indiCators.DocumentsView;
+import com.warehouse_accounting.components.indiCators.grids.IndicatorsGridLayout;
+import com.warehouse_accounting.components.indiCators.grids.RecycleBinGridLayout;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,9 +23,12 @@ public class IndicatorsSubMenuView extends VerticalLayout {
     private final RecycleBinGridLayout recycleBinGridLayout;
     private final IndicatorsGridLayout indicatorsGridLayout;
 
-    public IndicatorsSubMenuView(RecycleBinGridLayout recycleBinGridLayout, IndicatorsGridLayout indicatorsGridLayout) {
+    private final DocumentsView documentsView;
+
+    public IndicatorsSubMenuView(RecycleBinGridLayout recycleBinGridLayout, IndicatorsGridLayout indicatorsGridLayout, DocumentsView documentsView) {
         this.recycleBinGridLayout = recycleBinGridLayout;
         this.indicatorsGridLayout = indicatorsGridLayout;
+        this.documentsView = documentsView;
         this.pageContent.removeAll();
         pageContent.setSizeFull();
         add(initSubMenu(), pageContent);
@@ -46,7 +50,7 @@ public class IndicatorsSubMenuView extends VerticalLayout {
                     break;
                 case "Документы":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Документы"));
+                    pageContent.add(documentsView);
                     break;
                 case "Корзина":
                     pageContent.removeAll();
