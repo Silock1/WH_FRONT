@@ -1,5 +1,7 @@
 package com.warehouse_accounting.components.production.forms;
 
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -22,14 +24,17 @@ import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.UtilView;
 import com.warehouse_accounting.components.production.ProductionTasks;
+import com.warehouse_accounting.models.dto.ProductionTasksAdditionalFieldDto;
 import com.warehouse_accounting.models.dto.ProductionTasksDto;
 import com.warehouse_accounting.models.dto.WarehouseDto;
+import com.warehouse_accounting.services.interfaces.ProductionTasksAdditionalFieldService;
 import com.warehouse_accounting.services.interfaces.ProductionTasksService;
 import com.warehouse_accounting.services.interfaces.WarehouseService;
 import lombok.extern.log4j.Log4j2;
 
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.warehouse_accounting.components.UtilView.subMenuTabs;
 
@@ -41,26 +46,42 @@ public class ProductionTasksForm extends VerticalLayout {
     private final Div returnDiv;
 
     private transient ProductionTasksDto productionTasksDto;
+
+    private transient List<ProductionTasksAdditionalFieldDto> productionTasksAdditionalFieldDtos = new ArrayList<>();
     private Binder<ProductionTasksDto> productionTasksDtoBinder =
             new Binder<>(ProductionTasksDto.class);
 
     private final transient ProductionTasksService productionTasksService;
+
+    private final transient ProductionTasksAdditionalFieldService productionTasksAdditionalFieldService;
     
     private final transient WarehouseService warehouseService;
+
+    private static final String PROPERTY_MAP_VALUE_LITERAL = "value";
 
     public ProductionTasksForm(ProductionTasks productionTasks,
                                ProductionTasksDto productionTasksDto,
                                ProductionTasksService productionTasksService,
+                               ProductionTasksAdditionalFieldService productionTasksAdditionalFieldService,
                                WarehouseService warehouseService) {
         this.productionTasks = productionTasks;
         this.returnDiv = productionTasks.getMainContent();
         this.productionTasksDto = productionTasksDto;
         this.productionTasksService = productionTasksService;
+        this.productionTasksAdditionalFieldService = productionTasksAdditionalFieldService;
         this.warehouseService = warehouseService;
+        init();
+    }
 
+    public void init() {
+        if (this.productionTasksDto.getAdditionalFieldsIds() != null) {
+            this.productionTasksAdditionalFieldDtos = this.productionTasksDto.getAdditionalFieldsIds().stream()
+                    .map(productionTasksAdditionalFieldService::getById)
+                    .collect(Collectors.toList());
+        }
         productionTasks.removeAll();
         add(createTopGroupElements(), createInputFieldForm());
-
+        productionTasksDtoBinder.readBean(this.productionTasksDto);
     }
 
     private HorizontalLayout createTopGroupElements() {
@@ -88,16 +109,28 @@ public class ProductionTasksForm extends VerticalLayout {
                 productionTasksDto.setDateOfEdit(LocalDate.now());
                 productionTasksDto.setDateOfCreate(LocalDate.now());
 
+                productionTasksDto.setAdditionalFieldsIds(productionTasksAdditionalFieldDtos.stream()
+                        .map(x -> {
+                            if (x.getId() != null && x.getId() > 0) {
+                               return productionTasksAdditionalFieldService.update(x);
+                            } else {
+                                return productionTasksAdditionalFieldService.create(x);
+                            }
+                        })
+                        .map(ProductionTasksAdditionalFieldDto::getId)
+                        .collect(Collectors.toList()));
+
                 if (productionTasksDto.getId() != null && productionTasksDto.getId() > 0) {
                     productionTasksService.update(productionTasksDto);
                 } else {
                     productionTasksService.create(productionTasksDto);
                 }
                 productionTasks.getProductionTasksGridLayout().updateGrid();
-                productionTasks.removeAll();
-                productionTasks.add(returnDiv);
+
             } catch (ValidationException e) {
                 log.error("Ошибка валидации");
+            } finally {
+                formCleanup();
             }
         });
         return saveButton;
@@ -105,12 +138,15 @@ public class ProductionTasksForm extends VerticalLayout {
 
     private Button closeProductionTechnologyButton() {
         Button closeButton = new Button("Закрыть");
-        closeButton.addClickListener(c -> {
-            productionTasks.removeAll();
-            productionTasks.add(returnDiv);
-        });
+        closeButton.addClickListener(c -> formCleanup());
         return closeButton;
 
+    }
+
+    private void formCleanup() {
+        productionTasksAdditionalFieldDtos = new ArrayList<>();
+        productionTasks.removeAll();
+        productionTasks.add(returnDiv);
     }
 
     private HorizontalLayout createEditButton(){
@@ -252,7 +288,48 @@ public class ProductionTasksForm extends VerticalLayout {
                 .bind(productionTasksDto1 -> warehouseService.getById(productionTasksDto1.getProductionWarehouseId()),
                         (productionTasksDto2, productionWarehouse) ->
                                 productionTasksDto2.setProductionWarehouseId(productionWarehouse.getId()));
+        ProductionTasksDto productionTasksDtoTemplate = productionTasksService.getById(1L);
+        for (Long fieldId : productionTasksDtoTemplate.getAdditionalFieldsIds()) {
+            ProductionTasksAdditionalFieldDto dto = productionTasksAdditionalFieldService.getById(fieldId);
+            HasValue customField = createCustomField(dto);
+            String customFieldName = productionTasksDtoTemplate.getAdditionalFieldsNames()
+                    .get(productionTasksDtoTemplate.getAdditionalFieldsIds().indexOf(fieldId));
+            if (productionTasksDto.getAdditionalFieldsNames() != null) {
+                ProductionTasksAdditionalFieldDto dtoField = productionTasksAdditionalFieldService
+                        .getById(productionTasksDto.getAdditionalFieldsIds()
+                        .get(productionTasksDto.getAdditionalFieldsNames().indexOf(customFieldName)));
+                customField.setValue(dtoField.getProperty().get(PROPERTY_MAP_VALUE_LITERAL));
+                customField.addValueChangeListener(x -> productionTasksAdditionalFieldDtos
+                        .get(productionTasksAdditionalFieldDtos.indexOf(dtoField))
+                        .getProperty().put(PROPERTY_MAP_VALUE_LITERAL,customField.getValue()));
+            } else {
+                ProductionTasksAdditionalFieldDto dtoField = ProductionTasksAdditionalFieldDto.builder()
+                        .description(dto.getDescription())
+                        .hide(dto.getHide())
+                        .required(dto.getRequired())
+                        .name(dto.getName())
+                        .build();
+                productionTasksAdditionalFieldDtos.add(dtoField);
+                Map<String,Object> propertyMap = new HashMap<>();
+                propertyMap.put("type",dto.getProperty().get("type"));
+                dtoField.setProperty(propertyMap);
+                customField.addValueChangeListener(event ->
+                        dtoField.getProperty().put(PROPERTY_MAP_VALUE_LITERAL, customField.getValue()));
+            }
+            formLayout.addFormItem((Component) customField, customFieldName);
+
+        }
         return formLayout;
+    }
+
+    private HasValue createCustomField(ProductionTasksAdditionalFieldDto dto) {
+        HasValue component;
+        switch ((String)dto.getProperty().get("type")) {
+            case "Integer" : component = new NumberField(); break;
+            case "String" : component = new TextField(); break;
+            default: component = new TextField();
+        }
+        return component;
     }
 
     private FormLayout createInputFormHeader() {

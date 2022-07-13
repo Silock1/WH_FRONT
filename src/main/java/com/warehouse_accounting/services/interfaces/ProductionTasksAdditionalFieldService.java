@@ -8,6 +8,8 @@ public interface ProductionTasksAdditionalFieldService {
 
     List<ProductionTasksAdditionalFieldDto> getAll();
 
+    ProductionTasksAdditionalFieldDto getById(Long id);
+
     ProductionTasksAdditionalFieldDto create(ProductionTasksAdditionalFieldDto productionTasksAdditionalFieldDto);
 
     ProductionTasksAdditionalFieldDto update(ProductionTasksAdditionalFieldDto productionTasksAdditionalFieldDto);

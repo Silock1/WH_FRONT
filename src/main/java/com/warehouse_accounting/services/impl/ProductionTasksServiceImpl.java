@@ -1,6 +1,5 @@
 package com.warehouse_accounting.services.impl;
 
-import com.warehouse_accounting.models.dto.ProductionProcessTechnologyDto;
 import com.warehouse_accounting.models.dto.ProductionTasksDto;
 import com.warehouse_accounting.services.interfaces.ProductionTasksService;
 import com.warehouse_accounting.services.interfaces.api.ProductionTasksApi;
@@ -45,6 +44,27 @@ public class ProductionTasksServiceImpl implements ProductionTasksService {
             e.printStackTrace();
         }
         return productionTasksDtoList;
+    }
+
+    @Override
+    public ProductionTasksDto getById(Long id) {
+        ProductionTasksDto productionTasksDto = new ProductionTasksDto();
+        Call<ProductionTasksDto> call = productionTasksApi.getById(productionTasksUrl, id);
+        try {
+            Response<ProductionTasksDto> response = call.execute();
+            if (response.isSuccessful()) {
+                productionTasksDto = response.body();
+                log.info("Успешно выполнен запрос на получение ProductionTasksDto");
+                log.info(productionTasksDto);
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на получение ProductionTasksDto"
+                        , response.code());
+                log.error("[eq");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return productionTasksDto;
     }
 
     @Override
