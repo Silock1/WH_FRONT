@@ -50,10 +50,12 @@ import com.warehouse_accounting.services.interfaces.WarehouseService;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @SpringComponent
@@ -73,9 +75,13 @@ public class ProductionTasks extends VerticalLayout {
 
     private transient List<ProductionTasksAdditionalFieldDto> customFields = new ArrayList<>();
 
+    private Accordion customFieldsAccordion = new Accordion();
+
     @Getter
     @Setter
     private Div mainContent;
+
+    private static final String USER_STRING_TYPE_LITERAL = "Строка";
 
     public ProductionTasks(ProductionTasksFilterLayout productionTasksFilterLayout,
                            ProductionTasksGridLayout productionTasksGridLayout,
@@ -118,12 +124,15 @@ public class ProductionTasks extends VerticalLayout {
                 ProductionTasksDto.builder()
                         .taskId(1L)
                         .productionWarehouseId(1L)
+                        .dateOfCreate(LocalDate.now())
                         .materialWarehouseId(1L)
                         .editEmployeeId(1L)
                         .ownerDepartmentId(1L)
                         .ownerEmployeeId(1L)
-                        .isAccessed(true).build(),
+                        .isAccessed(true)
+                        .build(),
                 productionTasksService,
+                productionTasksAdditionalFieldService,
                 warehouseService)));
 
         Button filter = new Button("Фильтр");
@@ -157,7 +166,21 @@ public class ProductionTasks extends VerticalLayout {
 
         MenuItem edit = menuBar.addItem(editVision);
         SubMenu editSubMenu = edit.getSubMenu();
-        editSubMenu.addItem("Удалить").onEnabledStateChanged(false);
+        Button deleteButton = new Button("Удалить");
+        deleteButton.addClickListener(click -> {
+            if (!productionTasksGridLayout.getProductionTasksDtoGrid().getSelectedItems().isEmpty()) {
+                ProductionTasksDto dto = (ProductionTasksDto) productionTasksGridLayout.getProductionTasksDtoGrid()
+                        .getSelectedItems().toArray()[0];
+                productionTasksService.delete(dto.getId());
+                for (Long id:
+                     dto.getAdditionalFieldsIds()) {
+                    productionTasksAdditionalFieldService.delete(id);
+                }
+                productionTasksGridLayout.updateGrid();
+            }
+
+        });
+        editSubMenu.addItem(deleteButton);
         editSubMenu.addItem("Копировать").onEnabledStateChanged(false);
         editSubMenu.addItem("Массовое редактирование");
         editSubMenu.addItem("Провести").onEnabledStateChanged(false);
@@ -184,7 +207,13 @@ public class ProductionTasks extends VerticalLayout {
 
         Button setting = new Button(new Icon(VaadinIcon.COG)); // Настройки
         Dialog dialog = getCogDialog();
-        setting.addClickListener(click -> dialog.open());
+        setting.addClickListener(click -> {
+            ProductionTasksDto productionTasksDto = productionTasksService.getById(1L);
+            for (Long fieldId : productionTasksDto.getAdditionalFieldsIds()) {
+                customFieldsAccordion.add(createCurrentFieldForm(fieldId));
+            }
+            dialog.open();
+        });
         setting.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 
 
@@ -204,6 +233,7 @@ public class ProductionTasks extends VerticalLayout {
     }
 
     private VerticalLayout createDialogLayout(Dialog dialog) {
+
         H2 headline = new H2("Настройки производственных заданий");
         headline.getStyle().set("margin", "var(--lumo-space-m) 0 0 0")
                 .set("font-size", "1.5em").set("font-weight", "bold");
@@ -211,15 +241,49 @@ public class ProductionTasks extends VerticalLayout {
 
             List<ProductionTasksDto> productionTasksDtoList = productionTasksService.getAll();
             for (ProductionTasksDto productionTasksDto : productionTasksDtoList) {
-                productionTasksDto.setAdditionalFieldsIds(customFields.stream()
-                        .map(x -> productionTasksAdditionalFieldService.create(x).getId())
+                productionTasksDto.getAdditionalFieldsIds().addAll(customFields.stream()
+                        .map(x -> {
+                            if (productionTasksDto.getAdditionalFieldsNames().contains(x.getName())) {
+                                ProductionTasksAdditionalFieldDto dto =
+                                        productionTasksAdditionalFieldService
+                                                .getById(productionTasksDto.getAdditionalFieldsIds()
+                                                                .get(productionTasksDto
+                                                                .getAdditionalFieldsNames()
+                                                                .indexOf(x.getName()))
+                                                        );
+                                dto.setHide(x.getHide());
+                                dto.setDescription(x.getDescription());
+                                dto.setRequired(x.getRequired());
+                                productionTasksAdditionalFieldService.update(dto);
+                                return null;
+                            } else {
+                                return productionTasksAdditionalFieldService.create(x).getId();
+                            }
+                        })
+                        .filter(Objects::nonNull)
                         .collect(Collectors.toList()));
                 productionTasksService.update(productionTasksDto);
             }
-
+            productionTasksGridLayout.updateGrid();
+            for (ProductionTasksAdditionalFieldDto customField : customFields) {
+                if (productionTasksGridLayout.getProductionTasksDtoGrid().getColumnByKey(customField.getName()) == null)
+                {
+                    productionTasksGridLayout.getProductionTasksDtoGrid().addColumn(productionTasksDto ->
+                            productionTasksAdditionalFieldService.getById(productionTasksDto.getAdditionalFieldsIds()
+                                            .get(productionTasksDto
+                                                    .getAdditionalFieldsNames()
+                                                    .indexOf(customField.getName())))
+                                    .getProperty().get("value")
+                    ).setHeader(customField.getName()).setKey(customField.getName());
+                }
+            }
+            dialogCleanup();
             dialog.close();
         });
-        Button cancelButton = new Button("Отменить", e -> dialog.close());
+        Button cancelButton = new Button("Отменить", e -> {
+            dialogCleanup();
+            dialog.close();
+        });
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
         HorizontalLayout buttonLayout = new HorizontalLayout(saveButton, cancelButton);
 
@@ -259,8 +323,6 @@ public class ProductionTasks extends VerticalLayout {
         ), new H6("Дополнительные поля"));
         additionalFieldsHeader.setSpacing(false);
 
-        Accordion customFieldsAccordion = new Accordion();
-
         Button addFieldButton = UtilView.plusButton("Поле");
         addFieldButton.addClickListener(click -> customFieldsAccordion.add(createCustomFieldForm()));
         VerticalLayout additionalFields = new VerticalLayout(additionalFieldsHeader,
@@ -282,9 +344,9 @@ public class ProductionTasks extends VerticalLayout {
         TextField fieldName = new TextField();
         formLayout.addFormItem(fieldName,"Название");
         Select<String> select = new Select<>();
-        select.setItems("Строка", "Число целое", "Дата", "Справочник",
+        select.setItems(USER_STRING_TYPE_LITERAL, "Число целое", "Дата", "Справочник",
                 "Файл", "Число дробное", "Флажок", "Текст", "Ссылка");
-        select.setValue("Строка");
+        select.setValue(USER_STRING_TYPE_LITERAL);
         HorizontalLayout typeName = new HorizontalLayout(
                 UtilView.createHelpButton("Тип данных, которые могут храниться в поле."),
                 new Span("Тип")
@@ -350,5 +412,76 @@ public class ProductionTasks extends VerticalLayout {
         return accordionPanel;
     }
 
+    private AccordionPanel createCurrentFieldForm(Long fieldId) {
+        ProductionTasksAdditionalFieldDto productionTasksAdditionalFieldDto =
+                productionTasksAdditionalFieldService.getById(fieldId);
+        customFields.add(productionTasksAdditionalFieldDto);
+        FormLayout formLayout = new FormLayout();
+        TextField fieldName = new TextField();
+        fieldName.setValue(productionTasksAdditionalFieldDto.getName());
+        fieldName.setReadOnly(true);
+        formLayout.addFormItem(fieldName,"Название");
+        Select<String> select = new Select<>();
+        select.setItems(USER_STRING_TYPE_LITERAL, "Число целое", "Дата", "Справочник",
+                "Файл", "Число дробное", "Флажок", "Текст", "Ссылка");
+        select.setValue(AdditionalFieldConvertor
+                .convertFromType((String) productionTasksAdditionalFieldDto.getProperty().get("type")));
+        select.setReadOnly(true);
+        HorizontalLayout typeName = new HorizontalLayout(
+                UtilView.createHelpButton("Тип данных, которые могут храниться в поле."),
+                new Span("Тип")
+        );
+        typeName.setSpacing(false);
+        formLayout.addFormItem(select, typeName);
 
+        HorizontalLayout necessaryName = new HorizontalLayout(
+                UtilView.createHelpButton("Если включено, документ нельзя сохранить, не заполнив это поле."),
+                new Span("Обязательный")
+        );
+        necessaryName.setSpacing(false);
+        Checkbox necessaryNameCheckbox = new Checkbox();
+        necessaryNameCheckbox.setValue(productionTasksAdditionalFieldDto.getRequired());
+        formLayout.addFormItem(necessaryNameCheckbox, necessaryName);
+
+        HorizontalLayout hidingName = new HorizontalLayout(
+                UtilView.createHelpButton("Если включить, поле не будет показываться в карточке документа"),
+                new Span("Скрывать в карточке")
+        );
+        hidingName.setSpacing(false);
+        Checkbox hidingNameCheckbox = new Checkbox();
+        hidingNameCheckbox.setValue(productionTasksAdditionalFieldDto.getHide());
+        formLayout.addFormItem(hidingNameCheckbox, hidingName);
+
+        HorizontalLayout descriptionName = new HorizontalLayout(
+                UtilView.createHelpButton("Этот текст будет подсказкой, как данный текст."),
+                new Span("Описание")
+        );
+        descriptionName.setSpacing(false);
+        TextArea descriptionNameTextArea = new TextArea();
+        descriptionNameTextArea.setValue(productionTasksAdditionalFieldDto.getDescription());
+        formLayout.addFormItem(descriptionNameTextArea, descriptionName);
+
+        AccordionPanel accordionPanel = new AccordionPanel(productionTasksAdditionalFieldDto.getName(), formLayout);
+
+        necessaryNameCheckbox.addValueChangeListener(
+                click -> productionTasksAdditionalFieldDto.setRequired(necessaryNameCheckbox.getValue()));
+
+        hidingNameCheckbox.addValueChangeListener(
+                click -> productionTasksAdditionalFieldDto.setHide(hidingNameCheckbox.getValue()));
+
+        descriptionNameTextArea.addValueChangeListener(
+                click -> productionTasksAdditionalFieldDto.setDescription(descriptionNameTextArea.getValue()));
+
+        return accordionPanel;
+    }
+
+    private void dialogCleanup() {
+        customFields = new ArrayList<>();
+        VerticalLayout accordionParent = (VerticalLayout) (customFieldsAccordion.getParent().isPresent()
+                ? customFieldsAccordion.getParent().get()
+                : new VerticalLayout());
+        customFieldsAccordion.getElement().removeFromParent();
+        customFieldsAccordion = new Accordion();
+        accordionParent.add(customFieldsAccordion);
+    }
 }

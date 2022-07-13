@@ -47,7 +47,7 @@ public class PostingServiceImpl implements PostingService {
         try {
             Response<List<PostingDto>> response = listCall.execute();
             if (response.isSuccessful()) {
-                postingDtoList = listCall.execute().body();
+                postingDtoList = response.body();
                 log.info("Успешно выполнен запрон на получение списка");
             } else {
                 log.error("Произошла ошибка {} при выполнении запроса на получение списка ERRRRR", response.code());

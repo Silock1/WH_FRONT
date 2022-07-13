@@ -9,10 +9,15 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.components.production.ProductionTasks;
+import com.warehouse_accounting.components.production.forms.ProductionTasksForm;
 import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.ProductionTasksDto;
+import com.warehouse_accounting.services.interfaces.ProductionTasksAdditionalFieldService;
 import com.warehouse_accounting.services.interfaces.ProductionTasksService;
+import com.warehouse_accounting.services.interfaces.WarehouseService;
 import lombok.Getter;
+import org.springframework.context.annotation.Lazy;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -22,13 +27,23 @@ import java.util.List;
 @SpringComponent
 public class ProductionTasksGridLayout extends HorizontalLayout {
     private final transient ProductionTasksService productionTasksService;
+    private final transient ProductionTasksAdditionalFieldService productionTasksAdditionalFieldService;
+    private final transient WarehouseService warehouseService;
     private transient List<ProductionTasksDto> productionTasksDtoList = new ArrayList<>();
     @Getter
     private final Grid<ProductionTasksDto> productionTasksDtoGrid =
             new Grid<>(ProductionTasksDto.class, false);
 
-    public ProductionTasksGridLayout(ProductionTasksService productionTasksService) {
+    private final ProductionTasks productionTasks;
+
+    public ProductionTasksGridLayout(ProductionTasksService productionTasksService,
+                                     ProductionTasksAdditionalFieldService productionTasksAdditionalFieldService,
+                                     WarehouseService warehouseService,
+                                     @Lazy ProductionTasks productionTasks) {
         this.productionTasksService = productionTasksService;
+        this.productionTasksAdditionalFieldService = productionTasksAdditionalFieldService;
+        this.warehouseService = warehouseService;
+        this.productionTasks = productionTasks;
 
         initializingGrid();
     }
@@ -87,8 +102,23 @@ public class ProductionTasksGridLayout extends HorizontalLayout {
         productionTasksDtoList = productionTasksService.getAll();
         productionTasksDtoList.sort(Comparator.comparingLong(ProductionTasksDto::getId));
         productionTasksDtoGrid.setItems(productionTasksDtoList);
+        for (String customField : productionTasksDtoList.get(0).getAdditionalFieldsNames()) {
+            productionTasksDtoGrid.addColumn( productionTasksDto ->
+                    productionTasksAdditionalFieldService.getById(productionTasksDto.getAdditionalFieldsIds()
+                                    .get(productionTasksDto.getAdditionalFieldsNames().indexOf(customField)))
+                            .getProperty().get("value")
+            ).setHeader(customField).setKey(customField);
+        }
 
         productionTasksDtoGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+
+        productionTasksDtoGrid.addItemDoubleClickListener(click -> productionTasks.add(new ProductionTasksForm(
+                productionTasks,
+                ((ProductionTasksDto) productionTasksDtoGrid.getSelectedItems().toArray()[0]),
+                productionTasksService,
+                productionTasksAdditionalFieldService,
+                warehouseService
+                )));
 
         Button menuButton = new Button(new Icon(VaadinIcon.COG));
         menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);

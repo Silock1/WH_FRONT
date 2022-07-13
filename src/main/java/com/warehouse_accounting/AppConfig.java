@@ -52,8 +52,9 @@ public class AppConfig {
     }
 }
 
-class LocalDateTimeSerializerAdapter implements JsonSerializer<LocalDateTime> {
-    public JsonElement serialize(LocalDateTime date, Type typeOfSrc, JsonSerializationContext context) {
-        return new JsonPrimitive(date.format(DateConvertor.dateTimeFormatter)); // "yyyy-mm-dd"
+class LocalDateTimeSerializerAdapter implements JsonDeserializer<LocalDateTime> {
+    public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+            throws JsonParseException {
+        return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), DateConvertor.dateTimeFormatter);
     }
 }

@@ -1,11 +1,8 @@
 package com.warehouse_accounting.services.impl;
 
 import com.warehouse_accounting.models.dto.ProductionTasksAdditionalFieldDto;
-import com.warehouse_accounting.models.dto.ProductionTasksDto;
 import com.warehouse_accounting.services.interfaces.ProductionTasksAdditionalFieldService;
-import com.warehouse_accounting.services.interfaces.ProductionTasksService;
 import com.warehouse_accounting.services.interfaces.api.ProductionTasksAdditionalFieldApi;
-import com.warehouse_accounting.services.interfaces.api.ProductionTasksApi;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -49,6 +46,27 @@ public class ProductionTasksAdditionalFieldServiceImpl implements ProductionTask
             e.printStackTrace();
         }
         return dtoList;
+    }
+
+    @Override
+    public ProductionTasksAdditionalFieldDto getById(Long id) {
+        Call<ProductionTasksAdditionalFieldDto> call = api.getById(url, id);
+        ProductionTasksAdditionalFieldDto responseDto = new ProductionTasksAdditionalFieldDto();
+        try {
+            Response<ProductionTasksAdditionalFieldDto> response = call.execute();
+            if (response.isSuccessful()) {
+                responseDto = response.body();
+                log.info("Успешно выполнен запрос на получение ProductionTasksAdditionalFieldDto");
+                log.info(responseDto);
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на получение ProductionTasksAdditionalFieldDto"
+                        , response.code());
+                log.error("[eq");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return responseDto;
     }
 
     @Override

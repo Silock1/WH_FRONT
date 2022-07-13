@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface ProductionTasksService {
     List<ProductionTasksDto> getAll();
+    ProductionTasksDto getById(Long id);
     void create(ProductionTasksDto productionTasksDto);
     void update(ProductionTasksDto productionTasksDto);
     void delete(Long id);
