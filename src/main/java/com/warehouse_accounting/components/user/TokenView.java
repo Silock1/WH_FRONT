@@ -35,6 +35,7 @@ public class TokenView extends VerticalLayout {
         HorizontalLayout groupButtons = getGroupButtons();
         add(groupButtons);
         setSizeFull();
+        add(tokenDtoGrid());
     }
 
 
@@ -84,9 +85,11 @@ public class TokenView extends VerticalLayout {
         editMenuBar.addThemeVariants(MenuBarVariant.LUMO_SMALL);
         HorizontalLayout editItem = new HorizontalLayout(new Text("Изменить"), caretDownIcon);
         editItem.setSpacing(false);
-        editItem.setAlignItems(Alignment.CENTER); //
+        editItem.setAlignItems(Alignment.CENTER);
 
         MenuItem editMenu = editMenuBar.addItem(editItem);
+        editMenu.getSubMenu().addItem("Удалить", menuItemClickEvent -> {
+        });
 
         var horizontalLayout = new HorizontalLayout();
         horizontalLayout.add(textField, editMenuBar);
@@ -95,4 +98,13 @@ public class TokenView extends VerticalLayout {
         return horizontalLayout;
     }
 
+    private HorizontalLayout tokenDtoGrid() {
+        var horizontalLayout = new HorizontalLayout();
+        tokenDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI);
+        tokenDtoGrid.setItems(tokenService.getAll());
+        tokenDtoGrid.addColumn(TokenDto::getId).setHeader("Создан пользователем");
+        tokenDtoGrid.addColumn(TokenDto::getFirstName).setHeader("Владелец");
+        add(tokenDtoGrid);
+        return horizontalLayout;
+    }
 }
