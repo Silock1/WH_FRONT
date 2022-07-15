@@ -1,7 +1,6 @@
 package com.warehouse_accounting.components;
 
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
@@ -16,7 +15,6 @@ import com.warehouse_accounting.components.production.TechnologicalMap;
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import static com.warehouse_accounting.components.UtilView.subMenuTabs;
 
@@ -30,16 +28,21 @@ public class ProductionSubMenuView extends VerticalLayout {
     private final ProductionSteps productionSteps;
     private final ProductionProcessTechnology productionProcessTechnology;
     private final ProductionOperations productionOperations;
-    private final ProductionOrders productionOrders;
+    //Закомментчено до фикса так как вызывает краш вкладки Производство
+//    private final ProductionOrders productionOrders;
     private final TechnologicalMap technologicalMap;
 
-    public ProductionSubMenuView(ProductionOrders productionOrders,
+    public ProductionSubMenuView(
+            //Закомментчено до фикса так как вызывает краш вкладки Производство
+            //ProductionOrders productionOrders,
                                  ProductionTasks productionTasks,
                                  ProductionSteps productionSteps,
                                  ProductionProcessTechnology productionProcessTechnology,
-                                 ProductionOperations productionOperations, TechnologicalMap technologicalMap) {
+                                 ProductionOperations productionOperations,
+                                 TechnologicalMap technologicalMap) {
         this.technologicalMap = technologicalMap;
-        this.productionOrders = productionOrders;
+        //Закомментчено до фикса так как вызывает краш вкладки Производство
+//        this.productionOrders = productionOrders;
         this.productionOperations = productionOperations;
         this.productionTasks = productionTasks;
         this.productionSteps = productionSteps;
@@ -62,7 +65,8 @@ public class ProductionSubMenuView extends VerticalLayout {
                     break;
                 case "Заказы на производство":
                     pageContent.removeAll();
-                    pageContent.add(productionOrders);
+                    //Закомментчено до фикса так как вызывает краш вкладки Производство
+//                    pageContent.add(productionOrders);
                     break;
                 case "Тех. операции":
                     pageContent.removeAll();
@@ -81,6 +85,7 @@ public class ProductionSubMenuView extends VerticalLayout {
                     productionSteps.setParentLayer(pageContent);
                     pageContent.add(productionSteps);
                     break;
+                default:
             }
         });
         return subMenuTabs;
