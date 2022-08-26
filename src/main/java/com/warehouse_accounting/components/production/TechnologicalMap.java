@@ -2,13 +2,13 @@ package com.warehouse_accounting.components.production;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridMultiSelectionModel;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -20,14 +20,16 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import com.warehouse_accounting.components.production.forms.TechnologicalMapForm;
 import com.warehouse_accounting.models.dto.TechnologicalMapDto;
 import com.warehouse_accounting.services.interfaces.TechnologicalMapService;
 import lombok.extern.log4j.Log4j2;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @SpringComponent
 @UIScope
@@ -35,17 +37,65 @@ import java.util.List;
 
 public class TechnologicalMap extends VerticalLayout {
     private final TextField textField = new TextField();
-    private final Grid<TechnologicalMapDto> technologicalMapDtoGrid = new Grid<>(TechnologicalMapDto.class, false);
+    private Grid<TechnologicalMapDto> technologicalMapDtoGrid = new Grid<>(TechnologicalMapDto.class, false);
     private final TechnologicalMapService technologicalMapService;
     private final HorizontalLayout formLayout;
+    private final HorizontalLayout groupButtons;
+
+    private final MenuBar editMenuBar;
+    private List<Long> list;
 
     public TechnologicalMap(TechnologicalMapService technologicalMapService) {
         this.technologicalMapService = technologicalMapService;
+        this.editMenuBar = initMenuBar();
         this.formLayout = createNewTechnologicalMap();
-        HorizontalLayout groupButtons = getGroupButtons();
+        groupButtons = getGroupButtons();
         add(groupButtons, formLayout);
         technologicalMapDtoGridSet();
+        list = new ArrayList<>();
+
     }
+
+    public void init() {
+
+        HorizontalLayout groupButtons = getGroupButtons();
+        add(groupButtons, createNewTechnologicalMap());
+        technologicalMapDtoGrid = new Grid<>(TechnologicalMapDto.class, false);
+        technologicalMapDtoGridSet();
+    }
+
+    public void initNew() {
+        HorizontalLayout groupButtons = getButton();
+        add(groupButtons);
+    }
+
+    private HorizontalLayout getButton() {
+        HorizontalLayout groupControl = new HorizontalLayout();
+
+        Label textTechnologicalMap = new Label();
+        textTechnologicalMap.setText("Техкарты");
+
+
+        Button addTextTechnologicalMapButton = new Button("Техкарты", new Icon(VaadinIcon.MINUS));
+        addTextTechnologicalMapButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+
+        addTextTechnologicalMapButton.addClickListener(buttonClickEvent -> {
+            removeAll();
+            init();
+
+//            NewTechnologicalMapPanel newTechnologicalMapPanel = new NewTechnologicalMapPanel();
+//            newTechnologicalMapPanel.setOnCloseHandler(() -> initPage());
+
+
+            //   UI.getCurrent().navigate(String.valueOf(TechnologicalMapForm.class));
+        });
+
+
+        groupControl.add(textTechnologicalMap, addTextTechnologicalMapButton);
+        setSizeFull();
+        return groupControl;
+    }
+
 
     private HorizontalLayout getGroupButtons() {
         HorizontalLayout groupControl = new HorizontalLayout();
@@ -72,8 +122,16 @@ public class TechnologicalMap extends VerticalLayout {
 
         Button addTextTechnologicalMapButton = new Button("Техкарты", new Icon(VaadinIcon.PLUS));
         addTextTechnologicalMapButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+
         addTextTechnologicalMapButton.addClickListener(buttonClickEvent -> {
-//            UI.getCurrent().navigate(TechnologicalMapForm.class);
+            removeAll();
+            initNew();
+
+//            NewTechnologicalMapPanel newTechnologicalMapPanel = new NewTechnologicalMapPanel();
+//            newTechnologicalMapPanel.setOnCloseHandler(() -> initPage());
+
+
+            //   UI.getCurrent().navigate(String.valueOf(TechnologicalMapForm.class));
         });
 
         Button addtextTechnologicalMapGroupButton = new Button("Группа", new Icon(VaadinIcon.PLUS));
@@ -109,13 +167,33 @@ public class TechnologicalMap extends VerticalLayout {
     }
 
     private HorizontalLayout getEditMenuBar() {
-        Icon caretDownIcon = new Icon(VaadinIcon.CARET_DOWN);
-        caretDownIcon.setSize("12px");
+
         textField.setReadOnly(true);
         textField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         textField.setWidth("30px");
         textField.setValue("0");
+        textField.addValueChangeListener(textFieldStringComponentValueChangeEvent -> disableEnableElement());
 
+        HorizontalLayout groupEdit = new HorizontalLayout();
+        groupEdit.add(textField, editMenuBar);
+        groupEdit.setSpacing(false);
+        groupEdit.setAlignItems(Alignment.CENTER); //
+        return groupEdit;
+    }
+
+    private void disableEnableElement() {
+        if (Integer.parseInt(textField.getValue())> 0) {
+            editMenuBar.getItems().get(0).getSubMenu().getItems().get(0).getElement().setAttribute("disabled", false);
+        }
+      else {
+            editMenuBar.getItems().get(0).getSubMenu().getItems().get(0).getElement().setAttribute("disabled", true);
+        }
+
+    }
+
+    private MenuBar initMenuBar() {
+        Icon caretDownIcon = new Icon(VaadinIcon.CARET_DOWN);
+        caretDownIcon.setSize("12px");
         MenuBar editMenuBar = new MenuBar();
         editMenuBar.addThemeVariants(MenuBarVariant.LUMO_SMALL);
         HorizontalLayout editItem = new HorizontalLayout(new Text("Изменить"), caretDownIcon);
@@ -123,7 +201,16 @@ public class TechnologicalMap extends VerticalLayout {
         editItem.setAlignItems(Alignment.CENTER); //
 
         MenuItem editMenu = editMenuBar.addItem(editItem);
-        editMenu.getSubMenu().addItem("Удалить", menuItemClickEvent -> {
+        editMenu.getSubMenu().addItem("Удалить", menuItemClickEvent -> { log.info("deleting");
+            for (Long l: list
+                 ) {
+                technologicalMapService.deleteById(l);
+            }
+            list.removeAll(list);
+            log.info(list);
+            removeAll();
+            init();
+
         }).getElement().setAttribute("disabled", true);
 
         editMenu.getSubMenu().addItem("Массовое редактирование", menuItemClickEvent -> {
@@ -135,12 +222,7 @@ public class TechnologicalMap extends VerticalLayout {
         editMenu.getSubMenu().addItem("Извлечь из архива", menuItemClickEvent -> {
 
         }).getElement().setAttribute("disabled", true);
-
-        HorizontalLayout groupEdit = new HorizontalLayout();
-        groupEdit.add(textField, editMenuBar);
-        groupEdit.setSpacing(false);
-        groupEdit.setAlignItems(Alignment.CENTER); //
-        return groupEdit;
+        return editMenuBar;
     }
 
     private HorizontalLayout getSetting() {
@@ -156,11 +238,21 @@ public class TechnologicalMap extends VerticalLayout {
     private void technologicalMapDtoGridSet() {
         Grid.Column<TechnologicalMapDto> idColumn = technologicalMapDtoGrid.addColumn(TechnologicalMapDto::getId).setHeader("Id");
 
-        Grid.Column<TechnologicalMapDto> nameColumn = technologicalMapDtoGrid.addColumn(TechnologicalMapDto::getName).setHeader("Фамилия");
-        Grid.Column<TechnologicalMapDto> expensesColumn = technologicalMapDtoGrid.addColumn(TechnologicalMapDto::getProductionCost).setHeader("Фамилия");
-        Grid.Column<TechnologicalMapDto> commentColumn = technologicalMapDtoGrid.addColumn(TechnologicalMapDto::getComment).setHeader("Имя");
+        Grid.Column<TechnologicalMapDto> nameColumn = technologicalMapDtoGrid.addColumn(TechnologicalMapDto::getName).setHeader("Наименование");
+        Grid.Column<TechnologicalMapDto> expensesColumn = technologicalMapDtoGrid.addColumn(TechnologicalMapDto::getProductionCost).setHeader("Затраты на производство");
+        Grid.Column<TechnologicalMapDto> commentColumn = technologicalMapDtoGrid.addColumn(TechnologicalMapDto::getComment).setHeader("Комментарий");
 
-        technologicalMapDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI); //
+
+        //technologicalMapDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI); //
+        GridMultiSelectionModel<TechnologicalMapDto> selectionModel =
+                (GridMultiSelectionModel<TechnologicalMapDto>) technologicalMapDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI);
+        //  technologicalMapDtoGrid.addSelectionListener(selectionEvent -> tempEvent(technologicalMapDtoGrid.getSelectedItems()));
+        //technologicalMapDtoGrid.addMu
+        selectionModel.addMultiSelectionListener(multiSelectionEvent -> {
+            tempEvent(multiSelectionEvent.getAddedSelection());
+            tempDeleteEvent(multiSelectionEvent.getRemovedSelection());
+        });
+
 
         Button menuButton = new Button(new Icon(VaadinIcon.COG));
         menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -170,6 +262,7 @@ public class TechnologicalMap extends VerticalLayout {
         columnToggleContextMenu.addColumnToggleItem("Затраты на производство", expensesColumn);
         columnToggleContextMenu.addColumnToggleItem("Комментарий", commentColumn);
 
+
         List<TechnologicalMapDto> technologicalMapDtoList = technologicalMapService.getAll();
         technologicalMapDtoGrid.setItems(technologicalMapDtoList);
 
@@ -178,6 +271,32 @@ public class TechnologicalMap extends VerticalLayout {
         headerLayout.setFlexGrow(1);
 
         add(technologicalMapDtoGrid, headerLayout);
+    }
+
+    private void tempEvent(Set<TechnologicalMapDto> selectedItems) {
+        for (TechnologicalMapDto t : new ArrayList<>(selectedItems)
+        ) {
+            list.add(t.getId());
+            log.info("add " + t.getId());
+            log.info("List" + list);
+            textField.setValue(String.valueOf(list.size()));
+        }
+
+        //list.add()
+    }
+
+    private void tempDeleteEvent(Set<TechnologicalMapDto> selectedItems) {
+        for (TechnologicalMapDto t : new ArrayList<>(selectedItems)
+        ) {
+            Element element = groupButtons.getElement().getChild(8);
+            log.info("List do" + list);
+            list.remove(t.getId());   //list.indexOf(t.getId())
+            log.info("List posle" + list);
+            log.info("delete " + t.getId());
+            textField.setValue(String.valueOf(list.size()));
+        }
+
+        //list.add()
     }
 
     private static class ColumnToggleContextMenu extends ContextMenu {
