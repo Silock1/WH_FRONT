@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,27 +20,15 @@ public class ReturnDto {
     private String comment;
     private boolean isPosted;
     private boolean isSent;
-    private List<ProductDto> productDtoList;
+    private BigDecimal sum;
+    private List<ProductDto> products;
+    private List<TaskDto> tasks;
+    private ProjectDto project = new ProjectDto();
+    private CompanyDto company = new CompanyDto();
+    private WarehouseDto warehouse = new WarehouseDto();
+    private ContractorDto contractor = new ContractorDto();
+    private ContractDto contract = new ContractDto();
 
-    private Long contractorId;
-    private String contractorName;
-
-    private Long contractId;
-    private String contractNumber;
-
-    private Long warehouseId;
-    private String warehouseName;
-
-    private Long companyId;
-    private String companyName;
-
-    private Long projectId;
-    private String projectName;
-
-    // контрагент
-    private Long authorId;
-    private String authorLastName;
-    private String authorFirstName;
 
 
 }

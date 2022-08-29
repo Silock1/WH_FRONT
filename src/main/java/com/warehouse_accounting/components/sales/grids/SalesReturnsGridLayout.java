@@ -14,5 +14,18 @@ public class SalesReturnsGridLayout extends HorizontalLayout {
         this.selectedTextField = selectedTextField;
 
         Grid.Column<ReturnDto> idColumn = returnDtoGrid.addColumn(ReturnDto::getId).setHeader("Id");
+        Grid.Column<ReturnDto> returnDateTimeColumn = returnDtoGrid.addColumn(ReturnDto::getReturnDateTime).setHeader("Время");
+        Grid.Column<ReturnDto> warehouseColumn = returnDtoGrid.addColumn(ReturnDto::getWarehouse).setHeader("Со склада");
+        Grid.Column<ReturnDto> contractorColumn = returnDtoGrid.addColumn(ReturnDto::getContractor).setHeader("Контрагент");
+        Grid.Column<ReturnDto> companyColumn = returnDtoGrid.addColumn(ReturnDto::getId).setHeader("Организация");
+        Grid.Column<ReturnDto> contractColumn = returnDtoGrid.addColumn(ReturnDto::getId).setHeader("Id");
+        Grid.Column<ReturnDto> projectColumn = returnDtoGrid.addColumn(ReturnDto::getId).setHeader("Id");
+        Grid.Column<ReturnDto> filesColumn = returnDtoGrid.addColumn(ReturnDto::getId).setHeader("Id");
+        Grid.Column<ReturnDto> tasksColumn  = returnDtoGrid.addColumn(ReturnDto::getId).setHeader("Id");
+        Grid.Column<ReturnDto> productsColumn  = returnDtoGrid.addColumn(ReturnDto::getId).setHeader("Id");
+        Grid.Column<ReturnDto> sumColumn = returnDtoGrid.addColumn(ReturnDto::getId).setHeader("Id");
+        Grid.Column<ReturnDto> isSentColumn = returnDtoGrid.addColumn(ReturnDto::getId).setHeader("Id");
+        Grid.Column<ReturnDto> isPrintedColumn = returnDtoGrid.addColumn(ReturnDto::getId).setHeader("Id");
+        Grid.Column<ReturnDto> commentColumn = returnDtoGrid.addColumn(ReturnDto::getId).setHeader("Id");
     }
 }
