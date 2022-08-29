@@ -25,18 +25,11 @@ import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.goods.forms.GoodsForm;
+import com.warehouse_accounting.components.production.forms.NewGoodsDialog;
+import com.warehouse_accounting.components.production.forms.NewTechnologicalMapPanel;
 import com.warehouse_accounting.components.sales.forms.order.components.DocumentOperationsToolbar;
 import com.warehouse_accounting.models.dto.TechnologicalMapDto;
-import com.warehouse_accounting.services.interfaces.AttributeOfCalculationObjectService;
-import com.warehouse_accounting.services.interfaces.ContractorService;
-import com.warehouse_accounting.services.interfaces.CountryService;
-import com.warehouse_accounting.services.interfaces.ImageService;
-import com.warehouse_accounting.services.interfaces.ProductGroupService;
-import com.warehouse_accounting.services.interfaces.ProductService;
-import com.warehouse_accounting.services.interfaces.TaxSystemService;
 import com.warehouse_accounting.services.interfaces.TechnologicalMapService;
-import com.warehouse_accounting.services.interfaces.UnitService;
-import com.warehouse_accounting.services.interfaces.UnitsOfMeasureService;
 import lombok.extern.log4j.Log4j2;
 
 import java.util.ArrayList;
@@ -57,28 +50,13 @@ public class TechnologicalMap extends VerticalLayout {
     private final MenuBar editMenuBar;
     private List<Long> list;
 
+    private final NewTechnologicalMapPanel newTechnologicalMapPanel;
 
-    private final ProductService productService;
-    private final CountryService countryService;
-    private final UnitsOfMeasureService unitsOfMeasureService;
-    private final ContractorService contractorService;
-    private final TaxSystemService taxSystemService;
-    private final ImageService imageService;
-    private final ProductGroupService productGroupService;
-    private final AttributeOfCalculationObjectService attributeService;
-    private final UnitService unitService;
 
-    public TechnologicalMap(TechnologicalMapService technologicalMapService, ProductService productService, CountryService countryService, UnitsOfMeasureService unitsOfMeasureService, ContractorService contractorService, TaxSystemService taxSystemService, ImageService imageService, ProductGroupService productGroupService, AttributeOfCalculationObjectService attributeService, UnitService unitService) {
+
+    public TechnologicalMap(TechnologicalMapService technologicalMapService, NewGoodsDialog newGoodsDialog, NewTechnologicalMapPanel newTechnologicalMapPanel) {
         this.technologicalMapService = technologicalMapService;
-        this.productService = productService;
-        this.countryService = countryService;
-        this.unitsOfMeasureService = unitsOfMeasureService;
-        this.contractorService = contractorService;
-        this.taxSystemService = taxSystemService;
-        this.imageService = imageService;
-        this.productGroupService = productGroupService;
-        this.attributeService = attributeService;
-        this.unitService = unitService;
+        this.newTechnologicalMapPanel = newTechnologicalMapPanel;
         this.editMenuBar = initMenuBar();
         this.formLayout = createNewTechnologicalMap();
         groupButtons = getGroupButtons();
@@ -97,55 +75,8 @@ public class TechnologicalMap extends VerticalLayout {
     }
 
     public void initNew() {
-        HorizontalLayout groupButtons = getButton();
+        HorizontalLayout groupButtons = newTechnologicalMapPanel.getLayout(this);
         add(groupButtons);
-    }
-
-    private HorizontalLayout getButton() {
-        HorizontalLayout groupControl = new HorizontalLayout();
-
-        Label textTechnologicalMap = new Label();
-        textTechnologicalMap.setText("Техкарты");
-
-
-        Button addTextTechnologicalMapButton = new Button("Техкарты", new Icon(VaadinIcon.MINUS));
-        addTextTechnologicalMapButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-
-        addTextTechnologicalMapButton.addClickListener(buttonClickEvent -> {
-            removeAll();
-            init();
-
-
-
-//            NewTechnologicalMapPanel newTechnologicalMapPanel = new NewTechnologicalMapPanel();
-//            newTechnologicalMapPanel.setOnCloseHandler(() -> initPage());
-
-
-            //   UI.getCurrent().navigate(String.valueOf(TechnologicalMapForm.class));
-        });
-        Button addGoodsButton = new Button("Новый товар", new Icon(VaadinIcon.MINUS));
-        addGoodsButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-
-        addGoodsButton.addClickListener(addGoodsButtonClickEvent -> {
-                    Dialog dialog = new Dialog();
-                    GoodsForm goodsForm = new GoodsForm(productService, countryService, unitsOfMeasureService,
-                            contractorService, taxSystemService, imageService, productGroupService, attributeService,
-                            unitService);
-            DocumentOperationsToolbar menu = new DocumentOperationsToolbar();
-            menu.setCloseHandler(() -> { dialog.close();
-                        });
-            menu.setSaveHandler(() -> { goodsForm.save();
-                dialog.close();
-                        });
-dialog.add(menu);
-            dialog.add(goodsForm);
-            dialog.setSizeFull();
-            dialog.open();
-                });
-
-        groupControl.add(textTechnologicalMap, addTextTechnologicalMapButton, addGoodsButton);
-        setSizeFull();
-        return groupControl;
     }
 
 
@@ -183,7 +114,7 @@ dialog.add(menu);
 //            newTechnologicalMapPanel.setOnCloseHandler(() -> initPage());
 
 
-            //   UI.getCurrent().navigate(String.valueOf(TechnologicalMapForm.class));
+            //   UI.getCurrent().navigate(String.valueOf(TechnologicalMapForm.class));NewTechnologicalMapPanel
         });
 
         Button addtextTechnologicalMapGroupButton = new Button("Группа", new Icon(VaadinIcon.PLUS));
