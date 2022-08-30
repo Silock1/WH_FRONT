@@ -8,6 +8,7 @@ import com.warehouse_accounting.components.sales.forms.order.components.OrderDet
 import com.warehouse_accounting.components.sales.forms.order.components.OrderHeader;
 import com.warehouse_accounting.components.sales.forms.order.components.OrderPositions;
 import com.warehouse_accounting.components.sales.forms.order.types.DocumentCloseHandler;
+import com.warehouse_accounting.models.dto.CustomerOrderDto;
 import com.warehouse_accounting.models.dto.InvoiceDto;
 import com.warehouse_accounting.models.dto.InvoiceProductDto;
 import com.warehouse_accounting.services.interfaces.*;
@@ -34,7 +35,7 @@ public class OrderPanel extends VerticalLayout {
     private final ProjectService projectService;
     private final InvoiceService invoiceService;
     private final DocumentOperationsToolbar documentToolbar = new DocumentOperationsToolbar();
-    private final InvoiceDto invoiceDto = new InvoiceDto();
+    private final CustomerOrderDto invoiceDto = new CustomerOrderDto();
 
     public OrderPanel(CompanyService companyService, ContractorService contractorService, ProductService productService,
                       WarehouseService warehouseService, ContractService contractService, ProjectService projectService,

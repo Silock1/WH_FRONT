@@ -17,6 +17,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PageConfigurator;
@@ -35,6 +36,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -139,6 +141,7 @@ public class AppView extends AppLayout implements PageConfigurator {
         userSubMenu.addItem("Подписка", event -> profile.getUI().ifPresent(ui -> ui.navigate("subscription")));
         profile.getSubMenu().add(new Hr());
         userSubMenu.addItem("Выход", event -> profile.getUI().ifPresent(ui -> ui.navigate("logout")));
+//        new QueryParameters(new HashMap<>(){{put("method",List.of("POST"));}})
         Avatar avatar = null;
         try {
             tmpEmployeeDto = employeeService.getById(1L); // Spring security когда будет

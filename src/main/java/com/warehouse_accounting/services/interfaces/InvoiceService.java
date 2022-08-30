@@ -1,5 +1,6 @@
 package com.warehouse_accounting.services.interfaces;
 
+import com.warehouse_accounting.models.dto.CustomerOrderDto;
 import com.warehouse_accounting.models.dto.InvoiceDto;
 
 import java.util.List;
@@ -10,9 +11,9 @@ public interface InvoiceService {
 
     InvoiceDto getById(Long id);
 
-    void create(InvoiceDto invoiceDto);
+    void create(CustomerOrderDto invoiceDto);
 
-    void update(InvoiceDto invoiceDto);
+    void update(CustomerOrderDto invoiceDto);
 
     void deleteById(Long id);
 }

@@ -1,5 +1,6 @@
 package com.warehouse_accounting.services.impl;
 
+import com.warehouse_accounting.models.dto.CustomerOrderDto;
 import com.warehouse_accounting.models.dto.InvoiceDto;
 import com.warehouse_accounting.services.interfaces.InvoiceService;
 import com.warehouse_accounting.services.interfaces.api.InvoiceApi;
@@ -63,7 +64,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public void create(InvoiceDto invoiceDto) {
+    public void create(CustomerOrderDto invoiceDto) {
         Call<Void> call = invoiceApi.create(invoiceUrl, invoiceDto);
         try {
             Response<Void> response = call.execute();
@@ -78,7 +79,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public void update(InvoiceDto invoiceDto) {
+    public void update(CustomerOrderDto invoiceDto) {
         Call<Void> call = invoiceApi.update(invoiceUrl, invoiceDto);
         try {
             Response<Void> response = call.execute();

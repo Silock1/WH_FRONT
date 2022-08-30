@@ -8,8 +8,10 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.warehouse_accounting.components.sales.CustomerOrders;
 import com.warehouse_accounting.components.sales.forms.order.types.GridSummaryReciver;
 import com.warehouse_accounting.components.sales.forms.order.types.OrderSummary;
+import com.warehouse_accounting.models.dto.CustomerOrderDto;
 import com.warehouse_accounting.models.dto.InvoiceDto;
 
 import java.math.BigDecimal;
@@ -32,9 +34,9 @@ public class OrderGridFooter extends HorizontalLayout implements GridSummaryReci
     private Span priceField = new Span("Промежуточный итог: 0.0");
     private Span totalPriceField = new Span("Итог: 0.0");
     private OrderGrid grid;
-    private final InvoiceDto invoiceDto;
+    private final CustomerOrderDto invoiceDto;
 
-    public OrderGridFooter(InvoiceDto invoiceDto) {
+    public OrderGridFooter(CustomerOrderDto invoiceDto) {
         this.invoiceDto = invoiceDto;
 
         setWidthFull();
@@ -80,7 +82,7 @@ public class OrderGridFooter extends HorizontalLayout implements GridSummaryReci
         );
     }
 
-    public OrderGridFooter(InvoiceDto invoiceDto, OrderGrid grid) {
+    public OrderGridFooter(CustomerOrderDto invoiceDto, OrderGrid grid) {
         this(invoiceDto);
         this.grid = grid;
     }

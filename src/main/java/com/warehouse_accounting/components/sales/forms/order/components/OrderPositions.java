@@ -4,6 +4,7 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.warehouse_accounting.models.dto.CustomerOrderDto;
 import com.warehouse_accounting.models.dto.InvoiceDto;
 import com.warehouse_accounting.models.dto.InvoiceProductDto;
 import com.warehouse_accounting.services.interfaces.ProductService;
@@ -22,7 +23,7 @@ import java.util.List;
 public class OrderPositions extends VerticalLayout {
     OrderGrid grid = new OrderGrid();
 
-    public OrderPositions(ProductService productService, InvoiceDto invoiceDto) {
+    public OrderPositions(ProductService productService, CustomerOrderDto invoiceDto) {
         OrderGridFooter footer = new OrderGridFooter(invoiceDto, grid);
         SearchToolbar searchHeader = new SearchToolbar(productService, grid);
         Tab mainTab = new Tab("Главная");

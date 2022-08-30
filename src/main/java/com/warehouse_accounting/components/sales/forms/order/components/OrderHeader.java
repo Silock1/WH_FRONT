@@ -10,15 +10,16 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.warehouse_accounting.models.dto.CustomerOrderDto;
 import com.warehouse_accounting.models.dto.InvoiceDto;
 
 import java.time.LocalDateTime;
 
 @CssImport("./css/order_header.css")
 public class OrderHeader extends HorizontalLayout {
-    private final InvoiceDto invoice;
+    private final CustomerOrderDto invoice;
 
-    public OrderHeader(InvoiceDto invoice) {
+    public OrderHeader(CustomerOrderDto invoice) {
         this.invoice = invoice;
         addClassName("dtb-baseline");
 
@@ -53,7 +54,7 @@ public class OrderHeader extends HorizontalLayout {
         add(invoiceLabel, orderNumber, fromLabel, invoiceDate, pending, payRequest, marker, isCompleted, isReserved);
     }
 
-    public InvoiceDto getInvoice() {
+    public CustomerOrderDto getInvoice() {
         return invoice;
     }
 }

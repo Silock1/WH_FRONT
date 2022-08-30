@@ -1,5 +1,6 @@
 package com.warehouse_accounting.services.interfaces.api;
 
+import com.warehouse_accounting.models.dto.CustomerOrderDto;
 import com.warehouse_accounting.models.dto.InvoiceDto;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -24,11 +25,11 @@ public interface InvoiceApi {
 
     @Headers("Accept: application/json")
     @POST("{url}")
-    Call <Void> create(@Path(value = "url", encoded = true) String url, @Body InvoiceDto dto);
+    Call <Void> create(@Path(value = "url", encoded = true) String url, @Body CustomerOrderDto dto);
 
     @Headers("Accept: application/json")
     @PUT("{url}")
-    Call<Void> update(@Path(value = "url", encoded = true) String url, @Body InvoiceDto dto);
+    Call<Void> update(@Path(value = "url", encoded = true) String url, @Body CustomerOrderDto dto);
 
     @Headers("Accept: application/json")
     @DELETE("{url}/{id}")
