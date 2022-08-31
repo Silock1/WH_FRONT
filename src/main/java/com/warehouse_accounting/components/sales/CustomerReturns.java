@@ -52,9 +52,6 @@ public class CustomerReturns extends VerticalLayout {
         addOrderButton.addClickListener(buttonClickEvent -> {
             CustomerReturnsForm returnForm = new CustomerReturnsForm(parentLayer, this);
             parentLayer.removeAll();
-            /*
-            TODO сделать форму ReturnForm ориентир InvoiceForm
-             */
             parentLayer.add(returnForm);
         });
 
