@@ -1,6 +1,7 @@
 package com.warehouse_accounting.services.impl;
 
 import com.warehouse_accounting.models.dto.ContractorDto;
+import com.warehouse_accounting.services.ServiceUtils;
 import com.warehouse_accounting.services.interfaces.ContractorService;
 import com.warehouse_accounting.services.interfaces.api.ContractorApi;
 import lombok.extern.log4j.Log4j2;
@@ -28,82 +29,31 @@ public class ContractorServiceImpl implements ContractorService {
 
     @Override
     public List<ContractorDto> getAll() {
-        List<ContractorDto> contractorDto = Collections.emptyList();
         Call<List<ContractorDto>> contractorApiAll = contractorApi.getAll(contractorUrl);
-        try {
-            Response<List<ContractorDto>> response = contractorApiAll.execute();
-            if (response.isSuccessful()) {
-                contractorDto = response.body();
-                log.info("Успешно выполнен запрос на получение списка ContractorDto");
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение списка ContractorDto", response.code());
-            }
-        } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение списка ContractorDto", e);
-        }
-        return contractorDto;
+        return new ServiceUtils<>(ContractorDto.class).getAll(contractorApiAll);
     }
 
     @Override
     public ContractorDto getById(Long id) {
-        ContractorDto contractorDto = null;
         Call<ContractorDto> callSync = contractorApi.getById(contractorUrl, id);
-        try {
-            Response<ContractorDto> response = callSync.execute();
-            if (response.isSuccessful()) {
-                contractorDto = response.body();
-                log.info("Успешно выполнен запрос на получение ContractorDto по id: {}", id);
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение ContractorDto по id {}", response.code(), id);
-            }
-        } catch (Exception e) {
-            log.error("Произошла ошибка при выполнении запроса на получение ContractorDto по id", e);
-        }
-        return contractorDto;
+        return new ServiceUtils<>(ContractorDto.class).getById(callSync, id);
     }
 
     @Override
     public void create(ContractorDto dto) {
         Call<Void> call = contractorApi.create(contractorUrl, dto);
-        try {
-            Response<Void> response = call.execute();
-            if (response.isSuccessful()) {
-                log.info("Успешно выполнен запрос на создание ContractorDto");
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на создании ContractorDto", response.code());
-            }
-        } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на создании ContractorDto", e);
-        }
+        new ServiceUtils<>(ContractorDto.class).create(call);
     }
 
     @Override
     public void update(ContractorDto dto) {
         Call<Void> call = contractorApi.update(contractorUrl, dto);
-        try {
-            Response<Void> response = call.execute();
-            if (response.isSuccessful()) {
-                log.info("Успешно выполнен запрос на изменение ContractorDto");
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на изменение ContractorDto", response.code());
-            }
-        } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на изменение ContractorDto", e);
-        }
+        new ServiceUtils<>(ContractorDto.class).update(call);
     }
 
     @Override
     public void deleteById(Long id) {
         Call<Void> call = contractorApi.deleteById(contractorUrl, id);
-        try {
-            Response<Void> response = call.execute();
-            if (response.isSuccessful()) {
-                log.info("Успешно выполнен запрос на удаление ContractorDto");
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на удаление ContractorDto", response.code());
-            }
-        } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на удаление ContractorDto по id", e);
-        }
+        new ServiceUtils<>(ContractorDto.class).deleteById(call);
     }
 }
