@@ -1,6 +1,5 @@
 package com.warehouse_accounting.components.sales;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -15,22 +14,22 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
-import com.warehouse_accounting.components.sales.forms.ReturnForm;
-import com.warehouse_accounting.components.sales.grids.SalesInvoicesGridLayout;
-import com.warehouse_accounting.components.sales.grids.SalesReturnsGridLayout;
+import com.warehouse_accounting.components.sales.forms.CustomerReturnsForm;
+import com.warehouse_accounting.components.sales.grids.CustomerReturnsGridLayout;
 
 /*
 Продажи / возвраты покупателей
  */
 public class CustomerReturns extends VerticalLayout {
-    private SalesReturnsGridLayout salesReturnsGridLayout;
+    private CustomerReturnsGridLayout customerReturnsGridLayout;
     private final TextField textFieldGridSelected = new TextField();
     private final Div parentLayer;
 
     public CustomerReturns(Div parentLayer) {
         this.parentLayer = parentLayer;
-        salesReturnsGridLayout = new SalesReturnsGridLayout(textFieldGridSelected);
+        customerReturnsGridLayout = new CustomerReturnsGridLayout(textFieldGridSelected);
         Div pageContent = new Div();
+        pageContent.add(customerReturnsGridLayout);
         pageContent.setSizeFull();
         add(getGroupButtons(), pageContent);
     }
@@ -51,10 +50,10 @@ public class CustomerReturns extends VerticalLayout {
         addOrderButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
         addOrderButton.addClickListener(buttonClickEvent -> {
-            ReturnForm returnForm = new ReturnForm(parentLayer, this);
+            CustomerReturnsForm returnForm = new CustomerReturnsForm(parentLayer, this);
             parentLayer.removeAll();
             /*
-            сделать форму ReturnForm ориентир InvoiceForm
+            TODO сделать форму ReturnForm ориентир InvoiceForm
              */
             parentLayer.add(returnForm);
         });
