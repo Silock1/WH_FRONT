@@ -20,10 +20,10 @@ public class ServiceUtils<T> {
         return type.getSimpleName();
     }
 
-    public List<T> getAll(Call<List<T>> apiAll) {
+    public List<T> getAll(Call<List<T>> call) {
         List<T> list = Collections.emptyList();
         try {
-            Response<List<T>> response = apiAll.execute();
+            Response<List<T>> response = call.execute();
             if (response.isSuccessful()) {
                 list = response.body();
                 log.info("Успешно выполнен запрос на получение списка {}", typeName());
@@ -36,10 +36,10 @@ public class ServiceUtils<T> {
         return list;
     }
 
-    public T getById(Call<T> callSync, Long id) {
+    public T getById(Call<T> call, Long id) {
         T dto = null;
         try {
-            Response<T> response = callSync.execute();
+            Response<T> response = call.execute();
             if (response.isSuccessful()) {
                 dto = response.body();
                 log.info("Успешно выполнен запрос на получение {} по id: {}", typeName(), id);
@@ -78,7 +78,7 @@ public class ServiceUtils<T> {
         }
     }
 
-    public void deleteById(Call<Void> call) {
+    public void delete(Call<Void> call) {
         try {
             Response<Void> response = call.execute();
             if (response.isSuccessful()) {
