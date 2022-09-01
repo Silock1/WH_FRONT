@@ -37,13 +37,13 @@ public class ProductionOperationsGridLayout extends HorizontalLayout {
     }
 
     public void initializingGrid () {
-        Grid.Column<TechnologicalOperationDto> idColumn = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getId).setHeader("Id");
-        Grid.Column<TechnologicalOperationDto> technologicalMapName = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getTechnologicalMapName).setHeader("TechnologicalMapName");
+        Grid.Column<TechnologicalOperationDto> idColumn = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getId).setHeader("№");
+        Grid.Column<TechnologicalOperationDto> technologicalMapName = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getTechnologicalMapName).setHeader("Технологическая карта");
         Grid.Column<TechnologicalOperationDto> technologicalMapId = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getTechnologicalMapId).setHeader("TechnologicalMapId");
         technologicalMapId.setVisible(false);
-        Grid.Column<TechnologicalOperationDto> volumeOfProduction = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getVolumeOfProduction).setHeader("VolumeOfProduction");
-        Grid.Column<TechnologicalOperationDto> warehouseForMaterialsName = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getWarehouseForMaterialsName).setHeader("WarehouseForMaterialsName");
-        Grid.Column<TechnologicalOperationDto> warehouseForProductName = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getWarehouseForProductName).setHeader("WarehouseForProductName");
+        Grid.Column<TechnologicalOperationDto> volumeOfProduction = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getVolumeOfProduction).setHeader("Объем производства");
+        Grid.Column<TechnologicalOperationDto> warehouseForMaterialsName = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getWarehouseForMaterialsName).setHeader("Склад для материалов");
+        Grid.Column<TechnologicalOperationDto> warehouseForProductName = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getWarehouseForProductName).setHeader("Склад для продукции");
 //        Grid.Column<TechnologicalOperationDto> tasks = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getTasks).setHeader("Tasks");
 
         productionOperationsDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI);
