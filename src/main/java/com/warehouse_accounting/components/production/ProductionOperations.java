@@ -25,6 +25,7 @@ import com.warehouse_accounting.components.production.grids.ProductionOperations
 import com.warehouse_accounting.models.dto.TechnologicalOperationDto;
 import com.warehouse_accounting.services.interfaces.ProductionOperationsService;
 import com.warehouse_accounting.services.interfaces.ProductionStageService;
+import com.warehouse_accounting.services.interfaces.WarehouseService;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
@@ -37,6 +38,7 @@ public class ProductionOperations extends VerticalLayout {
     private final ProductionOperationsService productionOperationsService;
     private TextField textField;
     private final ProductionStageService productionStageService;
+    private final WarehouseService warehouseService;
 
     @Getter
     private final ProductionOperationsGridLayout productionOperationsGridLayout;
@@ -46,10 +48,11 @@ public class ProductionOperations extends VerticalLayout {
     private Div pageContent;
 
     public ProductionOperations(ProductionOperationsService productionOperationsService, ProductionOperationsGridLayout productionOperationsGridLayout,
-                                ProductionStageService productionStageService) {
+                                ProductionStageService productionStageService, WarehouseService warehouseService) {
         this.productionStageService = productionStageService;
         this.productionOperationsGridLayout = productionOperationsGridLayout;
         this.productionOperationsService = productionOperationsService;
+        this.warehouseService = warehouseService;
         this.pageContent = new Div();
         pageContent.setSizeFull();
         pageContent.add(createTopGroupElements(), mainContent());
@@ -110,7 +113,7 @@ public class ProductionOperations extends VerticalLayout {
         buttonIcon.setWidth("14px");
         Button addProductionOperationButton = new Button("Операция", buttonIcon);
         addProductionOperationButton.addClickListener(buttonClickEvent -> {
-            add(new ProductionOperationsForm(this, new TechnologicalOperationDto(), productionStageService, productionOperationsService));
+            add(new ProductionOperationsForm(this, new TechnologicalOperationDto(), productionStageService, warehouseService));
         });
         return addProductionOperationButton;
     }
@@ -214,7 +217,7 @@ public class ProductionOperations extends VerticalLayout {
     }
     private HorizontalLayout mainContent() {
         productionOperationsGridLayout.getProductionOperationsDtoGrid().addItemClickListener(productionOperationsDtoItemClickEvent -> {
-            add(new ProductionOperationsForm(this, productionOperationsDtoItemClickEvent.getItem(), productionStageService, productionOperationsService));
+            add(new ProductionOperationsForm(this, productionOperationsDtoItemClickEvent.getItem(), productionStageService, warehouseService));
         });
         return productionOperationsGridLayout;
     }

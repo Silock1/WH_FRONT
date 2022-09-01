@@ -3,24 +3,28 @@ package com.warehouse_accounting.components.production.forms;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.menubar.MenuBar;
-import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.production.ProductionOperations;
 import com.warehouse_accounting.models.dto.TechnologicalOperationDto;
-import com.warehouse_accounting.services.interfaces.ProductionOperationsService;
+import com.warehouse_accounting.models.dto.WarehouseDto;
 import com.warehouse_accounting.services.interfaces.ProductionStageService;
+import com.warehouse_accounting.services.interfaces.WarehouseService;
 import lombok.extern.log4j.Log4j2;
+
+
+import java.util.List;
 
 import static com.vaadin.flow.component.button.ButtonVariant.LUMO_TERTIARY_INLINE;
 
@@ -29,45 +33,38 @@ import static com.vaadin.flow.component.button.ButtonVariant.LUMO_TERTIARY_INLIN
 public class ProductionOperationsForm extends VerticalLayout {
 
     private ProductionOperations productionOperations;
-
+    private final TechnologicalOperationDto technologicalOperation;
     private final Div returnDiv;
-    private final ProductionStageService productionStageService;
-
+    //private final ProductionStageService productionStageService;
+    private final WarehouseService warehouseService;
     private final Binder <TechnologicalOperationDto> productionOperationsDtoBinder = new Binder<>(TechnologicalOperationDto.class);
-    private final TechnologicalOperationDto technologicalOperationDto;
-    private final ProductionOperationsService productionOperationsService;
 
-    public ProductionOperationsForm(ProductionOperations productionOperations, TechnologicalOperationDto technologicalOperationDto,
-                                    ProductionStageService productionStageService,
-                                    ProductionOperationsService productionOperationsService) {
-        this.productionStageService = productionStageService;
-        this.technologicalOperationDto = technologicalOperationDto;
-        this.productionOperationsService = productionOperationsService;
+
+    public ProductionOperationsForm(ProductionOperations productionOperations, TechnologicalOperationDto technologicalOperation,
+                                    ProductionStageService productionStageService, WarehouseService warehouseService) {
+        //this.productionStageService = productionStageService;
+        this.technologicalOperation = technologicalOperation;
         this.productionOperations = productionOperations;
+        this.warehouseService = warehouseService;
         this.returnDiv = productionOperations.getPageContent();
         productionOperations.removeAll();
         add(createTopGroupElements());
-
+        createColumns();
     }
 
 
     private HorizontalLayout createTopGroupElements() {
         HorizontalLayout topPartLayout = new HorizontalLayout();
         topPartLayout.setAlignItems(Alignment.CENTER);
-        String showTextArchive = "Элементы, перемещенные в архив, не отображаются в справочниках и отчетах. Архив позволяет скрывать неактуальные элементы, не удаляя их.";
         topPartLayout.add(
                 saveProductionOperationsButton(),
-                closeProductionTechnologyButton(),
-                createEmptyDiv(),
-                createHelpButton(showTextArchive),
-                createMoveToArchiveButton(),
-                createEditButton()
+                closeProductionOperationButton()
         );
         return topPartLayout;
     }
 
     private Button saveProductionOperationsButton () {
-        Button saveButton = new Button("Дальше");
+        Button saveButton = new Button("Продолжить");
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
         saveButton.addClickListener(event -> {
            if (productionOperationsDtoBinder.validate().isOk()) {
@@ -77,8 +74,8 @@ public class ProductionOperationsForm extends VerticalLayout {
         return saveButton;
     }
 
-    private Button closeProductionTechnologyButton() {
-        Button closeButton = new Button("Закрыть");
+    private Button closeProductionOperationButton() {
+        Button closeButton = new Button("Отмена");
         closeButton.addClickListener(c -> {
             productionOperations.removeAll();
             productionOperations.add(returnDiv);
@@ -87,77 +84,38 @@ public class ProductionOperationsForm extends VerticalLayout {
 
     }
 
-    private HorizontalLayout createEditButton(){
-        Icon caretDownIcon = new Icon(VaadinIcon.CARET_DOWN);
-        caretDownIcon.setSize("12px");
-
-        MenuBar editMenuBar = new MenuBar();
-        editMenuBar.addThemeVariants(MenuBarVariant.LUMO_SMALL);
-        HorizontalLayout editItem = new HorizontalLayout(new Text("Изменить"), caretDownIcon);
-        editItem.setSpacing(false);
-        editItem.setAlignItems(Alignment.CENTER);
-
-        MenuItem editMenu = editMenuBar.addItem(editItem);
-        boolean visibleItemDelete = true;
-
-        editMenu.getSubMenu().addItem("Удалить", menuItemClickEvent -> {
-            productionOperationsService.getById(technologicalOperationDto.getId());
-            productionOperations.getProductionOperationsGridLayout().updateGrid();
-            productionOperations.removeAll();
-            productionOperations.add(returnDiv);
-        }).getElement().setAttribute("disabled", visibleItemDelete);
-        editMenu.getSubMenu().addItem("Копировать", menuItemClickEvent -> {
-
+    private void createColumns() {
+        VerticalLayout column = new VerticalLayout();
+        //todo сделать колонки как на оригинальном сайте
+        TextField numberOfOperation = new TextField("Номер");
+        DatePicker createOperationDate = new DatePicker("Дата");
+       // createOperationDate.setPlaceholder(new LocalD); todo сделать заполнение текущей даты
+        Select<String> technologicalMap = new Select<>();
+        technologicalMap.setLabel("Технологическая карта");
+        TextField volumeOfProduction = new TextField("Объем производства");
+        List<WarehouseDto> warehouses = warehouseService.getAll();
+        ComboBox<WarehouseDto> warehouseForMaterials = new ComboBox<>();
+        warehouseForMaterials.setLabel("Склад для материалов");
+        warehouseForMaterials.setItems(warehouses);
+        warehouseForMaterials.setItemLabelGenerator(WarehouseDto::getName);
+        warehouseForMaterials.addValueChangeListener(event -> {
+            WarehouseDto warehouseDto = event.getValue();
+            technologicalOperation.setWarehouseForMaterialsId(warehouseDto.getId());
+            technologicalOperation.setWarehouseForMaterialsName(warehouseDto.getName());
+        });
+        ComboBox<WarehouseDto> warehouseForProducts = new ComboBox<>();
+        warehouseForProducts.setLabel("Склад для продукции");
+        warehouseForProducts.setItems(warehouses);
+        warehouseForProducts.setItemLabelGenerator(WarehouseDto::getName);
+        warehouseForProducts.addValueChangeListener(event -> {
+            WarehouseDto warehouseDto = event.getValue();
+            technologicalOperation.setWarehouseForProductId(warehouseDto.getId());
+            technologicalOperation.setWarehouseForProductName(warehouseDto.getName());
         });
 
-        HorizontalLayout groupEdit = new HorizontalLayout();
-        groupEdit.add(editMenuBar);
-        groupEdit.setSpacing(false);
-        groupEdit.setAlignItems(Alignment.CENTER);
-        return groupEdit;
-    }
-
-    private Button createHelpButton(String showText) {
-        Button helpButton = new Button(new Image("icons/helpApp.svg", "helpApp"));
-        helpButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_LARGE);
-
-        Notification helpNotification = new Notification();
-        helpNotification.setPosition(Notification.Position.TOP_START);
-
-        Button closeBtn = new Button(
-                VaadinIcon.CLOSE_SMALL.create(),
-                clickEvent -> helpNotification.close());
-        closeBtn.addThemeVariants(LUMO_TERTIARY_INLINE);
-
-        HorizontalLayout layout = new HorizontalLayout();
-        layout.add(new Text(showText),closeBtn);
-        layout.setMaxWidth("350px");
-
-        helpNotification.add(layout);
-
-        helpButton.addClickListener(c -> {
-            if (helpNotification.isOpened()) {
-                helpNotification.close();
-            } else {
-                helpNotification.open();
-            };
-        });
-
-        return helpButton;
-    }
-
-    private Button createMoveToArchiveButton() {
-        Button archiveButton = new Button("Поместить в архив", e -> {
-
-        });
-        archiveButton.setEnabled(false);
-        return archiveButton;
-    }
-
-    private Div createEmptyDiv() {
-        Div emptyDiv = new Div();
-        emptyDiv.setWidth("200px");
-        return emptyDiv;
+        column.add(numberOfOperation, createOperationDate,
+                technologicalMap, volumeOfProduction, warehouseForMaterials, warehouseForProducts);
+        add(column);
     }
 
     private void showErrorNotification(String showText) {
