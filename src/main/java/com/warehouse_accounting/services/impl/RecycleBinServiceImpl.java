@@ -61,56 +61,20 @@ public class RecycleBinServiceImpl implements RecycleBinService {
     @Override
     public ResponseBody getExcel() {
         Call<ResponseBody> call = api.getExcel(url + "/export/xlsx");
-        ResponseBody responseBody = null;
-        try {
-            Response<ResponseBody> response = call.execute();
-            if (response.isSuccessful()) {
-                responseBody = response.body();
-                log.info("Успешно выполнен запрос на получение списка RecycleBinDto в виде таблички");
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение списка RecycleBinDto в виде таблички", response.code());
-            }
-        } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение списка RecycleBinDto в виде таблички", e);
-        }
-        return responseBody;
+        return new ServiceUtils<>(RecycleBinDto.class).getResponseBody(call);
     }
 
 
     @Override
     public ResponseBody getPDF() {
         Call<ResponseBody> call = api.getPDF(url + "/export/pdf");
-        ResponseBody responseBody = null;
-        try {
-            Response<ResponseBody> response = call.execute();
-            if (response.isSuccessful()) {
-                responseBody = response.body();
-                log.info("Успешно выполнен запрос на получение pdf RecycleBinDto");
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение pdf RecycleBinDto", response.code());
-            }
-        } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение pdf RecycleBinDto", e);
-        }
-        return responseBody;
+        return new ServiceUtils<>(RecycleBinDto.class).getResponseBody(call);
     }
 
     @Override
     public ResponseBody getTermsConditions() {
         Call<ResponseBody> call = api.getTermsConditions(url + "/terms-conditions");
-        ResponseBody responseBody = null;
-        try {
-            Response<ResponseBody> response = call.execute();
-            if (response.isSuccessful()) {
-                responseBody = response.body();
-                log.info("Успешно выполнен запрос на получение pdf RecycleBinDto");
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение pdf RecycleBinDto", response.code());
-            }
-        } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение pdf RecycleBinDto", e);
-        }
-        return responseBody;
+        return new ServiceUtils<>(RecycleBinDto.class).getResponseBody(call);
     }
 
 

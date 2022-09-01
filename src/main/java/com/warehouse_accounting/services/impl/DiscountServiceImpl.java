@@ -18,7 +18,6 @@ import java.util.List;
 public class DiscountServiceImpl implements DiscountService {
 
     private final DiscountApi api;
-
     private final String url;
 
     public DiscountServiceImpl(@Value("${retrofit.restServices.discount_url}") String url, Retrofit retrofit) {

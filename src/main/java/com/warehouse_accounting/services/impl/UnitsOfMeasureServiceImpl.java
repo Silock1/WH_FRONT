@@ -16,6 +16,7 @@ import java.util.List;
 @Log4j2
 @Service
 public class UnitsOfMeasureServiceImpl implements UnitsOfMeasureService {
+
     private final UnitsOfMeasureApi api;
     private final String url;
 
@@ -23,7 +24,6 @@ public class UnitsOfMeasureServiceImpl implements UnitsOfMeasureService {
         this.api = retrofit.create(UnitsOfMeasureApi.class);
         this.url = url;
     }
-
 
     @Override
     public List<UnitsOfMeasureDto> getAll() {

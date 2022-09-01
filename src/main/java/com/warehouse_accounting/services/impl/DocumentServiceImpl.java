@@ -17,14 +17,12 @@ import java.util.List;
 public class DocumentServiceImpl implements DocumentService<DocumentDto> {
 
     private final String url;
-
     private final DocumentApi api;
 
     public DocumentServiceImpl(@Value("${retrofit.restServices.documents_url}") String url, Retrofit retrofit) {
         api = retrofit.create(DocumentApi.class);
         this.url = url;
     }
-
 
     @Override
     public List<DocumentDto> getAll() {

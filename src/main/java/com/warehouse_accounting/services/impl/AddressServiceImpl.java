@@ -27,7 +27,6 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public List<AddressDto> getAll() {
         Call<List<AddressDto>> call = api.getAll(url);
-
         return new ServiceUtils<>(AddressDto.class).getAll(call);
     }
 

@@ -34,62 +34,26 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public List<CityDto> getSlice(int offset, int limit, String name, String regionCode) {
-        List<CityDto> dtoList = Collections.emptyList();
-        Call<List<CityDto>> request = api.getSlice(url, offset, limit, name, regionCode);
-        try {
-            Response<List<CityDto>> response = request.execute();
-            if (response.isSuccessful()) {
-                dtoList = response.body();
-                log.info("Успешно выполнен запрос на получение slice CityDto по offset: {}, limit: {}, name: {}, code {}", offset, limit, name, regionCode);
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение slice CityDto по offset: {}, limit: {}, name: {}, code {}", response.code(), offset, limit, name, regionCode);
-            }
-        } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение slice CityDto по offset: {}, limit: {}, name: {}, code {}", offset, limit, name, regionCode, e);
-        }
-        return dtoList;
-    }
-
-    @Override
-    public int getCount(String name, String regionCode) {
-        int count = 0;
-        Call<Integer> callSync = api.getCount(url, name, regionCode);
-        try {
-            Response<Integer> response = callSync.execute();
-            if (response.isSuccessful()) {
-                count = response.body();
-                log.info("Успешно выполнен запрос на получение count City по name: {}, code {}", name, regionCode);
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение count City по name {}, code {}", response.code(), name, regionCode);
-            }
-        } catch (Exception e) {
-            log.error("Произошла ошибка при выполнении запроса на получение count City по name", e);
-        }
-        return count;
-    }
-
-    @Override
     public CityDto getById(Long id) {
         Call<CityDto> call = api.getById(url, id);
         return new ServiceUtils<>(CityDto.class).getById(call, id);
     }
 
     @Override
+    public List<CityDto> getSlice(int offset, int limit, String name, String regionCode) {
+        Call<List<CityDto>> call = api.getSlice(url, offset, limit, name, regionCode);
+        return new ServiceUtils<>(CityDto.class).getSlice(call, offset, limit, name, regionCode);
+    }
+
+    @Override
+    public int getCount(String name, String regionCode) {
+        Call<Integer> call = api.getCount(url, name, regionCode);
+        return new ServiceUtils<>(CityDto.class).getCount(call, name, regionCode);
+    }
+
+    @Override
     public CityDto getByCode(String code) {
-        CityDto dto = null;
-        Call<CityDto> callSync = api.getByCode(url, code);
-        try {
-            Response<CityDto> response = callSync.execute();
-            if (response.isSuccessful()) {
-                dto = response.body();
-                log.info("Успешно выполнен запрос на получение CityDto по code: {}", code);
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение CityDto по code {}", response.code(), code);
-            }
-        } catch (Exception e) {
-            log.error("Произошла ошибка при выполнении запроса на получение CityDto по code", e);
-        }
-        return dto;
+        Call<CityDto> call = api.getByCode(url, code);
+        return new ServiceUtils<>(CityDto.class).getByCode(call, code);
     }
 }

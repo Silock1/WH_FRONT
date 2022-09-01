@@ -23,15 +23,8 @@ public class PostingServiceImpl implements PostingService {
         this.url = url;
     }
 
-    //убрать после доработки
-//    private PostingDto wfod = new PostingDto(1L, null, null, null, null, true, true, "this is comment");
-
-
     @Override
     public List<PostingDto> getAll() {
-//        List<PostingDto> list = new ArrayList<PostingDto>();
-//        return list;
-
         Call<List<PostingDto>> call = api.getAll(url);
         return new ServiceUtils<>(PostingDto.class).getAll(call);
     }

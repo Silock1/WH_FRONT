@@ -15,6 +15,7 @@ import java.util.List;
 @Log4j2
 @Service
 public class GoodsToRealizeGiveImpl implements GoodsToRealizeGiveService {
+
     private final GoodsToRealizeGiveApi api;
     private final String url;
 
@@ -34,7 +35,6 @@ public class GoodsToRealizeGiveImpl implements GoodsToRealizeGiveService {
         Call<GoodsToRealizeGiveDto> call = api.getById(url, id);
         return new ServiceUtils<>(GoodsToRealizeGiveDto.class).getById(call, id);
     }
-
 
     @Override
     public void create(GoodsToRealizeGiveDto dto) {

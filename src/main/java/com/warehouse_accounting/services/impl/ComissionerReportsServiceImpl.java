@@ -23,16 +23,6 @@ public class ComissionerReportsServiceImpl implements ComissionerReportsService 
         this.url = url;
         this.api = retrofit.create(CommissionerReportsApi.class);
     }
-    // -----------------------Удалить комментарии если все норм--------------------
-
-    //    private final String reportsUrl = "/api/comissioner_reports";
-//    private final ComissionerReportsApi reportsApi = buildRetrofit().create(ComissionerReportsApi.class);
-//
-//    Retrofit buildRetrofit() {
-//        return new Retrofit.Builder()
-//            .baseUrl("http://localhost:4446")
-//            .addConverterFactory(GsonConverterFactory.create()).build();
-//    }
 
     @Override
     public List<ComissionerReportsDto> getAll() {

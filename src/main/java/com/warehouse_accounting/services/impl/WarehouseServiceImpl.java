@@ -24,7 +24,6 @@ public class WarehouseServiceImpl implements WarehouseService {
         this.url = url;
     }
 
-
     public List<WarehouseDto> getAll() {
         Call<List<WarehouseDto>> call = api.getAll(url);
         return new ServiceUtils<>(WarehouseDto.class).getAll(call);

@@ -24,11 +24,6 @@ public class WriteOffsServiceImpl implements WriteOffsService {
         this.url = url;
     }
 
-    //убрать после доработки
-//    private WriteOffsDto wfod = new WriteOffsDto(1L, LocalDateTime.now(),new CompanyDto()
-//            , true, true, "comment");
-
-
     @Override
     public List<WriteOffsDto> getAll() {
         Call<List<WriteOffsDto>> call = api.getAll(url);

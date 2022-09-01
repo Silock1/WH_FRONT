@@ -8,11 +8,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 @Log4j2
@@ -35,38 +32,14 @@ public class StreetServiceImpl implements StreetService {
 
     @Override
     public List<StreetDto> getSlice(int offset, int limit, String name, String regionCityCode) {
-        List<StreetDto> dtoList = Collections.emptyList();
-        Call<List<StreetDto>> request = api.getSlice(url, offset, limit, name, regionCityCode);
-        try {
-            Response<List<StreetDto>> response = request.execute();
-            if (response.isSuccessful()) {
-                dtoList = response.body();
-                log.info("Успешно выполнен запрос на получение slice StreetDto, по offset: {}, limit: {}, name: {}, code {}", offset, limit, name, regionCityCode);
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение slice StreetDto по offset: {}, limit: {}, name: {}, code {}", response.code(), offset, limit, name, regionCityCode);
-            }
-        } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение slice StreetDto по offset: {}, limit: {}, name: {}, code {}", offset, limit, name, regionCityCode, e);
-        }
-        return dtoList;
+        Call<List<StreetDto>> call = api.getSlice(url, offset, limit, name, regionCityCode);
+        return new ServiceUtils<>(StreetDto.class).getSlice(call, offset, limit, name, regionCityCode);
     }
 
     @Override
     public int getCount(String name, String regionCityCode) {
-        int count = 0;
-        Call<Integer> callSync = api.getCount(url, name, regionCityCode);
-        try {
-            Response<Integer> response = callSync.execute();
-            if (response.isSuccessful()) {
-                count = response.body();
-                log.info("Успешно выполнен запрос на получение count Street по name: {}, code {}", name, regionCityCode);
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение count Street по name {}, code {}", response.code(), name, regionCityCode);
-            }
-        } catch (Exception e) {
-            log.error("Произошла ошибка при выполнении запроса на получение count Street по name", e);
-        }
-        return count;
+        Call<Integer> call = api.getCount(url, name, regionCityCode);
+        return new ServiceUtils<>(StreetDto.class).getCount(call, name, regionCityCode);
     }
 
     @Override

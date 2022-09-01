@@ -18,6 +18,7 @@ import java.util.List;
 @Log4j2
 @Service
 public class ProductGroupServiceImpl implements ProductGroupService {
+
     private final ProductGroupApi api;
     private final String url;
 
@@ -58,23 +59,7 @@ public class ProductGroupServiceImpl implements ProductGroupService {
 
     @Override
     public List<ProductGroupDto> getAllByParentGroupId(Long id) {
-        List<ProductGroupDto> productGroupDtoList = Collections.emptyList();
         Call<List<ProductGroupDto>> groupApiAll = api.getAllByParentId(url + "/parent", id);
-        return getProductGroupDtos(productGroupDtoList, groupApiAll);
-    }
-
-    private List<ProductGroupDto> getProductGroupDtos(List<ProductGroupDto> productGroupDtoList, Call<List<ProductGroupDto>> groupApiAll) {
-        try {
-            Response<List<ProductGroupDto>> response = groupApiAll.execute();
-            if (response.isSuccessful()) {
-                productGroupDtoList = response.body();
-                log.info("Успешно выполнен запрос на получение списка ProductGroupDto");
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение списка ProductGroupDto", response.code());
-            }
-        } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение списка ProductGroupDto", e);
-        }
-        return productGroupDtoList;
+        return new ServiceUtils<>(ProductGroupDto.class).getAll(groupApiAll);
     }
 }

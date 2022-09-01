@@ -16,6 +16,7 @@ import java.util.List;
 @Log4j2
 @Service
 public class PointOfSalesServiceImpl implements PointOfSalesService {
+
     private final RetailApi api;
     private final String url;
 

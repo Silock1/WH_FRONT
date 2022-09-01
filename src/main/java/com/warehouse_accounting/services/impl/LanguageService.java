@@ -16,7 +16,6 @@ import java.util.List;
 public class LanguageService implements com.warehouse_accounting.services.interfaces.LanguageService {
 
     private final String url;
-
     private final LanguageApi api;
 
     public LanguageService(@Value("${retrofit.restServices.language_url}") String url, Retrofit retrofit) {

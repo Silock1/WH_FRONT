@@ -18,6 +18,7 @@ import java.util.List;
 @Log4j2
 @Service
 public class MovementServiceImpl implements MovementService {
+
     private final MovementApi api;
     private final String url;
 
@@ -59,18 +60,6 @@ public class MovementServiceImpl implements MovementService {
     @Override
     public ResponseBody getExcel() {
         Call<ResponseBody> call = api.getExcel(url + "/export/xlsx");
-        ResponseBody responseBody = null;
-        try {
-            Response<ResponseBody> response = call.execute();
-            if (response.isSuccessful()) {
-                responseBody = response.body();
-                log.info("Успешно выполнен запрос на получение списка MovementDto в виде таблички");
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение списка MovementDto в виде таблички", response.code());
-            }
-        } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение списка MovementDto в виде таблички", e);
-        }
-        return responseBody;
+        return new ServiceUtils<>(MovementDto.class).getResponseBody(call);
     }
 }

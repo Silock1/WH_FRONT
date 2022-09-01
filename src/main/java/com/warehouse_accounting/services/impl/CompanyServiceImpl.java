@@ -17,7 +17,6 @@ import java.util.List;
 public class CompanyServiceImpl implements CompanyService {
 
     private final String url;
-
     private final CompanyApi api;
 
     public CompanyServiceImpl(@Value("${retrofit.restServices.company_url}") String url, Retrofit retrofit) {

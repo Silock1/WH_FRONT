@@ -8,7 +8,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import java.util.List;
@@ -39,19 +38,7 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public RegionDto getByCode(String code) {
-        RegionDto dto = null;
-        Call<RegionDto> callSync = api.getByCode(url, code);
-        try {
-            Response<RegionDto> response = callSync.execute();
-            if (response.isSuccessful()) {
-                dto = response.body();
-                log.info("Успешно выполнен запрос на получение RegionDto по code: {}", code);
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение RegionDto по code {}", response.code(), code);
-            }
-        } catch (Exception e) {
-            log.error("Произошла ошибка при выполнении запроса на получение RegionDto по code", e);
-        }
-        return dto;
+        Call<RegionDto> call = api.getByCode(url, code);
+        return new ServiceUtils<>(RegionDto.class).getByCode(call, code);
     }
 }

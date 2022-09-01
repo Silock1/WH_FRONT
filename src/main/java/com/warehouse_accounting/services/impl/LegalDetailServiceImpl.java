@@ -15,6 +15,7 @@ import java.util.List;
 @Log4j2
 @Service
 public class LegalDetailServiceImpl implements LegalDetailService {
+
     private final LegalDetailApi api;
     private final String url;
 

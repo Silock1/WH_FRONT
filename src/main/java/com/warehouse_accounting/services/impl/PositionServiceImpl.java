@@ -24,7 +24,6 @@ public class PositionServiceImpl implements PositionService {
         this.url = url;
     }
 
-
     @Override
     public List<PositionDto> getAll() {
         Call<List<PositionDto>> call = api.getAll(url);

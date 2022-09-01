@@ -17,7 +17,6 @@ import java.util.List;
 public class PrintingDocumentsServiceImpl implements PrintingDocumentsService {
 
     private final String url;
-
     private final PrintingDocumentsApi api;
 
     public PrintingDocumentsServiceImpl(@Value("${retrofit.restServices.printing_documents_url}") String url, Retrofit retrofit) {
