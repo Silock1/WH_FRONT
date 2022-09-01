@@ -61,6 +61,7 @@ public class ProductionSubMenuView extends VerticalLayout {
             switch (event.getSelectedTab().getLabel()) {
                 case "Тех. карты":
                     pageContent.removeAll();
+                    technologicalMap.init();
                     pageContent.add(technologicalMap);
                     break;
                 case "Заказы на производство":

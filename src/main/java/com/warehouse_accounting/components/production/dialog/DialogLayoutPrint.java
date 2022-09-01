@@ -12,29 +12,19 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 @SpringComponent
 public class DialogLayoutPrint {
 
-
     public VerticalLayout createDialogLayout(Dialog dialog) {
         H2 headline = new H2("Создание печатной формы");
         headline.getStyle().set("margin", "var(--lumo-space-m) 0 0 0")
                 .set("font-size", "1.5em").set("font-weight", "bold");
-
-
         Select<String> selectForm = new Select<>("Открыть в браузере",
                 "Скачать в формате EXEL", "Скачать в формате PDF");
-
-
         VerticalLayout fieldLayout = new VerticalLayout(selectForm);
         fieldLayout.setSpacing(false);
         fieldLayout.setPadding(false);
         fieldLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
-
-
         Button cancelButton = new Button("Закрыть", e -> dialog.close());
-
-
         HorizontalLayout buttonLayout = new HorizontalLayout(cancelButton);
         buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
-
         VerticalLayout dialogLayout = new VerticalLayout(headline, fieldLayout, buttonLayout);
         dialogLayout.setPadding(false);
         dialogLayout.setAlignItems(FlexComponent.Alignment.STRETCH);

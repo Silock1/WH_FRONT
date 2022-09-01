@@ -37,7 +37,6 @@ import java.util.Set;
 @SpringComponent
 @UIScope
 @Log4j2
-
 public class TechnologicalMap extends VerticalLayout {
     private final TextField textField = new TextField();
     private Grid<TechnologicalMapDto> technologicalMapDtoGrid = new Grid<>(TechnologicalMapDto.class, false);
@@ -48,7 +47,6 @@ public class TechnologicalMap extends VerticalLayout {
     private final MenuBar editMenuBar;
     private final List<Long> list;
     private final TechnologicalMapNotification notifications;
-
     private HorizontalLayout headerLayout;
 
     public TechnologicalMap(TechnologicalMapService technologicalMapService, NewTechnologicalMapPanel newTechnologicalMapPanel, TechnologicalMapNotification notification) {
@@ -100,11 +98,9 @@ public class TechnologicalMap extends VerticalLayout {
         textTechnologicalMap.setText("Техкарты");
 
         Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH), buttonClickEvent -> {
-
             remove(technologicalMapDtoGrid);
             remove(headerLayout);
             technologicalMapDtoGridSet();
-
         });
         refreshButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
 
@@ -147,13 +143,11 @@ public class TechnologicalMap extends VerticalLayout {
     }
 
     private HorizontalLayout getEditMenuBar() {
-
         textField.setReadOnly(true);
         textField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         textField.setWidth("30px");
         textField.setValue("0");
         textField.addValueChangeListener(textFieldStringComponentValueChangeEvent -> disableEnableElement());
-
         HorizontalLayout groupEdit = new HorizontalLayout();
         groupEdit.add(textField, editMenuBar);
         groupEdit.setSpacing(false);
@@ -180,13 +174,10 @@ public class TechnologicalMap extends VerticalLayout {
 
         MenuItem editMenu = editMenuBar.addItem(editItem);
         editMenu.getSubMenu().addItem("Удалить", menuItemClickEvent -> {
-            //  log.info("deleting");
-            for (Long l : list
-            ) {
+            for (Long l : list) {
                 technologicalMapService.deleteById(l);
             }
             list.removeAll(list);
-            //  log.info(list);
             init();
         }).getElement().setAttribute("disabled", true);
 
@@ -240,7 +231,6 @@ public class TechnologicalMap extends VerticalLayout {
             tempDeleteEvent(multiSelectionEvent.getRemovedSelection());
         });
 
-
         Button menuButton = new Button(new Icon(VaadinIcon.COG));
         menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         TechnologicalMap.ColumnToggleContextMenu columnToggleContextMenu = new TechnologicalMap
@@ -250,15 +240,12 @@ public class TechnologicalMap extends VerticalLayout {
         columnToggleContextMenu.addColumnToggleItem("Затраты на производство", expensesColumn);
         columnToggleContextMenu.addColumnToggleItem("Комментарий", commentColumn);
 
-
         List<TechnologicalMapDto> technologicalMapDtoList = technologicalMapService.getAll();
         technologicalMapDtoGrid.setItems(technologicalMapDtoList);
-
 
         headerLayout = new HorizontalLayout(menuButton);
         headerLayout.setAlignItems(FlexComponent.Alignment.BASELINE);
         headerLayout.setFlexGrow(1);
-
         add(technologicalMapDtoGrid, headerLayout);
     }
 
@@ -266,8 +253,6 @@ public class TechnologicalMap extends VerticalLayout {
         for (TechnologicalMapDto t : new ArrayList<>(selectedItems)
         ) {
             list.add(t.getId());
-            //  log.info("add " + t.getId());
-            //  log.info("List" + list);
             textField.setValue(String.valueOf(list.size()));
         }
     }
@@ -275,11 +260,7 @@ public class TechnologicalMap extends VerticalLayout {
     private void tempDeleteEvent(Set<TechnologicalMapDto> selectedItems) {
         for (TechnologicalMapDto t : new ArrayList<>(selectedItems)
         ) {
-            // Element element = groupButtons.getElement().getChild(8);
-            //  log.info("List do" + list);
             list.remove(t.getId());
-            // log.info("List posle" + list);
-            // log.info("delete " + t.getId());
             textField.setValue(String.valueOf(list.size()));
         }
     }
@@ -328,7 +309,6 @@ public class TechnologicalMap extends VerticalLayout {
 
         HorizontalLayout filterForm = new HorizontalLayout();
         filterForm.add(firstLine, formLayout);
-
         filterForm.setVisible(false);
         return filterForm;
     }

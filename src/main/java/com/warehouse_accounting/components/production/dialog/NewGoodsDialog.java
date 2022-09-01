@@ -1,4 +1,4 @@
-package com.warehouse_accounting.components.production.forms;
+package com.warehouse_accounting.components.production.dialog;
 
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.spring.annotation.SpringComponent;

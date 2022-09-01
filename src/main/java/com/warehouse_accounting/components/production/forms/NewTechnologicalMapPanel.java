@@ -7,7 +7,6 @@ import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.grid.GridMultiSelectionModel;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Label;
@@ -16,18 +15,17 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.tabs.Tab;
-import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.production.TechnologicalMap;
 import com.warehouse_accounting.components.production.dialog.DialogLayoutPrint;
+import com.warehouse_accounting.components.production.dialog.NewGoodsDialog;
 import com.warehouse_accounting.components.production.grids.NewTechnologicalMapGridLayout;
 import com.warehouse_accounting.components.production.notification.TechnologicalMapNotification;
 import com.warehouse_accounting.models.dto.ProductDto;
@@ -62,7 +60,6 @@ public class NewTechnologicalMapPanel extends HorizontalLayout {
     private final NewTechnologicalMapGridLayout newTechnologicalMapGridLayout;
     private final TechnologicalMapNotification notifications;
     private final DialogLayoutPrint dialogLayoutPrint;
-
     private final TechnologicalMapMaterialsServiceImpl technologicalMapMaterialsService;
     private Grid<TechnologicalMapMaterialDto> mapMaterialDtoGrid;
     private HorizontalLayout horizontalToolPanelLayout;
@@ -77,6 +74,11 @@ public class NewTechnologicalMapPanel extends HorizontalLayout {
     private List<TechnologicalMapMaterialDto> mapMaterialDtos;
     private TechnologicalMapDto technologicalMapDto;
     private MenuItem delete;
+    private IntegerField integerField;
+    private Select<TechnologicalMapGroupDto> groupTechnologicalMap;
+    private Select<String> productionProcessField;
+    private TextField nameField;
+    private TextField commentField;
 
     public NewTechnologicalMapPanel(ProductionProcessTechnologyServiceImpl productionProcessTechnologyService, TechnologicalMapServiceImpl technologicalMapService, TechnologicalMapGroupServiceImpl technologicalMapGroupService, ProductionStageServiceImpl productionStageService, ProductionProcessTechnologyServiceImpl processTechnologyService, NewGoodsDialog newGoodsDialog, NewTechnologicalMapGridLayout newTechnologicalMapGridLayout, TechnologicalMapNotification notifications, DialogLayoutPrint dialogLayoutPrint, TechnologicalMapMaterialsServiceImpl technologicalMapMaterialsService) {
         this.productionProcessTechnologyService = productionProcessTechnologyService;
@@ -104,8 +106,7 @@ public class NewTechnologicalMapPanel extends HorizontalLayout {
         removeAll();
         this.technologicalMapDto = technologicalMapDto;
         getLayout(technologicalMap);
-
-        initMaterialsGrid();
+        // Временно убрано initMaterialsGrid();
     }
 
     private void createDateLine() {
@@ -119,53 +120,46 @@ public class NewTechnologicalMapPanel extends HorizontalLayout {
         H2 headline = new H2("Технологическая карта");
         headline.getStyle().set("margin", "var(--lumo-space-m) 0 0 0")
                 .set("font-size", "1.5em").set("font-weight", "bold");
-        TextField nameField = new TextField();
+        nameField = new TextField();
         nameField.setLabel("Наименование");
+        nameField.setRequired(true);
         nameField.setRequiredIndicatorVisible(true);
         nameField.setErrorMessage("Наименование не может быть пустым");
 
-        Select<String> productionProcessField = new Select<>();
+        productionProcessField = new Select<>();
         productionProcessTechnologyDtoList = productionProcessTechnologyService.getAll();
+        //todo Техпроцесс не реализовано
         productionProcessField.setLabel("Техпроцесс");
         productionProcessField.setItems(productionProcessTechnologyDtoList.stream().map(ProductionProcessTechnologyDto::getName).collect(Collectors.toList()));
-        // productionProcessField.setRequiredIndicatorVisible(true);
-        // productionProcessField.setErrorMessage("Поле должно быть заполнено");
         productionProcessField.setWidth("100");
-        productionProcessField.addValueChangeListener(selectStringComponentValueChangeEvent -> initMenu(selectStringComponentValueChangeEvent.getValue()));
+        //  productionProcessField.addValueChangeListener(selectStringComponentValueChangeEvent -> initMenu(selectStringComponentValueChangeEvent.getValue()));
         productionProcessField.setEnabled(false);
-
-        //   technologicalMapDtoList = technologicalMapService.getAll();
         technologicalMapGroupDtoList = technologicalMapGroupService.getAll();
-        Select<String> groupTechnologicalMap = new Select<>();
+        groupTechnologicalMap = new Select<>();
         groupTechnologicalMap.setLabel("Группа");
-        groupTechnologicalMap.setItems(technologicalMapGroupDtoList.stream().map(TechnologicalMapGroupDto::getName).collect(Collectors.toList()));
-
-        TextField commentField = new TextField();
+        groupTechnologicalMap.setItems(technologicalMapGroupDtoList);
+        groupTechnologicalMap.addValueChangeListener(selectTechnologicalMapGroupDtoComponentValueChangeEvent -> {
+            selectTechnologicalMapGroupDtoComponentValueChangeEvent.getValue().getId();
+        });
+        groupTechnologicalMap.setValue(technologicalMapGroupDtoList.get(0));
+        commentField = new TextField();
         commentField.setLabel("Комментарий");
 
-        if (technologicalMapDto != null) {
-            initField(nameField, productionProcessField, groupTechnologicalMap);
-        }
-        IntegerField integerField = new IntegerField();
+        integerField = new IntegerField();
         integerField.setLabel("Затраты");
         integerField.setMin(0);
         integerField.setValue(0);
         integerField.setHasControls(true);
-
         Label mat = new Label();
         mat.setText("Материалы");
         Button addMaterial = new Button("Добавить из справочника", buttonClickEvent -> {
-            //initMaterialLayout();
-
             newTechnologicalMapGridLayout.open(this);
-
-            // initMaterialsGrid();
-
-            //TODO
 
         });
 
-
+        if (technologicalMapDto != null) {
+            initField(nameField, productionProcessField, groupTechnologicalMap);
+        }
         Div div = new Div(helpButton, headline);
         div.setClassName("technoH2");
         div.getStyle().set("display", "flex");
@@ -182,7 +176,7 @@ public class NewTechnologicalMapPanel extends HorizontalLayout {
     }
 
     public void initMaterials() {
-        initMaterialsGrid();
+        //  initMaterialsGrid();
     }
 
     private void initMaterialsGrid() {
@@ -193,6 +187,7 @@ public class NewTechnologicalMapPanel extends HorizontalLayout {
             productDtoList = newTechnologicalMapGridLayout.getSelectedProductDto();
             for (ProductDto p : productDtoList) {
                 //TODO (Что делать с ID? добавить отдельную Модель?)добавлять в бд материалы без привязка к тех карте,а при сохранении тех карты добавлять привязку. ТАкже при удалении с грида удалять из бд
+                //TODO необходимо сохранять материал, но пока это невозможно из-зи уникальности поля materialID
                 TechnologicalMapMaterialDto t = TechnologicalMapMaterialDto.builder().id(1L).materialId(p.getId()).materialName(p.getName()).count(BigDecimal.ONE).build();
                 mapMaterialDtos.add(t);
             }
@@ -226,19 +221,15 @@ public class NewTechnologicalMapPanel extends HorizontalLayout {
             });
             return editButton;
         }).setWidth("150px").setFlexGrow(0);
-
-
         mapMaterialDtoGrid.setItems(mapMaterialDtos);
-
-
         add(mapMaterialDtoGrid);
-
-
     }
 
-    private void initField(TextField nameField, Select<String> productionProcessField, Select<String> groupTechnologicalMap) {
+    private void initField(TextField nameField, Select<String> productionProcessField, Select<TechnologicalMapGroupDto> groupTechnologicalMap) {
         nameField.setValue(technologicalMapDto.getName());
-        groupTechnologicalMap.setValue(technologicalMapDto.getTechnologicalMapGroupName());
+        groupTechnologicalMap.setValue(technologicalMapGroupService.getById(technologicalMapDto.getTechnologicalMapGroupId()));
+        commentField.setValue(technologicalMapDto.getComment());
+        integerField.setValue(technologicalMapDto.getProductionCost().intValue());
         delete.setEnabled(true);
     }
 
@@ -248,22 +239,22 @@ public class NewTechnologicalMapPanel extends HorizontalLayout {
     //  content.add(newTechnologicalMapGridLayout);
 
     //  }
-    private void initMenu(String processTechnology) {
-        removeClassNames("productionProcess");
-        details = new Tab("Продукция");
-        materials = new Tab("Материалы");
-        money = new Tab("Деньги");
-        Tabs tabs = new Tabs(details, materials, money);
-        tabs.addSelectedChangeListener(event ->
-                setContent(event.getSelectedTab(), processTechnology)
-        );
-        content = new VerticalLayout();
-        content.setSpacing(false);
-        setContent(tabs.getSelectedTab(), processTechnology);
-        Div div = new Div(tabs, content);
-        div.setClassName("productionProcess");
-        add(div);
-    }
+//    private void initMenu(String processTechnology) {
+//        removeClassNames("productionProcess");
+//        details = new Tab("Продукция");
+//        materials = new Tab("Материалы");
+//        money = new Tab("Деньги");
+//        Tabs tabs = new Tabs(details, materials, money);
+//        tabs.addSelectedChangeListener(event ->
+//                setContent(event.getSelectedTab(), processTechnology)
+//        );
+//        content = new VerticalLayout();
+//        content.setSpacing(false);
+//        setContent(tabs.getSelectedTab(), processTechnology);
+//        Div div = new Div(tabs, content);
+//        div.setClassName("productionProcess");
+//        add(div);
+//    }
 
     private void setContent(Tab tab, String processTechnology) {
         content.removeAll();
@@ -282,13 +273,28 @@ public class NewTechnologicalMapPanel extends HorizontalLayout {
     private void configToolPanel(TechnologicalMap technologicalMap) {
         Button save = new Button("Сохранить", buttonClickEvent -> {
             //checkRequired();
+//TODO проблемы с сохранением map с материалами, либо расенхронизация генерации id  см строка 196
+            if (technologicalMapDto != null && technologicalMapDto.getId() != null) {
+                technologicalMapDto.setName(nameField.getValue());
+                technologicalMapDto.setTechnologicalMapGroupId(groupTechnologicalMap.getValue().getId());
+                technologicalMapDto.setTechnologicalMapGroupName(groupTechnologicalMap.getValue().getName());
+                technologicalMapDto.setComment(commentField.getValue());
+                technologicalMapDto.setProductionCost(BigDecimal.valueOf(integerField.getValue()));
+                technologicalMapService.update(technologicalMapDto);
+            } else {
+                technologicalMapService.create(TechnologicalMapDto.builder()
+                        .name(nameField.getValue())
+                        .comment(commentField.getValue())
+                        .productionCost(BigDecimal.valueOf(integerField.getValue()))
+                        .technologicalMapGroupId(groupTechnologicalMap.getValue().getId())
+                        .technologicalMapGroupName(groupTechnologicalMap.getValue().getName())
+                        .build());
+            }
             //TODO SAVE
             removeAll();
             newTechnologicalMapGridLayout.clearSelectedProductDto();
             technologicalMapDto = null;
             technologicalMap.init();
-            // log.info("save method");
-
         });
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
 
@@ -318,8 +324,6 @@ public class NewTechnologicalMapPanel extends HorizontalLayout {
 
         SubMenu changeSubMenu = change.getSubMenu();
         delete = changeSubMenu.addItem("Удалить");
-
-
         delete.addClickListener(event -> {
             //TODO удалить
             newTechnologicalMapGridLayout.clearSelectedProductDto();
@@ -327,7 +331,6 @@ public class NewTechnologicalMapPanel extends HorizontalLayout {
             removeAll();
             technologicalMapDto = null;
             technologicalMap.init();
-
         });
         delete.getElement().setAttribute("disabled", true);
         MenuItem recover = changeSubMenu.addItem("Копировать");
@@ -335,8 +338,6 @@ public class NewTechnologicalMapPanel extends HorizontalLayout {
             //TODO  копировать
         });
         recover.getElement().setAttribute("disable", true);
-
-
         MenuItem createDocument = menuBar.addItem("Создать документ");
         createDocument.add(new Icon(VaadinIcon.CARET_DOWN));
         SubMenu createSubMenu = createDocument.getSubMenu();
@@ -348,13 +349,12 @@ public class NewTechnologicalMapPanel extends HorizontalLayout {
         productionOrders.addClickListener(event -> {
             //TODO Заказ на производство
         });
-
-
         MenuItem print = menuBar.addItem(new Icon(VaadinIcon.PRINT));
         print.add("Печать");
         print.add(new Icon(VaadinIcon.CARET_DOWN));
 
-//модальное окно
+        //модальное окно
+
         Dialog dialog = new Dialog();
         VerticalLayout dialogLayout = dialogLayoutPrint.createDialogLayout(dialog);
         dialog.add(dialogLayout);
@@ -368,10 +368,8 @@ public class NewTechnologicalMapPanel extends HorizontalLayout {
 
         MenuItem configurePrint = printSubMenu.addItem("Настроить...");
         configurePrint.addClickListener(event -> {
-
             //TODO повод поработать этот функционал
         });
-
         //TODO owner?
 
         //  Button owner = new Button("Owner",new Icon(VaadinIcon.CARET_DOWN));
