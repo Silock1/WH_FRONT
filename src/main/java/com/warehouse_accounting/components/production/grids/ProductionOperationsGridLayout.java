@@ -38,10 +38,10 @@ public class ProductionOperationsGridLayout extends HorizontalLayout {
 
     public void initializingGrid () {
         Grid.Column<TechnologicalOperationDto> idColumn = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getId).setHeader("Id");
-        idColumn.setVisible(false);
         Grid.Column<TechnologicalOperationDto> technologicalMapName = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getTechnologicalMapName).setHeader("TechnologicalMapName");
         Grid.Column<TechnologicalOperationDto> technologicalMapId = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getTechnologicalMapId).setHeader("TechnologicalMapId");
         technologicalMapId.setVisible(false);
+        Grid.Column<TechnologicalOperationDto> volumeOfProduction = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getVolumeOfProduction).setHeader("VolumeOfProduction");
         Grid.Column<TechnologicalOperationDto> warehouseForMaterialsName = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getWarehouseForMaterialsName).setHeader("WarehouseForMaterialsName");
         Grid.Column<TechnologicalOperationDto> warehouseForProductName = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getWarehouseForProductName).setHeader("WarehouseForProductName");
 //        Grid.Column<TechnologicalOperationDto> tasks = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getTasks).setHeader("Tasks");
@@ -60,9 +60,10 @@ public class ProductionOperationsGridLayout extends HorizontalLayout {
         ProductionOperationsGridLayout.ColumnToggleContextMenu columnToggleContextMenu = new ProductionOperationsGridLayout.ColumnToggleContextMenu(
                 menuButton);
         columnToggleContextMenu.addColumnToggleItem("Id", idColumn);
-        columnToggleContextMenu.addColumnToggleItem("TechnologicalMapName", technologicalMapName);
-        columnToggleContextMenu.addColumnToggleItem("TechnologicalMapId", warehouseForMaterialsName);
-        columnToggleContextMenu.addColumnToggleItem("WarehouseForMaterialsName", warehouseForProductName);
+        columnToggleContextMenu.addColumnToggleItem("Технологическая карта", technologicalMapName);
+        columnToggleContextMenu.addColumnToggleItem("Объем производства", volumeOfProduction);
+        columnToggleContextMenu.addColumnToggleItem("Склад для материалов", warehouseForMaterialsName);
+        columnToggleContextMenu.addColumnToggleItem("Склад для продукции", warehouseForProductName);
 //        columnToggleContextMenu.addColumnToggleItem("Tasks", tasks);
 
         setSizeFull();
