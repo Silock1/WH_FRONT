@@ -15,6 +15,7 @@ import java.util.List;
 @Log4j2
 @Service
 public class BankAccountServiceImpl implements BankAccountService {
+
     private final BankAccountApi api;
     private final String url;
 

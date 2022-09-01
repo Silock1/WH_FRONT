@@ -23,6 +23,7 @@ public class CityServiceImpl implements CityService {
     private final String url;
 
     public CityServiceImpl(@Value("${retrofit.restServices.city_url}") String url, Retrofit retrofit) {
+
         this.url = url;
         this.api = retrofit.create(CityApi.class);
     }
