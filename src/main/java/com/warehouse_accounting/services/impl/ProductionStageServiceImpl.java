@@ -46,6 +46,26 @@ public class ProductionStageServiceImpl implements ProductionStageService {
         }
         return productionStageDtoList;
     }
+    @Override
+    public ProductionStageDto getById(Long id) {
+        ProductionStageDto productionStageDto = null;
+        Call<ProductionStageDto> call = productionStageApi.getById(productionStageUrl, id);
+        try {
+            Response<ProductionStageDto> response = call.execute();
+            if (response.isSuccessful()) {
+                productionStageDto = response.body();
+                log.info("Успешно выполнен запрос на получение ProductionStageDto по id");
+                log.info(productionStageDto);
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на получение  ProductionStageDto по id", response.code());
+                log.error("[eq");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return productionStageDto;
+    }
+
 
     @Override
     public void create(ProductionStageDto productionStageDto) {

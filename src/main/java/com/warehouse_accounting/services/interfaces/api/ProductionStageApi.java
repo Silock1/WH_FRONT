@@ -14,6 +14,10 @@ public interface ProductionStageApi {
     Call<List<ProductionStageDto>> getAll(@Path(value = "url", encoded = true) String url);
 
     @Headers("Accept: application/json")
+    @GET("{url}/{id}")
+    Call<ProductionStageDto> getById(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
+
+    @Headers("Accept: application/json")
     @POST("{url}")
     Call<Void> create(@Path(value = "url", encoded = true) String url, @Body ProductionStageDto productionStageDto);
 
