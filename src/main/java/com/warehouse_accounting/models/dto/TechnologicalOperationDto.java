@@ -18,7 +18,7 @@ public class TechnologicalOperationDto {
     private long id;
     private String number;
     private boolean isArchive = false;
-//    private LocalDateTime technologicalOperationDateTime;
+    private LocalDateTime technologicalOperationDateTime;
     private BigDecimal volumeOfProduction;
     private String comments;
 

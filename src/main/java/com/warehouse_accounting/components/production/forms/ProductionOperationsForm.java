@@ -17,14 +17,16 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.production.ProductionOperations;
+import com.warehouse_accounting.models.dto.TechnologicalMapDto;
 import com.warehouse_accounting.models.dto.TechnologicalOperationDto;
 import com.warehouse_accounting.models.dto.WarehouseDto;
-import com.warehouse_accounting.services.interfaces.ProductionStageService;
+import com.warehouse_accounting.services.interfaces.TechnologicalMapService;
 import com.warehouse_accounting.services.interfaces.WarehouseService;
 import lombok.extern.log4j.Log4j2;
 
 
-import java.util.List;
+import java.time.LocalDate;
+import java.util.stream.Stream;
 
 import static com.vaadin.flow.component.button.ButtonVariant.LUMO_TERTIARY_INLINE;
 
@@ -35,17 +37,17 @@ public class ProductionOperationsForm extends VerticalLayout {
     private ProductionOperations productionOperations;
     private final TechnologicalOperationDto technologicalOperation;
     private final Div returnDiv;
-    //private final ProductionStageService productionStageService;
     private final WarehouseService warehouseService;
-    private final Binder <TechnologicalOperationDto> productionOperationsDtoBinder = new Binder<>(TechnologicalOperationDto.class);
+    private final TechnologicalMapService technologicalMapService;
+    private final Binder <TechnologicalOperationDto> technologicalOperationDtoBinder = new Binder<>(TechnologicalOperationDto.class);
 
 
     public ProductionOperationsForm(ProductionOperations productionOperations, TechnologicalOperationDto technologicalOperation,
-                                    ProductionStageService productionStageService, WarehouseService warehouseService) {
-        //this.productionStageService = productionStageService;
+                                     WarehouseService warehouseService, TechnologicalMapService technologicalMapService) {
         this.technologicalOperation = technologicalOperation;
         this.productionOperations = productionOperations;
         this.warehouseService = warehouseService;
+        this.technologicalMapService = technologicalMapService;
         this.returnDiv = productionOperations.getPageContent();
         productionOperations.removeAll();
         add(createTopGroupElements());
@@ -67,7 +69,7 @@ public class ProductionOperationsForm extends VerticalLayout {
         Button saveButton = new Button("Продолжить");
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
         saveButton.addClickListener(event -> {
-           if (productionOperationsDtoBinder.validate().isOk()) {
+           if (technologicalOperationDtoBinder.validate().isOk()) {
                return;
            }
         });
@@ -86,17 +88,17 @@ public class ProductionOperationsForm extends VerticalLayout {
 
     private void createColumns() {
         VerticalLayout column = new VerticalLayout();
-        //todo сделать колонки как на оригинальном сайте
         TextField numberOfOperation = new TextField("Номер");
         DatePicker createOperationDate = new DatePicker("Дата");
-       // createOperationDate.setPlaceholder(new LocalD); todo сделать заполнение текущей даты
+        createOperationDate.setValue(LocalDate.now());
         Select<String> technologicalMap = new Select<>();
         technologicalMap.setLabel("Технологическая карта");
+//        technologicalMap.setItemLabelGenerator(TechnologicalMapDto::getName);
+//        technologicalMap.setItems(technologicalMapService.getAll());
         TextField volumeOfProduction = new TextField("Объем производства");
-        List<WarehouseDto> warehouses = warehouseService.getAll();
         ComboBox<WarehouseDto> warehouseForMaterials = new ComboBox<>();
         warehouseForMaterials.setLabel("Склад для материалов");
-        warehouseForMaterials.setItems(warehouses);
+        warehouseForMaterials.setItems(warehouseService.getAll());
         warehouseForMaterials.setItemLabelGenerator(WarehouseDto::getName);
         warehouseForMaterials.addValueChangeListener(event -> {
             WarehouseDto warehouseDto = event.getValue();
@@ -105,7 +107,7 @@ public class ProductionOperationsForm extends VerticalLayout {
         });
         ComboBox<WarehouseDto> warehouseForProducts = new ComboBox<>();
         warehouseForProducts.setLabel("Склад для продукции");
-        warehouseForProducts.setItems(warehouses);
+        warehouseForProducts.setItems(warehouseService.getAll());
         warehouseForProducts.setItemLabelGenerator(WarehouseDto::getName);
         warehouseForProducts.addValueChangeListener(event -> {
             WarehouseDto warehouseDto = event.getValue();
@@ -140,4 +142,6 @@ public class ProductionOperationsForm extends VerticalLayout {
         notification.open();
 
     }
+
+
 }
