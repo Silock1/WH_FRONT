@@ -31,8 +31,9 @@ public class CustomerReturnsForm extends VerticalLayout {
     private void createColumns() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         VerticalLayout firstColumn = new VerticalLayout();
+        firstColumn.setAlignItems(Alignment.END);
         VerticalLayout secondColumn = new VerticalLayout();
-
+        secondColumn.setAlignItems(Alignment.END);
 
         HorizontalLayout dateLayout = new HorizontalLayout();
         Label dateLabel = new Label("Проект");
