@@ -47,7 +47,7 @@ public class ProductionSubMenuView extends VerticalLayout {
         this.productionTasks = productionTasks;
         this.productionSteps = productionSteps;
         this.productionProcessTechnology = productionProcessTechnology;
-
+        pageContent.add(this.technologicalMap);
         pageContent.setSizeFull();
         add(initSubMenu(), pageContent);
     }
