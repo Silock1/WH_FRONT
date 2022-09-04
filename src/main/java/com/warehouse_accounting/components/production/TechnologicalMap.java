@@ -60,6 +60,7 @@ public class TechnologicalMap extends VerticalLayout {
     }
 
     public void init() {
+        list.clear();
         removeAll();
         add(groupButtons, createNewTechnologicalMap());
         technologicalMapDtoGrid = new Grid<>(TechnologicalMapDto.class, false);
