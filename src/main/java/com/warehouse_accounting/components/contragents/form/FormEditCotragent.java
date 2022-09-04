@@ -37,11 +37,14 @@ import com.warehouse_accounting.models.dto.AddressDto;
 import com.warehouse_accounting.models.dto.BankAccountDto;
 import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.models.dto.ContractorFaceContactDto;
+import com.warehouse_accounting.models.dto.ContractorGroupDto;
 import com.warehouse_accounting.models.dto.LegalDetailDto;
 import com.warehouse_accounting.models.dto.dadataDto.Example2;
+import com.warehouse_accounting.services.impl.ContractorGroupServiceImpl;
 import com.warehouse_accounting.services.interfaces.AddressService;
 import com.warehouse_accounting.services.interfaces.BankAccountService;
 import com.warehouse_accounting.services.interfaces.CallService;
+import com.warehouse_accounting.services.interfaces.ContractorGroupService;
 import com.warehouse_accounting.services.interfaces.ContractorService;
 import com.warehouse_accounting.services.interfaces.DadataService;
 import com.warehouse_accounting.services.interfaces.TypeOfPriceService;
@@ -56,6 +59,8 @@ import java.util.stream.Collectors;
 @UIScope
 public class FormEditCotragent extends VerticalLayout {
     private final ContractorService contractorService;
+
+    private final ContractorGroupService contractorGroupService;
     private final transient BankAccountService bankAccountService;
     private final transient TypeOfPriceService typeOfPriceService;
 
@@ -108,6 +113,7 @@ public class FormEditCotragent extends VerticalLayout {
 
 
     public FormEditCotragent(ContractorService contractorService,
+                             ContractorGroupService contractorGroupService,
                              DadataService dadata,
                              BankAccountService bankAccountService,
                              TypeOfPriceService typeOfPriceService,
@@ -115,6 +121,7 @@ public class FormEditCotragent extends VerticalLayout {
                              AddressForm address,
                              AddressForm addressLegal) {
         this.contractorService = contractorService;
+        this.contractorGroupService = contractorGroupService;
         this.dadata = dadata;
         this.bankAccountService = bankAccountService;
         this.typeOfPriceService = typeOfPriceService;
@@ -428,12 +435,15 @@ public class FormEditCotragent extends VerticalLayout {
         return blockLayout;
     }
 
+    Binder<List<ContractorGroupDto>> contractorGroupDtoBinder = new Binder<>();
+
     //Блок о контрагенте
     private AccordionPanel getContragentAccordion(ContractorDto contractorDto) {
 
 //        FormLayout main = new FormLayout();
 
         ComboBox<String> status = new ComboBox<>();
+        ComboBox<ContractorGroupDto> group = new ComboBox<>();
         TextField phone = new TextField();
         TextField fax = new TextField();
         TextField email = new TextField();
@@ -445,33 +455,75 @@ public class FormEditCotragent extends VerticalLayout {
         status.setValue("Новый");
         contractorDtoBinder.bind(status, ContractorDto::getStatus, ContractorDto::setStatus);
 
+        contractorGroupDtoBinder.readBean(contractorGroupService.getAll());
+        group.setItems(contractorGroupService.getAll());
+        group.setItemLabelGenerator(ContractorGroupDto::getName);
+        contractorDtoBinder.forField(group).bind(ContractorDto::getContractorGroup, ContractorDto::setContractorGroup);
+
         contractorDtoBinder.forField(phone).bind(ContractorDto::getPhone, ContractorDto::setPhone);
-        phone.setValue(contractorDto.getPhone() == null ? " " : contractorDto.getPhone());
+//        phone.setValue(contractorDto.getPhone() == null ? " " : contractorDto.getPhone());
 
         contractorDtoBinder.forField(fax).bind(ContractorDto::getFax, ContractorDto::setFax);
-        fax.setValue(contractorDto.getFax() == null ? " " : contractorDto.getFax());
+//        fax.setValue(contractorDto.getFax() == null ? " " : contractorDto.getFax());
 
         contractorDtoBinder.forField(email).bind(ContractorDto::getEmail, ContractorDto::setEmail);
-        email.setValue(contractorDto.getEmail() == null ? " " : contractorDto.getEmail());
+//        email.setValue(contractorDto.getEmail() == null ? " " : contractorDto.getEmail());
+
+        AddressDto addressDto = new AddressDto();
+
+        TextField cityName = new TextField();
+        TextField streetName = new TextField();
+        TextField buildingName = new TextField();
+        TextField office = new TextField();
+        TextField other = new TextField();
+
+
+        addressDtoBinder.forField(cityName).bind(AddressDto::getCityName, AddressDto::setCityName);
+        addressDtoBinder.forField(streetName).bind(AddressDto::getStreetName, AddressDto::setStreetName);
+        addressDtoBinder.forField(buildingName).bind(AddressDto::getBuildingName, AddressDto::setBuildingName);
+        addressDtoBinder.forField(office).bind(AddressDto::getOffice, AddressDto::setOffice);
+        addressDtoBinder.forField(other).bind(AddressDto::getOther, AddressDto::setOther);
+
 
         contractorDtoBinder.forField(comment).bind(ContractorDto::getComment, ContractorDto::setComment);
-        comment.setValue(contractorDto.getComment() == null ? " " : contractorDto.getComment());
+//        comment.setValue(contractorDto.getComment() == null ? " " : contractorDto.getComment());
 
         contractorDtoBinder.forField(code).bind(ContractorDto::getCode, ContractorDto::setCode);
-        code.setValue(contractorDto.getCode() == null ? " " : contractorDto.getCode());
+//        code.setValue(contractorDto.getCode() == null ? " " : contractorDto.getCode());
 
         contractorDtoBinder.forField(outerCode).bind(ContractorDto::getOuterCode, ContractorDto::setOuterCode);
-        outerCode.setValue(contractorDto.getOuterCode() == null ? " " : contractorDto.getOuterCode());
+//        outerCode.setValue(contractorDto.getOuterCode() == null ? " " : contractorDto.getOuterCode());
 
         contractorDtoBinder.readBean(contractorDto);
 
+        addressDtoBinder.readBean(addressDto);
+
+        Button buttonToAddActualAddress = new Button("Обновить фактический адрес");
+
+        buttonToAddActualAddress.setDisableOnClick(false);
+
+        buttonToAddActualAddress.addClickListener(e -> {
+            try {
+                addressDtoBinder.writeBean(addressDto);
+            } catch (ValidationException ex) {
+                throw new RuntimeException(ex);
+            }
+            contractorDto.setAddress(addressDto);
+        });
+
+
         FormLayout form = new FormLayout();
         form.addFormItem(status, "Статус");
-//        form.addFormItem(group, "Группы");
+        form.addFormItem(group, "Группы");
         form.addFormItem(phone, "Телефон");
         form.addFormItem(fax, "Факс");
         form.addFormItem(email, "Электронная почта");
-//        form.addFormItem("Фактический адрес", address);
+        form.addFormItem(cityName, "Город");
+        form.addFormItem(streetName, "Улица");
+        form.addFormItem(buildingName, "Дом");
+        form.addFormItem(office, "Квартира/Офис");
+        form.addFormItem(other, "Другое");
+        form.add(buttonToAddActualAddress);
         form.addFormItem(comment, "Комментарий");
         form.addFormItem(code, "Код");
         form.addFormItem(outerCode, "Внешний код");
@@ -481,6 +533,15 @@ public class FormEditCotragent extends VerticalLayout {
         aboutContractor.addThemeVariants(DetailsVariant.FILLED);
         aboutContractor.setOpened(true);
         return aboutContractor;
+    }
+
+    public VerticalLayout getFormForActualAddress(ContractorDto contractorDto) {
+        VerticalLayout layoutForAddress = new VerticalLayout();
+
+        AddressDto addressDto = new AddressDto();
+
+        contractorDto.setAddress(addressDto);
+        return layoutForAddress;
     }
 
     // Блок Контакты
@@ -510,7 +571,7 @@ public class FormEditCotragent extends VerticalLayout {
 
     //<Блок реквизиты
     private AccordionPanel getLegalDetailAccordion(ContractorDto contractorDto) {
-        if (contractorDto.getLegalDetailDto() == null) contractorDto.setLegalDetailDto(new LegalDetailDto());
+//        if (contractorDto.getLegalDetailDto() == null) contractorDto.setLegalDetailDto(new LegalDetailDto());
 
         VerticalLayout main = new VerticalLayout();
         VerticalLayout forms = new VerticalLayout();
