@@ -17,7 +17,6 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.production.ProductionOperations;
-import com.warehouse_accounting.models.dto.TechnologicalMapDto;
 import com.warehouse_accounting.models.dto.TechnologicalOperationDto;
 import com.warehouse_accounting.models.dto.WarehouseDto;
 import com.warehouse_accounting.services.interfaces.TechnologicalMapService;
@@ -26,7 +25,6 @@ import lombok.extern.log4j.Log4j2;
 
 
 import java.time.LocalDate;
-import java.util.stream.Stream;
 
 import static com.vaadin.flow.component.button.ButtonVariant.LUMO_TERTIARY_INLINE;
 
@@ -59,13 +57,13 @@ public class ProductionOperationsForm extends VerticalLayout {
         HorizontalLayout topPartLayout = new HorizontalLayout();
         topPartLayout.setAlignItems(Alignment.CENTER);
         topPartLayout.add(
-                saveProductionOperationsButton(),
+                continueProductionOperationsButton(),
                 closeProductionOperationButton()
         );
         return topPartLayout;
     }
 
-    private Button saveProductionOperationsButton () {
+    private Button continueProductionOperationsButton() {
         Button saveButton = new Button("Продолжить");
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
         saveButton.addClickListener(event -> {
@@ -83,7 +81,6 @@ public class ProductionOperationsForm extends VerticalLayout {
             productionOperations.add(returnDiv);
         });
         return closeButton;
-
     }
 
     private void createColumns() {
