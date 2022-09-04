@@ -1,16 +1,25 @@
 package com.warehouse_accounting.models.dto;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIdentityInfo(generator= ObjectIdGenerators.UUIDGenerator.class, property="@id")
 public class ContractorDto {
 
     private Long id;
@@ -39,16 +48,19 @@ public class ContractorDto {
     private AddressDto legalDetailAddress;
 
     private List<ContractorFaceContactDto> contacts;  // Не создаются на беке
-    private List<BankAccountDto> bankAccountDtos;  // Не создаются на беке
+
+//    private transient List<BankAccountDto> bankAccountDtos = new ArrayList<>();  // Не создаются на беке
+
     private LegalDetailDto legalDetailDto;
     private List<Long> callIds;
 
-    public String getName() {
-        return name == null ? "Contractor with id: " + id : name;
-    }
+//    public String getName() {
+//        return name == null ? "Contractor with id: " + id : name;
+//    }
+//
+//    @Override
+//    public String toString() {
+//        return name == null ? "Company number: " + id : name;
+//    }
 
-    @Override
-    public String toString() {
-        return name == null ? "Company number: " + id : name;
-    }
 }
