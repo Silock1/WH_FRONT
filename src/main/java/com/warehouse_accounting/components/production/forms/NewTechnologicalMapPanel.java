@@ -62,11 +62,6 @@ public class NewTechnologicalMapPanel extends HorizontalLayout {
     private final DialogLayoutPrint dialogLayoutPrint;
     private final TechnologicalMapMaterialsServiceImpl technologicalMapMaterialsService;
     private Grid<TechnologicalMapMaterialDto> mapMaterialDtoGrid;
-    private HorizontalLayout horizontalToolPanelLayout;
-    private Tab details;
-    private Tab materials;
-    private Tab money;
-    private VerticalLayout content;
     private List<ProductionProcessTechnologyDto> productionProcessTechnologyDtoList;
     private List<TechnologicalMapDto> technologicalMapDtoList;
     private List<TechnologicalMapGroupDto> technologicalMapGroupDtoList;
@@ -233,43 +228,6 @@ public class NewTechnologicalMapPanel extends HorizontalLayout {
         delete.setEnabled(true);
     }
 
-    //  private void initMaterialLayout() {
-    //      content.removeAll();
-    // newTechnologicalMapGridLayout.init();
-    //  content.add(newTechnologicalMapGridLayout);
-
-    //  }
-//    private void initMenu(String processTechnology) {
-//        removeClassNames("productionProcess");
-//        details = new Tab("Продукция");
-//        materials = new Tab("Материалы");
-//        money = new Tab("Деньги");
-//        Tabs tabs = new Tabs(details, materials, money);
-//        tabs.addSelectedChangeListener(event ->
-//                setContent(event.getSelectedTab(), processTechnology)
-//        );
-//        content = new VerticalLayout();
-//        content.setSpacing(false);
-//        setContent(tabs.getSelectedTab(), processTechnology);
-//        Div div = new Div(tabs, content);
-//        div.setClassName("productionProcess");
-//        add(div);
-//    }
-
-    private void setContent(Tab tab, String processTechnology) {
-        content.removeAll();
-
-        if (tab.equals(details)) {
-
-            content.add(new Paragraph("Заглушка"));
-        } else if (tab.equals(materials)) {
-            newTechnologicalMapGridLayout.init();
-            content.add(newTechnologicalMapGridLayout);
-        } else {
-            content.add(new Paragraph("This is the Shipping tab"));
-        }
-    }
-
     private void configToolPanel(TechnologicalMap technologicalMap) {
         Button save = new Button("Сохранить", buttonClickEvent -> {
             //checkRequired();
@@ -383,8 +341,6 @@ public class NewTechnologicalMapPanel extends HorizontalLayout {
     }
 
     private void checkRequired() {
-
+        //TODO
     }
-
-
 }

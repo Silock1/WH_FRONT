@@ -41,12 +41,12 @@ public class TechnologicalMap extends VerticalLayout {
     private final TextField textField = new TextField();
     private Grid<TechnologicalMapDto> technologicalMapDtoGrid = new Grid<>(TechnologicalMapDto.class, false);
     private final TechnologicalMapService technologicalMapService;
-    private final HorizontalLayout formLayout;
     private final NewTechnologicalMapPanel newTechnologicalMapPanel;
     private final HorizontalLayout groupButtons;
     private final MenuBar editMenuBar;
     private final List<Long> list;
     private final TechnologicalMapNotification notifications;
+    private HorizontalLayout formLayout;
     private HorizontalLayout headerLayout;
 
     public TechnologicalMap(TechnologicalMapService technologicalMapService, NewTechnologicalMapPanel newTechnologicalMapPanel, TechnologicalMapNotification notification) {
@@ -54,17 +54,13 @@ public class TechnologicalMap extends VerticalLayout {
         this.newTechnologicalMapPanel = newTechnologicalMapPanel;
         this.notifications = notification;
         this.editMenuBar = initMenuBar();
-        this.formLayout = createNewTechnologicalMap();
+        formLayout = createNewTechnologicalMap();
         groupButtons = getGroupButtons();
-        add(groupButtons, formLayout);
-        technologicalMapDtoGridSet();
         list = new ArrayList<>();
-        this.newTechnologicalMapPanel.getLayout(this);
     }
 
     public void init() {
         removeAll();
-        HorizontalLayout groupButtons = getGroupButtons();
         add(groupButtons, createNewTechnologicalMap());
         technologicalMapDtoGrid = new Grid<>(TechnologicalMapDto.class, false);
         technologicalMapDtoGridSet();

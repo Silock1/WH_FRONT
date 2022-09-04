@@ -8,7 +8,10 @@ public interface ProductionStageService {
     List<ProductionStageDto> getAll();
 
     ProductionStageDto getById(Long id);
+
     void create(ProductionStageDto productionStageDto);
+
     void update(ProductionStageDto productionStageDto);
+
     void delete(Long id);
 }
