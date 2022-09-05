@@ -61,6 +61,7 @@ public class TechnologicalMap extends VerticalLayout {
 
     public void init() {
         list.clear();
+        textField.setValue(String.valueOf(list.size()));
         removeAll();
         add(groupButtons, createNewTechnologicalMap());
         technologicalMapDtoGrid = new Grid<>(TechnologicalMapDto.class, false);
@@ -174,7 +175,6 @@ public class TechnologicalMap extends VerticalLayout {
             for (Long l : list) {
                 technologicalMapService.deleteById(l);
             }
-            list.removeAll(list);
             init();
         }).getElement().setAttribute("disabled", true);
 
