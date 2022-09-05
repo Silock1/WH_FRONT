@@ -1,110 +1,56 @@
 package com.warehouse_accounting.services.impl;
 
 import com.warehouse_accounting.models.dto.TaxSystemDto;
-import com.warehouse_accounting.services.interfaces.api.TaxSystemApi;
+import com.warehouse_accounting.services.ServiceUtils;
 import com.warehouse_accounting.services.interfaces.TaxSystemService;
+import com.warehouse_accounting.services.interfaces.api.TaxSystemApi;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
 @Service
 public class TaxSystemServiceImpl implements TaxSystemService {
-    private final TaxSystemApi taxSystemApi;
-    @Value("${retrofit.restServices.tax_system_url}")
-    private String taxSystemUrl;
 
-    public TaxSystemServiceImpl(Retrofit retrofit) {
-        this.taxSystemApi = retrofit.create(TaxSystemApi.class);
+    private final TaxSystemApi api;
+    private final String url;
+
+    public TaxSystemServiceImpl(Retrofit retrofit, @Value("${retrofit.restServices.tax_system_url}") String url) {
+        this.api = retrofit.create(TaxSystemApi.class);
+        this.url = url;
     }
 
     @Override
     public List<TaxSystemDto> getAll() {
-        List<TaxSystemDto> taxSystemDtoList = new ArrayList<>();
-        Call<List<TaxSystemDto>> taxSystemDtoGetAllCall = taxSystemApi.getAll(taxSystemUrl);
-        try {
-            Response<List<TaxSystemDto>> response = taxSystemDtoGetAllCall.execute();
-            if (response.isSuccessful()) {
-                taxSystemDtoList = response.body();
-                log.info("Успешно выполнен запрос на получение списка TaxSystemDto");
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение списка TaxSystemDto",response.code());
-            }
-        } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение списка TaxSystemDto", e);
-        }
-        return taxSystemDtoList;
+        Call<List<TaxSystemDto>> call = api.getAll(url);
+        return new ServiceUtils<>(TaxSystemDto.class).getAll(call);
     }
 
     @Override
     public TaxSystemDto getById(Long id) {
-        TaxSystemDto taxSystemDto = new TaxSystemDto();
-        Call<TaxSystemDto> taxSystemDtoGetByIdCall = taxSystemApi.getById(taxSystemUrl, id);
-        try {
-            Response<TaxSystemDto> response = taxSystemDtoGetByIdCall.execute();
-            if (response.isSuccessful()) {
-                taxSystemDto = response.body();
-                log.info("Успешно выполнен запрос на получение TaxSystemDto c id = {}", id);
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение TaxSystemDto c id {}",response.code(), id);
-            }
-        } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на получение TaxSystemDto по id", e);
-
-        }
-        return taxSystemDto;
+        Call<TaxSystemDto> call = api.getById(url, id);
+        return new ServiceUtils<>(TaxSystemDto.class).getById(call, id);
     }
 
     @Override
-    public void update(TaxSystemDto taxSystemDto) {
-        Call<Void> updateCall = taxSystemApi.update(taxSystemUrl, taxSystemDto);
-        try {
-            Response<Void> response = updateCall.execute();
-            if (response.isSuccessful()) {
-                log.info("Успешно выполнен запрос на обновление TaxSystemDto c id = {}", taxSystemDto.getId());
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на обновление TaxSystemDto",response.code());
-            }
-        } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на обновление TaxSystemDto", e);
-        }
-
+    public void create(TaxSystemDto dto) {
+        Call<Void> call = api.create(url, dto);
+        new ServiceUtils<>(TaxSystemDto.class).create(call);
     }
 
     @Override
-    public void create(TaxSystemDto taxSystemDto) {
-        Call<Void> createCall = taxSystemApi.create(taxSystemUrl, taxSystemDto);
-        try {
-            Response<Void> response = createCall.execute();
-            if (response.isSuccessful()) {
-                log.info("Успешно выполнен запрос на создание TaxSystemDto");
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на создание TaxSystemDto", response.code());
-            }
-        } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на создание TaxSystemDto", e);
-        }
+    public void update(TaxSystemDto dto) {
+        Call<Void> call = api.update(url, dto);
+        new ServiceUtils<>(TaxSystemDto.class).update(call);
     }
 
     @Override
     public void deleteById(Long id) {
-        Call<Void> deleteCall = taxSystemApi.deleteById(taxSystemUrl, id);
-        try {
-            Response<Void> response = deleteCall.execute();
-            if (response.isSuccessful()) {
-                log.info("Успешно выполнен запрос на удаление TaxSystemDto с id = {}", id);
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на удаление TaxSystemDto по id",response.code());
-            }
-        } catch (IOException e) {
-            log.error("Произошла ошибка при выполнении запроса на удаление TaxSystemDto по id", e);
-        }
+        Call<Void> call = api.deleteById(url, id);
+        new ServiceUtils<>(TaxSystemDto.class).delete(call);
     }
 }

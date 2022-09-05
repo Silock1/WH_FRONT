@@ -18,7 +18,7 @@ retrofit:
     call_url: api/calls
     city_url: api/cities
     company_url: api/companies
-    comissioner_reports_url: api/commission_reports
+    commissioner_reports_url: api/commission_reports
     contract_url: api/contracts
     contractor_group_url: api/contractor_groups
     contractor_url: api/contractors
@@ -26,6 +26,7 @@ retrofit:
     currency_url: api/currencies
     customer_order_url: api/customer_orders   # []
     department_url: api/departments
+    discount_url: api/discount
     employee_url: api/employees
     feed_url: api/feed
     image_url: api/images
@@ -54,6 +55,7 @@ retrofit:
     role_url: api/roles
     settings_url: api/settings
     start_screen_url: api/start_screen
+    stats_url: api/stats
     street_url: api/streets
     subscription_url: api/subscription
     supplier_invoice_url: api/supplier_invoices

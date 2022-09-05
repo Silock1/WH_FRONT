@@ -140,8 +140,9 @@ public class AppView extends AppLayout implements PageConfigurator {
         userSubMenu.addItem("Приложения", event -> profile.getUI().ifPresent(ui -> ui.navigate("applications")));
         userSubMenu.addItem("Подписка", event -> profile.getUI().ifPresent(ui -> ui.navigate("subscription")));
         profile.getSubMenu().add(new Hr());
-        userSubMenu.addItem("Выход", event -> profile.getUI().ifPresent(ui -> ui.navigate("logout")));
-//        new QueryParameters(new HashMap<>(){{put("method",List.of("POST"));}})
+        userSubMenu.addItem("Выход", event -> profile.getUI().ifPresent(ui -> {
+            ui.getSession().close();
+            ui.getCurrent().getPage().executeJs("location.assign('logout')");}));
         Avatar avatar = null;
         try {
             tmpEmployeeDto = employeeService.getById(1L); // Spring security когда будет
