@@ -28,10 +28,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 // Настройте страницу входа.
                 .and().formLogin()
+                .loginPage(LOGIN_PROCESSING_URL).permitAll()
                 .successHandler(new LoginSuccessHandler())
-                .loginProcessingUrl(LOGIN_PROCESSING_URL)
                 // Настроить выход
-                .and().logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL);
+                .and().logout()
+                .logoutSuccessUrl(LOGOUT_SUCCESS_URL);
     }
 
     @Override
