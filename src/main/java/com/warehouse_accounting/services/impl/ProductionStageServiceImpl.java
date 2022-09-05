@@ -1,5 +1,6 @@
 package com.warehouse_accounting.services.impl;
 
+import com.warehouse_accounting.models.dto.ProductionOrderDto;
 import com.warehouse_accounting.models.dto.ProductionStageDto;
 import com.warehouse_accounting.services.ServiceUtils;
 import com.warehouse_accounting.services.interfaces.ProductionStageService;
@@ -19,7 +20,7 @@ public class ProductionStageServiceImpl implements ProductionStageService {
     private final ProductionStageApi api;
     private final String url;
 
-    public ProductionStageServiceImpl(@Value("api/production_stage") String url, Retrofit retrofit) {
+    public ProductionStageServiceImpl(@Value("${retrofit.restServices.product_stage_url}") String url, Retrofit retrofit) {
         this.api = retrofit.create(ProductionStageApi.class);
         this.url = url;
     }
@@ -29,24 +30,11 @@ public class ProductionStageServiceImpl implements ProductionStageService {
         Call<List<ProductionStageDto>> call = api.getAll(url);
         return new ServiceUtils<>(ProductionStageDto.class).getAll(call);
     }
+
     @Override
     public ProductionStageDto getById(Long id) {
-        ProductionStageDto productionStageDto = null;
-        Call<ProductionStageDto> call = productionStageApi.getById(productionStageUrl, id);
-        try {
-            Response<ProductionStageDto> response = call.execute();
-            if (response.isSuccessful()) {
-                productionStageDto = response.body();
-                log.info("Успешно выполнен запрос на получение ProductionStageDto по id");
-                log.info(productionStageDto);
-            } else {
-                log.error("Произошла ошибка {} при выполнении запроса на получение  ProductionStageDto по id", response.code());
-                log.error("[eq");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return productionStageDto;
+        Call<ProductionStageDto> call = api.getById(url, id);
+        return new ServiceUtils<>(ProductionStageDto.class).getById(call, id);
     }
 
 

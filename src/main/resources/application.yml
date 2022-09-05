@@ -44,6 +44,7 @@ retrofit:
     posting_url: api/posting
     product_group_url: api/product_groups
     product_url: api/products
+    product_stage_url: api/production_stage
     production_tasks_url: api/production_tasks
     production_tasks_additional_field_url: api/additional_field
 #    production_operations_url: api/productions_operations
@@ -62,6 +63,9 @@ retrofit:
     tax_system_url: api/tax_systems
     type_of_contractor_url: api/type_of_contractors
     type_of_price_url: api/type_of_prices
+    technological_map_url: api/technological_map
+    technological_map_material_url: api/technological_map_material
+    technological_map_group_url: api/technological_map_group
     unit_url: api/units
     units_of_measure_url: api/unitsOfMeasure
     writeOffs_url: /api/writeOffs
