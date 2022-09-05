@@ -21,13 +21,13 @@ public class IndicatorsSubMenuView extends VerticalLayout {
 
     private final Div pageContent = new Div();
     private final RecycleBinGridLayout recycleBinGridLayout;
-    private final IndicatorsGridLayout indicatorsGridLayout;
+  //  private final IndicatorsGridLayout indicatorsGridLayout;
 
     private final DocumentsView documentsView;
 
-    public IndicatorsSubMenuView(RecycleBinGridLayout recycleBinGridLayout, IndicatorsGridLayout indicatorsGridLayout, DocumentsView documentsView) {
+    public IndicatorsSubMenuView(RecycleBinGridLayout recycleBinGridLayout,  DocumentsView documentsView) {
         this.recycleBinGridLayout = recycleBinGridLayout;
-        this.indicatorsGridLayout = indicatorsGridLayout;
+        // this.indicatorsGridLayout = indicatorsGridLayout;
         this.documentsView = documentsView;
         this.pageContent.removeAll();
         pageContent.setSizeFull();
@@ -46,7 +46,7 @@ public class IndicatorsSubMenuView extends VerticalLayout {
             switch (event.getSelectedTab().getLabel()) {
                 case "Показатели":
                     pageContent.removeAll();
-                    pageContent.add(indicatorsGridLayout);
+                   // pageContent.add(indicatorsGridLayout);
                     break;
                 case "Документы":
                     pageContent.removeAll();

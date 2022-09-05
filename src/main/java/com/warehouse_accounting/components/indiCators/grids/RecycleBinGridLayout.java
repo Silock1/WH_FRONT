@@ -16,6 +16,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
@@ -182,43 +183,81 @@ public class RecycleBinGridLayout extends VerticalLayout {
         H2 headline = new H2("Создание печатной формы");
         headline.getStyle().set("margin", "var(--lumo-space-m) 0 0 0")
                 .set("font-size", "1.5em").set("font-weight", "bold");
-
-
-        /*Select<String> selectForm = new Select<>("Открыть в браузере",
-                "Скачать в формате EXEL","Скачать в формате PDF");
-*/
+        Label label = new Label("Создать печатную форму по шаблону 'Список документов'?");
+        Button accept1 = new Button("Да");
+        Button accept2 = new Button("Да");
+        Button accept3 = new Button("Да");
+//        accept2.setVisible(false);
+//        accept3.setVisible(false);
 
         FileDownloadWrapper buttonWrapper1 = new FileDownloadWrapper(
                 new StreamResource(LocalDate.now() + " openBrowse.pdf",
                         () -> recycleBinService.getTermsConditions().byteStream()));
-        buttonWrapper1.wrapComponent(new Button("Открыть в браузере"));
+        buttonWrapper1.wrapComponent(accept1);
 
         FileDownloadWrapper buttonWrapper2 = new FileDownloadWrapper(
                 new StreamResource(LocalDate.now() + " someSheetExel.xlsx",
                         () -> recycleBinService.getExcel().byteStream()));
-        buttonWrapper2.wrapComponent(new Button("Скачать в формате EXEL"));
-
+        buttonWrapper2.wrapComponent(accept2);
 
         FileDownloadWrapper buttonWrapper3 = new FileDownloadWrapper(
                 new StreamResource(LocalDate.now() + " someSheetPDF.pdf",
                         () -> recycleBinService.getPDF().byteStream()));
-        buttonWrapper3.wrapComponent(new Button("Скачать в формате PDF"));
+        buttonWrapper3.wrapComponent(accept3);
+        buttonWrapper2.setVisible(false);
+        buttonWrapper3.setVisible(false);
+
+        Select<String> selectForm = new Select<>("Открыть в браузере",
+                "Скачать в формате EXEL", "Скачать в формате PDF");
+        selectForm.setValue("Открыть в браузере");
+        selectForm.addValueChangeListener(selectStringComponentValueChangeEvent -> {
+            switch (selectStringComponentValueChangeEvent.getValue()) {
+                case "Открыть в браузере":
+                    buttonWrapper1.setVisible(true);
+                    buttonWrapper2.setVisible(false);
+                    buttonWrapper3.setVisible(false);
+                    break;
+                case "Скачать в формате EXEL":
+                    buttonWrapper1.setVisible(false);
+                    buttonWrapper2.setVisible(true);
+                    buttonWrapper3.setVisible(false);
+                    break;
+                case "Скачать в формате PDF":
+                    buttonWrapper1.setVisible(false);
+                    buttonWrapper2.setVisible(false);
+                    buttonWrapper3.setVisible(true);
+                    break;
+            }
+
+        });
+        accept1.addClickListener(buttonClickEvent -> {
+            selectForm.setValue("Открыть в браузере");
+            dialog.close();
+        });
+        accept2.addClickListener(buttonClickEvent -> {
+            selectForm.setValue("Открыть в браузере");
+            dialog.close();
+        });
+        accept3.addClickListener(buttonClickEvent -> {
+            selectForm.setValue("Открыть в браузере");
+            dialog.close();
+        });
 
 
-        VerticalLayout fieldLayout = new VerticalLayout(buttonWrapper1, buttonWrapper2, buttonWrapper3
-        );
-        fieldLayout.setSpacing(false);
-        fieldLayout.setPadding(false);
-        fieldLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
+
+        //  VerticalLayout fieldLayout = new VerticalLayout(buttonWrapper1, buttonWrapper2, buttonWrapper3);
+//        fieldLayout.setSpacing(false);
+//        fieldLayout.setPadding(false);
+//        fieldLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
 
 
         Button cancelButton = new Button("Закрыть", e -> dialog.close());
 
 
-        HorizontalLayout buttonLayout = new HorizontalLayout(cancelButton);
+        HorizontalLayout buttonLayout = new HorizontalLayout(buttonWrapper1, buttonWrapper2, buttonWrapper3, cancelButton);
         buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
 
-        VerticalLayout dialogLayout = new VerticalLayout(headline, fieldLayout, buttonLayout);
+        VerticalLayout dialogLayout = new VerticalLayout(headline, label, selectForm, buttonLayout);
         dialogLayout.setPadding(false);
         dialogLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
         dialogLayout.getStyle().set("width", "350px").set("max-width", "100%");
