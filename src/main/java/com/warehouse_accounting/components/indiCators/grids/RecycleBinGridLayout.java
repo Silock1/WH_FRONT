@@ -179,8 +179,6 @@ public class RecycleBinGridLayout extends VerticalLayout {
 
         horizontalToolPanelLayout.add(helpButton, textProducts, refreshButton, addOrderButton, addFilterButton, searchField, numberField, menuBar);
     }
-
-
     //модальное окно
     private VerticalLayout createDialogLayout(Dialog dialog) {
         H2 headline = new H2("Создание печатной формы");
