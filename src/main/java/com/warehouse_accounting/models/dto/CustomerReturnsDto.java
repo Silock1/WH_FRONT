@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReturnDto {
+public class CustomerReturnsDto {
     private Long id;
     private String number;
     private LocalDateTime returnDateTime;
