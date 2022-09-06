@@ -38,7 +38,7 @@ import java.time.LocalDate;
 public class RecycleBinGridLayout extends VerticalLayout {
 
     private HorizontalLayout horizontalToolPanelLayout = new HorizontalLayout();
-    private Grid<RecycleBinDto> grid = new Grid<>(RecycleBinDto.class, false);
+    private Grid<RecycleBinDto> recycleBinDtoGrid = new Grid<>(RecycleBinDto.class, false);
 
     private Button menuButton = new Button(new Icon(VaadinIcon.COG));
     private static RecycleBinService recycleBinService;
@@ -46,10 +46,10 @@ public class RecycleBinGridLayout extends VerticalLayout {
     public RecycleBinGridLayout(RecycleBinService recycleBinService) {
         this.recycleBinService = recycleBinService;
         horizontalToolPanelLayout.setAlignItems(Alignment.CENTER);
-        grid.setItems(recycleBinService.getAll());
         configToolPanel();
         add(horizontalToolPanelLayout);
-        initGrid();
+        recycleBinDtoGrid = initGrid();
+        recycleBinDtoGrid.setItems(recycleBinService.getAll());
     }
 
     private Grid<RecycleBinDto> initGrid() {
@@ -186,48 +186,31 @@ public class RecycleBinGridLayout extends VerticalLayout {
         H2 headline = new H2("Создание печатной формы");
         headline.getStyle().set("margin", "var(--lumo-space-m) 0 0 0")
                 .set("font-size", "1.5em").set("font-weight", "bold");
-
-        //TODO реазлизовать функционал на селекте? в зависимоти от выбранного по кнопке "да" и печатать в зависимости от todo SelectionListener ?
-        /*Select<String> selectForm = new Select<>("Открыть в браузере",
-                "Скачать в формате EXEL","Скачать в формате PDF");
-*/
         Label label = new Label("Создать печатную форму по шаблону 'Список документов'?");
         Button accept1 = new Button("Да");
         Button accept2 = new Button("Да");
-        Button accept3 = new Button("Да");
-//        accept2.setVisible(false);
-//        accept3.setVisible(false);
-
-        Button buttonWrapper1 = new Button("Открыть в браузере", buttonClickEvent -> dialog.close());
+        Button buttonWrapper1 = new Button("Да", buttonClickEvent -> dialog.close());
         buttonWrapper1.addClickListener(clickEvent -> {
             PdfBrowserViewer viewer = new PdfBrowserViewer(
-                new StreamResource(LocalDate.now() + " openBrowse.pdf",
-                        () -> recycleBinService.getTermsConditions().byteStream()));
+                    new StreamResource(LocalDate.now() + " openBrowse.pdf",
+                            () -> recycleBinService.getTermsConditions().byteStream()));
             viewer.setHeight("100%");
             viewer.setWidth("100%");
             Dialog dialogPdf = new Dialog(viewer);
             dialogPdf.setHeight("80%");
             dialogPdf.setWidth("80%");
             dialogPdf.open();
-
         });
-//        FileDownloadWrapper buttonWrapper1 = new FileDownloadWrapper(
-//                new StreamResource(LocalDate.now() + " openBrowse.pdf",
-//                        () -> recycleBinService.getTermsConditions().byteStream()));
-//        buttonWrapper1.wrapComponent(new Button("Открыть в браузере"));
-
         FileDownloadWrapper buttonWrapper2 = new FileDownloadWrapper(
                 new StreamResource(LocalDate.now() + " someSheetExel.xlsx",
                         () -> recycleBinService.getExcel().byteStream()));
-        buttonWrapper2.wrapComponent(accept2);
-
+        buttonWrapper2.wrapComponent(accept1);
         FileDownloadWrapper buttonWrapper3 = new FileDownloadWrapper(
                 new StreamResource(LocalDate.now() + " someSheetPDF.pdf",
                         () -> recycleBinService.getPDF().byteStream()));
-        buttonWrapper3.wrapComponent(accept3);
+        buttonWrapper3.wrapComponent(accept2);
         buttonWrapper2.setVisible(false);
         buttonWrapper3.setVisible(false);
-
         Select<String> selectForm = new Select<>("Открыть в браузере",
                 "Скачать в формате EXEL", "Скачать в формате PDF");
         selectForm.setValue("Открыть в браузере");
@@ -249,7 +232,6 @@ public class RecycleBinGridLayout extends VerticalLayout {
                     buttonWrapper3.setVisible(true);
                     break;
             }
-
         });
         accept1.addClickListener(buttonClickEvent -> {
             selectForm.setValue("Открыть в браузере");
@@ -259,32 +241,15 @@ public class RecycleBinGridLayout extends VerticalLayout {
             selectForm.setValue("Открыть в браузере");
             dialog.close();
         });
-        accept3.addClickListener(buttonClickEvent -> {
-            selectForm.setValue("Открыть в браузере");
-            dialog.close();
-        });
-
-
-
-        //  VerticalLayout fieldLayout = new VerticalLayout(buttonWrapper1, buttonWrapper2, buttonWrapper3);
-//        fieldLayout.setSpacing(false);
-//        fieldLayout.setPadding(false);
-//        fieldLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
-
-
         Button cancelButton = new Button("Закрыть", e -> dialog.close());
-
-
         HorizontalLayout buttonLayout = new HorizontalLayout(buttonWrapper1, buttonWrapper2, buttonWrapper3, cancelButton);
+
         buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
 
         VerticalLayout dialogLayout = new VerticalLayout(headline, label, selectForm, buttonLayout);
         dialogLayout.setPadding(false);
         dialogLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
         dialogLayout.getStyle().set("width", "350px").set("max-width", "100%");
-
         return dialogLayout;
     }
-
-
 }
