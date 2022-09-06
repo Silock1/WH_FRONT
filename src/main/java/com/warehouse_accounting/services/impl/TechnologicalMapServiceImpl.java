@@ -19,7 +19,8 @@ public class TechnologicalMapServiceImpl implements TechnologicalMapService {
     private final TechnologicalMapApi api;
     private final String url;
 
-    public TechnologicalMapServiceImpl(@Value("api/technological_map") String url, Retrofit retrofit) {
+    public TechnologicalMapServiceImpl(@Value("${retrofit.restServices.technological_map_url}")
+                                       String url, Retrofit retrofit) {
         this.api = retrofit.create(TechnologicalMapApi.class);
         this.url = url;
     }

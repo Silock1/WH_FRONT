@@ -21,13 +21,14 @@ public class IndicatorsSubMenuView extends VerticalLayout {
 
     private final Div pageContent = new Div();
     private final RecycleBinGridLayout recycleBinGridLayout;
-  //  private final IndicatorsGridLayout indicatorsGridLayout;
+   // private final IndicatorsGridLayout indicatorsGridLayout;
 
     private final DocumentsView documentsView;
 
-    public IndicatorsSubMenuView(RecycleBinGridLayout recycleBinGridLayout,  DocumentsView documentsView) {
+    public IndicatorsSubMenuView(RecycleBinGridLayout recycleBinGridLayout,DocumentsView documentsView) {
+          //  IndicatorsGridLayout indicatorsGridLayout
         this.recycleBinGridLayout = recycleBinGridLayout;
-        // this.indicatorsGridLayout = indicatorsGridLayout;
+       // this.indicatorsGridLayout = indicatorsGridLayout;
         this.documentsView = documentsView;
         this.pageContent.removeAll();
         pageContent.setSizeFull();

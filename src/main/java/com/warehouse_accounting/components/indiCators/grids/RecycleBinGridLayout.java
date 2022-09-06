@@ -27,6 +27,7 @@ import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.RecycleBinDto;
 import com.warehouse_accounting.services.interfaces.RecycleBinService;
 import org.springframework.stereotype.Component;
+import org.vaadin.alejandro.PdfBrowserViewer;
 import org.vaadin.olli.FileDownloadWrapper;
 
 import java.time.LocalDate;
@@ -128,6 +129,8 @@ public class RecycleBinGridLayout extends VerticalLayout {
         searchField.setMinWidth("170px");
 
         NumberField numberField = new NumberField();
+        //todo SelectionListener
+
         //  grid.addSelectionListener(event -> numberField.setValue((double) (grid.getSelectedItems().size())));
         numberField.setValue(0d);
         numberField.setWidth("40px");
@@ -183,6 +186,11 @@ public class RecycleBinGridLayout extends VerticalLayout {
         H2 headline = new H2("Создание печатной формы");
         headline.getStyle().set("margin", "var(--lumo-space-m) 0 0 0")
                 .set("font-size", "1.5em").set("font-weight", "bold");
+
+        //TODO реазлизовать функционал на селекте? в зависимоти от выбранного по кнопке "да" и печатать в зависимости от todo SelectionListener ?
+        /*Select<String> selectForm = new Select<>("Открыть в браузере",
+                "Скачать в формате EXEL","Скачать в формате PDF");
+*/
         Label label = new Label("Создать печатную форму по шаблону 'Список документов'?");
         Button accept1 = new Button("Да");
         Button accept2 = new Button("Да");
@@ -190,10 +198,23 @@ public class RecycleBinGridLayout extends VerticalLayout {
 //        accept2.setVisible(false);
 //        accept3.setVisible(false);
 
-        FileDownloadWrapper buttonWrapper1 = new FileDownloadWrapper(
+        Button buttonWrapper1 = new Button("Открыть в браузере", buttonClickEvent -> dialog.close());
+        buttonWrapper1.addClickListener(clickEvent -> {
+            PdfBrowserViewer viewer = new PdfBrowserViewer(
                 new StreamResource(LocalDate.now() + " openBrowse.pdf",
                         () -> recycleBinService.getTermsConditions().byteStream()));
-        buttonWrapper1.wrapComponent(accept1);
+            viewer.setHeight("100%");
+            viewer.setWidth("100%");
+            Dialog dialogPdf = new Dialog(viewer);
+            dialogPdf.setHeight("80%");
+            dialogPdf.setWidth("80%");
+            dialogPdf.open();
+
+        });
+//        FileDownloadWrapper buttonWrapper1 = new FileDownloadWrapper(
+//                new StreamResource(LocalDate.now() + " openBrowse.pdf",
+//                        () -> recycleBinService.getTermsConditions().byteStream()));
+//        buttonWrapper1.wrapComponent(new Button("Открыть в браузере"));
 
         FileDownloadWrapper buttonWrapper2 = new FileDownloadWrapper(
                 new StreamResource(LocalDate.now() + " someSheetExel.xlsx",
