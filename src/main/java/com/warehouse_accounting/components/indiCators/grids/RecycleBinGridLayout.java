@@ -26,6 +26,7 @@ import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.RecycleBinDto;
 import com.warehouse_accounting.services.interfaces.RecycleBinService;
 import org.springframework.stereotype.Component;
+import org.vaadin.alejandro.PdfBrowserViewer;
 import org.vaadin.olli.FileDownloadWrapper;
 
 import java.time.LocalDate;
@@ -36,7 +37,7 @@ import java.time.LocalDate;
 public class RecycleBinGridLayout extends VerticalLayout {
 
     private HorizontalLayout horizontalToolPanelLayout = new HorizontalLayout();
-    private Grid<RecycleBinDto> grid = new Grid<>(RecycleBinDto.class, false);
+    private Grid<RecycleBinDto> recycleBinDtoGrid = new Grid<>(RecycleBinDto.class, false);
 
     private Button menuButton = new Button(new Icon(VaadinIcon.COG));
     private static RecycleBinService recycleBinService;
@@ -44,15 +45,17 @@ public class RecycleBinGridLayout extends VerticalLayout {
     public RecycleBinGridLayout(RecycleBinService recycleBinService) {
         this.recycleBinService = recycleBinService;
         horizontalToolPanelLayout.setAlignItems(Alignment.CENTER);
-        grid.setItems(recycleBinService.getAll());
         configToolPanel();
         add(horizontalToolPanelLayout);
-        initGrid();
+        recycleBinDtoGrid = initGrid();
+        recycleBinDtoGrid.setItems(recycleBinService.getAll());
+
+
+
     }
 
     private Grid<RecycleBinDto> initGrid() {
         Grid<RecycleBinDto> grid = new Grid<>(RecycleBinDto.class, false);
-
         Grid.Column<RecycleBinDto> documentType = grid.addColumn(RecycleBinDto::getDocumentType).setHeader("Тип документа");
         Grid.Column<RecycleBinDto> number = grid.addColumn(RecycleBinDto::getNumber).setHeader("№");
         // Grid.Column<RecycleBinDto> date = grid.addColumn(RecycleBinDto::getDate).setHeader("Время");
@@ -127,6 +130,8 @@ public class RecycleBinGridLayout extends VerticalLayout {
         searchField.setMinWidth("170px");
 
         NumberField numberField = new NumberField();
+        //todo SelectionListener
+
         //  grid.addSelectionListener(event -> numberField.setValue((double) (grid.getSelectedItems().size())));
         numberField.setValue(0d);
         numberField.setWidth("40px");
@@ -183,26 +188,39 @@ public class RecycleBinGridLayout extends VerticalLayout {
         headline.getStyle().set("margin", "var(--lumo-space-m) 0 0 0")
                 .set("font-size", "1.5em").set("font-weight", "bold");
 
-
+        //TODO реазлизовать функционал на селекте? в зависимоти от выбранного по кнопке "да" и печатать в зависимости от todo SelectionListener ?
         /*Select<String> selectForm = new Select<>("Открыть в браузере",
                 "Скачать в формате EXEL","Скачать в формате PDF");
 */
 
-        FileDownloadWrapper buttonWrapper1 = new FileDownloadWrapper(
+        Button buttonWrapper1 = new Button("Открыть в браузере", buttonClickEvent -> dialog.close());
+        buttonWrapper1.addClickListener(clickEvent -> {
+            PdfBrowserViewer viewer = new PdfBrowserViewer(
                 new StreamResource(LocalDate.now() + " openBrowse.pdf",
                         () -> recycleBinService.getTermsConditions().byteStream()));
-        buttonWrapper1.wrapComponent(new Button("Открыть в браузере"));
+            viewer.setHeight("100%");
+            viewer.setWidth("100%");
+            Dialog dialogPdf = new Dialog(viewer);
+            dialogPdf.setHeight("80%");
+            dialogPdf.setWidth("80%");
+            dialogPdf.open();
+
+        });
+//        FileDownloadWrapper buttonWrapper1 = new FileDownloadWrapper(
+//                new StreamResource(LocalDate.now() + " openBrowse.pdf",
+//                        () -> recycleBinService.getTermsConditions().byteStream()));
+//        buttonWrapper1.wrapComponent(new Button("Открыть в браузере"));
 
         FileDownloadWrapper buttonWrapper2 = new FileDownloadWrapper(
                 new StreamResource(LocalDate.now() + " someSheetExel.xlsx",
                         () -> recycleBinService.getExcel().byteStream()));
-        buttonWrapper2.wrapComponent(new Button("Скачать в формате EXEL"));
+        buttonWrapper2.wrapComponent(new Button("Скачать в формате EXEL", buttonClickEvent -> dialog.close()));
 
 
         FileDownloadWrapper buttonWrapper3 = new FileDownloadWrapper(
                 new StreamResource(LocalDate.now() + " someSheetPDF.pdf",
                         () -> recycleBinService.getPDF().byteStream()));
-        buttonWrapper3.wrapComponent(new Button("Скачать в формате PDF"));
+        buttonWrapper3.wrapComponent(new Button("Скачать в формате PDF", buttonClickEvent -> dialog.close()));
 
 
         VerticalLayout fieldLayout = new VerticalLayout(buttonWrapper1, buttonWrapper2, buttonWrapper3
@@ -225,6 +243,5 @@ public class RecycleBinGridLayout extends VerticalLayout {
 
         return dialogLayout;
     }
-
 
 }

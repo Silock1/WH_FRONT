@@ -1,7 +1,6 @@
 package com.warehouse_accounting.services.interfaces.api;
 
 import com.warehouse_accounting.models.dto.ComissionerReportsDto;
-import com.warehouse_accounting.models.dto.SalesChannelDto;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -13,7 +12,7 @@ import retrofit2.http.Path;
 
 import java.util.List;
 
-public interface ComissionerReportsApi {
+public interface CommissionerReportsApi {
 
     @Headers("Accept: application/json")
     @GET("{url}")
