@@ -12,11 +12,11 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.production.ProductionOperations;
+import com.warehouse_accounting.models.dto.TechnologicalMapDto;
 import com.warehouse_accounting.models.dto.TechnologicalOperationDto;
 import com.warehouse_accounting.models.dto.WarehouseDto;
 import com.warehouse_accounting.services.interfaces.TechnologicalMapService;
@@ -41,7 +41,7 @@ public class ProductionOperationsForm extends VerticalLayout {
 
 
     public ProductionOperationsForm(ProductionOperations productionOperations, TechnologicalOperationDto technologicalOperation,
-                                     WarehouseService warehouseService, TechnologicalMapService technologicalMapService) {
+                                    WarehouseService warehouseService, TechnologicalMapService technologicalMapService) {
         this.technologicalOperation = technologicalOperation;
         this.productionOperations = productionOperations;
         this.warehouseService = warehouseService;
@@ -88,10 +88,15 @@ public class ProductionOperationsForm extends VerticalLayout {
         TextField numberOfOperation = new TextField("Номер");
         DatePicker createOperationDate = new DatePicker("Дата");
         createOperationDate.setValue(LocalDate.now());
-        Select<String> technologicalMap = new Select<>();
-        technologicalMap.setLabel("Технологическая карта");
-//        technologicalMap.setItemLabelGenerator(TechnologicalMapDto::getName);
-//        technologicalMap.setItems(technologicalMapService.getAll());
+        ComboBox<TechnologicalMapDto> technologicalMapDtoComboBox = new ComboBox<>();
+        technologicalMapDtoComboBox.setLabel("Технологическая карта");
+        technologicalMapDtoComboBox.setItems(technologicalMapService.getAll());
+        technologicalMapDtoComboBox.setItemLabelGenerator(TechnologicalMapDto::getName);
+        technologicalMapDtoComboBox.addValueChangeListener(event -> {
+           TechnologicalMapDto technologicalMapDto = event.getValue();
+           technologicalOperation.setTechnologicalMapId(technologicalMapDto.getId());
+           technologicalOperation.setTechnologicalMapName(technologicalMapDto.getName());
+        });
         TextField volumeOfProduction = new TextField("Объем производства");
         ComboBox<WarehouseDto> warehouseForMaterials = new ComboBox<>();
         warehouseForMaterials.setLabel("Склад для материалов");
@@ -113,7 +118,7 @@ public class ProductionOperationsForm extends VerticalLayout {
         });
 
         column.add(numberOfOperation, createOperationDate,
-                technologicalMap, volumeOfProduction, warehouseForMaterials, warehouseForProducts);
+                technologicalMapDtoComboBox, volumeOfProduction, warehouseForMaterials, warehouseForProducts);
         add(column);
     }
 
