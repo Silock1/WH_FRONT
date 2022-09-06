@@ -37,11 +37,11 @@ import java.time.LocalDate;
 @Route(value = "recycleBin", layout = AppView.class)
 public class RecycleBinGridLayout extends VerticalLayout {
 
-    private HorizontalLayout horizontalToolPanelLayout = new HorizontalLayout();
-    private Grid<RecycleBinDto> recycleBinDtoGrid = new Grid<>(RecycleBinDto.class, false);
-
+    private final RecycleBinService recycleBinService;
     private Button menuButton = new Button(new Icon(VaadinIcon.COG));
-    private static RecycleBinService recycleBinService;
+    private Grid<RecycleBinDto> recycleBinDtoGrid;
+    private HorizontalLayout horizontalToolPanelLayout = new HorizontalLayout();
+    private NumberField numberField;
 
     public RecycleBinGridLayout(RecycleBinService recycleBinService) {
         this.recycleBinService = recycleBinService;
@@ -128,7 +128,7 @@ public class RecycleBinGridLayout extends VerticalLayout {
         searchField.setPlaceholder("Номер или комментарий");
         searchField.setMinWidth("170px");
 
-        NumberField numberField = new NumberField();
+        numberField = new NumberField();
         //todo SelectionListener
 
         //  grid.addSelectionListener(event -> numberField.setValue((double) (grid.getSelectedItems().size())));
@@ -182,7 +182,7 @@ public class RecycleBinGridLayout extends VerticalLayout {
 
 
     //модальное окно
-    private static VerticalLayout createDialogLayout(Dialog dialog) {
+    private VerticalLayout createDialogLayout(Dialog dialog) {
         H2 headline = new H2("Создание печатной формы");
         headline.getStyle().set("margin", "var(--lumo-space-m) 0 0 0")
                 .set("font-size", "1.5em").set("font-weight", "bold");
