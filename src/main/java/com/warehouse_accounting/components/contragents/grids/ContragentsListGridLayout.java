@@ -63,13 +63,13 @@ public class ContragentsListGridLayout extends HorizontalLayout {
         Grid.Column<ContractorDto> discontCard = contractorDtoGrid.addColumn(ContractorDto::getNumberDiscountCard).setHeader("Дисконтная карта").setSortable(true).setAutoWidth(true);
         Grid.Column<ContractorDto> address = contractorDtoGrid.addColumn(ContractorDto::getAddress).setHeader("Фактический адрес").setSortable(true).setAutoWidth(true);
         Grid.Column<ContractorDto> comment = contractorDtoGrid.addColumn(ContractorDto::getComment).setHeader("Комментарий").setSortable(true).setAutoWidth(true);
-        Grid.Column<ContractorDto> groups = contractorDtoGrid.addColumn(ContractorDto::getContractorGroupName).setHeader("Группы").setSortable(true).setAutoWidth(true);
-        Grid.Column<ContractorDto> contractorType = contractorDtoGrid.addColumn(ContractorDto::getLegalDetailTypeOfContractorName).setHeader("Тип Контрагента").setSortable(true).setAutoWidth(true);
+        Grid.Column<ContractorDto> groups = contractorDtoGrid.addColumn(ContractorDto::getContractorGroup).setHeader("Группы").setSortable(true).setAutoWidth(true);
+//        Grid.Column<ContractorDto> contractorType = contractorDtoGrid.addColumn(ContractorDto::getLegalDetailTypeOfContractorName).setHeader("Тип Контрагента").setSortable(true).setAutoWidth(true);
         Grid.Column<ContractorDto> fullName = contractorDtoGrid.addColumn(ContractorDto::getName).setHeader("Полное наименование").setSortable(true).setAutoWidth(true);
-        Grid.Column<ContractorDto> legalAddress = contractorDtoGrid.addColumn(ContractorDto::getLegalDetailAddress).setHeader("Юридический Адрес").setSortable(true).setAutoWidth(true);
-        Grid.Column<ContractorDto> inn = contractorDtoGrid.addColumn(ContractorDto::getLegalDetailInn).setHeader("ИНН").setSortable(true).setAutoWidth(true);
-        Grid.Column<ContractorDto> kpp = contractorDtoGrid.addColumn(ContractorDto::getLegalDetailKpp).setHeader("КПП").setSortable(true).setAutoWidth(true);
-        Grid.Column<ContractorDto> prices = contractorDtoGrid.addColumn(ContractorDto::getTypeOfPriceName).setHeader("Цены").setSortable(true).setAutoWidth(true);
+//        Grid.Column<ContractorDto> legalAddress = contractorDtoGrid.addColumn(ContractorDto::getLegalDetailAddress).setHeader("Юридический Адрес").setSortable(true).setAutoWidth(true);
+//        Grid.Column<ContractorDto> inn = contractorDtoGrid.addColumn(ContractorDto::getLegalDetailInn).setHeader("ИНН").setSortable(true).setAutoWidth(true);
+//        Grid.Column<ContractorDto> kpp = contractorDtoGrid.addColumn(ContractorDto::getLegalDetailKpp).setHeader("КПП").setSortable(true).setAutoWidth(true);
+        Grid.Column<ContractorDto> prices = contractorDtoGrid.addColumn(ContractorDto::getTypeOfPrice).setHeader("Цены").setSortable(true).setAutoWidth(true);
 
         contractorDtoGrid.addItemDoubleClickListener(event -> parent.editFormActivate(event.getItem()));
 
@@ -89,11 +89,11 @@ public class ContragentsListGridLayout extends HorizontalLayout {
         columnToggleContextMenu.addColumnToggleItem("Фактический адрес", address);
         columnToggleContextMenu.addColumnToggleItem("Комментарий", comment);
         columnToggleContextMenu.addColumnToggleItem("Группы", groups);
-        columnToggleContextMenu.addColumnToggleItem("Тип Контрагента", contractorType);
+//        columnToggleContextMenu.addColumnToggleItem("Тип Контрагента", contractorType);
         columnToggleContextMenu.addColumnToggleItem("Полное наименование", fullName);
-        columnToggleContextMenu.addColumnToggleItem("Юридический Адрес", legalAddress);
-        columnToggleContextMenu.addColumnToggleItem("ИНН", inn);
-        columnToggleContextMenu.addColumnToggleItem("КПП", kpp);
+//        columnToggleContextMenu.addColumnToggleItem("Юридический Адрес", legalAddress);
+//        columnToggleContextMenu.addColumnToggleItem("ИНН", inn);
+//        columnToggleContextMenu.addColumnToggleItem("КПП", kpp);
         columnToggleContextMenu.addColumnToggleItem("Цены", prices);
         columnToggleContextMenu.addColumnToggleItem("Изменить", edit);
         columnToggleContextMenu.addColumnToggleItem("Удалить", delete);

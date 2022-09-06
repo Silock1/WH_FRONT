@@ -34,7 +34,7 @@ public class TypeOfContractorServiceImpl implements TypeOfContractorService {
         try {
             Response<List<TypeOfContractorDto>> response = listCall.execute();
             if (response.isSuccessful()) {
-                typeOfContractorDtoList = listCall.execute().body();
+                typeOfContractorDtoList = response.body();
                 log.info("Успешно выполнен запрон на получение списка type of contractors");
             } else {
                 log.error("Произошла ошибка {} при выполнении запроса на получение списка type of contractors", response.code());

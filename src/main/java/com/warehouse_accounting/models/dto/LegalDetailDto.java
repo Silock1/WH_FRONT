@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class LegalDetailDto {
     private Long id;
-
+    private String fullName;
     private String lastName;
     private String firstName;
     private String middleName;
@@ -27,5 +27,5 @@ public class LegalDetailDto {
     private String numberOfTheCertificate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateConvertor.datePattern)
     private LocalDate dateOfTheCertificate;
-    private String typeOfContractorName;
+    private TypeOfContractorDto typeOfContractor;
 }

@@ -155,7 +155,7 @@ public class LegalDetailSettingsView extends VerticalLayout {
         Grid.Column<LegalDetailDto> kppColumn = legalDetailDtoGrid.addColumn(LegalDetailDto::getKpp).setHeader("КПП");
         Grid.Column<LegalDetailDto> numberOfTheCertificateColumn = legalDetailDtoGrid.addColumn(LegalDetailDto::getNumberOfTheCertificate).setHeader("Номер сертификата");
         Grid.Column<LegalDetailDto> dateOfTheCertificateColumn = legalDetailDtoGrid.addColumn(LegalDetailDto::getDateOfTheCertificate).setHeader("Дата выдачи сертификата");
-        Grid.Column<LegalDetailDto> typeOfContractorNameColumn = legalDetailDtoGrid.addColumn(LegalDetailDto::getTypeOfContractorName).setHeader("Тип контракта");
+        Grid.Column<LegalDetailDto> typeOfContractorNameColumn = legalDetailDtoGrid.addColumn(LegalDetailDto::getTypeOfContractor).setHeader("Тип контракта");
 
         legalDetailDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI); //
 
