@@ -91,7 +91,7 @@ public class LegalDetailForm extends VerticalLayout {
         form.add(okpo);
 
         TextField ogrnip = new TextField("ОГРНИП");
-        legalDetailDtoBinder.forField(ogrnip).asRequired().bind(LegalDetailDto::getOgrnip, LegalDetailDto::setOgrnip);
+        legalDetailDtoBinder.forField(ogrnip).asRequired().bind(LegalDetailDto::getOgrn, LegalDetailDto::setOgrn);
         form.add(ogrnip);
 
         TextField kpp = new TextField("КПП");

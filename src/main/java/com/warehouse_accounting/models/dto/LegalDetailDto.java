@@ -21,9 +21,9 @@ public class LegalDetailDto {
     private String middleName;
     private AddressDto address;
     private String inn;
-    private String okpo;
-    private String ogrnip;
     private String kpp;
+    private String okpo;
+    private String ogrn;
     private String numberOfTheCertificate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateConvertor.datePattern)
     private LocalDate dateOfTheCertificate;

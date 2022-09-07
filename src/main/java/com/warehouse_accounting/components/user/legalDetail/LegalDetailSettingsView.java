@@ -150,9 +150,9 @@ public class LegalDetailSettingsView extends VerticalLayout {
         Grid.Column<LegalDetailDto> middleNameColumn = legalDetailDtoGrid.addColumn(LegalDetailDto::getMiddleName).setHeader("Отчество");
         Grid.Column<LegalDetailDto> addressColumn = legalDetailDtoGrid.addColumn(LegalDetailDto::getAddress).setHeader("Комментарии к адресу");
         Grid.Column<LegalDetailDto> innColumn = legalDetailDtoGrid.addColumn(LegalDetailDto::getInn).setHeader("ИНН");
-        Grid.Column<LegalDetailDto> okpoColumn = legalDetailDtoGrid.addColumn(LegalDetailDto::getOkpo).setHeader("ОКПО");
-        Grid.Column<LegalDetailDto> ogrnipColumn = legalDetailDtoGrid.addColumn(LegalDetailDto::getOgrnip).setHeader("ОГРНИП");
         Grid.Column<LegalDetailDto> kppColumn = legalDetailDtoGrid.addColumn(LegalDetailDto::getKpp).setHeader("КПП");
+        Grid.Column<LegalDetailDto> okpoColumn = legalDetailDtoGrid.addColumn(LegalDetailDto::getOkpo).setHeader("ОКПО");
+        Grid.Column<LegalDetailDto> ogrnipColumn = legalDetailDtoGrid.addColumn(LegalDetailDto::getOgrn).setHeader("ОГРНИП");
         Grid.Column<LegalDetailDto> numberOfTheCertificateColumn = legalDetailDtoGrid.addColumn(LegalDetailDto::getNumberOfTheCertificate).setHeader("Номер сертификата");
         Grid.Column<LegalDetailDto> dateOfTheCertificateColumn = legalDetailDtoGrid.addColumn(LegalDetailDto::getDateOfTheCertificate).setHeader("Дата выдачи сертификата");
         Grid.Column<LegalDetailDto> typeOfContractorNameColumn = legalDetailDtoGrid.addColumn(LegalDetailDto::getTypeOfContractor).setHeader("Тип контракта");

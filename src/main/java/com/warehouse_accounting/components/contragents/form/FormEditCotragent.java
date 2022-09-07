@@ -8,7 +8,6 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.details.DetailsVariant;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
@@ -19,7 +18,6 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
-import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.contragents.ContragentsList;
@@ -285,17 +283,16 @@ public class FormEditCotragent extends VerticalLayout {
         status.setValue("Новый");
         contractorDtoBinder.bind(status, ContractorDto::getStatus, ContractorDto::setStatus);
 
-//        contractorGroupDtoBinder.readBean(contractorGroupService.getAll());
-        group.setRequired(true);
         group.setItems(contractorGroupService.getAll());
         group.setItemLabelGenerator(ContractorGroupDto::getName);
-        contractorDtoBinder.forField(group).bind(ContractorDto::getContractorGroup, ContractorDto::setContractorGroup);
+        contractorDtoBinder.forField(group).asRequired("Укажите группу")
+                .bind(ContractorDto::getContractorGroup, ContractorDto::setContractorGroup);
 
         contractorDtoBinder.forField(phone).bind(ContractorDto::getPhone, ContractorDto::setPhone);
         contractorDtoBinder.forField(fax).bind(ContractorDto::getFax, ContractorDto::setFax);
         contractorDtoBinder.forField(email).bind(ContractorDto::getEmail, ContractorDto::setEmail);
 
-        AddressDto addressDto = new AddressDto();
+        AddressDto addressDto = contractorDto.getAddress();
 
         TextField cityName = new TextField();
         TextField streetName = new TextField();
@@ -304,8 +301,7 @@ public class FormEditCotragent extends VerticalLayout {
         TextField other = new TextField();
 
 
-        addressDtoBinder.forField(cityName).asRequired("Укажите город контрагента")
-                .bind(AddressDto::getCityName, AddressDto::setCityName);
+        addressDtoBinder.forField(cityName).bind(AddressDto::getCityName, AddressDto::setCityName);
         addressDtoBinder.forField(streetName).bind(AddressDto::getStreetName, AddressDto::setStreetName);
         addressDtoBinder.forField(buildingName).bind(AddressDto::getBuildingName, AddressDto::setBuildingName);
         addressDtoBinder.forField(office).bind(AddressDto::getOffice, AddressDto::setOffice);
@@ -328,21 +324,19 @@ public class FormEditCotragent extends VerticalLayout {
         contractorDtoBinder.readBean(contractorDto);
 
         if (!newForm) {
-            addressDtoBinder.readBean(contractorDto.getAddress());
+            addressDtoBinder.readBean(addressDto);
         }
 
 
-        Button buttonToAddActualAddress = new Button("Обновить фактический адрес");
-
+        Button buttonToAddActualAddress = new Button("Обновить адрес");
         buttonToAddActualAddress.setDisableOnClick(false);
-
         buttonToAddActualAddress.addClickListener(e -> {
             try {
                 addressDtoBinder.writeBean(addressDto);
             } catch (ValidationException ex) {
                 throw new RuntimeException(ex);
             }
-            contractorDto.setAddress(addressDto);
+            contractorService.update(contractorDto);
         });
 
 
@@ -402,7 +396,7 @@ public class FormEditCotragent extends VerticalLayout {
     //<Блок реквизиты
     private AccordionPanel getLegalDetailAccordion(ContractorDto contractorDto) {
 
-        LegalDetailDto legalDetailDto = new LegalDetailDto();
+        LegalDetailDto legalDetailDto = contractorDto.getLegalDetail();
 
         ComboBox<TypeOfContractorDto> typeOfContractorDtoComboBox = new ComboBox<>();
         typeOfContractorDtoComboBox.setWidth("350px");
@@ -420,14 +414,14 @@ public class FormEditCotragent extends VerticalLayout {
         TextField okpo = new TextField();
 
         legalDetailDtoBinder.forField(inn).bind(LegalDetailDto::getInn, LegalDetailDto::setInn);
-        legalDetailDtoBinder.forField(fullName).asRequired("Укажите ФИО контрагента")
+        legalDetailDtoBinder.forField(fullName).asRequired("Укажите полное наименование")
                 .bind(LegalDetailDto::getFullName, LegalDetailDto::setFullName);
         legalDetailDtoBinder.forField(kpp).bind(LegalDetailDto::getKpp, LegalDetailDto::setKpp);
-        legalDetailDtoBinder.forField(ogrnip).bind(LegalDetailDto::getOgrnip, LegalDetailDto::setOgrnip);
+        legalDetailDtoBinder.forField(ogrnip).bind(LegalDetailDto::getOgrn, LegalDetailDto::setOgrn);
         legalDetailDtoBinder.forField(okpo).bind(LegalDetailDto::getOkpo, LegalDetailDto::setOkpo);
 
 
-        legalDetailDtoBinder.readBean(contractorDto.getLegalDetail());
+        legalDetailDtoBinder.readBean(legalDetailDto);
 
 
         FormLayout formLayout = new FormLayout();
@@ -448,7 +442,7 @@ public class FormEditCotragent extends VerticalLayout {
             } catch (ValidationException ex) {
                 throw new RuntimeException(ex);
             }
-            contractorDto.setLegalDetail(legalDetailDto);
+            contractorService.update(contractorDto);
         });
 
 
@@ -466,8 +460,6 @@ public class FormEditCotragent extends VerticalLayout {
     private AccordionPanel getSalasEndPriceAccordion(ContractorDto contractorDto) {
 
         FormLayout formSalePrice = new FormLayout();
-
-//        typeOfPriceDtoBinder.readBean(typeOfPriceService.getAll());
 
         ComboBox<TypeOfPriceDto> typeOfPriceDtoComboBox = new ComboBox<>();
         typeOfPriceDtoComboBox.setRequired(true);
@@ -509,7 +501,7 @@ public class FormEditCotragent extends VerticalLayout {
 
         VerticalLayout bankAccountSpace = new VerticalLayout();
 
-        Button addNewBankAcc = new Button("Расчетный счет");
+        Button addNewBankAcc = new Button("+ Расчетный счет");
 
         addNewBankAcc.addClickListener(e -> {
             try {
@@ -521,7 +513,7 @@ public class FormEditCotragent extends VerticalLayout {
 
         bankAccountSpace.add(addNewBankAcc);
 
-//        попытка получить все банк аккаунты принадлежащее изменяемому контрагенту
+
         List<BankAccountDto> bankAccountDtoList = bankAccountService.getAll();
 
         contractorDtoBinder.readBean(contractorDto);
@@ -530,7 +522,6 @@ public class FormEditCotragent extends VerticalLayout {
                 .filter(bankAccountDto1 -> {
                     if (bankAccountDto1.getContractor() != null &&
                             Objects.equals(contractorDto.getId(), bankAccountDto1.getContractor().getId())) {
-                        System.out.println("Null");
                         try {
                             bankAccountSpace
                                     .add(getFormForAlreadyExistsBankAccounts(contractorDto, bankAccountDto1));
@@ -542,6 +533,7 @@ public class FormEditCotragent extends VerticalLayout {
                     return false;
                 })
                 .collect(Collectors.toList());
+
 
         return bankAccountSpace;
     }

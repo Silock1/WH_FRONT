@@ -54,27 +54,37 @@ public class ContragentsListGridLayout extends HorizontalLayout {
 
         contractorDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI);
 
-        Grid.Column<ContractorDto> name = contractorDtoGrid.addColumn(ContractorDto::getName).setHeader("Наименование").setSortable(true).setAutoWidth(true);
-        Grid.Column<ContractorDto> code = contractorDtoGrid.addColumn(ContractorDto::getCode).setHeader("Код").setSortable(true).setAutoWidth(true);
-        Grid.Column<ContractorDto> phone = contractorDtoGrid.addColumn(ContractorDto::getPhone).setHeader("Телефон").setSortable(true).setAutoWidth(true);
-        Grid.Column<ContractorDto> fax = contractorDtoGrid.addColumn(ContractorDto::getFax).setHeader("Факс").setSortable(true).setAutoWidth(true);
-        Grid.Column<ContractorDto> email = contractorDtoGrid.addColumn(ContractorDto::getEmail).setHeader("Email").setSortable(true).setAutoWidth(true);
-        Grid.Column<ContractorDto> status = contractorDtoGrid.addColumn(ContractorDto::getStatus).setHeader("Статус").setSortable(true).setAutoWidth(true);
-        Grid.Column<ContractorDto> discontCard = contractorDtoGrid.addColumn(ContractorDto::getNumberDiscountCard).setHeader("Дисконтная карта").setSortable(true).setAutoWidth(true);
-        Grid.Column<ContractorDto> address = contractorDtoGrid.addColumn(ContractorDto::getAddress).setHeader("Фактический адрес").setSortable(true).setAutoWidth(true);
-        Grid.Column<ContractorDto> comment = contractorDtoGrid.addColumn(ContractorDto::getComment).setHeader("Комментарий").setSortable(true).setAutoWidth(true);
-        Grid.Column<ContractorDto> groups = contractorDtoGrid.addColumn(ContractorDto::getContractorGroup).setHeader("Группы").setSortable(true).setAutoWidth(true);
-//        Grid.Column<ContractorDto> contractorType = contractorDtoGrid.addColumn(ContractorDto::getLegalDetailTypeOfContractorName).setHeader("Тип Контрагента").setSortable(true).setAutoWidth(true);
-        Grid.Column<ContractorDto> fullName = contractorDtoGrid.addColumn(ContractorDto::getName).setHeader("Полное наименование").setSortable(true).setAutoWidth(true);
-//        Grid.Column<ContractorDto> legalAddress = contractorDtoGrid.addColumn(ContractorDto::getLegalDetailAddress).setHeader("Юридический Адрес").setSortable(true).setAutoWidth(true);
-//        Grid.Column<ContractorDto> inn = contractorDtoGrid.addColumn(ContractorDto::getLegalDetailInn).setHeader("ИНН").setSortable(true).setAutoWidth(true);
-//        Grid.Column<ContractorDto> kpp = contractorDtoGrid.addColumn(ContractorDto::getLegalDetailKpp).setHeader("КПП").setSortable(true).setAutoWidth(true);
-        Grid.Column<ContractorDto> prices = contractorDtoGrid.addColumn(ContractorDto::getTypeOfPrice).setHeader("Цены").setSortable(true).setAutoWidth(true);
+        Grid.Column<ContractorDto> name = contractorDtoGrid.addColumn(ContractorDto::getName)
+                .setHeader("Наименование").setSortable(true).setAutoWidth(true);
+        Grid.Column<ContractorDto> code = contractorDtoGrid.addColumn(ContractorDto::getCode)
+                .setHeader("Наименование").setSortable(true).setAutoWidth(true);
+        Grid.Column<ContractorDto> phone = contractorDtoGrid.addColumn(ContractorDto::getPhone)
+                .setHeader("Телефон").setSortable(true).setAutoWidth(true);
+        Grid.Column<ContractorDto> fax = contractorDtoGrid.addColumn(ContractorDto::getFax)
+                .setHeader("Факс").setSortable(true).setAutoWidth(true);
+        Grid.Column<ContractorDto> email = contractorDtoGrid.addColumn(ContractorDto::getEmail)
+                .setHeader("Email").setSortable(true).setAutoWidth(true);
+        Grid.Column<ContractorDto> status = contractorDtoGrid.addColumn(ContractorDto::getStatus)
+                .setHeader("Статус").setSortable(true).setAutoWidth(true);
+        Grid.Column<ContractorDto> discontCard = contractorDtoGrid.addColumn(ContractorDto::getNumberDiscountCard)
+                .setHeader("Дисконтная карта").setSortable(true).setAutoWidth(true);
+        Grid.Column<ContractorDto> address = contractorDtoGrid.addColumn(ContractorDto::getAddress)
+                .setHeader("Фактический адрес").setSortable(true).setAutoWidth(true);
+        Grid.Column<ContractorDto> comment = contractorDtoGrid.addColumn(ContractorDto::getComment)
+                .setHeader("Комментарий").setSortable(true).setAutoWidth(true);
+        Grid.Column<ContractorDto> groups = contractorDtoGrid.addColumn(ContractorDto::getContractorGroup)
+                .setHeader("Группы").setSortable(true).setAutoWidth(true);
+        Grid.Column<ContractorDto> fullName = contractorDtoGrid.addColumn(ContractorDto::getName)
+                .setHeader("Полное наименование").setSortable(true).setAutoWidth(true);
+        Grid.Column<ContractorDto> prices = contractorDtoGrid.addColumn(ContractorDto::getTypeOfPrice)
+                .setHeader("Цены").setSortable(true).setAutoWidth(true);
 
         contractorDtoGrid.addItemDoubleClickListener(event -> parent.editFormActivate(event.getItem()));
 
-        Grid.Column<ContractorDto> edit = contractorDtoGrid.addColumn(rowEdit()).setHeader("Изменить").setSortable(true).setAutoWidth(true);
-        Grid.Column<ContractorDto> delete = contractorDtoGrid.addColumn(rowDelete()).setHeader("Удалить").setSortable(true).setAutoWidth(true);
+//        Grid.Column<ContractorDto> edit = contractorDtoGrid.addColumn(rowEdit()).setHeader("Изменить")
+//                .setSortable(true).setAutoWidth(true);
+        Grid.Column<ContractorDto> delete = contractorDtoGrid.addColumn(rowDelete()).setHeader("Удалить")
+                .setSortable(true).setAutoWidth(true);
 
         settingButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         ColumnToggleContextMenu<ContractorDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(settingButton);
@@ -89,13 +99,9 @@ public class ContragentsListGridLayout extends HorizontalLayout {
         columnToggleContextMenu.addColumnToggleItem("Фактический адрес", address);
         columnToggleContextMenu.addColumnToggleItem("Комментарий", comment);
         columnToggleContextMenu.addColumnToggleItem("Группы", groups);
-//        columnToggleContextMenu.addColumnToggleItem("Тип Контрагента", contractorType);
         columnToggleContextMenu.addColumnToggleItem("Полное наименование", fullName);
-//        columnToggleContextMenu.addColumnToggleItem("Юридический Адрес", legalAddress);
-//        columnToggleContextMenu.addColumnToggleItem("ИНН", inn);
-//        columnToggleContextMenu.addColumnToggleItem("КПП", kpp);
         columnToggleContextMenu.addColumnToggleItem("Цены", prices);
-        columnToggleContextMenu.addColumnToggleItem("Изменить", edit);
+//        columnToggleContextMenu.addColumnToggleItem("Изменить", edit);
         columnToggleContextMenu.addColumnToggleItem("Удалить", delete);
         return contractorDtoGrid;
     }

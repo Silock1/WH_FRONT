@@ -16,7 +16,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
-import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.contragents.form.FormEditCotragent;
@@ -81,28 +80,6 @@ public class ContragentsList extends VerticalLayout {
         Button addContragent = new Button(("Контрагент"), new Icon(VaadinIcon.PLUS));
         addContragent.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         addContragent.addClickListener(e -> {
-
-//            Retrofit retrofit = new Retrofit.Builder()
-//                    .baseUrl("http://localhost:4446")
-//                    .addConverterFactory(GsonConverterFactory.create())
-//                    .build();
-//
-//            ContractorService contractorService = new ContractorServiceImpl("/api/contractors", retrofit);
-//            ContractorDto contractorDto = new ContractorDto();
-//            contractorDto.setName("Первый");
-//            contractorDto.setStatus("1");
-//            contractorDto.setCode("1");
-//            contractorDto.setComment("1");
-//            contractorDto.setEmail("f");
-//            contractorDto.setFax("f");
-//            contractorDto.setOuterCode("f");
-//
-//
-////            contractorDto.setCheckboxEnabled(checkboxEnabled.getValue());
-////            contractorDto.setName(namePointSales.getValue());
-////            contractorDto.setCashiers(formCashiers.getValue());
-//            contractorService.create(contractorDto);
-
             hideButtonEndGrid();
             formEditCotragent.build();
             add(formEditCotragent);
