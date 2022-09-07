@@ -287,6 +287,7 @@ public class FormEditCotragent extends VerticalLayout {
         group.setItemLabelGenerator(ContractorGroupDto::getName);
         contractorDtoBinder.forField(group).asRequired("Укажите группу")
                 .bind(ContractorDto::getContractorGroup, ContractorDto::setContractorGroup);
+        group.setValue(contractorGroupService.getById(1L));
 
         contractorDtoBinder.forField(phone).bind(ContractorDto::getPhone, ContractorDto::setPhone);
         contractorDtoBinder.forField(fax).bind(ContractorDto::getFax, ContractorDto::setFax);
@@ -404,6 +405,8 @@ public class FormEditCotragent extends VerticalLayout {
         typeOfContractorDtoComboBox.setItemLabelGenerator(TypeOfContractorDto::getName);
         typeOfContractorDtoComboBox.setRequired(true);
 
+        typeOfContractorDtoComboBox.setItems(typeOfContractorService.getAll());
+        typeOfContractorDtoComboBox.setValue(typeOfContractorService.getById(1L));
         legalDetailDtoBinder.forField(typeOfContractorDtoComboBox)
                 .bind(LegalDetailDto::getTypeOfContractor, LegalDetailDto::setTypeOfContractor);
 
