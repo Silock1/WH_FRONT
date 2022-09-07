@@ -34,17 +34,17 @@ public class OrderGridFooter extends HorizontalLayout implements GridSummaryReci
     private Span priceField = new Span("Промежуточный итог: 0.0");
     private Span totalPriceField = new Span("Итог: 0.0");
     private OrderGrid grid;
-    private final CustomerOrderDto invoiceDto;
+    private final CustomerOrderDto customerOrder;
 
-    public OrderGridFooter(CustomerOrderDto invoiceDto) {
-        this.invoiceDto = invoiceDto;
+    public OrderGridFooter(CustomerOrderDto customerOrder) {
+        this.customerOrder = customerOrder;
 
         setWidthFull();
 
         TextArea comment = new TextArea();
         comment.setWidthFull();
         comment.setPlaceholder("Комментарий");
-        comment.addValueChangeListener(event -> invoiceDto.setComment(event.getValue()));
+        comment.addValueChangeListener(event -> customerOrder.setComment(event.getValue()));
 
         TextField outerCode = new TextField();
         outerCode.setEnabled(false);
@@ -82,8 +82,8 @@ public class OrderGridFooter extends HorizontalLayout implements GridSummaryReci
         );
     }
 
-    public OrderGridFooter(CustomerOrderDto invoiceDto, OrderGrid grid) {
-        this(invoiceDto);
+    public OrderGridFooter(CustomerOrderDto customerOrder, OrderGrid grid) {
+        this(customerOrder);
         this.grid = grid;
     }
 

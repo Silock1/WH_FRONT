@@ -33,25 +33,26 @@ public class OrderPanel extends VerticalLayout {
     private final WarehouseService warehouseService;
     private final ContractService contractService;
     private final ProjectService projectService;
-    private final InvoiceService invoiceService;
+//    private final InvoiceService invoiceService;
+    private final CustomerOrderService customerOrderService;
     private final DocumentOperationsToolbar documentToolbar = new DocumentOperationsToolbar();
-    private final CustomerOrderDto invoiceDto = new CustomerOrderDto();
+    private final CustomerOrderDto customerOrder = new CustomerOrderDto();
 
     public OrderPanel(CompanyService companyService, ContractorService contractorService, ProductService productService,
                       WarehouseService warehouseService, ContractService contractService, ProjectService projectService,
-                      InvoiceService invoiceService) {
+                      CustomerOrderService customerOrderService) {
         this.companyService = companyService;
         this.contractorService = contractorService;
         this.productService = productService;
         this.warehouseService = warehouseService;
         this.contractService = contractService;
         this.projectService = projectService;
-        this.invoiceService = invoiceService;
+        this.customerOrderService = customerOrderService;
 
         try {
-            OrderDetails orderDetails = new OrderDetails(companyService, contractorService, warehouseService, contractService, projectService, invoiceDto);
-            OrderPositions orderPositions = new OrderPositions(productService, invoiceDto);
-            OrderHeader orderHeader = new OrderHeader(invoiceDto);
+            OrderDetails orderDetails = new OrderDetails(companyService, contractorService, warehouseService, contractService, projectService, customerOrder);
+            OrderPositions orderPositions = new OrderPositions(productService, customerOrder);
+            OrderHeader orderHeader = new OrderHeader(customerOrder);
 
             documentToolbar.setSaveHandler(() -> {
                 // save invoice and orders
@@ -62,15 +63,15 @@ public class OrderPanel extends VerticalLayout {
                     return;
                 }
 
-                invoiceDto.setProductDtos(order);
+                customerOrder.setProductDtos(order);
 //                invoice.setEdits(List.of(InvoiceEditDto.builder().id(1L).build())); // todo: получать текущего пользователя?
-                invoiceDto.setType("RECEIPT");
-                invoiceDto.setInvoiceAuthorId(1L);
-                invoiceDto.setInvoiceAuthorFirstName("Test_author_FistName");
-                invoiceDto.setInvoiceAuthorLastName("Test_author_LastName");
+                customerOrder.setType("RECEIPT");
+                customerOrder.setInvoiceAuthorId(1L);
+                customerOrder.setInvoiceAuthorFirstName("Test_author_FistName");
+                customerOrder.setInvoiceAuthorLastName("Test_author_LastName");
 
                 Notification.show("Сохранение заказа");
-                invoiceService.create(invoiceDto);
+                customerOrderService.create(customerOrder);
             });
 
             add(documentToolbar, orderHeader, orderDetails, orderPositions);

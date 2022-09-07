@@ -23,8 +23,8 @@ import java.util.List;
 public class OrderPositions extends VerticalLayout {
     OrderGrid grid = new OrderGrid();
 
-    public OrderPositions(ProductService productService, CustomerOrderDto invoiceDto) {
-        OrderGridFooter footer = new OrderGridFooter(invoiceDto, grid);
+    public OrderPositions(ProductService productService, CustomerOrderDto customerOrder) {
+        OrderGridFooter footer = new OrderGridFooter(customerOrder, grid);
         SearchToolbar searchHeader = new SearchToolbar(productService, grid);
         Tab mainTab = new Tab("Главная");
         Tab linkedTab = new Tab("Связанные документы");

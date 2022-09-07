@@ -40,7 +40,7 @@ public class OrderDetails extends HorizontalLayout {
     private final ContractService contractService;
     private final ProjectService projectService;
 //    private final InvoiceDto invoice;
-    private final CustomerOrderDto invoice;
+    private final CustomerOrderDto customerOrder;
     private List<CompanyDto> companies;
     private List<ContractorDto> contractors;
 
@@ -53,7 +53,7 @@ public class OrderDetails extends HorizontalLayout {
         this.warehouseService = warehouseService;
         this.contractService = contractService;
         this.projectService = projectService;
-        this.invoice = invoiceDto;
+        this.customerOrder = invoiceDto;
 
         contractors = contractorService.getAll();
         companies = companyService.getAll();
@@ -79,7 +79,7 @@ public class OrderDetails extends HorizontalLayout {
             CompanyDto companyDto = event.getValue();
 //            invoice.setCompanyId(companyDto.getId());
 //            invoice.setCompanyName(companyDto.getName());
-            invoice.setCompanyDto(companyDto);
+            customerOrder.setCompanyDto(companyDto);
         });
 
         ComboBox<ContractDto> contract = new ComboBox<>();
@@ -93,7 +93,7 @@ public class OrderDetails extends HorizontalLayout {
             ContractDto contractDto = event.getValue();
 //            invoice.setContractId(contractDto.getId());
 //            invoice.setContractNumber(contractDto.getNumber());
-            invoice.setContractDto(contractDto);
+            customerOrder.setContractDto(contractDto);
         });
 
         ComboBox<ContractorDto> agent = new ComboBox<>();
@@ -106,16 +106,16 @@ public class OrderDetails extends HorizontalLayout {
             ContractorDto contractorDto = event.getValue();
 //            invoice.setContractorId(contractorDto.getId());
 //            invoice.setContractorName(contractorDto.getName());
-            invoice.setContractorDto(contractorDto);
+            customerOrder.setContractorDto(contractorDto);
         });
 
         Label balance = new Label("Баланс: 0,00 руб"); // todo: это должно быть изначально скрыто
 
 //        invoice.setContractDate(LocalDate.now());
-        invoice.getContractDto().setContractDate(LocalDate.now());
+        customerOrder.getContractDto().setContractDate(LocalDate.now());
         DatePicker unloadDate = new DatePicker(LocalDate.now());
         unloadDate.addValueChangeListener(
-                event -> invoice.getContractDto().setContractDate(event.getValue() != null ? event.getValue() : LocalDate.now()));
+                event -> customerOrder.getContractDto().setContractDate(event.getValue() != null ? event.getValue() : LocalDate.now()));
         unloadDate.setInitialPosition(LocalDate.now());
 //                        invoice.setContractDate(event.getValue() != null ? event.getValue() : LocalDate.now()));
 //        unloadDate.setInitialPosition(LocalDate.now());
@@ -146,7 +146,7 @@ public class OrderDetails extends HorizontalLayout {
             WarehouseDto warehouseDto = event.getValue();
 //            invoice.setWarehouseId(warehouseDto.getId());
 //            invoice.setWarehouseName(warehouseDto.getName());
-            invoice.setWarehouseDto(warehouseDto);
+            customerOrder.setWarehouseDto(warehouseDto);
         });
 
         ComboBox<ProjectDto> project = new ComboBox<>();
@@ -158,7 +158,7 @@ public class OrderDetails extends HorizontalLayout {
             ProjectDto projectDto = event.getValue();
 //            invoice.setProjectId(projectDto.getId());
 //            invoice.setProjectName(projectDto.getName());
-            invoice.setProjectDto(projectDto);
+            customerOrder.setProjectDto(projectDto);
         });
 
         VerticalLayout rightFields = new VerticalLayout();
@@ -170,6 +170,6 @@ public class OrderDetails extends HorizontalLayout {
     }
 
     public CustomerOrderDto getInvoice() {
-        return invoice;
+        return customerOrder;
     }
 }

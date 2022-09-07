@@ -17,21 +17,21 @@ import java.time.LocalDateTime;
 
 @CssImport("./css/order_header.css")
 public class OrderHeader extends HorizontalLayout {
-    private final CustomerOrderDto invoice;
+    private final CustomerOrderDto customerOrder;
 
-    public OrderHeader(CustomerOrderDto invoice) {
-        this.invoice = invoice;
+    public OrderHeader(CustomerOrderDto customerOrder) {
+        this.customerOrder = customerOrder;
         addClassName("dtb-baseline");
 
         Label invoiceLabel = new Label("Заказ покупателя №");
 
         TextField orderNumber = new TextField();
-        orderNumber.addValueChangeListener(x -> invoice.setNumber(x.getValue()));
+        orderNumber.addValueChangeListener(x -> customerOrder.setNumber(x.getValue()));
 
         Label fromLabel = new Label(" от ");
 
         DateTimePicker invoiceDate = new DateTimePicker(LocalDateTime.now());
-        invoiceDate.addValueChangeListener(event -> invoice.setInvoiceDateTime(event.getValue()));
+        invoiceDate.addValueChangeListener(event -> customerOrder.setInvoiceDateTime(event.getValue()));
 
         Icon pendingIcon = new Icon(VaadinIcon.CLOCK);
         Span pending = new Span(pendingIcon, new Span("Не оплачено"));
@@ -46,7 +46,7 @@ public class OrderHeader extends HorizontalLayout {
 
         CheckboxWithHelper isCompleted = new CheckboxWithHelper("Проведено", "Непроведённый документ - это черновик. Он не учитывается в отчетах.");
         isCompleted.setValue(true);
-        isCompleted.addValueChangeListener(event -> invoice.setPosted(event.getValue()));
+        isCompleted.addValueChangeListener(event -> customerOrder.setPosted(event.getValue()));
 
         CheckboxWithHelper isReserved = new CheckboxWithHelper("Резерв");
         isReserved.addValueChangeListener(event -> Notification.show("Not implemented"));
@@ -55,6 +55,6 @@ public class OrderHeader extends HorizontalLayout {
     }
 
     public CustomerOrderDto getInvoice() {
-        return invoice;
+        return customerOrder;
     }
 }
