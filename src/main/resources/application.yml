@@ -18,7 +18,7 @@ retrofit:
     call_url: api/calls
     city_url: api/cities
     company_url: api/companies
-    comissioner_reports_url: api/commission_reports
+    commissioner_reports_url: api/commission_reports
     contract_url: api/contracts
     contractor_group_url: api/contractor_groups
     contractor_url: api/contractors
@@ -26,6 +26,7 @@ retrofit:
     currency_url: api/currencies
     customer_order_url: api/customer_orders   # []
     department_url: api/departments
+    discount_url: api/discount
     employee_url: api/employees
     feed_url: api/feed
     image_url: api/images
@@ -43,6 +44,7 @@ retrofit:
     posting_url: api/posting
     product_group_url: api/product_groups
     product_url: api/products
+    product_stage_url: api/production_stage
     production_tasks_url: api/production_tasks
     production_tasks_additional_field_url: api/additional_field
 #    production_operations_url: api/productions_operations
@@ -54,12 +56,16 @@ retrofit:
     role_url: api/roles
     settings_url: api/settings
     start_screen_url: api/start_screen
+    stats_url: api/stats
     street_url: api/streets
     subscription_url: api/subscription
     supplier_invoice_url: api/supplier_invoices
     tax_system_url: api/tax_systems
     type_of_contractor_url: api/type_of_contractors
     type_of_price_url: api/type_of_prices
+    technological_map_url: api/technological_map
+    technological_map_material_url: api/technological_map_material
+    technological_map_group_url: api/technological_map_group
     unit_url: api/units
     units_of_measure_url: api/unitsOfMeasure
     writeOffs_url: /api/writeOffs

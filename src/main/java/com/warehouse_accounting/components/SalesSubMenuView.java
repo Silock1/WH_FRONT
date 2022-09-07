@@ -10,6 +10,7 @@ import com.warehouse_accounting.components.sales.ComissionerReports;
 import com.warehouse_accounting.components.sales.CustomerGoodsToRealize;
 import com.warehouse_accounting.components.sales.CustomerInvoices;
 import com.warehouse_accounting.components.sales.CustomerOrders;
+import com.warehouse_accounting.components.sales.CustomerReturns;
 import com.warehouse_accounting.components.sales.Shipments;
 import com.warehouse_accounting.components.sales.filter.CustomerOrdersFilter;
 import com.warehouse_accounting.components.sales.filter.GoodsToRealizeFilter;
@@ -39,6 +40,7 @@ public class SalesSubMenuView extends VerticalLayout {
     private CustomerInvoices customerInvoices;
     private Shipments shipments;
     private ComissionerReports comissionerReports;
+    private CustomerReturns customerReturns;
 
 
     private CompanyService companyService;
@@ -113,7 +115,7 @@ public class SalesSubMenuView extends VerticalLayout {
                 case "Возвраты покупателей":
                     pageContent.removeAll();
                     // Сделать и Добавить представление инициализации возврата покупателей
-                    pageContent.add(new Span("Возвраты покупателей"));
+                    pageContent.add(initCustomerReturns(pageContent));
                     break;
                 case "Счета-фактуры выданные":
                     pageContent.removeAll();
@@ -174,5 +176,12 @@ public class SalesSubMenuView extends VerticalLayout {
                     projectService, warehouseService, departmentService, employeeService);
         }
         return comissionerReports;
+    }
+
+    private CustomerReturns initCustomerReturns(Div pageContent){
+        if (Objects.isNull(customerReturns)) {
+            customerReturns = new CustomerReturns(pageContent);
+        }
+        return customerReturns;
     }
 }

@@ -47,7 +47,8 @@ public class ProductionSubMenuView extends VerticalLayout {
         this.productionTasks = productionTasks;
         this.productionSteps = productionSteps;
         this.productionProcessTechnology = productionProcessTechnology;
-
+        this.technologicalMap.init();
+        pageContent.add(this.technologicalMap);
         pageContent.setSizeFull();
         add(initSubMenu(), pageContent);
     }
@@ -61,6 +62,7 @@ public class ProductionSubMenuView extends VerticalLayout {
             switch (event.getSelectedTab().getLabel()) {
                 case "Тех. карты":
                     pageContent.removeAll();
+                    technologicalMap.init();
                     pageContent.add(technologicalMap);
                     break;
                 case "Заказы на производство":

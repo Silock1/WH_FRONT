@@ -7,11 +7,15 @@ import retrofit2.http.*;
 
 import java.util.List;
 
-public interface ProductionStageApi {
+public interface    ProductionStageApi {
 
     @Headers("Accept: application/json")
     @GET("{url}")
     Call<List<ProductionStageDto>> getAll(@Path(value = "url", encoded = true) String url);
+
+    @Headers("Accept: application/json")
+    @GET("{url}/{id}")
+    Call<ProductionStageDto> getById(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
 
     @Headers("Accept: application/json")
     @POST("{url}")
