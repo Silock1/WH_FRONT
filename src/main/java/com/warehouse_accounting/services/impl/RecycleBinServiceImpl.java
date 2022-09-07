@@ -73,7 +73,7 @@ public class RecycleBinServiceImpl implements RecycleBinService {
 
     @Override
     public ResponseBody getTermsConditions() {
-        Call<ResponseBody> call = api.getTermsConditions(url + "/terms-conditions");
+        Call<ResponseBody> call = api.getTermsConditions(url + "/terms-conditions/application/pdf");
         return new ServiceUtils<>(RecycleBinDto.class).getResponseBody(call);
     }
 
