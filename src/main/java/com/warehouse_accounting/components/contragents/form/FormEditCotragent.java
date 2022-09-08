@@ -121,15 +121,20 @@ public class FormEditCotragent extends VerticalLayout {
                 groupBlockLayout(contractorDto));
     }
 
+    boolean alreadyMakeUpdate = false;
 
     public void build() {
         removeAll();
         newForm = true;
-        try {
-            contractorDtoBinder.writeBean(contractorDto);
-        } catch (ValidationException e) {
-            throw new RuntimeException(e);
+
+        if (alreadyMakeUpdate) {
+            try {
+                contractorDtoBinder.writeBean(contractorDto);
+            } catch (ValidationException e) {
+                throw new RuntimeException(e);
+            }
         }
+
         add(createButton(contractorDto),
                 getNameContragent(contractorDto),
                 groupBlockLayout(contractorDto));
@@ -174,6 +179,7 @@ public class FormEditCotragent extends VerticalLayout {
                 }
             } else {
                 try {
+                    alreadyMakeUpdate = true;
                     contractorDtoBinder.writeBean(contractorDto);
                     contractorService.update(contractorDto);
                 } catch (ValidationException ex) {
@@ -215,9 +221,9 @@ public class FormEditCotragent extends VerticalLayout {
         leftLayout.add(getContragentAccordion(contractorDto));
         if (!newForm) {
             leftLayout.add(getLegalDetailAccordion(contractorDto));
-            leftLayout.add(getSalasEndPriceAccordion(contractorDto));
             leftLayout.add(getAccessAccordion());
         }
+        leftLayout.add(getSalasEndPriceAccordion(contractorDto));
         leftLayout.setWidth("450px");
         return leftLayout;
     }
@@ -327,6 +333,7 @@ public class FormEditCotragent extends VerticalLayout {
             legalDetailDtoBinder.readBean(legalDetailDto);
             contractorDto.setAddress(addressDto1);
             contractorDto.setLegalDetail(legalDetailDto);
+            contractorDto.setNumberDiscountCard("");
         }
 
         contractorDtoBinder.readBean(contractorDto);
