@@ -32,7 +32,8 @@ public class CustomerOrders extends VerticalLayout {
     private EmployeeService employeeService;
     private DepartmentService departmentService;
     private final ProductService productService;
-    private final InvoiceService invoiceService;
+//    private final InvoiceService invoiceService;
+    private final CustomerOrderService customerOrderService;
     private final Div parentLayer;
     private final CustomerOrdersFilter customerOrdersFilter;
     private final SalesGridLayout salesGridLayout;
@@ -41,7 +42,7 @@ public class CustomerOrders extends VerticalLayout {
     public CustomerOrders(Div parentLayer, CompanyService companyService, ContractorService contractorService,
                           ContractService contractService, ProjectService projectService, WarehouseService warehouseService,
                           EmployeeService employeeService, DepartmentService departmentService, ProductService productService,
-                          InvoiceService invoiceService) {
+                          CustomerOrderService customerOrderService) {
         this.parentLayer = parentLayer;
         this.companyService = companyService;
         this.contractorService = contractorService;
@@ -51,7 +52,7 @@ public class CustomerOrders extends VerticalLayout {
         this.employeeService = employeeService;
         this.departmentService = departmentService;
         this.productService = productService;
-        this.invoiceService = invoiceService;
+        this.customerOrderService = customerOrderService;
 
         customerOrdersFilter = new CustomerOrdersFilter(companyService, contractorService, contractService,
                 projectService, warehouseService, employeeService, departmentService);
@@ -83,7 +84,7 @@ public class CustomerOrders extends VerticalLayout {
         addOrderButton.addClickListener(event -> {
             removeAll();
             OrderPanel orderPanel = new OrderPanel(companyService, contractorService, productService, warehouseService,
-                    contractService, projectService, invoiceService);
+                    contractService, projectService, customerOrderService);
             orderPanel.setOnCloseHandler(() -> initPage());
             add(orderPanel);
         });
