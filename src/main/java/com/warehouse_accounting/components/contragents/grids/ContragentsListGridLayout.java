@@ -14,8 +14,15 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.contragents.ContragentsList;
 import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
+import com.warehouse_accounting.models.dto.BankAccountDto;
 import com.warehouse_accounting.models.dto.ContractorDto;
+import com.warehouse_accounting.services.interfaces.BankAccountService;
 import com.warehouse_accounting.services.interfaces.ContractorService;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /*
 Таблица контрагентов
@@ -25,12 +32,15 @@ import com.warehouse_accounting.services.interfaces.ContractorService;
 public class ContragentsListGridLayout extends HorizontalLayout {
     private final ContractorService contractorService;
 
+    private final BankAccountService bankAccountService;
+
     private Button settingButton = new Button(new Icon(VaadinIcon.COG));
     private Grid<ContractorDto> contractorDtoGrid;
     private ContragentsList parent;
 
-    public ContragentsListGridLayout(ContractorService contractorService) {
+    public ContragentsListGridLayout(ContractorService contractorService, BankAccountService bankAccountService) {
         this.contractorService = contractorService;
+        this.bankAccountService = bankAccountService;
         contractorDtoGrid = initGrid();
         contractorDtoGrid.setItems(contractorService.getAll());
         add(contractorDtoGrid, settingButton);
@@ -126,6 +136,20 @@ public class ContragentsListGridLayout extends HorizontalLayout {
 
     private void deleteAndClose(ContractorDto contractorDto) {
 
+        List<BankAccountDto> filteredList = new ArrayList<>();
+
+        List<BankAccountDto> bankAccountDtoList = bankAccountService.getAll();
+        bankAccountDtoList.stream()
+                .filter(bankAccountDto1 -> {
+                    if (bankAccountDto1.getContractor() != null &&
+                            Objects.equals(contractorDto.getId(), bankAccountDto1.getContractor().getId())) {
+                        filteredList.add(bankAccountDto1);
+                        return true;
+                    }
+                    return false;
+                })
+                .collect(Collectors.toList());
+
         Button delete = new Button("Удалить");
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
         Button cancel = new Button("Отмена");
@@ -136,7 +160,9 @@ public class ContragentsListGridLayout extends HorizontalLayout {
         dialog.add(new VerticalLayout());
         dialog.add(buttonLayout);
 
-        dialog.open();
+        if (filteredList.size() == 0) {
+            dialog.open();
+        }
 
         delete.addClickListener(event -> {
             contractorService.deleteById(contractorDto.getId());
@@ -147,6 +173,20 @@ public class ContragentsListGridLayout extends HorizontalLayout {
         cancel.addClickListener(event -> {
             dialog.close();
         });
+
+        if (filteredList.size() != 0) {
+            Button canceled = new Button("Отмена");
+            HorizontalLayout horizontalLayout = new HorizontalLayout(canceled);
+            Dialog dialog2 = new Dialog();
+            dialog2.add("Не удалены привязанные расчетные счета");
+            dialog2.add(new VerticalLayout());
+            dialog2.add(horizontalLayout);
+            canceled.addClickListener(event -> {
+                dialog2.close();
+            });
+            dialog2.open();
+        }
+
     }
 
     public void setParent(ContragentsList parent) {

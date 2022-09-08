@@ -10,6 +10,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.details.DetailsVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -504,8 +505,9 @@ public class FormEditCotragent extends VerticalLayout {
 
         VerticalLayout bankAccountSpace = new VerticalLayout();
 
-        Button addNewBankAcc = new Button("+ Расчетный счет");
-
+        Image buttonIcon = new Image("icons/plus.png", "Plus");
+        buttonIcon.setWidth("14px");
+        Button addNewBankAcc = new Button("Расчетный счет", buttonIcon);
         addNewBankAcc.addClickListener(e -> {
             try {
                 bankAccountSpace.add(getFormForBankAccount(contractorDto));

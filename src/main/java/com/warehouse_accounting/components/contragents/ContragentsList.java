@@ -77,8 +77,10 @@ public class ContragentsList extends VerticalLayout {
         refreshButton.addClickListener(e -> {
             contragentsListGridLayout.refreshDate();
         });
-        Button addContragent = new Button(("Контрагент"), new Icon(VaadinIcon.PLUS));
-        addContragent.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        Image buttonIcon = new Image("icons/plus.png", "Plus");
+        buttonIcon.setWidth("14px");
+        Button addContragent = new Button("Контрагент", buttonIcon);
+//        addContragent.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         addContragent.addClickListener(e -> {
             hideButtonEndGrid();
             formEditCotragent.build();
