@@ -79,7 +79,7 @@ public class FormEditCotragent extends VerticalLayout {
 
     private transient List<FormForFaceContactInner> formsFacesContact;
 
-    private final Binder<BankAccountDto> bankAccountDtoBinder = new Binder<>(BankAccountDto.class);
+//    private final Binder<BankAccountDto> bankAccountDtoBinder = new Binder<>(BankAccountDto.class);
 
     private final Binder<ContractorDto> contractorDtoBinder = new Binder<>(ContractorDto.class);
 
@@ -87,11 +87,11 @@ public class FormEditCotragent extends VerticalLayout {
 
     private final Binder<AddressDto> addressDtoBinder = new Binder<>(AddressDto.class);
 
-    private final Binder<List<TypeOfPriceDto>> typeOfPriceDtoBinder = new Binder<>();
-
-    private final Binder<List<TypeOfContractorDto>> typeOfContractorDtoBinder = new Binder<>();
-
-    private final Binder<List<ContractorGroupDto>> contractorGroupDtoBinder = new Binder<>();
+//    private final Binder<List<TypeOfPriceDto>> typeOfPriceDtoBinder = new Binder<>();
+//
+//    private final Binder<List<TypeOfContractorDto>> typeOfContractorDtoBinder = new Binder<>();
+//
+//    private final Binder<List<ContractorGroupDto>> contractorGroupDtoBinder = new Binder<>();
 
     public FormEditCotragent(ContractorService contractorService,
                              ContractorGroupService contractorGroupService,
@@ -125,6 +125,11 @@ public class FormEditCotragent extends VerticalLayout {
     public void build() {
         removeAll();
         newForm = true;
+        try {
+            contractorDtoBinder.writeBean(contractorDto);
+        } catch (ValidationException e) {
+            throw new RuntimeException(e);
+        }
         add(createButton(contractorDto),
                 getNameContragent(contractorDto),
                 groupBlockLayout(contractorDto));
@@ -178,9 +183,9 @@ public class FormEditCotragent extends VerticalLayout {
 
             removeAll();
             parent.showButtonEndGrid(true);
-//        }
 
         });
+
         close = new Button("Закрыть");
         close.addClickListener(e1 -> {
             removeAll();
@@ -189,6 +194,7 @@ public class FormEditCotragent extends VerticalLayout {
         button.add(close, edit);
         button.setAlignItems(Alignment.CENTER);
         return button;
+
     }
 
     private HorizontalLayout getNameContragent(ContractorDto contractorDto) {

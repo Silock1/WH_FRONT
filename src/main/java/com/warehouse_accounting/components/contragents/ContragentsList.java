@@ -80,7 +80,6 @@ public class ContragentsList extends VerticalLayout {
         Image buttonIcon = new Image("icons/plus.png", "Plus");
         buttonIcon.setWidth("14px");
         Button addContragent = new Button("Контрагент", buttonIcon);
-//        addContragent.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         addContragent.addClickListener(e -> {
             hideButtonEndGrid();
             formEditCotragent.build();
