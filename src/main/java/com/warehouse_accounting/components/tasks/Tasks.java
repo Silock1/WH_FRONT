@@ -14,8 +14,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.warehouse_accounting.components.tasks.filter.TasksFilter;
-import com.warehouse_accounting.components.tasks.forms.TasksEditForm;
-import com.warehouse_accounting.components.tasks.forms.TasksForm;
+import com.warehouse_accounting.components.tasks.forms.TaskModal;
 import com.warehouse_accounting.components.tasks.grids.TasksGrid;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.ContractorService;
@@ -38,10 +37,11 @@ public class Tasks extends VerticalLayout {
         this.employeeService = employeeService;
         this.contractorService = contractorService;
         tasksGrid = new TasksGrid(tasksService, employeeService, contractorService);
+//        setSizeFull();
         Div pageContent = new Div();
+//        pageContent.setSizeFull();
         pageContent.add(tasksGrid);
         filterLayout.setTasks(this);//оно
-        pageContent.setSizeFull();
         add(getGroupButtons(), filterLayout, pageContent);
     }
 
@@ -57,6 +57,7 @@ public class Tasks extends VerticalLayout {
 
         Label textProducts = new Label();
         textProducts.setText("Задачи");
+        textProducts.getStyle().set("font-size", "20px").set("font-weight", "bold");
 
         Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH));
         refreshButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
@@ -65,10 +66,12 @@ public class Tasks extends VerticalLayout {
         addOrderButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
         addOrderButton.addClickListener(buttonClickEvent -> {
-            TasksForm tasksForm = new TasksForm(parentLayer, this
-                    , employeeService, contractorService);
-            parentLayer.removeAll();
-            parentLayer.add(tasksForm);
+//            TasksForm tasksForm = new TasksForm(parentLayer, this
+//                    , employeeService, contractorService);
+//            parentLayer.removeAll();
+//            parentLayer.add(tasksForm);
+            TaskModal newTaskModal = new TaskModal(employeeService, contractorService);
+            parentLayer.add(newTaskModal);
 
         });
 

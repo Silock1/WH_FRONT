@@ -5,6 +5,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -29,6 +30,7 @@ import java.time.format.DateTimeFormatter;
 @UIScope
 @SpringComponent
 @Log4j2
+
 public class TasksEditForm extends VerticalLayout {
 
     private TextField numberText;
@@ -71,7 +73,7 @@ public class TasksEditForm extends VerticalLayout {
                 tasksDto.setDescription(numberText.getValue());
                 tasksDto.setEmployeeId(comboBox.getValue().getId());
                 tasksDto.setEmployeeName(comboBox.getValue().getFirstName());
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
                 String date = dtf.format(deadline.getValue());
                 tasksDto.setDeadline(date);
 
