@@ -38,4 +38,5 @@ public interface EmployeeApi {
     @GET("{url}/profile")
     Call<EmployeeDto> getPrincipal(@Path(value = "url", encoded = true) String url);
 
+
 }
