@@ -6,7 +6,6 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
@@ -37,7 +36,6 @@ public class TaskModal extends Div {
     private ComboBox<ContractorDto> contractorName;
     private Checkbox accessCheckbox;
     private Dialog dialog;
-    private TasksDto task;
 
     public TaskModal(EmployeeService employeeService, ContractorService contractorService) {
 
@@ -53,21 +51,10 @@ public class TaskModal extends Div {
         dialog.open();
     }
 
-//    public TaskModal(TasksDto task, EmployeeService employeeService, ContractorService contractorService){
-//        this(employeeService, contractorService);
-//        this.task = task;
-//        binder.forField(deadline).withConverter(new LocalDateToDateConverter()).bind(deadline.getValue().toString());
-//        binder.bindInstanceFields(this);
-//    }
-
-
     private VerticalLayout createMenu() {
 // кнопки
         VerticalLayout modalWindow = new VerticalLayout();
         Button saveButton = new Button("Сохранить", e -> saveTask());
-//            if (notification == null) {
-//                reloadPageAndCloseModal();
-//            }
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
         Button closeButton = new Button("Закрыть", e -> dialog.close());
         HorizontalLayout buttons = new HorizontalLayout(saveButton, closeButton);
@@ -83,7 +70,6 @@ public class TaskModal extends Div {
         description.setWidthFull();
         description.setHeightFull();
         description.getStyle().set("background-color", "#ffffff");
-//        this.description = description;
         left.add(description);
         accessCheckbox = new Checkbox();
         accessCheckbox.setLabel("Выполнено");
@@ -158,14 +144,4 @@ public class TaskModal extends Div {
             notification.setPosition(Notification.Position.BOTTOM_STRETCH);
         }
     }
-
-    private void reloadPageAndCloseModal() {
-        UI.getCurrent().getPage().reload();
-        dialog.close();
-    }
-
-//    public void setTask(TasksDto task) {
-//        this.task = task;
-//        binder.readBean(task);
-//    }
 }

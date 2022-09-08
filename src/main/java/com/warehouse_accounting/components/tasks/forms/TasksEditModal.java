@@ -6,7 +6,6 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
@@ -16,7 +15,6 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.data.binder.Binder;
 import com.warehouse_accounting.components.util.DateConvertor;
 import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.models.dto.EmployeeDto;
@@ -42,11 +40,8 @@ public class TasksEditModal extends Div {
     private ComboBox<EmployeeDto> employeeName;
     private ComboBox<ContractorDto> contractorName;
     private Checkbox accessCheckbox;
-//    private final Binder<TasksDto> taskEditFormBinder = new Binder<>(TasksDto.class);
     private Dialog dialog;
     private TasksDto task;
-//    boolean readonly = true;
-
 
     public TasksEditModal(TasksDto task, EmployeeService employeeService, TasksService tasksService, ContractorService contractorService) {
         this.task = task;
@@ -54,16 +49,13 @@ public class TasksEditModal extends Div {
         this.employeeService = employeeService;
         this.tasksService = tasksService;
         dialog = new Dialog();
-
         VerticalLayout dialogLayout = createMenu();
         dialogLayout.setPadding(false);
         dialogLayout.setSpacing(false);
         dialogLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
         dialog.add(dialogLayout);
         add(dialog);
-
         dialog.open();
-//        createMenu();
     }
 
     private VerticalLayout createMenu() {
@@ -71,8 +63,6 @@ public class TasksEditModal extends Div {
         VerticalLayout modalWindow = new VerticalLayout();
         modalWindow.addClassName("editModal");
         Button saveButton = new Button("Сохранить", e -> updateTask());
-
-        //        saveButton.setVisible(!readonly);
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
         Button closeButton = new Button("Закрыть", event -> dialog.close());
         Button deleteButton = new Button("Удалить", event -> deleteButton(task));
@@ -92,8 +82,6 @@ public class TasksEditModal extends Div {
         description.setHeightFull();
         description.getStyle().set("background-color", "#ffffff");
         description.setValue(task.getDescription());
-//        description.setReadOnly(readonly);
-//        this.description = description;
         left.add(description, commentField());
         accessCheckbox = new Checkbox();
         accessCheckbox.setLabel("Выполнено");
@@ -110,7 +98,6 @@ public class TasksEditModal extends Div {
         employeeName.setPlaceholder("Field is required");
         employeeName.setItems(employeeService.getAll());
         employeeName.setValue(employeeService.getById(task.getEmployeeId()));
-//        employeeName.setReadOnly(readonly);
         employeeName.setItemLabelGenerator(EmployeeDto::getFirstName);
         employeeName.setWidth("200px");
         employeeName.getStyle().set("background-color", "#ffffff");
@@ -125,7 +112,6 @@ public class TasksEditModal extends Div {
         if (task.getDeadline() != null) {
             deadline.setValue(DateConvertor.fromTextDate(task.getDeadline()));
         }
-//        deadline.setReadOnly(readonly);
         deadline.setWidth("200px");
         deadline.getStyle().set("background-color", "#ffffff");
         right.add(deadline);
@@ -137,13 +123,11 @@ public class TasksEditModal extends Div {
         contractorName.setItems(contractorService.getAll());
         contractorName.setValue(contractorService.getById(task.getContractorId()));
         contractorName.setItemLabelGenerator(ContractorDto::getName);
-//        contractorName.setReadOnly(readonly);
         contractorName.setWidth("200px");
         contractorName.getStyle().set("background-color", "#ffffff");
         right.add(contractorName);
         line4.add(left, right);
         modalWindow.add(buttons, line1, line2, line3, line4);
-//        System.out.println("in window " + task);
         return modalWindow;
     }
 
@@ -164,12 +148,10 @@ public class TasksEditModal extends Div {
         VerticalLayout block = new VerticalLayout(labelLayout, commentFieldLayout);
         block.setSpacing(false);
         block.getStyle().set("padding-left", "0px").set("padding-bottom", "0px").set("padding-right", "0px");
-//        block.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.END);
         return block;
     }
 
     private void updateTask() {
-//        notification = null;
         try {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("http://localhost:4446")
@@ -177,7 +159,6 @@ public class TasksEditModal extends Div {
                     .build();
             TasksService tasksService = new TasksServiceImpl("/api/tasks_employee", retrofit);
             TasksDto tasksDto = task;
-//            tasksDto.setId(task.getId());
             tasksDto.setDescription(description.getValue());
             tasksDto.setEmployeeId(employeeName.getValue().getId());
             tasksDto.setEmployeeName(employeeName.getValue().getFirstName());
@@ -188,42 +169,16 @@ public class TasksEditModal extends Div {
                 tasksDto.setContractorId(contractorName.getValue().getId());
                 tasksDto.setContractorName(contractorName.getValue().getName());
             }
-//            if (contractorName.getValue().getName() != null) {
-//                tasksDto.setContractorName(contractorName.getValue().getName());
-//            }
             tasksDto.setIsDone(accessCheckbox.getValue());
-//            System.out.println("in method " + tasksDto);
             tasksService.update(tasksDto);
             UI.getCurrent().getPage().reload();
         } catch (Exception ex) {
-//            System.out.println("-------------------------------------");
-//            ex.printStackTrace();
-//            System.out.println("--------------------------------------");
             notification = Notification.show("Ошибка создания Задачи");
             notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
             notification.setPosition(Notification.Position.BOTTOM_STRETCH);
         }
     }
 
-//    private void closeModal() {
-//        UI.getCurrent().getPage().reload();
-//        dialog.close();
-//    }
-
-    //    public MenuBar menuBar() {
-//        MenuBar menuBar = new MenuBar();
-//        menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY);
-//        MenuItem menuItem = menuBar.addItem("•••");
-//        menuItem.getElement().setAttribute("aria-label", "More options");
-//        SubMenu subMenu = menuItem.getSubMenu();
-//        subMenu.addItem("Редактировать", event -> {
-//            readonly = false;
-//            ;
-//        });
-//        subMenu.addItem("Копировать", event -> {});
-//        subMenu.addItem("Удалить", event -> {});
-//        return menuBar;
-//    }
     private void deleteButton(TasksDto tasksDto) {
 
         Button delete = new Button("Удалить");
