@@ -22,12 +22,12 @@ import com.warehouse_accounting.services.interfaces.TasksService;
 
 
 public class Tasks extends VerticalLayout {
-    private TasksGrid tasksGrid;
-    private TasksFilter filterLayout;
+    private final TasksGrid tasksGrid;
+    private final TasksFilter filterLayout;
     private final Div parentLayer;
     private final TextField textFieldGridSelected = new TextField();
-    private EmployeeService employeeService;
-    private ContractorService contractorService;
+    private final EmployeeService employeeService;
+    private final ContractorService contractorService;
 
     public Tasks(Div parentLayer, TasksService tasksService, TasksFilter filterLayout
             , EmployeeService employeeService, ContractorService contractorService) {

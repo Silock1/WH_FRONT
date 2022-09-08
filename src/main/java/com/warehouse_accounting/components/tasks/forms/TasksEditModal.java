@@ -34,26 +34,25 @@ public class TasksEditModal extends Div {
     private final ContractorService contractorService;
     private final TasksService tasksService;
     private final EmployeeService employeeService;
-    private Notification notification;
     private TextArea description;
     private DatePicker deadline;
     private ComboBox<EmployeeDto> employeeName;
     private ComboBox<ContractorDto> contractorName;
     private Checkbox accessCheckbox;
-    private Dialog dialog;
-    private TasksDto task;
+    private final Dialog dialog;
+    private final TasksDto task;
 
     public TasksEditModal(TasksDto task, EmployeeService employeeService, TasksService tasksService, ContractorService contractorService) {
         this.task = task;
         this.contractorService = contractorService;
         this.employeeService = employeeService;
         this.tasksService = tasksService;
-        dialog = new Dialog();
+
         VerticalLayout dialogLayout = createMenu();
         dialogLayout.setPadding(false);
         dialogLayout.setSpacing(false);
         dialogLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
-        dialog.add(dialogLayout);
+        dialog = new Dialog(dialogLayout);
         add(dialog);
         dialog.open();
     }
@@ -83,8 +82,8 @@ public class TasksEditModal extends Div {
         description.getStyle().set("background-color", "#ffffff");
         description.setValue(task.getDescription());
         left.add(description, commentField());
-        accessCheckbox = new Checkbox();
-        accessCheckbox.setLabel("Выполнено");
+        accessCheckbox = new Checkbox("Выполнено");
+//        accessCheckbox.setLabel("Выполнено");
         right.add(accessCheckbox);
         right.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.END);
         line1.setSizeFull();
@@ -173,7 +172,7 @@ public class TasksEditModal extends Div {
             tasksService.update(tasksDto);
             UI.getCurrent().getPage().reload();
         } catch (Exception ex) {
-            notification = Notification.show("Ошибка создания Задачи");
+            Notification notification = Notification.show("Ошибка создания Задачи");
             notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
             notification.setPosition(Notification.Position.BOTTOM_STRETCH);
         }
@@ -199,8 +198,6 @@ public class TasksEditModal extends Div {
             dialog.close();
         });
 
-        cancel.addClickListener(event -> {
-            dialog.close();
-        });
+        cancel.addClickListener(event -> dialog.close());
     }
 }

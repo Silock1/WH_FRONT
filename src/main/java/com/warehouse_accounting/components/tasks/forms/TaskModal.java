@@ -29,13 +29,12 @@ public class TaskModal extends Div {
 
     private final EmployeeService employeeService;
     private final ContractorService contractorService;
-    private Notification notification;
     private TextArea description;
     private DatePicker deadline;
     private ComboBox<EmployeeDto> employeeName;
     private ComboBox<ContractorDto> contractorName;
     private Checkbox accessCheckbox;
-    private Dialog dialog;
+    private final Dialog dialog;
 
     public TaskModal(EmployeeService employeeService, ContractorService contractorService) {
 
@@ -116,7 +115,6 @@ public class TaskModal extends Div {
     }
 
     private void saveTask() {
-        notification = null;
         try {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("http://localhost:4446")
@@ -139,7 +137,7 @@ public class TaskModal extends Div {
             tasksService.create(tasksDto);
             UI.getCurrent().getPage().reload();
         } catch (Exception ex) {
-            notification = Notification.show("Ошибка создания Задачи");
+            Notification notification = Notification.show("Ошибка создания Задачи");
             notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
             notification.setPosition(Notification.Position.BOTTOM_STRETCH);
         }

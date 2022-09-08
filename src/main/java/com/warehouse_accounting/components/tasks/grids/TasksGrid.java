@@ -49,7 +49,7 @@ public class TasksGrid extends HorizontalLayout {
         initGrid();
     }
 
-    private Grid<TasksDto> initGrid() {
+    private void initGrid() {
         taskDtoGrid.setColumns(getVisibleColumn().keySet().toArray(String[]::new));
         taskDtoGrid.setWidth("1000px");
         taskDtoGrid.getColumnByKey("description").setWidth("600px");
@@ -68,7 +68,6 @@ public class TasksGrid extends HorizontalLayout {
         headerLayout.setAlignItems(Alignment.BASELINE);
         taskDtoGrid.addItemClickListener(e -> editButton(e.getItem()));
         add(taskDtoGrid, headerLayout);
-        return taskDtoGrid;
     }
 
     private HashMap<String, String> getVisibleColumn() {
