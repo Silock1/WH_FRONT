@@ -37,6 +37,7 @@ import com.warehouse_accounting.models.dto.SettingsDto;
 import com.warehouse_accounting.models.dto.StartScreenDto;
 import com.warehouse_accounting.models.dto.TariffDto;
 import com.warehouse_accounting.models.dto.WarehouseDto;
+import com.warehouse_accounting.security.UserPrincipal;
 import com.warehouse_accounting.services.interfaces.CompanyService;
 import com.warehouse_accounting.services.interfaces.ContractorService;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
@@ -49,6 +50,7 @@ import com.warehouse_accounting.services.interfaces.SettingsService;
 import com.warehouse_accounting.services.interfaces.StartScreenService;
 import com.warehouse_accounting.services.interfaces.WarehouseService;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.File;
 import java.io.IOException;
@@ -162,6 +164,10 @@ public class UserSettingsView extends VerticalLayout {
     public void dsUserSettingsView() throws IOException {
         initialization();
         setSizeFull();
+        employeeDto = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getEmployeeDto();
+
+//        employeeDto = employeeService.getCurrentEmployee();
+        System.out.println(employeeDto);
         horizontalLayout.add(createButton, closeButton, change, changeButtonPass);
         verticalLayout.add(
                 textFieldrow("Имя", firstName, employeeDto.getFirstName()),

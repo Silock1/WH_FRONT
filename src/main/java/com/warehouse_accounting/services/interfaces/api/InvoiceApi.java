@@ -1,5 +1,6 @@
 package com.warehouse_accounting.services.interfaces.api;
 
+import com.warehouse_accounting.models.dto.CustomerOrderDto;
 import com.warehouse_accounting.models.dto.InvoiceDto;
 import retrofit2.Call;
 import retrofit2.http.Body;

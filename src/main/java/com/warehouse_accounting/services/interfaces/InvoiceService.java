@@ -1,5 +1,6 @@
 package com.warehouse_accounting.services.interfaces;
 
+import com.warehouse_accounting.models.dto.CustomerOrderDto;
 import com.warehouse_accounting.models.dto.InvoiceDto;
 
 import java.util.List;

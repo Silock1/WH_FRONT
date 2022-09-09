@@ -8,8 +8,10 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.warehouse_accounting.components.sales.CustomerOrders;
 import com.warehouse_accounting.components.sales.forms.order.types.GridSummaryReciver;
 import com.warehouse_accounting.components.sales.forms.order.types.OrderSummary;
+import com.warehouse_accounting.models.dto.CustomerOrderDto;
 import com.warehouse_accounting.models.dto.InvoiceDto;
 
 import java.math.BigDecimal;
@@ -32,17 +34,17 @@ public class OrderGridFooter extends HorizontalLayout implements GridSummaryReci
     private Span priceField = new Span("Промежуточный итог: 0.0");
     private Span totalPriceField = new Span("Итог: 0.0");
     private OrderGrid grid;
-    private final InvoiceDto invoiceDto;
+    private final CustomerOrderDto customerOrder;
 
-    public OrderGridFooter(InvoiceDto invoiceDto) {
-        this.invoiceDto = invoiceDto;
+    public OrderGridFooter(CustomerOrderDto customerOrder) {
+        this.customerOrder = customerOrder;
 
         setWidthFull();
 
         TextArea comment = new TextArea();
         comment.setWidthFull();
         comment.setPlaceholder("Комментарий");
-        comment.addValueChangeListener(event -> invoiceDto.setComment(event.getValue()));
+        comment.addValueChangeListener(event -> customerOrder.setComment(event.getValue()));
 
         TextField outerCode = new TextField();
         outerCode.setEnabled(false);
@@ -80,8 +82,8 @@ public class OrderGridFooter extends HorizontalLayout implements GridSummaryReci
         );
     }
 
-    public OrderGridFooter(InvoiceDto invoiceDto, OrderGrid grid) {
-        this(invoiceDto);
+    public OrderGridFooter(CustomerOrderDto customerOrder, OrderGrid grid) {
+        this(customerOrder);
         this.grid = grid;
     }
 
