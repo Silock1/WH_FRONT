@@ -10,6 +10,7 @@ import com.warehouse_accounting.components.goods.GoodsAndServiceView;
 import com.warehouse_accounting.components.goods.Inventory;
 import com.warehouse_accounting.components.goods.InternalOrderView;
 import com.warehouse_accounting.components.goods.Posting;
+import com.warehouse_accounting.components.goods.Remains;
 import com.warehouse_accounting.components.goods.WriteOffs;
 import com.warehouse_accounting.components.goods.filter.GoodsFilter;
 import com.warehouse_accounting.components.goods.grids.movements.MovementView;
@@ -36,6 +37,7 @@ public class GoodsSubMenuView extends VerticalLayout {
     private final PriceList priceList;
     private final Posting posting;
     private final WriteOffs writeOffs;
+    private final Remains remains;
     private final Inventory inventory;
     private GoodsAndServiceView goodsAndService;
 
@@ -53,12 +55,13 @@ public class GoodsSubMenuView extends VerticalLayout {
     public GoodsSubMenuView(PriceList priceList, Posting posting, MovementView movementView, GoodsAndServiceView goodsAndService,
                             GoodsFilter goodsFilter, ProductService productService, EmployeeService employeeService,
                             DepartmentService departmentService, ContractorService contractorService,
-                            ProductGroupService productGroupService, WriteOffs writeOffs,
+                            ProductGroupService productGroupService, WriteOffs writeOffs, Remains remains,
                             Inventory inventory, InternalOrderView internalOrderView) {
         this.priceList = priceList;
         this.posting = posting;
         this.movementView = movementView;
         this.writeOffs = writeOffs;
+        this.remains = remains;
         this.inventory = inventory;
         this.goodsAndService = goodsAndService;
         this.goodsFilter = goodsFilter;
@@ -117,7 +120,7 @@ public class GoodsSubMenuView extends VerticalLayout {
                     break;
                 case "Остатки":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Остатки"));
+                    pageContent.add(remains);
                     break;
                 case "Обороты":
                     pageContent.removeAll();
