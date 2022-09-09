@@ -37,6 +37,7 @@ import com.warehouse_accounting.models.dto.SettingsDto;
 import com.warehouse_accounting.models.dto.StartScreenDto;
 import com.warehouse_accounting.models.dto.TariffDto;
 import com.warehouse_accounting.models.dto.WarehouseDto;
+import com.warehouse_accounting.security.UserPrincipal;
 import com.warehouse_accounting.services.interfaces.CompanyService;
 import com.warehouse_accounting.services.interfaces.ContractorService;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
@@ -49,6 +50,7 @@ import com.warehouse_accounting.services.interfaces.SettingsService;
 import com.warehouse_accounting.services.interfaces.StartScreenService;
 import com.warehouse_accounting.services.interfaces.WarehouseService;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.File;
 import java.io.IOException;
@@ -212,9 +214,11 @@ public class UserSettingsView extends VerticalLayout {
             settingsDto = new SettingsDto();
             System.out.println("Empty");
         } else {
-            settingsDto = settingsService.getById(1L);
-        }
-        employeeDto = employeeService.getById(1L);
+            employeeDto = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getEmployeeDto();
+            settingsDto = settingsService.getById(employeeDto.getId());
+            System.out.println(employeeDto);
+        } //getById(1L) заменено на employeeDto.getId()//
+//        employeeDto = employeeService.getById(1L); - закоменчено
         companyDto = settingsDto.getCompanyDto();
         warehouseDto = settingsDto.getWarehouseDto();
         customerDto = settingsDto.getCustomerDto();
@@ -228,6 +232,7 @@ public class UserSettingsView extends VerticalLayout {
         notificationsDto = settingsDto.getNotificationsDto();
 
     }
+
 
     private HorizontalLayout setComboBox(String label, ComboBox comboBox, List list) {
         Label companyLabel = new Label(label);
