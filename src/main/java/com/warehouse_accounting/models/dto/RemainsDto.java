@@ -10,14 +10,14 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-@AllArgsConstructor
+//@AllArgsConstructor
 @NoArgsConstructor
 public class RemainsDto {
     private Long id;
 
     private String name;
 
-    private BigDecimal sum = BigDecimal.valueOf(0);
+    private Long sum;
 
     private Long article;
 
@@ -31,16 +31,31 @@ public class RemainsDto {
 
     private Long available;
 
-//    private String unit;
-//
-//    private Long days;
-//
-//    private Double price;
-//    private Double salesPrice;
-//    private Double buyPrice;
-//
-//    private Boolean access;
+    private String unit;
 
-    public RemainsDto(long l) {
+    private Long days;
+
+    private Double price;
+    private Double salesPrice;
+    private Double buyPrice;
+
+    public RemainsDto(Long id, String name, Long sum,
+                      Long article, Long remainder, Long nonRemainder,
+                      Long reserve, Long wait, Long available, String unit, Long days, Double price,
+                      Double salesPrice, Double buyPrice) {
+        this.id = id;
+        this.name = name;
+        this.sum = sum;
+        this.article = article;
+        this.remainder = remainder;
+        this.NonRemainder = nonRemainder;
+        this.reserve = reserve;
+        this.wait = wait;
+        this.available = available;
+        this.unit = unit;
+        this.days = days;
+        this.price = price;
+        this.salesPrice = salesPrice;
+        this.buyPrice = buyPrice;
     }
 }

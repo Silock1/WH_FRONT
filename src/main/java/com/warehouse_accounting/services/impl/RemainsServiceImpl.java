@@ -28,7 +28,9 @@ public class RemainsServiceImpl implements RemainsService {
     }
 
     //убрать после доработки
-    private RemainsDto wfod = new RemainsDto(1L);
+    private RemainsDto wfod = new RemainsDto(1L, "Cola", 31l, 1l,
+            1l, 1l, 1l, 1l, 1l,
+            "Unit", 12l, 12.3, 11.0, 14123.0);
 
 
     @Override

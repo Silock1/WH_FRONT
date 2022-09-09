@@ -17,6 +17,7 @@ import com.warehouse_accounting.components.goods.grids.movements.MovementView;
 import com.warehouse_accounting.components.goods.grids.priceList.PriceList;
 import com.warehouse_accounting.services.interfaces.ContractorService;
 import com.warehouse_accounting.services.interfaces.DepartmentService;
+import com.warehouse_accounting.services.interfaces.RemainsService;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.ProductGroupService;
 import com.warehouse_accounting.services.interfaces.ProductService;
@@ -50,18 +51,20 @@ public class GoodsSubMenuView extends VerticalLayout {
     private final DepartmentService departmentService;
     private final ContractorService contractorService;
     private final ProductGroupService productGroupService;
+    private final RemainsService remainsService;
 
 
-    public GoodsSubMenuView(PriceList priceList, Posting posting, MovementView movementView, GoodsAndServiceView goodsAndService,
+    public GoodsSubMenuView(PriceList priceList, Posting posting, Remains remains, MovementView movementView, GoodsAndServiceView goodsAndService,
                             GoodsFilter goodsFilter, ProductService productService, EmployeeService employeeService,
                             DepartmentService departmentService, ContractorService contractorService,
-                            ProductGroupService productGroupService, WriteOffs writeOffs, Remains remains,
+                            ProductGroupService productGroupService, WriteOffs writeOffs, RemainsService remainsService,
                             Inventory inventory, InternalOrderView internalOrderView) {
         this.priceList = priceList;
         this.posting = posting;
+        this.remains = remains;
         this.movementView = movementView;
         this.writeOffs = writeOffs;
-        this.remains = remains;
+        this.remainsService = remainsService;
         this.inventory = inventory;
         this.goodsAndService = goodsAndService;
         this.goodsFilter = goodsFilter;

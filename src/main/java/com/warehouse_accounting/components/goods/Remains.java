@@ -56,14 +56,14 @@ public class Remains extends VerticalLayout {
         Grid.Column<RemainsDto> reserve = grid.getColumnByKey("reserve").setHeader("Резерв");
         Grid.Column<RemainsDto> wait = grid.getColumnByKey("wait").setHeader("Ожидание");
         Grid.Column<RemainsDto> aviable = grid.getColumnByKey("available").setHeader("Доступно");
-//        Grid.Column<RemainsDto> unit = grid.getColumnByKey("unit").setHeader("Ед.изм.");
-//        Grid.Column<RemainsDto> days = grid.getColumnByKey("days").setHeader("Дней на складе");
-//        Grid.Column<RemainsDto> price = grid.getColumnByKey("price").setHeader("Сумма себестоимости");
-//        Grid.Column<RemainsDto> salesPrice = grid.getColumnByKey("salesPrice").setHeader("Цена продажи");
-//        Grid.Column<RemainsDto> buyPrice = grid.getColumnByKey("buyPrice").setHeader("Сумма продажи");
-        grid.setColumnOrder(id, name, sum, article, remainder, nonRemainder, reserve, wait, aviable);
-//        unit, days,
-//                price, salesPrice, buyPrice
+        Grid.Column<RemainsDto> unit = grid.getColumnByKey("unit").setHeader("Ед.изм.");
+        Grid.Column<RemainsDto> days = grid.getColumnByKey("days").setHeader("Дней на складе");
+        Grid.Column<RemainsDto> price = grid.getColumnByKey("price").setHeader("Сумма себестоимости");
+        Grid.Column<RemainsDto> salesPrice = grid.getColumnByKey("salesPrice").setHeader("Цена продажи");
+        Grid.Column<RemainsDto> buyPrice = grid.getColumnByKey("buyPrice").setHeader("Сумма продажи");
+        grid.setColumnOrder(id, name, sum, article, remainder, nonRemainder, reserve, wait, aviable,  unit, days,
+                price, salesPrice, buyPrice);
+
 
         settingButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         ColumnToggleContextMenu<RemainsDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(settingButton);
@@ -77,10 +77,10 @@ public class Remains extends VerticalLayout {
         columnToggleContextMenu.addColumnToggleItem("Резерв", reserve);
         columnToggleContextMenu.addColumnToggleItem("Ожидание", wait);
         columnToggleContextMenu.addColumnToggleItem("Доступно", aviable);
-//        columnToggleContextMenu.addColumnToggleItem("Ед.изм", unit);
-//        columnToggleContextMenu.addColumnToggleItem("Сумма себестоимости", price);
-//        columnToggleContextMenu.addColumnToggleItem("Цена продажи", salesPrice);
-//        columnToggleContextMenu.addColumnToggleItem("Сумма продажи", buyPrice);
+        columnToggleContextMenu.addColumnToggleItem("Ед.изм", unit);
+        columnToggleContextMenu.addColumnToggleItem("Сумма себестоимости", price);
+        columnToggleContextMenu.addColumnToggleItem("Цена продажи", salesPrice);
+        columnToggleContextMenu.addColumnToggleItem("Сумма продажи", buyPrice);
 
 
         HorizontalLayout headerLayout = new HorizontalLayout();
