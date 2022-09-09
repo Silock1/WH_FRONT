@@ -4,7 +4,7 @@ import com.warehouse_accounting.models.dto.TechnologicalOperationDto;
 
 import java.util.List;
 
-public interface ProductionOperationsService {
+public interface TechnologicalOperationsService {
     List <TechnologicalOperationDto> getAll();
     TechnologicalOperationDto getById(Long id);
     void create (TechnologicalOperationDto technologicalOperationDto);

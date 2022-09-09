@@ -12,8 +12,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.models.dto.TechnologicalOperationDto;
-import com.warehouse_accounting.services.interfaces.ProductionOperationsService;
-import lombok.Data;
+import com.warehouse_accounting.services.interfaces.TechnologicalOperationsService;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
@@ -24,14 +23,14 @@ import java.util.List;
 @SpringComponent
 @UIScope
 @Log4j2
-public class ProductionOperationsGridLayout extends HorizontalLayout {
-    private ProductionOperationsService productionOperationsService;
+public class TechnologicalOperationsGridLayout extends HorizontalLayout {
+    private TechnologicalOperationsService productionOperationsService;
     private List<TechnologicalOperationDto> technologicalOperationDtoList = new ArrayList<>();
 
     @Getter
     private Grid<TechnologicalOperationDto> productionOperationsDtoGrid = new Grid<>(TechnologicalOperationDto.class, false);
 
-    public ProductionOperationsGridLayout(ProductionOperationsService productionOperationsService) {
+    public TechnologicalOperationsGridLayout(TechnologicalOperationsService productionOperationsService) {
         this.productionOperationsService = productionOperationsService;
         initializingGrid();
     }
@@ -57,7 +56,7 @@ public class ProductionOperationsGridLayout extends HorizontalLayout {
         Button menuButton = new Button(new Icon(VaadinIcon.COG));
         menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
-        ProductionOperationsGridLayout.ColumnToggleContextMenu columnToggleContextMenu = new ProductionOperationsGridLayout.ColumnToggleContextMenu(
+        TechnologicalOperationsGridLayout.ColumnToggleContextMenu columnToggleContextMenu = new TechnologicalOperationsGridLayout.ColumnToggleContextMenu(
                 menuButton);
         columnToggleContextMenu.addColumnToggleItem("Id", idColumn);
         columnToggleContextMenu.addColumnToggleItem("Технологическая карта", technologicalMapName);
