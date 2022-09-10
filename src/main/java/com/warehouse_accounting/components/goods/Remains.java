@@ -139,7 +139,7 @@ public class Remains extends VerticalLayout {
         massEdit.addClickListener(event -> {
             //TODO повод поработать этот функционал
         });
-        MenuItem operate = changeSubMenu.addItem("Термоэтикетка (58х40мм");
+        MenuItem operate = changeSubMenu.addItem("Термоэтикетка (58х40мм)");
         operate.addClickListener(event -> {
             //TODO повод поработать этот функционал
         });
