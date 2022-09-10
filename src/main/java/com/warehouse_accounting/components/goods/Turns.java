@@ -7,6 +7,7 @@ import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -85,7 +86,11 @@ public class Turns extends VerticalLayout {
         columnToggleContextMenu.addColumnToggleItem("Кол-во", amountEnd);
         columnToggleContextMenu.addColumnToggleItem("Сумма", sumEnd);
 
-
+        HeaderRow second = grid.prependHeaderRow();
+        second.join(amountBegin, sumBegin).setText("     Начало периода");
+        second.join(amountComing, sumComing).setText("    Приход");
+        second.join(amountConsumption, sumConsumption).setText("   Расход");
+        second.join(amountEnd, sumEnd).setText("    Конец периода");
 
         HorizontalLayout headerLayout = new HorizontalLayout();
         headerLayout.add(grid, settingButton);
@@ -114,6 +119,8 @@ public class Turns extends VerticalLayout {
 
         Button addWriteOffsButton = new Button("Фильтр", event -> {
         });
+
+
 
 //        Button filterButton = new Button("По складам", event -> {
 //        });
