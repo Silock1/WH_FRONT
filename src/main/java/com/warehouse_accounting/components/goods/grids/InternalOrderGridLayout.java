@@ -13,10 +13,12 @@ import com.warehouse_accounting.components.goods.InternalOrderView;
 import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.InternalOrderDto;
 import com.warehouse_accounting.services.interfaces.InternalOrderService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @UIScope
 @Component
+@Qualifier("internalOrderGridLayout")
 @Route(value = "internalOrderGridLayout", layout = AppView.class)
 public class InternalOrderGridLayout extends HorizontalLayout {
 

@@ -19,6 +19,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
 import com.warehouse_accounting.components.goods.grids.InternalOrderGridLayout;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @UIScope
@@ -30,7 +31,7 @@ public class InternalOrderView extends VerticalLayout {
 
     private HorizontalLayout buttons;
 
-    public InternalOrderView(InternalOrderGridLayout internalOrderGridLayout) {
+    public InternalOrderView(@Qualifier("internalOrderGridLayout") InternalOrderGridLayout internalOrderGridLayout) {
         this.internalOrderGridLayout = internalOrderGridLayout;
         this.buttons = getGroupButton();
         this.internalOrderGridLayout.setParent(this);
