@@ -2,7 +2,7 @@ package com.warehouse_accounting.services.impl;
 
 import com.warehouse_accounting.models.dto.TechnologicalOperationDto;
 import com.warehouse_accounting.services.ServiceUtils;
-import com.warehouse_accounting.services.interfaces.ProductionOperationsService;
+import com.warehouse_accounting.services.interfaces.TechnologicalOperationsService;
 import com.warehouse_accounting.services.interfaces.api.ProductionOperationsApi;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,11 +14,11 @@ import java.util.List;
 
 @Service
 @Log4j2
-public class ProductionOperationsServiceImpl implements ProductionOperationsService {
+public class TechnologicalOperationsServiceImpl implements TechnologicalOperationsService {
     private ProductionOperationsApi api;
     private String url;
 
-    public ProductionOperationsServiceImpl(Retrofit retrofit, @Value("api/technological_operation") String url) {
+    public TechnologicalOperationsServiceImpl(Retrofit retrofit, @Value("api/technological_operation") String url) {
         this.api = retrofit.create(ProductionOperationsApi.class);
         this.url = url;
     }
