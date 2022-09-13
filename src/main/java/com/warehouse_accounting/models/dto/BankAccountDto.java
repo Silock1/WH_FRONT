@@ -1,12 +1,13 @@
 package com.warehouse_accounting.models.dto;
 
-import com.warehouse_accounting.models.dto.dadataDto.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,9 +19,6 @@ public class BankAccountDto {
 
     private String bank;
 
-//    private String address;
-    public Address address;
-
     private String correspondentAccount;
 
     private String account;
@@ -29,4 +27,7 @@ public class BankAccountDto {
 
     private String sortNumber;
 
+    public String bankAddress;
+
+    private ContractorDto contractor;
 }

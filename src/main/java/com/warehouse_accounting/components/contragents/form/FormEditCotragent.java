@@ -5,40 +5,39 @@ import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.accordion.AccordionPanel;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.details.DetailsVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
-import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import com.warehouse_accounting.components.address.AddressForm;
 import com.warehouse_accounting.components.contragents.ContragentsList;
 import com.warehouse_accounting.components.contragents.form.form_edit.Events;
-import com.warehouse_accounting.components.contragents.grids.CallsGridLayout;
 import com.warehouse_accounting.models.dto.AddressDto;
 import com.warehouse_accounting.models.dto.BankAccountDto;
 import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.models.dto.ContractorFaceContactDto;
+import com.warehouse_accounting.models.dto.ContractorGroupDto;
 import com.warehouse_accounting.models.dto.LegalDetailDto;
+import com.warehouse_accounting.models.dto.TypeOfContractorDto;
 import com.warehouse_accounting.models.dto.TypeOfPriceDto;
-import com.warehouse_accounting.models.dto.dadataDto.Example2;
-import com.warehouse_accounting.services.interfaces.AddressService;
 import com.warehouse_accounting.services.interfaces.BankAccountService;
 import com.warehouse_accounting.services.interfaces.CallService;
+import com.warehouse_accounting.services.interfaces.ContractorGroupService;
 import com.warehouse_accounting.services.interfaces.ContractorService;
 import com.warehouse_accounting.services.interfaces.DadataService;
+import com.warehouse_accounting.services.interfaces.LegalDetailService;
+import com.warehouse_accounting.services.interfaces.TypeOfContractorService;
 import com.warehouse_accounting.services.interfaces.TypeOfPriceService;
 
 import java.util.ArrayList;
@@ -50,244 +49,185 @@ import java.util.stream.Collectors;
 @SpringComponent
 @UIScope
 public class FormEditCotragent extends VerticalLayout {
-    private final transient ContractorService contractorService;
-    private final transient BankAccountService bankAccountService;
-    private final transient TypeOfPriceService typeOfPriceService;
+    private final ContractorService contractorService;
+
+    private LegalDetailService legalDetailService;
+
+    private final ContractorGroupService contractorGroupService;
+
+    private final BankAccountService bankAccountService;
+
+    private final TypeOfPriceService typeOfPriceService;
+
+    private final TypeOfContractorService typeOfContractorService;
 
     private final transient CallService callService;
+
     private ContragentsList parent;
-    private transient ContractorDto contractorDto;
+
+    private final ContractorDto contractorDto = new ContractorDto();
+
     private final transient DadataService dadata;
+
     private boolean newForm = false;
 
     //Поля для правого блока
     private Events events;
 
+    private Button edit = new Button("Сохранить");
+    private Button close = new Button("Закрыть");
 
-    private Button edit = new Button ("Изменить");
-    private Button close = new Button ("Закрыть");
-    // Поля для блока контрагент
-    private TextField name;
-    private ComboBox<String> status;
-    private ComboBox<String> group;
-    private TextField phone;
-    private TextField discountCard;
-    private Select <String> typeOfPrice;
-    private TextField fax;
-    private TextField email;
-    private AddressForm address;
-    private TextArea comment;
-    private TextField code;
-    private TextField outerCode;
-
-    // Поля для LegalDetails
-    private TextField lastName;
-    private TextField firstName;
-    private TextField middleName;
-    private AddressForm addressLegal;
-    private TextField inn;
-    private TextField okpo;
-    private TextField ogrnip;
-    private TextField kpp;
-    private TextField numberOfTheCertificate;
-    private DatePicker dateOfTheCertificate;
-    private Select <String>typeOfContractor;
-
-    // Формы для множественных внутренних обьектов.
-    private transient List<FormBankAccauntInner> formsBankAccount;
     private transient List<FormForFaceContactInner> formsFacesContact;
 
+//    private final Binder<BankAccountDto> bankAccountDtoBinder = new Binder<>(BankAccountDto.class);
+
+    private final Binder<ContractorDto> contractorDtoBinder = new Binder<>(ContractorDto.class);
+
+    private final Binder<LegalDetailDto> legalDetailDtoBinder = new Binder<>(LegalDetailDto.class);
+
+    private final Binder<AddressDto> addressDtoBinder = new Binder<>(AddressDto.class);
+
+//    private final Binder<List<TypeOfPriceDto>> typeOfPriceDtoBinder = new Binder<>();
+//
+//    private final Binder<List<TypeOfContractorDto>> typeOfContractorDtoBinder = new Binder<>();
+//
+//    private final Binder<List<ContractorGroupDto>> contractorGroupDtoBinder = new Binder<>();
+
     public FormEditCotragent(ContractorService contractorService,
+                             ContractorGroupService contractorGroupService,
                              DadataService dadata,
                              BankAccountService bankAccountService,
                              TypeOfPriceService typeOfPriceService,
-                             CallService callService,
-                             AddressForm address,
-                             AddressForm addressLegal) {
+                             TypeOfContractorService typeOfContractorService,
+                             LegalDetailService legalDetailService,
+                             CallService callService) {
         this.contractorService = contractorService;
+        this.contractorGroupService = contractorGroupService;
         this.dadata = dadata;
         this.bankAccountService = bankAccountService;
         this.typeOfPriceService = typeOfPriceService;
+        this.typeOfContractorService = typeOfContractorService;
+        this.legalDetailService = legalDetailService;
         this.callService = callService;
-        this.address = address;
-        this.addressLegal = addressLegal;
     }
-    public void bild(ContractorDto contractorDto){
+
+
+    public void build(ContractorDto contractorDto) {
         removeAll();
-        // Проверяем на null понимаем new или edit форма.
-        if(contractorDto == null){
-            newForm = true;
-            contractorDto = ContractorDto.builder()
-                    .name("")
-                    .status("")
-                    .contractorGroupName("")
-                    .fax("")
-                    .email("")
-                    .address(new AddressDto())
-                    .comment("")
-                    .code("")
-                    .outerCode("")
-                    .build();
-        }
-        else {
-            contractorDto = contractorService.getById(contractorDto.getId());
-            newForm = false;
-            System.out.println("Получил:" + contractorDto);
-        }
-        if(contractorDto.getBankAccountDtos() == null)contractorDto.setBankAccountDtos(new ArrayList<>());
-        if(contractorDto.getContacts() == null) contractorDto.setContacts(new ArrayList<>());
-        this.contractorDto = contractorDto;
-        this.events = new Events(callService, contractorDto);
-        add(createButton(contractorDto), getNameContragent(contractorDto),groupBlockLayout());
+        newForm = false;
+        contractorDtoBinder.readBean(contractorDto);
+        add(createButton(contractorDto),
+                getNameContragent(contractorDto),
+                groupBlockLayout(contractorDto));
     }
-    private HorizontalLayout createButton(ContractorDto contractorDto){
+
+    boolean alreadyMakeUpdate = false;
+
+    public void build() {
+        removeAll();
+        newForm = true;
+
+        if (alreadyMakeUpdate) {
+            try {
+                contractorDtoBinder.writeBean(contractorDto);
+            } catch (ValidationException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        add(createButton(contractorDto),
+                getNameContragent(contractorDto),
+                groupBlockLayout(contractorDto));
+    }
+
+
+    private HorizontalLayout createButton(ContractorDto contractorDto) {
         HorizontalLayout button = new HorizontalLayout();
         button.setAlignItems(Alignment.CENTER);
         String typeForm;
-        typeForm = newForm ? "Cоздать" : "Изменить";
+        typeForm = "Сохранить";
         edit = new Button(typeForm);
         edit.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
         edit.addClickListener(e -> {
 
-            // получение Основные данные аккаунта
-            contractorDto.setName(name.getValue());
-            contractorDto.setStatus(status.getValue());
-            contractorDto.setContractorGroupName(group.getValue());
-            contractorDto.setPhone(phone.getValue());
-            contractorDto.setFax(fax.getValue());
-            contractorDto.setEmail(email.getValue());
-            contractorDto.setAddress(address.getValue());
-            contractorDto.setComment(comment.getValue());
-            contractorDto.setCode(code.getValue());
+            // Получение контактов аккаунттов или изменений в нём.
+//                ContractorFaceContactDto contact;
+//                for (FormForFaceContactInner form3 : formsFacesContact) {
+//                    contact = form3.getContactFace();
+//                    if (!form3.isDeleted() && form3.isNewFaceContact()) {
+//                        contractorDto.getContacts().add(contact);
+//                    }
+//                    if (!form3.isDeleted() && !form3.isNewFaceContact()) {
+//                        for (ContractorFaceContactDto contactOld : contractorDto.getContacts()) {
+//                            if (Objects.equals(contactOld.getId(), contact.getId())) {
+//                                contactOld.setAllNames(contact.getAllNames());
+//                                contactOld.setPosition(contact.getPosition());
+//                                contactOld.setPhone(contactOld.getPhone());
+//                                contactOld.setEmail(contact.getEmail());
+//                                contactOld.setComment(contact.getComment());
+//                            }
+//                        }
+//                    }
+//                }
 
-// МОЙ НОВЫЙ КОД
-            contractorDto.setNumberDiscountCard(discountCard.getValue());
-            contractorDto.setTypeOfPriceId(typeOfPrice.getValue().equals("Оптовая") ? 2L : 1L);
-            contractorDto.setTypeOfPriceName(typeOfPrice.getValue());
-            contractorDto.getTypeOfPrice().setName(typeOfPrice.getValue());
-            contractorDto.getTypeOfPrice()
-                    .setSortNumber(typeOfPrice.getValue().equals("Оптовая") ? "2" : "1");
-
-            if (outerCode.getValue().equals("")) {
-                contractorDto.setOuterCode("Generate");
-            } else {
-                contractorDto.setOuterCode(outerCode.getValue());
-            }
-
-            // получение Данные LegalDetails
-            contractorDto.getLegalDetailDto().setLastName(lastName.getValue());
-            contractorDto.getLegalDetailDto().setFirstName(firstName.getValue());
-            contractorDto.getLegalDetailDto().setMiddleName(middleName.getValue());
-            contractorDto.getLegalDetailDto().setAddress(addressLegal.getValue());
-            contractorDto.getLegalDetailDto().setInn(inn.getValue());
-            contractorDto.getLegalDetailDto().setOkpo(okpo.getValue());
-            contractorDto.getLegalDetailDto().setOgrnip(ogrnip.getValue());
-            contractorDto.getLegalDetailDto().setKpp(kpp.getValue());
-            contractorDto.getLegalDetailDto().setNumberOfTheCertificate(numberOfTheCertificate.getValue());
-            contractorDto.getLegalDetailDto().setDateOfTheCertificate(dateOfTheCertificate.getValue());
-            contractorDto.getLegalDetailDto().setTypeOfContractorName(typeOfContractor.getValue());
-
-
-            BankAccountDto bankAccountDto;
-            for (FormBankAccauntInner form : formsBankAccount) {
-                bankAccountDto = form.getBankAccount();
-                if (!form.isDeleted() && form.isNewAccount()) {
-                    contractorDto.getBankAccountDtos().add(bankAccountDto);
-                }
-                // получение Данные LegalDetails
-                contractorDto.getLegalDetailDto().setLastName(lastName.getValue());
-                contractorDto.getLegalDetailDto().setFirstName(firstName.getValue());
-                contractorDto.getLegalDetailDto().setMiddleName(middleName.getValue());
-                contractorDto.getLegalDetailDto().setAddress(addressLegal.getValue());
-                contractorDto.getLegalDetailDto().setInn(inn.getValue());
-                contractorDto.getLegalDetailDto().setOkpo(okpo.getValue());
-                contractorDto.getLegalDetailDto().setOgrnip(ogrnip.getValue());
-                contractorDto.getLegalDetailDto().setKpp(kpp.getValue());
-                contractorDto.getLegalDetailDto().setNumberOfTheCertificate(numberOfTheCertificate.getValue());
-                contractorDto.getLegalDetailDto().setDateOfTheCertificate(dateOfTheCertificate.getValue());
-                contractorDto.getLegalDetailDto().setTypeOfContractorName(typeOfContractor.getValue());
-
-
-                BankAccountDto accountDto1;
-                for(FormBankAccauntInner form2 : formsBankAccount){
-                    accountDto1 = form2.getBankAccount();
-                    if(!form2.isDeleted() && form2.isNewAccount()){
-                        contractorDto.getBankAccountDtos().add(accountDto1);
-                    }
-                    if(!form2.isDeleted() && !form2.isNewAccount()){
-                        for(BankAccountDto bankAccountOld : contractorDto.getBankAccountDtos()){
-                            if(Objects.equals(bankAccountOld.getId(), accountDto1.getId())){
-                                bankAccountOld.setRcbic(accountDto1.getRcbic());
-                                bankAccountOld.setBank(accountDto1.getBank());
-                                bankAccountOld.setAddress(accountDto1.getAddress());
-                                bankAccountOld.setCorrespondentAccount(accountDto1.getCorrespondentAccount());
-                                bankAccountOld.setAccount(accountDto1.getAccount());
-                                bankAccountOld.setMainAccount(accountDto1.getMainAccount());
-                                bankAccountOld.setSortNumber(accountDto1.getSortNumber());
-                            }
-                        }
-                    }
-                }
-                // Получение контактов аккаунттов или изменений в нём.
-                ContractorFaceContactDto contact;
-                for(FormForFaceContactInner form3: formsFacesContact ){
-                    contact = form3.getContactFace();
-                    if(!form3.isDeleted() && form3.isNewFaceContact()){
-                        contractorDto.getContacts().add(contact);
-                    }
-                    if(!form3.isDeleted() && !form3.isNewFaceContact()){
-                        for(ContractorFaceContactDto contactOld : contractorDto.getContacts()){
-                            if(Objects.equals(contactOld.getId(), contact.getId())){
-                                contactOld.setAllNames(contact.getAllNames());
-                                contactOld.setPosition(contact.getPosition());
-                                contactOld.setPhone(contactOld.getPhone());
-                                contactOld.setEmail(contact.getEmail());
-                                contactOld.setComment(contact.getComment());
-                            }
-                        }
-                    }
-                }
-                if(newForm){
+            if (newForm) {
+                try {
+                    contractorDtoBinder.writeBean(contractorDto);
                     contractorService.create(contractorDto);
-                }else {
-                    contractorService.update(contractorDto);
+                } catch (ValidationException ex) {
+                    throw new RuntimeException(ex);
                 }
-                //Удобно в тестах для отладки пока оставить.
-                System.out.println("Отправил:" + contractorDto);
-
-                removeAll();
-                parent.showButtonEndGrid(true);
+            } else {
+                try {
+                    alreadyMakeUpdate = true;
+                    contractorDtoBinder.writeBean(contractorDto);
+                    contractorService.update(contractorDto);
+                } catch (ValidationException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
+
+            removeAll();
+            parent.showButtonEndGrid(true);
 
         });
+
         close = new Button("Закрыть");
         close.addClickListener(e1 -> {
             removeAll();
             parent.showButtonEndGrid(false);
         });
-        button.add(close,edit);
+        button.add(close, edit);
         button.setAlignItems(Alignment.CENTER);
         return button;
+
     }
+
     private HorizontalLayout getNameContragent(ContractorDto contractorDto) {
         HorizontalLayout nameContragentLayout = new HorizontalLayout();
-        name = new TextField("Наименование");
+        TextField name = new TextField("Наименование");
+        name.setMinWidth("300px");
+        contractorDtoBinder.forField(name).asRequired("Наименование не должно быть пустым!")
+                .bind(ContractorDto::getName, ContractorDto::setName);
+        contractorDtoBinder.readBean(contractorDto);
 
-        name.setWidth("450px");
-        if(contractorDto.getName()!= null)name.setValue(contractorDto.getName());
         nameContragentLayout.add(name);
+
         return nameContragentLayout;
     }
-    private VerticalLayout leftGroupFormLayout() {
+
+    private VerticalLayout leftGroupFormLayout(ContractorDto contractorDto) {
         VerticalLayout leftLayout = new VerticalLayout();
-        leftLayout.add(getContragentAccordion(),
-                getFaceContactAccordion(),
-                getLegalDetailAccordion(),
-                getSalasEndPriceAccordion(),
-                getAccessAccordion());
+        leftLayout.add(getContragentAccordion(contractorDto));
+        if (!newForm) {
+            leftLayout.add(getLegalDetailAccordion(contractorDto));
+            leftLayout.add(getAccessAccordion());
+        }
+        leftLayout.add(getSalasEndPriceAccordion(contractorDto));
         leftLayout.setWidth("450px");
         return leftLayout;
     }
+
     private VerticalLayout rightGroupButtonLayout() {
         VerticalLayout rightLayout = new VerticalLayout();
         rightLayout.setWidth("500px");
@@ -330,36 +270,90 @@ public class FormEditCotragent extends VerticalLayout {
                     throw new IllegalStateException("Unexpected value: " + event.getSelectedTab().getLabel());
             }
         });
-        rightLayout.add(tabs,tabContent);
+        rightLayout.add(tabs, tabContent);
         return rightLayout;
     }
-    private HorizontalLayout groupBlockLayout() {
+
+    private HorizontalLayout groupBlockLayout(ContractorDto contractorDto) {
         HorizontalLayout blockLayout = new HorizontalLayout();
-        blockLayout.add(leftGroupFormLayout(), rightGroupButtonLayout());
+        blockLayout.add(leftGroupFormLayout(contractorDto), rightGroupButtonLayout());
         return blockLayout;
     }
-    //Блок о контрагенте
-    private AccordionPanel getContragentAccordion(){
-        FormLayout main = new FormLayout();
 
-        status = new ComboBox<>();
-        status.setItems("Новый", "Выслано предложение","Переговоры", "Сделка заключена", "Сделка не заключена");
-        if(contractorDto.getStatus()!= null) status.setValue(contractorDto.getStatus());
-        group = new ComboBox<>();
-        group.setItems("Основные", "Мелкий опт","Розница");
-        phone = new TextField();
-        if(contractorDto.getPhone() != null) phone.setValue(contractorDto.getPhone());
-        fax = new TextField();
-        if(contractorDto.getFax() != null) fax.setValue(contractorDto.getFax());
-        email = new TextField();
-        if(contractorDto.getEmail() != null) email.setValue(contractorDto.getEmail());
-        if(contractorDto.getAddress() != null) address.setValue(contractorDto.getAddress());
-        comment = new TextArea();
-        if(contractorDto.getComment() != null) comment.setValue(contractorDto.getComment());
-        code = new TextField();
-        if(contractorDto.getCode() != null) code.setValue(contractorDto.getCode());
-        outerCode = new TextField();
-        if(contractorDto.getCode() != null) outerCode.setValue(contractorDto.getOuterCode());
+    //Блок о контрагенте
+    private AccordionPanel getContragentAccordion(ContractorDto contractorDto) {
+
+        ComboBox<String> status = new ComboBox<>();
+        ComboBox<ContractorGroupDto> group = new ComboBox<>();
+        TextField phone = new TextField();
+        TextField fax = new TextField();
+        TextField email = new TextField();
+        TextField comment = new TextField();
+        TextField code = new TextField();
+        TextField outerCode = new TextField();
+
+        status.setItems("Новый", "Выслано предложение", "Переговоры", "Сделка заключена", "Сделка не заключена");
+        status.setValue("Новый");
+        contractorDtoBinder.bind(status, ContractorDto::getStatus, ContractorDto::setStatus);
+
+        group.setItems(contractorGroupService.getAll());
+        group.setItemLabelGenerator(ContractorGroupDto::getName);
+        contractorDtoBinder.forField(group).asRequired("Укажите группу")
+                .bind(ContractorDto::getContractorGroup, ContractorDto::setContractorGroup);
+        group.setValue(contractorGroupService.getById(1L));
+
+        contractorDtoBinder.forField(phone).bind(ContractorDto::getPhone, ContractorDto::setPhone);
+        contractorDtoBinder.forField(fax).bind(ContractorDto::getFax, ContractorDto::setFax);
+        contractorDtoBinder.forField(email).bind(ContractorDto::getEmail, ContractorDto::setEmail);
+
+        AddressDto addressDto = contractorDto.getAddress();
+
+        TextField cityName = new TextField();
+        TextField streetName = new TextField();
+        TextField buildingName = new TextField();
+        TextField office = new TextField();
+        TextField other = new TextField();
+
+
+        addressDtoBinder.forField(cityName).bind(AddressDto::getCityName, AddressDto::setCityName);
+        addressDtoBinder.forField(streetName).bind(AddressDto::getStreetName, AddressDto::setStreetName);
+        addressDtoBinder.forField(buildingName).bind(AddressDto::getBuildingName, AddressDto::setBuildingName);
+        addressDtoBinder.forField(office).bind(AddressDto::getOffice, AddressDto::setOffice);
+        addressDtoBinder.forField(other).bind(AddressDto::getOther, AddressDto::setOther);
+
+
+        contractorDtoBinder.forField(comment).bind(ContractorDto::getComment, ContractorDto::setComment);
+        contractorDtoBinder.forField(code).bind(ContractorDto::getCode, ContractorDto::setCode);
+        contractorDtoBinder.forField(outerCode).bind(ContractorDto::getOuterCode, ContractorDto::setOuterCode);
+
+        if (newForm) {
+            AddressDto addressDto1 = new AddressDto();
+            addressDtoBinder.readBean(addressDto1);
+            LegalDetailDto legalDetailDto = new LegalDetailDto();
+            legalDetailDtoBinder.readBean(legalDetailDto);
+            contractorDto.setAddress(addressDto1);
+            contractorDto.setLegalDetail(legalDetailDto);
+            contractorDto.setNumberDiscountCard("");
+        }
+
+        contractorDtoBinder.readBean(contractorDto);
+
+        if (!newForm) {
+            addressDtoBinder.readBean(addressDto);
+        }
+
+
+        Button buttonToAddActualAddress = new Button("Обновить адрес");
+        buttonToAddActualAddress.setDisableOnClick(false);
+        buttonToAddActualAddress.addClickListener(e -> {
+            try {
+                addressDtoBinder.writeBean(addressDto);
+            } catch (ValidationException ex) {
+                throw new RuntimeException(ex);
+            }
+            contractorService.update(contractorDto);
+        });
+
 
         FormLayout form = new FormLayout();
         form.addFormItem(status, "Статус");
@@ -367,7 +361,16 @@ public class FormEditCotragent extends VerticalLayout {
         form.addFormItem(phone, "Телефон");
         form.addFormItem(fax, "Факс");
         form.addFormItem(email, "Электронная почта");
-        address.addToForm("Адрес", form);
+
+        if (!newForm) {
+            form.addFormItem(cityName, "Город");
+            form.addFormItem(streetName, "Улица");
+            form.addFormItem(buildingName, "Дом");
+            form.addFormItem(office, "Квартира/Офис");
+            form.addFormItem(other, "Другое");
+            form.add(buttonToAddActualAddress);
+        }
+
         form.addFormItem(comment, "Комментарий");
         form.addFormItem(code, "Код");
         form.addFormItem(outerCode, "Внешний код");
@@ -377,20 +380,22 @@ public class FormEditCotragent extends VerticalLayout {
         aboutContractor.addThemeVariants(DetailsVariant.FILLED);
         aboutContractor.setOpened(true);
         return aboutContractor;
+
     }
+
     // Блок Контакты
-    private AccordionPanel getFaceContactAccordion(){
+    private AccordionPanel getFaceContactAccordion() {
         formsFacesContact = new ArrayList<>();
         VerticalLayout faceContactsSpace = new VerticalLayout();
-        if(contractorDto.getContacts() != null){
-            for(ContractorFaceContactDto contact : contractorDto.getContacts()){
+        if (contractorDto.getContacts() != null) {
+            for (ContractorFaceContactDto contact : contractorDto.getContacts()) {
                 FormForFaceContactInner form = new FormForFaceContactInner();
                 faceContactsSpace.add(form.getFormForFaceContact(contact));
                 formsFacesContact.add(form);
             }
         }
         Button addNewContBtn = new Button("Добавить контакт");
-        addNewContBtn.addClickListener(e->{
+        addNewContBtn.addClickListener(e -> {
             FormForFaceContactInner form = new FormForFaceContactInner();
             faceContactsSpace.add(form.getFormForFaceContact(null));
             formsFacesContact.add(form);
@@ -402,81 +407,103 @@ public class FormEditCotragent extends VerticalLayout {
         faceContacts.setOpened(true);
         return faceContacts;
     }
+
     //<Блок реквизиты
-    private AccordionPanel getLegalDetailAccordion(){
-        if(contractorDto.getLegalDetailDto() == null) contractorDto.setLegalDetailDto(new LegalDetailDto());
+    private AccordionPanel getLegalDetailAccordion(ContractorDto contractorDto) {
 
-        VerticalLayout main = new VerticalLayout();
-        VerticalLayout forms = new VerticalLayout();
-        // НАстроить дефолтный фокус
-        typeOfContractor = new Select<>();
-        typeOfContractor.setWidth("350px");
-        typeOfContractor.setItems("Физическое лицо","Юридическое лицо", "Индивидуальный предприниматель");
-        typeOfContractor.setEmptySelectionCaption("Тип контрагента");
+        LegalDetailDto legalDetailDto = contractorDto.getLegalDetail();
 
-        if (contractorDto.getLegalDetailDto().getTypeOfContractorName() !=null) {
-            forms.add(getFormForContractorType(contractorDto.getLegalDetailDto().getTypeOfContractorName()));
-            typeOfContractor.setValue(contractorDto.getLegalDetailDto().getTypeOfContractorName());
-        }else {
-            forms.add(getFormForContractorType("Юридическое лицо"));
-            typeOfContractor.setValue("Юридическое лицо");
-        }
-        typeOfContractor.addFocusListener(e ->{
-            if(typeOfContractor.getValue().equals("Физическое лицо")){
-                forms.removeAll();
-                forms.add(getFormForContractorType("Физическое лицо"));
+        ComboBox<TypeOfContractorDto> typeOfContractorDtoComboBox = new ComboBox<>();
+        typeOfContractorDtoComboBox.setWidth("350px");
+        typeOfContractorDtoComboBox.setItems(typeOfContractorService.getAll());
+        typeOfContractorDtoComboBox.setItemLabelGenerator(TypeOfContractorDto::getName);
+        typeOfContractorDtoComboBox.setRequired(true);
+
+        typeOfContractorDtoComboBox.setItems(typeOfContractorService.getAll());
+        typeOfContractorDtoComboBox.setValue(typeOfContractorService.getById(1L));
+        legalDetailDtoBinder.forField(typeOfContractorDtoComboBox)
+                .bind(LegalDetailDto::getTypeOfContractor, LegalDetailDto::setTypeOfContractor);
+
+        TextField inn = new TextField();
+        TextField fullName = new TextField();
+        TextField kpp = new TextField();
+        TextField ogrnip = new TextField();
+        TextField okpo = new TextField();
+
+        legalDetailDtoBinder.forField(inn).bind(LegalDetailDto::getInn, LegalDetailDto::setInn);
+        legalDetailDtoBinder.forField(fullName).asRequired("Укажите полное наименование")
+                .bind(LegalDetailDto::getFullName, LegalDetailDto::setFullName);
+        legalDetailDtoBinder.forField(kpp).bind(LegalDetailDto::getKpp, LegalDetailDto::setKpp);
+        legalDetailDtoBinder.forField(ogrnip).bind(LegalDetailDto::getOgrn, LegalDetailDto::setOgrn);
+        legalDetailDtoBinder.forField(okpo).bind(LegalDetailDto::getOkpo, LegalDetailDto::setOkpo);
+
+
+        legalDetailDtoBinder.readBean(legalDetailDto);
+
+
+        FormLayout formLayout = new FormLayout();
+        formLayout.addFormItem(typeOfContractorDtoComboBox, "Тип контрагента");
+        formLayout.addFormItem(inn, "ИНН");
+        formLayout.addFormItem(fullName, "Полное наименование");
+        formLayout.addFormItem(kpp, "КПП");
+        formLayout.addFormItem(ogrnip, "ОГРН");
+        formLayout.addFormItem(okpo, "ОКПО");
+
+        Button buttonToAddLegalDetail = new Button("Обновить реквизиты к контрагенту");
+
+        buttonToAddLegalDetail.setDisableOnClick(false);
+
+        buttonToAddLegalDetail.addClickListener(e -> {
+            try {
+                legalDetailDtoBinder.writeBean(legalDetailDto);
+            } catch (ValidationException ex) {
+                throw new RuntimeException(ex);
             }
-            if (typeOfContractor.getValue().equals("Индивидуальный предприниматель")) {
-                forms.removeAll();
-                forms.add(getFormForContractorType("Индивидуальный предприниматель"));
-            }
-            if (typeOfContractor.getValue().equals("Юридическое лицо")) {
-                forms.removeAll();
-                forms.add(getFormForContractorType("Юридическое лицо"));
-            }
+            contractorService.update(contractorDto);
         });
 
-        main.add(typeOfContractor, forms);
+
         Accordion accordion = new Accordion();
-        AccordionPanel legailDetails = accordion.add("Реквизиты", main);
+        AccordionPanel legailDetails = accordion.add("Реквизиты", formLayout);
+        legailDetails.addContent(buttonToAddLegalDetail);
+        legailDetails.addContent(getBankAccountSpace(contractorDto));
         legailDetails.addThemeVariants(DetailsVariant.FILLED);
         legailDetails.setOpened(true);
         return legailDetails;
+
     }
+
     // Блок Скидки и цены
-    private AccordionPanel getSalasEndPriceAccordion(){
-        HorizontalLayout layout = new HorizontalLayout();
+    private AccordionPanel getSalasEndPriceAccordion(ContractorDto contractorDto) {
+
         FormLayout formSalePrice = new FormLayout();
-        typeOfPrice = new Select<>();
-        typeOfPrice.setItems(typeOfPriceService.getAll()
-                .stream().map(TypeOfPriceDto::getName)
-                .collect(Collectors.toList()));
-        typeOfPrice.setEmptySelectionCaption("Тип цены");
-        if (contractorDto.getTypeOfPrice() == null) {
-            contractorDto.setTypeOfPrice(TypeOfPriceDto.builder()
-                    .name("")
-                    .sortNumber("")
-                    .build());
-        }
 
-        if (contractorDto.getTypeOfPriceName() != null) {
-            typeOfPrice.setValue(contractorDto.getTypeOfPriceName());
-        }
-        discountCard = new TextField();
-        if (contractorDto.getNumberDiscountCard() != null)
-            discountCard.setValue(contractorDto.getNumberDiscountCard());
+        ComboBox<TypeOfPriceDto> typeOfPriceDtoComboBox = new ComboBox<>();
+        typeOfPriceDtoComboBox.setRequired(true);
+        typeOfPriceDtoComboBox.setItems(typeOfPriceService.getAll());
+        typeOfPriceDtoComboBox.setItemLabelGenerator(TypeOfPriceDto::getName);
+        contractorDtoBinder.forField(typeOfPriceDtoComboBox)
+                .bind(ContractorDto::getTypeOfPrice, ContractorDto::setTypeOfPrice);
 
-        formSalePrice.addFormItem(typeOfPrice, "Цены");
-        formSalePrice.addFormItem(discountCard, "Дисконтная карта");
+        TextField numberDiscountCard = new TextField();
+        contractorDtoBinder.forField(numberDiscountCard)
+                .bind(ContractorDto::getNumberDiscountCard, ContractorDto::setNumberDiscountCard);
+
+        contractorDtoBinder.readBean(contractorDto);
+
+        formSalePrice.addFormItem(typeOfPriceDtoComboBox, "Цены");
+        formSalePrice.addFormItem(numberDiscountCard, "Номер диск. карта");
         formSalePrice.setWidth("400px");
         Accordion accordion = new Accordion();
-        AccordionPanel accordionPanel = accordion.add("Скидки и цены", layout);
+        AccordionPanel accordionPanel = accordion.add("Скидки и цены", formSalePrice);
+        accordionPanel.setOpened(true);
         accordionPanel.addThemeVariants(DetailsVariant.FILLED);
         return accordionPanel;
 
     }
+
     //БЛок Доступ
-    private AccordionPanel getAccessAccordion(){
+    private AccordionPanel getAccessAccordion() {
         HorizontalLayout layout = new HorizontalLayout();
         Text text = new Text("Тут пока не готово");
         layout.add(text);
@@ -486,157 +513,192 @@ public class FormEditCotragent extends VerticalLayout {
         return accordionPanel;
     }
 
-    // Форма lrgalDetail
-    private VerticalLayout getFormForContractorType(String type){
-        if(contractorDto.getLegalDetailDto() == null){
-            contractorDto.setLegalDetailDto(LegalDetailDto.builder()
-                    .lastName("")
-                    .firstName("")
-                    .middleName("")
-                    .address(new AddressDto())
-                    .inn("")
-                    .okpo("")
-                    .ogrnip("")
-                    .kpp("")
-                    .numberOfTheCertificate("")
-                    .build());
-        }
-        VerticalLayout superMain = new VerticalLayout();
-        HorizontalLayout main = new HorizontalLayout();
-        FormLayout formLayout = new FormLayout();
-        formLayout.setWidth("250px");
-
-        lastName = new TextField();
-        if(contractorDto.getLegalDetailDto().getLastName() != null) lastName.setValue(contractorDto.getLegalDetailDto().getLastName());
-        firstName = new TextField();
-        if(contractorDto.getLegalDetailDto().getFirstName() != null) firstName.setValue(contractorDto.getLegalDetailDto().getFirstName());
-        middleName = new TextField();
-        if(contractorDto.getLegalDetailDto().getMiddleName() != null) middleName.setValue(contractorDto.getLegalDetailDto().getMiddleName());
-        if(contractorDto.getLegalDetailDto().getAddress() != null) addressLegal.setValue(contractorDto.getLegalDetailDto().getAddress());
-        inn = new TextField();
-        if(contractorDto.getLegalDetailDto().getInn() != null) inn.setValue(contractorDto.getLegalDetailDto().getInn());
-        okpo = new TextField();
-        if(contractorDto.getLegalDetailDto().getOkpo() != null) okpo.setValue(contractorDto.getLegalDetailDto().getOkpo());
-        ogrnip = new TextField();
-        if(contractorDto.getLegalDetailDto().getOgrnip() != null) ogrnip.setValue(contractorDto.getLegalDetailDto().getOgrnip());
-        kpp = new TextField();
-        if(contractorDto.getLegalDetailDto().getKpp() != null) kpp.setValue(contractorDto.getLegalDetailDto().getKpp());
-        numberOfTheCertificate = new TextField();
-        if(contractorDto.getLegalDetailDto().getNumberOfTheCertificate() != null) numberOfTheCertificate.setValue(contractorDto.getLegalDetailDto().getNumberOfTheCertificate());
-        dateOfTheCertificate = new DatePicker("Date");
-        if(contractorDto.getLegalDetailDto().getDateOfTheCertificate() != null) dateOfTheCertificate.setValue(contractorDto.getLegalDetailDto().getDateOfTheCertificate());
-
-        switch (type) {
-            case "Индивидуальный предприниматель":
-                formLayout.addFormItem(inn, "ИНН");
-                formLayout.addFormItem(lastName, "Фамилия");
-                formLayout.addFormItem(firstName, "Имя");
-                formLayout.addFormItem(middleName, "Отчество");
-                addressLegal.addToForm("Адрес регистрации", formLayout);
-                formLayout.addFormItem(okpo, "ОКПО");
-                formLayout.addFormItem(ogrnip, "ОГРНИП");
-                formLayout.addFormItem(numberOfTheCertificate, "Номер свидетельства");
-                formLayout.addFormItem(dateOfTheCertificate, "Дата свидетельства");
-                break;
-
-            case "Физическое лицо":
-                formLayout.addFormItem(inn, "ИНН");
-                formLayout.addFormItem(lastName, "Фамилия");
-                formLayout.addFormItem(firstName, "Имя");
-                formLayout.addFormItem(middleName, "Отчество");
-                addressLegal.addToForm("Адрес регистрации", formLayout);
-                break;
-
-            case "Юридическое лицо":
-                formLayout.addFormItem(inn, "ИНН");
-                formLayout.addFormItem(firstName, "Полное наименование");
-                addressLegal.addToForm("Адрес регистрации", formLayout);
-                formLayout.addFormItem(kpp, "КПП");
-                formLayout.addFormItem(ogrnip, "ОГРН");
-                formLayout.addFormItem(okpo, "ОКПО");
-                break;
-        }
-        VerticalLayout buttins = new VerticalLayout();
-        Button button = new Button("Запросить по ИНН");
-        button.addClickListener(e->{
-            Example2 example2 = dadata.getExample(inn.getValue());
-
-            if (example2.getSuggestions().isEmpty()) {
-                showError("По данному ИНН ничего не найдено");
-            } else {
-                if (typeOfContractor.getValue().equals("Индивидуальный предприниматель")) {
-                    if (example2.getSuggestions().get(0).getData().getType().equals("LEGAL")) {
-                        showError("Для данного ИНН нужно выбрать тип: Юридическое лицо");
-                        contractorDto.getLegalDetailDto().setInn(inn.getValue());
-                    } else {
-                        lastName.setValue(example2.getSuggestions().get(0).getData().getFio().getSurname());
-                        firstName.setValue(example2.getSuggestions().get(0).getData().getFio().getName());
-                        middleName.setValue(example2.getSuggestions().get(0).getData().getFio().getPatronymic());
-                        //нужно исправить, ошибочно указан адрес из dadataDto, нужен AddressDto
-                        //addressLegal.setValue(example2.getSuggestions().get(0).getData().getAddress().getUnrestrictedValue());
-                        okpo.setValue(example2.getSuggestions().get(0).getData().getOkpo());
-                        ogrnip.setValue(example2.getSuggestions().get(0).getData().getOgrn());
-                    }
-                } else if (typeOfContractor.getValue().equals("Юридическое лицо")) {
-                    if (example2.getSuggestions().get(0).getData().getType().equals("INDIVIDUAL")) {
-                        showError("Для данного ИНН нужно выбрать тип: Индивидуальный предприниматель");
-                        contractorDto.getLegalDetailDto().setInn(inn.getValue());
-                    } else {
-                        firstName.setValue(example2.getSuggestions().get(0).getData().getName().getShortWithOpf());
-                        kpp.setValue(example2.getSuggestions().get(0).getData().getKpp());
-                        ////нужно исправить, ошибочно указан адрес из dadataDto, нужен AddressDto
-                        //addressLegal.setValue(example2.getSuggestions().get(0).getData().getAddress().getUnrestrictedValue());
-                        ogrnip.setValue(example2.getSuggestions().get(0).getData().getOgrn());
-                        okpo.setValue(example2.getSuggestions().get(0).getData().getOkpo());
-                    }
-                } else {
-                    showError("Для физ. лиц функция недоступна.");
-                }
-            }
-        });
-        Button button1 = new Button("Адреса");
-        buttins.setWidth("100px");
-        buttins.add(button, button1);
-        main.add(formLayout,buttins);
-        superMain.add(main);
-        superMain.add(getBankAccountSpace());
-        return superMain;
-    }
-
-    private void showError(String message){
-        Notification notification = new Notification();
-        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-        Div text = new Div(new Text(message));
-        Button closeButton = new Button(new Icon("lumo", "cross"));
-        closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
-        closeButton.getElement().setAttribute("aria-label", "Close");
-        closeButton.addClickListener(event -> notification.close());
-        HorizontalLayout layout = new HorizontalLayout(text, closeButton);
-        layout.setAlignItems(Alignment.CENTER);
-        notification.add(layout);
-        notification.open();
-    }
     // Формы для банк Аккаунтов
-    private VerticalLayout getBankAccountSpace(){
-        formsBankAccount = new ArrayList<>();
+    private VerticalLayout getBankAccountSpace(ContractorDto contractorDto) {
+
         VerticalLayout bankAccountSpace = new VerticalLayout();
-        if(contractorDto.getBankAccountDtos() != null) {
-            for (BankAccountDto bankAccountDto : contractorDto.getBankAccountDtos()) {
-                FormBankAccauntInner formBankAccauntInner = new FormBankAccauntInner(bankAccountService);
-                bankAccountSpace.add(formBankAccauntInner.getFormForBankAccount(bankAccountDto));
-                formsBankAccount.add(formBankAccauntInner);
+
+        Image buttonIcon = new Image("icons/plus.png", "Plus");
+        buttonIcon.setWidth("14px");
+        Button addNewBankAcc = new Button("Расчетный счет", buttonIcon);
+        addNewBankAcc.addClickListener(e -> {
+            try {
+                bankAccountSpace.add(getFormForBankAccount(contractorDto));
+            } catch (ValidationException ex) {
+                throw new RuntimeException(ex);
             }
-        }
-        Button addNewBankAcc = new Button("Добавить счёт");
-        addNewBankAcc.addClickListener(e->{
-            FormBankAccauntInner form = new FormBankAccauntInner(bankAccountService);
-            bankAccountSpace.add(form.getFormForBankAccount(null));
-            formsBankAccount.add(form);
         });
+
         bankAccountSpace.add(addNewBankAcc);
+
+
+        List<BankAccountDto> bankAccountDtoList = bankAccountService.getAll();
+
+        contractorDtoBinder.readBean(contractorDto);
+
+        List<BankAccountDto> filteredList = bankAccountDtoList.stream()
+                .filter(bankAccountDto1 -> {
+                    if (bankAccountDto1.getContractor() != null &&
+                            Objects.equals(contractorDto.getId(), bankAccountDto1.getContractor().getId())) {
+                        try {
+                            bankAccountSpace
+                                    .add(getFormForAlreadyExistsBankAccounts(contractorDto, bankAccountDto1));
+                            return true;
+                        } catch (ValidationException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
+                    return false;
+                })
+                .collect(Collectors.toList());
+
+
         return bankAccountSpace;
     }
+
+    public VerticalLayout getFormForBankAccount(ContractorDto contractorDto)
+            throws ValidationException {
+        VerticalLayout main = new VerticalLayout();
+
+        TextField rcbic = new TextField();
+        TextField bank = new TextField();
+        TextField bankAddress = new TextField();
+        TextField corespondentAccount = new TextField();
+        TextField account = new TextField();
+        Checkbox mainAccount = new Checkbox();
+        TextField sortNumber = new TextField();
+
+        Binder<BankAccountDto> bankAccountDtoBinder2 = new Binder<>(BankAccountDto.class);
+
+        BankAccountDto bankAccountDto = new BankAccountDto();
+        bankAccountDto.setContractor(contractorDto);
+
+
+        bankAccountDtoBinder2.forField(rcbic).bind(BankAccountDto::getRcbic, BankAccountDto::setRcbic);
+
+        bankAccountDtoBinder2.forField(bank).bind(BankAccountDto::getBank, BankAccountDto::setBank);
+
+        bankAccountDtoBinder2.forField(bankAddress).bind(BankAccountDto::getBankAddress, BankAccountDto::setBankAddress);
+
+        bankAccountDtoBinder2.forField(corespondentAccount)
+                .bind(BankAccountDto::getCorrespondentAccount, BankAccountDto::setCorrespondentAccount);
+
+        bankAccountDtoBinder2.forField(account).asRequired("Расчетный счёт не может быть пустым")
+                .bind(BankAccountDto::getAccount, BankAccountDto::setAccount);
+
+        bankAccountDtoBinder2.forField(sortNumber).bind(BankAccountDto::getSortNumber, BankAccountDto::setSortNumber);
+
+        bankAccountDtoBinder2.bind(mainAccount, BankAccountDto::getMainAccount, BankAccountDto::setMainAccount);
+
+
+        bankAccountDtoBinder2.readBean(bankAccountDto);
+
+
+        FormLayout formLayout = new FormLayout();
+        formLayout.addFormItem(rcbic, "БИК");
+        formLayout.addFormItem(bank, "Банк");
+        formLayout.addFormItem(bankAddress, "Адрес");
+        formLayout.addFormItem(corespondentAccount, "Kopp. счет");
+        formLayout.addFormItem(account, "Расчетный счет");
+        formLayout.addFormItem(sortNumber, "Текущий остаток");
+        formLayout.addFormItem(mainAccount, "Основной счет");
+
+
+        Button button = new Button("Закрыть");
+        button.addClickListener(e -> {
+            main.setVisible(false);
+        });
+
+
+        Button button1 = new Button("Привязать банк. счет");
+        button1.setDisableOnClick(true);
+        button1.addClickListener(e -> {
+            try {
+                bankAccountDtoBinder2.writeBean(bankAccountDto);
+            } catch (ValidationException ex) {
+                throw new RuntimeException(ex);
+            }
+            bankAccountService.create(bankAccountDto);
+            main.setVisible(true);
+        });
+
+        main.add(button, formLayout, button1);
+
+        return main;
+    }
+
+    public VerticalLayout getFormForAlreadyExistsBankAccounts(ContractorDto contractorDto, BankAccountDto bankAccountDto)
+            throws ValidationException {
+        VerticalLayout main = new VerticalLayout();
+
+        TextField rcbic = new TextField();
+        TextField bank = new TextField();
+        TextField bankAddress = new TextField();
+        TextField corespondentAccount = new TextField();
+        TextField account = new TextField();
+        Checkbox mainAccount = new Checkbox();
+        TextField sortNumber = new TextField();
+
+        Binder<BankAccountDto> bankAccountDtoBinder1 = new Binder<>(BankAccountDto.class);
+
+        bankAccountDto.setContractor(contractorDto);
+
+        bankAccountDtoBinder1.forField(rcbic).bind(BankAccountDto::getRcbic, BankAccountDto::setRcbic);
+
+        bankAccountDtoBinder1.forField(bank).bind(BankAccountDto::getBank, BankAccountDto::setBank);
+
+        bankAccountDtoBinder1.forField(bankAddress).bind(BankAccountDto::getBankAddress, BankAccountDto::setBankAddress);
+
+        bankAccountDtoBinder1.forField(corespondentAccount)
+                .bind(BankAccountDto::getCorrespondentAccount, BankAccountDto::setCorrespondentAccount);
+
+        bankAccountDtoBinder1.forField(account).asRequired("Расчетный счёт не может быть пустым")
+                .bind(BankAccountDto::getAccount, BankAccountDto::setAccount);
+
+        bankAccountDtoBinder1.forField(sortNumber).bind(BankAccountDto::getSortNumber, BankAccountDto::setSortNumber);
+
+        bankAccountDtoBinder1.bind(mainAccount, BankAccountDto::getMainAccount, BankAccountDto::setMainAccount);
+
+
+        bankAccountDtoBinder1.readBean(bankAccountDto);
+
+
+        FormLayout formLayout = new FormLayout();
+        formLayout.addFormItem(rcbic, "БИК");
+        formLayout.addFormItem(bank, "Банк");
+        formLayout.addFormItem(bankAddress, "Адрес");
+        formLayout.addFormItem(corespondentAccount, "Kopp. счет");
+        formLayout.addFormItem(account, "Расчетный счет");
+        formLayout.addFormItem(sortNumber, "Текущий остаток");
+        formLayout.addFormItem(mainAccount, "Основной счет");
+
+
+        Button button = new Button("Удалить банк. счёт");
+        button.addClickListener(e -> {
+            bankAccountService.deleteById(bankAccountDto.getId());
+            main.setVisible(false);
+        });
+
+
+        Button button1 = new Button("Обновить банк. счет");
+        button1.setDisableOnClick(false);
+        button1.addClickListener(e -> {
+            try {
+                bankAccountDtoBinder1.writeBean(bankAccountDto);
+            } catch (ValidationException ex) {
+                throw new RuntimeException(ex);
+            }
+            bankAccountService.update(bankAccountDto);
+            main.setVisible(true);
+        });
+
+        main.add(button, formLayout, button1);
+
+        return main;
+    }
+
     public void setParent(ContragentsList parent) {
         this.parent = parent;
     }
+
 }

@@ -13,7 +13,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import com.warehouse_accounting.components.contragents.form.FormNewContragent;
+//import com.warehouse_accounting.components.contragents.form.FormNewContragent;
 import com.warehouse_accounting.models.dto.AddressDto;
 import com.warehouse_accounting.models.dto.CountryDto;
 import com.warehouse_accounting.services.interfaces.AddressService;
@@ -26,20 +26,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class AddressView extends VerticalLayout {
     private final AddressService addressService;
     private final AddressForm addressForm;
-    private final FormNewContragent formNewContragent;
+//    private final FormNewContragent formNewContragent;
 
     @Autowired
     public AddressView(
             AddressService addressService,
-            AddressForm addressForm,
-            FormNewContragent formNewContragent
+            AddressForm addressForm
+//            , FormNewContragent formNewContragent
     ) {
         this.addressService = addressService;
         this.addressForm = addressForm;
-        this.formNewContragent = formNewContragent;
-
-        formNewContragent.refres();
-        add(formNewContragent);
+//        this.formNewContragent = formNewContragent;
+//
+//        formNewContragent.refres();
+//        add(formNewContragent);
 
         /*add(addressForm.getNewForm("Фактический адрес"));
 

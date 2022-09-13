@@ -33,7 +33,7 @@ public class Events extends VerticalLayout {
 
     private Grid<CallDto> initTable() {
         Grid<CallDto> grid = new Grid<>(CallDto.class,false);
-        grid.setItems(contractorDto.getCallIds().stream().map(x -> callService.getById(x)).collect(Collectors.toList()));
+//        grid.setItems(contractorDto.getCallIds().stream().map(x -> callService.getById(x)).collect(Collectors.toList()));
 //        grid.setColumns(CallsGridLayout.getVisibleColumn().keySet().toArray(String[]::new));
 //
 //        CallsGridLayout.getVisibleColumn().forEach((key, value) -> grid.getColumnByKey(key).setHeader(value));
