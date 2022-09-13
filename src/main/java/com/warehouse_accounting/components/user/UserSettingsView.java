@@ -31,6 +31,7 @@ import com.warehouse_accounting.models.dto.NotificationsDto;
 import com.warehouse_accounting.models.dto.PositionDto;
 import com.warehouse_accounting.models.dto.PrintingDocumentsDto;
 import com.warehouse_accounting.models.dto.ProjectDto;
+import com.warehouse_accounting.models.dto.RoleDto;
 import com.warehouse_accounting.models.dto.SelectorDto;
 import com.warehouse_accounting.models.dto.SelectorForViewDto;
 import com.warehouse_accounting.models.dto.SettingsDto;
@@ -164,6 +165,8 @@ public class UserSettingsView extends VerticalLayout {
     public void dsUserSettingsView() throws IOException {
         initialization();
         setSizeFull();
+        employeeDto = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getEmployeeDto();
+        System.out.println(employeeDto);
         horizontalLayout.add(createButton, closeButton, change, changeButtonPass);
         verticalLayout.add(
                 textFieldrow("Имя", firstName, employeeDto.getFirstName()),
@@ -217,8 +220,7 @@ public class UserSettingsView extends VerticalLayout {
             employeeDto = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getEmployeeDto();
             settingsDto = settingsService.getById(employeeDto.getId());
             System.out.println(employeeDto);
-        } //getById(1L) заменено на employeeDto.getId()//
-//        employeeDto = employeeService.getById(1L); - закоменчено
+        }
         companyDto = settingsDto.getCompanyDto();
         warehouseDto = settingsDto.getWarehouseDto();
         customerDto = settingsDto.getCustomerDto();
@@ -360,6 +362,7 @@ public class UserSettingsView extends VerticalLayout {
         settingsDto.setRefreshReportsAuto(refreshReports.getValue());
         settingsDto.setSignatureInLetters(signatureInLet.getValue());
         settingsDto.setNotificationsDto(notificationsDto);
+        settingsDto.setEmployeeDto(employeeDto);
         return settingsDto;
     }
 
@@ -395,7 +398,7 @@ public class UserSettingsView extends VerticalLayout {
 
             if (!buffer.getFileName().equalsIgnoreCase("")) {
                 String filePath = "src/main/resources/static/avatars/" + new Date().getTime() + buffer.getFileName();
-                imageDto = new ImageDto(null, filePath, null);
+                imageDto = new ImageDto(employeeDto.getId(), filePath, "Picture");
                 imageService.create(imageDto);
                 imageDto = imageService.getAll().stream().filter(imageDto ->
                         imageDto.getImageUrl().equals(filePath)).findFirst().get();
@@ -411,15 +414,6 @@ public class UserSettingsView extends VerticalLayout {
                 employeeDto.setPosition(positionDto);
                 employeeService.update(employeeDto);
             }
-
-            if (employeeService.getById(1L) == null) {
-                employeeDto.setId(1L);
-                employeeService.create(employeeDto);
-            } else {
-                employeeDto.setId(1L);
-                employeeService.update(employeeDto);
-            }
-
             setComboBoxSettings();
             setNotificationSettings();
             saveSetting();

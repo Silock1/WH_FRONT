@@ -50,6 +50,6 @@ public class UserPrincipal implements UserDetails {
     }
 
     public EmployeeDto getEmployeeDto() {
-        return this.employeeDto;
+        return employeeDto;
     }
 }
