@@ -50,6 +50,8 @@ public class CustomerOrderDto {
 
     List<FileDto> filesDto = new ArrayList<>();
 
+    SalesChannelDto channelDto = new SalesChannelDto();
+
     BigDecimal sum;
 
     String comment;

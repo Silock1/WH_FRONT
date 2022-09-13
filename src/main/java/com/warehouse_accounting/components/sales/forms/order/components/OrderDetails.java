@@ -44,9 +44,12 @@ public class OrderDetails extends HorizontalLayout {
     private List<CompanyDto> companies;
     private List<ContractorDto> contractors;
 
+    private final SalesChannelsService channelsService;
+
+
     public OrderDetails(CompanyService companyService, ContractorService contractorService,
                         WarehouseService warehouseService, ContractService contractService,
-                        ProjectService projectService, CustomerOrderDto invoiceDto) throws IOException {
+                        ProjectService projectService, CustomerOrderDto invoiceDto, SalesChannelsService channelsService) throws IOException {
 
         this.companyService = companyService;
         this.contractorService = contractorService;
@@ -57,6 +60,7 @@ public class OrderDetails extends HorizontalLayout {
 
         contractors = contractorService.getAll();
         companies = companyService.getAll();
+        this.channelsService = channelsService;
 
         Span dummy = new Span(".");
         dummy.setClassName("dtb-empty");
@@ -73,7 +77,7 @@ public class OrderDetails extends HorizontalLayout {
         ComboBox<CompanyDto> company = new ComboBox<>();
         company.setClearButtonVisible(true);
         company.setItems(companies);
-        company.setItemLabelGenerator(CompanyDto::getName);
+        company.setItemLabelGenerator(CompanyDto::toString);
         company.setRequired(true);
         company.addValueChangeListener(event -> {
             CompanyDto companyDto = event.getValue();
@@ -120,7 +124,18 @@ public class OrderDetails extends HorizontalLayout {
 //                        invoice.setContractDate(event.getValue() != null ? event.getValue() : LocalDate.now()));
 //        unloadDate.setInitialPosition(LocalDate.now());
 
-        ComboBox<String> channel = new ComboBox<>(); // todo: нет такого поля в InvoiceDto
+        ComboBox<SalesChannelDto> channel = new ComboBox<>();
+        channel.setClearButtonVisible(true);
+        List<SalesChannelDto> channels = channelsService.getAll();
+
+        channel.setItems(channels);
+        channel.setItemLabelGenerator(SalesChannelDto::getName);
+        channel.setRequired(true);
+        channel.addValueChangeListener(event -> {
+            SalesChannelDto channelDto = event.getValue();
+            customerOrder.setChannelDto(channelDto);
+        });
+
 
         VerticalLayout leftFields = new VerticalLayout(
                 new HorizontalLayout(company),

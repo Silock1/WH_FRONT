@@ -54,13 +54,15 @@ public class SalesSubMenuView extends VerticalLayout {
 //    private final InvoiceService invoiceService;
     private final CustomerOrderService customerOrderService;
 
+    private final SalesChannelsService channelsService;
+
     public SalesSubMenuView(SalesShipmentsFilter salesShipmentsFilter,
                             CustomerOrdersFilter customerOrdersFilter, GoodsToRealizeGiveService goodsToRealizeGiveService,
                             GoodsToRealizeGetService goodsToRealizeGetService, CompanyService companyService,
                             ContractorService contractorService, ContractService contractService, ProjectService projectService,
                             WarehouseService warehouseService, DepartmentService departmentService, EmployeeService employeeService,
                             GoodsToRealizeFilter filterLayout, GoodsToRealizeFilter goodsToRealizeFilter,
-                            ProductService productService, CustomerOrderService customerOrderService) {
+                            ProductService productService, CustomerOrderService customerOrderService, SalesChannelsService channelsService) {
         this.goodsToRealizeFilter = goodsToRealizeFilter;
         this.customerOrdersFilter = customerOrdersFilter;
         this.companyService = companyService;
@@ -73,6 +75,7 @@ public class SalesSubMenuView extends VerticalLayout {
         this.salesShipmentsFilter = salesShipmentsFilter;
         this.productService = productService;
         this.customerOrderService = customerOrderService;
+        this.channelsService = channelsService;
 
         pageContent.setSizeFull();
         this.goodsToRealizeGetService = goodsToRealizeGetService;
@@ -144,7 +147,7 @@ public class SalesSubMenuView extends VerticalLayout {
     private CustomerOrders initCustomerOrders(Div pageContent){
         if (Objects.isNull(customerOrders)) {
             customerOrders = new CustomerOrders(pageContent, companyService, contractorService, contractService,
-                    projectService, warehouseService, employeeService, departmentService, productService, customerOrderService);
+                    projectService, warehouseService, employeeService, departmentService, productService, customerOrderService, channelsService);
         }
         return customerOrders;
     }

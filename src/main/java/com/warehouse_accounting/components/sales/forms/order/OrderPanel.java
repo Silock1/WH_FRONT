@@ -9,7 +9,6 @@ import com.warehouse_accounting.components.sales.forms.order.components.OrderHea
 import com.warehouse_accounting.components.sales.forms.order.components.OrderPositions;
 import com.warehouse_accounting.components.sales.forms.order.types.DocumentCloseHandler;
 import com.warehouse_accounting.models.dto.CustomerOrderDto;
-import com.warehouse_accounting.models.dto.InvoiceDto;
 import com.warehouse_accounting.models.dto.InvoiceProductDto;
 import com.warehouse_accounting.services.interfaces.*;
 import lombok.extern.log4j.Log4j2;
@@ -37,10 +36,11 @@ public class OrderPanel extends VerticalLayout {
     private final CustomerOrderService customerOrderService;
     private final DocumentOperationsToolbar documentToolbar = new DocumentOperationsToolbar();
     private final CustomerOrderDto customerOrder = new CustomerOrderDto();
+    private final SalesChannelsService channelsService;
 
     public OrderPanel(CompanyService companyService, ContractorService contractorService, ProductService productService,
                       WarehouseService warehouseService, ContractService contractService, ProjectService projectService,
-                      CustomerOrderService customerOrderService) {
+                      CustomerOrderService customerOrderService, SalesChannelsService channelsService) {
         this.companyService = companyService;
         this.contractorService = contractorService;
         this.productService = productService;
@@ -48,9 +48,10 @@ public class OrderPanel extends VerticalLayout {
         this.contractService = contractService;
         this.projectService = projectService;
         this.customerOrderService = customerOrderService;
+        this.channelsService = channelsService;
 
         try {
-            OrderDetails orderDetails = new OrderDetails(companyService, contractorService, warehouseService, contractService, projectService, customerOrder);
+            OrderDetails orderDetails = new OrderDetails(companyService, contractorService, warehouseService, contractService, projectService, customerOrder, channelsService);
             OrderPositions orderPositions = new OrderPositions(productService, customerOrder);
             OrderHeader orderHeader = new OrderHeader(customerOrder);
 

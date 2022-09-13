@@ -164,10 +164,6 @@ public class UserSettingsView extends VerticalLayout {
     public void dsUserSettingsView() throws IOException {
         initialization();
         setSizeFull();
-        employeeDto = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getEmployeeDto();
-
-//        employeeDto = employeeService.getCurrentEmployee();
-        System.out.println(employeeDto);
         horizontalLayout.add(createButton, closeButton, change, changeButtonPass);
         verticalLayout.add(
                 textFieldrow("Имя", firstName, employeeDto.getFirstName()),
