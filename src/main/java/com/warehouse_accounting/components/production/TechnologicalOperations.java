@@ -16,40 +16,54 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import com.warehouse_accounting.components.AppView;
-import com.warehouse_accounting.components.production.forms.ProductionOperationsForm;
-import com.warehouse_accounting.components.production.grids.ProductionOperationsGridLayout;
+import com.warehouse_accounting.components.production.forms.TechnologicalOperationsForm;
+import com.warehouse_accounting.components.production.grids.TechnologicalOperationsGridLayout;
 import com.warehouse_accounting.models.dto.TechnologicalOperationDto;
-import com.warehouse_accounting.services.interfaces.ProductionOperationsService;
+import com.warehouse_accounting.services.interfaces.CompanyService;
+import com.warehouse_accounting.services.interfaces.TechnologicalOperationsService;
 import com.warehouse_accounting.services.interfaces.ProductionStageService;
+import com.warehouse_accounting.services.interfaces.ProjectService;
+import com.warehouse_accounting.services.interfaces.TechnologicalMapService;
+import com.warehouse_accounting.services.interfaces.WarehouseService;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 
+import java.io.IOException;
+
 import static com.vaadin.flow.component.button.ButtonVariant.LUMO_TERTIARY_INLINE;
 
+@Log4j2
 @SpringComponent
 @UIScope
-public class ProductionOperations extends VerticalLayout {
-    private final ProductionOperationsService productionOperationsService;
+public class TechnologicalOperations extends VerticalLayout {
+    private final TechnologicalOperationsService productionOperationsService;
     private TextField textField;
     private final ProductionStageService productionStageService;
+    private final WarehouseService warehouseService;
+    private final TechnologicalMapService technologicalMapService;
+    private final CompanyService companyService;
+    private final ProjectService projectService;
 
     @Getter
-    private final ProductionOperationsGridLayout productionOperationsGridLayout;
+    private final TechnologicalOperationsGridLayout productionOperationsGridLayout;
 
     @Getter
     @Setter
     private Div pageContent;
 
-    public ProductionOperations(ProductionOperationsService productionOperationsService, ProductionOperationsGridLayout productionOperationsGridLayout,
-                                ProductionStageService productionStageService) {
+    public TechnologicalOperations(TechnologicalOperationsService productionOperationsService, TechnologicalOperationsGridLayout productionOperationsGridLayout,
+                                   ProductionStageService productionStageService, WarehouseService warehouseService, TechnologicalMapService technologicalMapService,
+                                   CompanyService companyService, ProjectService projectService) {
         this.productionStageService = productionStageService;
         this.productionOperationsGridLayout = productionOperationsGridLayout;
         this.productionOperationsService = productionOperationsService;
+        this.warehouseService = warehouseService;
+        this.technologicalMapService = technologicalMapService;
+        this.companyService = companyService;
+        this.projectService = projectService;
         this.pageContent = new Div();
         pageContent.setSizeFull();
         pageContent.add(createTopGroupElements(), mainContent());
@@ -110,7 +124,12 @@ public class ProductionOperations extends VerticalLayout {
         buttonIcon.setWidth("14px");
         Button addProductionOperationButton = new Button("Операция", buttonIcon);
         addProductionOperationButton.addClickListener(buttonClickEvent -> {
-            add(new ProductionOperationsForm(this, new TechnologicalOperationDto(), productionStageService, productionOperationsService));
+            try {
+                add(new TechnologicalOperationsForm(this, new TechnologicalOperationDto(), warehouseService, technologicalMapService, productionOperationsService, companyService, projectService));
+            } catch (RuntimeException | IOException err) {
+                log.error("Не удалось создать форму тех. операции");
+                err.printStackTrace();
+            }
         });
         return addProductionOperationButton;
     }
@@ -214,7 +233,13 @@ public class ProductionOperations extends VerticalLayout {
     }
     private HorizontalLayout mainContent() {
         productionOperationsGridLayout.getProductionOperationsDtoGrid().addItemClickListener(productionOperationsDtoItemClickEvent -> {
-            add(new ProductionOperationsForm(this, productionOperationsDtoItemClickEvent.getItem(), productionStageService, productionOperationsService));
+            try {
+                add(new TechnologicalOperationsForm(this, productionOperationsDtoItemClickEvent.getItem(),
+                        warehouseService, technologicalMapService, productionOperationsService, companyService, projectService));
+            } catch (RuntimeException | IOException err) {
+                log.error("Не удалось создать форму тех. операции");
+                err.printStackTrace();
+            }
         });
         return productionOperationsGridLayout;
     }
