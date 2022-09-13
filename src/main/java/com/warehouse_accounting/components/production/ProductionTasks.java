@@ -44,6 +44,8 @@ import com.warehouse_accounting.components.production.grids.ProductionTasksGridL
 import com.warehouse_accounting.components.util.AdditionalFieldConvertor;
 import com.warehouse_accounting.models.dto.ProductionTasksAdditionalFieldDto;
 import com.warehouse_accounting.models.dto.ProductionTasksDto;
+import com.warehouse_accounting.services.interfaces.ContractorService;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.ProductionTasksAdditionalFieldService;
 import com.warehouse_accounting.services.interfaces.ProductionTasksService;
 import com.warehouse_accounting.services.interfaces.WarehouseService;
@@ -83,16 +85,24 @@ public class ProductionTasks extends VerticalLayout {
 
     private static final String USER_STRING_TYPE_LITERAL = "Строка";
 
+    private final transient EmployeeService employeeService;
+    private final transient ContractorService contractorService;
+
+
     public ProductionTasks(ProductionTasksFilterLayout productionTasksFilterLayout,
                            ProductionTasksGridLayout productionTasksGridLayout,
                            ProductionTasksService productionTasksService,
                            WarehouseService warehouseService,
-                           ProductionTasksAdditionalFieldService productionTasksAdditionalFieldService) {
+                           ProductionTasksAdditionalFieldService productionTasksAdditionalFieldService,
+                           EmployeeService employeeService,
+                           ContractorService contractorService) {
         this.productionTasksFilterLayout = productionTasksFilterLayout;
         this.productionTasksGridLayout = productionTasksGridLayout;
         this.productionTasksService = productionTasksService;
         this.warehouseService = warehouseService;
         this.productionTasksAdditionalFieldService = productionTasksAdditionalFieldService;
+        this.employeeService = employeeService;
+        this.contractorService = contractorService;
 
         mainContent = new Div();
         mainContent.setSizeFull();
@@ -133,7 +143,9 @@ public class ProductionTasks extends VerticalLayout {
                         .build(),
                 productionTasksService,
                 productionTasksAdditionalFieldService,
-                warehouseService)));
+                warehouseService,
+                employeeService,
+                contractorService)));
 
         Button filter = new Button("Фильтр");
         filter.addThemeVariants(ButtonVariant.LUMO_PRIMARY);

@@ -13,6 +13,8 @@ import com.warehouse_accounting.components.production.ProductionTasks;
 import com.warehouse_accounting.components.production.forms.ProductionTasksForm;
 import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.ProductionTasksDto;
+import com.warehouse_accounting.services.interfaces.ContractorService;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.ProductionTasksAdditionalFieldService;
 import com.warehouse_accounting.services.interfaces.ProductionTasksService;
 import com.warehouse_accounting.services.interfaces.WarehouseService;
@@ -36,14 +38,21 @@ public class ProductionTasksGridLayout extends HorizontalLayout {
 
     private final ProductionTasks productionTasks;
 
+    private final transient EmployeeService employeeService;
+    private final transient ContractorService contractorService;
+
     public ProductionTasksGridLayout(ProductionTasksService productionTasksService,
                                      ProductionTasksAdditionalFieldService productionTasksAdditionalFieldService,
                                      WarehouseService warehouseService,
-                                     @Lazy ProductionTasks productionTasks) {
+                                     @Lazy ProductionTasks productionTasks,
+                                     EmployeeService employeeService,
+                                     ContractorService contractorService) {
         this.productionTasksService = productionTasksService;
         this.productionTasksAdditionalFieldService = productionTasksAdditionalFieldService;
         this.warehouseService = warehouseService;
         this.productionTasks = productionTasks;
+        this.employeeService = employeeService;
+        this.contractorService = contractorService;
 
         initializingGrid();
     }
@@ -117,7 +126,7 @@ public class ProductionTasksGridLayout extends HorizontalLayout {
                 ((ProductionTasksDto) productionTasksDtoGrid.getSelectedItems().toArray()[0]),
                 productionTasksService,
                 productionTasksAdditionalFieldService,
-                warehouseService
+                warehouseService,employeeService, contractorService
                 )));
 
         Button menuButton = new Button(new Icon(VaadinIcon.COG));
