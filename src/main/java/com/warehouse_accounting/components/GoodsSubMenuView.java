@@ -146,7 +146,7 @@ public class GoodsSubMenuView extends VerticalLayout {
                     break;
                 case "Сер. номера":
                     pageContent.removeAll();
-                    pageContent.add(serialNumbers);
+                    pageContent.add(serialNumbers); //Добавил сер.номера
                     break;
             }
         });
@@ -159,3 +159,4 @@ public class GoodsSubMenuView extends VerticalLayout {
     }
 
 }
+
