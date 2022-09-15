@@ -17,6 +17,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
+import com.warehouse_accounting.components.payments.forms.CreateIncomingPayForm;
 import com.warehouse_accounting.components.payments.forms.CreateReceiptOrderForm;
 import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.PaymentsDto;
@@ -129,13 +130,14 @@ public class PaymentsView extends VerticalLayout {
         SubMenu addPaymentsButtonList = addPaymentsButton.getSubMenu();
         MenuItem addReceiptOrder = addPaymentsButtonList.addItem("Приходный ордер");
         addReceiptOrder.addClickListener(event -> {
-            //TODO
             removeAll();
             add(new CreateReceiptOrderForm(this));
         });
         MenuItem addIncomingPayment = addPaymentsButtonList.addItem("Входящий платёж");
         addIncomingPayment.addClickListener(event -> {
             //TODO
+            removeAll();
+            add(new CreateIncomingPayForm(this));
         });
 
         Button addExpensesButton = new Button("Расходы", new Icon(VaadinIcon.PLUS), event -> {

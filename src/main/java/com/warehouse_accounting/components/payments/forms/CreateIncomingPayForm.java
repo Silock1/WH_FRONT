@@ -14,7 +14,6 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -29,13 +28,15 @@ import com.warehouse_accounting.components.payments.PaymentsView;
 import java.time.LocalDate;
 
 @CssImport(value = "./css/receiptOrderAndIncomingPayForms.css")
-public class CreateReceiptOrderForm extends VerticalLayout {
+public class CreateIncomingPayForm extends VerticalLayout{
+
     private PaymentsView parent;
     private Tab paidDocuments = new Tab("Оплаченные документы");
     private Tab relatedDocuments = new Tab("Связанные документы");
     private VerticalLayout documentPage = new VerticalLayout();
-    private TextField fieldReceiptOrderNumber;
-    private DatePicker datePickerReceiptOrderNumber;
+
+    private TextField fieldIncomingPayNumber;
+    private DatePicker datePickerIncomingPayNumber;
     private Checkbox checkboxProdused;
     private Select<String> formOrganization;
     private Select<String> formContrAgent;
@@ -43,7 +44,7 @@ public class CreateReceiptOrderForm extends VerticalLayout {
     private Select<String> formProject;
     private Select<String> salesChannel;
 
-    public CreateReceiptOrderForm(PaymentsView parent) {
+    public CreateIncomingPayForm(PaymentsView parent) {
         this.parent = parent;
 
         add(initTopButtons(), initInvoiceNumber(), initForms(), initTabs(), initTasksAndFiles());
@@ -83,7 +84,7 @@ public class CreateReceiptOrderForm extends VerticalLayout {
         MenuItem itemPrint = print.addItem(new Icon(VaadinIcon.PRINT));
         itemPrint.add(new Text("Печать"));
         SubMenu subMenuPrint = itemPrint.getSubMenu();
-        subMenuPrint.addItem("Приходный ордер");
+        subMenuPrint.addItem("Входящий платёж");
         subMenuPrint.addItem("Настроить...");
 
         MenuBar send = new MenuBar();
@@ -91,7 +92,7 @@ public class CreateReceiptOrderForm extends VerticalLayout {
         MenuItem itemSend = send.addItem(new Icon(VaadinIcon.SHARE));
         itemSend.add(new Text("Отправить"));
         SubMenu subMenuSend = itemSend.getSubMenu();
-        subMenuSend.addItem("Приходный ордер");
+        subMenuSend.addItem("Входящий платёж");
 
         HorizontalLayout groupButton = new HorizontalLayout();
         groupButton.setAlignItems(FlexComponent.Alignment.CENTER);
@@ -106,17 +107,17 @@ public class CreateReceiptOrderForm extends VerticalLayout {
     private HorizontalLayout initInvoiceNumber() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
 
-        Text receiptOrderText = new Text("Приходный ордер №");
+        Text incomingPay = new Text("Входящий платёж №");
 
-        FormLayout formReceiptOrderNumber = new FormLayout();
-        fieldReceiptOrderNumber = new TextField();
-        formReceiptOrderNumber.add(fieldReceiptOrderNumber);
-        formReceiptOrderNumber.setWidth("4rem");
+        FormLayout formIncomingPayNumber = new FormLayout();
+        fieldIncomingPayNumber = new TextField();
+        formIncomingPayNumber.add(fieldIncomingPayNumber);
+        formIncomingPayNumber.setWidth("4rem");
 
         Text byText = new Text("от");
 
-        datePickerReceiptOrderNumber = new DatePicker();
-        datePickerReceiptOrderNumber.setValue(LocalDate.now());
+        datePickerIncomingPayNumber = new DatePicker();
+        datePickerIncomingPayNumber.setValue(LocalDate.now());
 
         MenuBar status = new MenuBar();
         status.addThemeVariants(MenuBarVariant.LUMO_CONTRAST, MenuBarVariant.LUMO_SMALL);
@@ -128,11 +129,11 @@ public class CreateReceiptOrderForm extends VerticalLayout {
         checkboxProdused.setLabel("Проведено");
 
         horizontalLayout.add(spaceGenerator(3),
-                receiptOrderText,
-                formReceiptOrderNumber,
+                incomingPay,
+                formIncomingPayNumber,
                 spaceGenerator(1),
                 byText,
-                datePickerReceiptOrderNumber);
+                datePickerIncomingPayNumber);
         horizontalLayout.add(status, spaceGenerator(2), checkboxProdused);
         horizontalLayout.setAlignItems(FlexComponent.Alignment.CENTER);
 
@@ -196,10 +197,23 @@ public class CreateReceiptOrderForm extends VerticalLayout {
         comment.addClassName("comment");
 
         formLayout4.addFormItem(salesChannel, "Канал продаж");
-        formLayout4.addFormItem(comment, "Основание");
+        formLayout4.addFormItem(comment, "Назначение платежа");
         formLayout4.addClassName("formLayout4");
 
-        verticalLayout.add(formLayout1, formLayout2, formLayout3, formLayout4); // Добавить формы
+        HorizontalLayout horizontalLayout5 = new HorizontalLayout();  // Четвертая строка с формами
+
+        TextField formIncomingNumber = new TextField();
+        formIncomingNumber.setWidth("148,5px");
+
+        DatePicker dateIncomingNumber = new DatePicker();
+
+        horizontalLayout5.add(spaceGenerator(1)); //пятая строка
+        horizontalLayout5.add(new Text("Входящий номер"), formIncomingNumber, spaceGenerator(1),
+                new Text("от"), dateIncomingNumber);
+        horizontalLayout5.setAlignItems(FlexComponent.Alignment.CENTER);
+        horizontalLayout5.addClassName("horizontalLayout4");
+
+        verticalLayout.add(formLayout1, formLayout2, formLayout3, formLayout4, horizontalLayout5); // Добавить формы
 
         return verticalLayout;
     }
