@@ -20,8 +20,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final String url;
 
     public EmployeeServiceImpl(@Value("${retrofit.restServices.employee_url}") String url, Retrofit retrofit) {
-        this.api = retrofit.create(EmployeeApi.class);
         this.url = url;
+        this.api = retrofit.create(EmployeeApi.class);
     }
 
     @Override

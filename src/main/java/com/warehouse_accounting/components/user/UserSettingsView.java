@@ -12,6 +12,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -47,6 +48,7 @@ import com.warehouse_accounting.services.interfaces.LanguageService;
 import com.warehouse_accounting.services.interfaces.PositionService;
 import com.warehouse_accounting.services.interfaces.PrintingDocumentsService;
 import com.warehouse_accounting.services.interfaces.ProjectService;
+import com.warehouse_accounting.services.interfaces.RoleService;
 import com.warehouse_accounting.services.interfaces.SettingsService;
 import com.warehouse_accounting.services.interfaces.StartScreenService;
 import com.warehouse_accounting.services.interfaces.WarehouseService;
@@ -99,6 +101,7 @@ public class UserSettingsView extends VerticalLayout {
     private final ProjectService projectService;
     private final PrintingDocumentsService printingDocumentsService;
     private final StartScreenService startScreenService;
+    private final RoleService roleService;
     private int numberOfAdditionalFields;
     private boolean refreshReportsAuto;
     private boolean signatureInLetters;
@@ -137,6 +140,8 @@ public class UserSettingsView extends VerticalLayout {
     private final ComboBox printingDocBox = new ComboBox();
     private final ComboBox startScreenBox = new ComboBox();
 
+    private Notification notification;
+
     public UserSettingsView(SettingsService settingsService,
                             CompanyService companyService,
                             WarehouseService warehouseService,
@@ -147,7 +152,7 @@ public class UserSettingsView extends VerticalLayout {
                             PositionService positionService,
                             EmployeeService employeeService,
                             ImageService imageService,
-                            LanguageService languageService) throws IOException {
+                            LanguageService languageService, RoleService roleService) throws IOException {
         this.companyService = companyService;
         this.warehouseService = warehouseService;
         this.contractorService = contractorService;
@@ -159,14 +164,15 @@ public class UserSettingsView extends VerticalLayout {
         this.employeeService = employeeService;
         this.positionService = positionService;
         this.imageService = imageService;
+        this.roleService = roleService;
         dsUserSettingsView();
     }
 
     public void dsUserSettingsView() throws IOException {
         initialization();
         setSizeFull();
+        //извлечение текущего сотрудника
         employeeDto = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getEmployeeDto();
-        System.out.println(employeeDto);
         horizontalLayout.add(createButton, closeButton, change, changeButtonPass);
         verticalLayout.add(
                 textFieldrow("Имя", firstName, employeeDto.getFirstName()),
@@ -219,7 +225,6 @@ public class UserSettingsView extends VerticalLayout {
         } else {
             employeeDto = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getEmployeeDto();
             settingsDto = settingsService.getById(employeeDto.getId());
-            System.out.println(employeeDto);
         }
         companyDto = settingsDto.getCompanyDto();
         warehouseDto = settingsDto.getWarehouseDto();
@@ -375,11 +380,8 @@ public class UserSettingsView extends VerticalLayout {
             employeeDto.setPhone(phone.getValue());
             employeeDto.setInn(inn.getValue());
             positionDto.setName(position.getValue());
-            Set<TariffDto> tariffDtos;
             if (employeeDto.getTariff().isEmpty()) {
-                tariffDtos = new HashSet<>();
-                tariffDtos.add(TariffDto.getDefaultTarifDto());
-                employeeDto.setTariff(tariffDtos);
+                employeeDto.setTariff(Set.of(TariffDto.getDefaultTarifDto()));
             }
             if (positionService.getAll().stream()
                     .anyMatch(positionDto -> positionDto.getName().equalsIgnoreCase(position.getValue()))
@@ -412,12 +414,15 @@ public class UserSettingsView extends VerticalLayout {
                 }
             } else {
                 employeeDto.setPosition(positionDto);
+                employeeDto.setTariff(null);
+                System.out.println(employeeDto);
                 employeeService.update(employeeDto);
             }
             setComboBoxSettings();
             setNotificationSettings();
             saveSetting();
             settingsService.update(settingsDto);
+            System.out.println(settingsDto);
             UI.getCurrent().getPage().setLocation("http://localhost:4447/");
         });
     }
