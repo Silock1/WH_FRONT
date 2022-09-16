@@ -127,13 +127,13 @@ public class FormEditCotragent extends VerticalLayout {
         removeAll();
         newForm = true;
 
-//        if (alreadyMakeUpdate) {
-//            try {
-//                contractorDtoBinder.writeBean(contractorDto);
-//            } catch (ValidationException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
+        if (alreadyMakeUpdate) {
+            try {
+                contractorDtoBinder.writeBean(contractorDto);
+            } catch (ValidationException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         add(createButton(contractorDto),
                 getNameContragent(contractorDto),
@@ -179,7 +179,7 @@ public class FormEditCotragent extends VerticalLayout {
                 }
             } else {
                 try {
-//                    alreadyMakeUpdate = true;
+                    alreadyMakeUpdate = true;
                     contractorDtoBinder.writeBean(contractorDto);
                     contractorService.update(contractorDto);
                 } catch (ValidationException ex) {
@@ -209,10 +209,8 @@ public class FormEditCotragent extends VerticalLayout {
         name.setMinWidth("300px");
         contractorDtoBinder.forField(name).asRequired("Наименование не должно быть пустым!")
                 .bind(ContractorDto::getName, ContractorDto::setName);
+        contractorDtoBinder.readBean(contractorDto);
 
-        if(!newForm) {
-            contractorDtoBinder.readBean(contractorDto);
-        }
         nameContragentLayout.add(name);
 
         return nameContragentLayout;
@@ -338,11 +336,10 @@ public class FormEditCotragent extends VerticalLayout {
             contractorDto.setNumberDiscountCard("");
         }
 
-//        contractorDtoBinder.readBean(contractorDto);
+        contractorDtoBinder.readBean(contractorDto);
 
         if (!newForm) {
             addressDtoBinder.readBean(addressDto);
-            contractorDtoBinder.readBean(contractorDto);
         }
 
 
@@ -492,9 +489,8 @@ public class FormEditCotragent extends VerticalLayout {
         contractorDtoBinder.forField(numberDiscountCard)
                 .bind(ContractorDto::getNumberDiscountCard, ContractorDto::setNumberDiscountCard);
 
-        if(!newForm) {
-            contractorDtoBinder.readBean(contractorDto);
-        }
+        contractorDtoBinder.readBean(contractorDto);
+
         formSalePrice.addFormItem(typeOfPriceDtoComboBox, "Цены");
         formSalePrice.addFormItem(numberDiscountCard, "Номер диск. карта");
         formSalePrice.setWidth("400px");
