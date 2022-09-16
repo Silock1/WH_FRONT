@@ -17,36 +17,12 @@ import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vk.api.sdk.client.TransportClient;
-import com.vk.api.sdk.client.VkApiClient;
-import com.vk.api.sdk.client.actors.UserActor;
-import com.vk.api.sdk.exceptions.ApiException;
-import com.vk.api.sdk.exceptions.ClientException;
-import com.vk.api.sdk.httpclient.HttpTransportClient;
-import com.vk.api.sdk.objects.UserAuthResponse;
-import com.vk.api.sdk.objects.market.MarketItem;
-import com.vk.api.sdk.objects.market.responses.AddResponse;
-import com.vk.api.sdk.objects.photos.responses.GetMarketUploadServerResponse;
-import com.vk.api.sdk.objects.photos.responses.MarketUploadResponse;
-import com.vk.api.sdk.objects.photos.responses.SaveMarketPhotoResponse;
-import com.vk.api.sdk.queries.market.MarketAddQuery;
 import com.warehouse_accounting.components.retail.grids.PointOfSalesGridLayout;
 import com.warehouse_accounting.models.dto.PointOfSalesDto;
 import com.warehouse_accounting.services.impl.PointOfSalesServiceImpl;
 import com.warehouse_accounting.services.interfaces.PointOfSalesService;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.List;
 
 public class CreatePointOfSalesForm extends VerticalLayout {
 
@@ -106,8 +82,6 @@ public class CreatePointOfSalesForm extends VerticalLayout {
     private Select<String> formCreateOrdersWithTheStatus;
     private Span prepayment;
 
-    UserAuthResponse authResponse;
-    MarketItem marketItem;
     boolean isMain = true;
 
     public CreatePointOfSalesForm(Div parentLayer, Component returnLayer) {
@@ -149,50 +123,6 @@ public class CreatePointOfSalesForm extends VerticalLayout {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_SMALL);
 
         Button close = new Button("Закрыть", e -> {
-
-            TransportClient transportClient = new HttpTransportClient();
-            VkApiClient vk = new VkApiClient(transportClient);
-//            try {
-//                authResponse = vk.oAuth()
-//                        .userAuthorizationCodeFlow(	51422705, "jvWdfng6tmQ9end1KM12"
-//                                , "https://oauth.vk.com/blank.html", "ab3298f4952e28013f")
-//                        .execute();
-//            } catch (OAuthException ex) {
-//                ex.getRedirectUri();
-//            } catch (ClientException | ApiException ex) {
-//                throw new RuntimeException(ex);
-//            }
-
-            UserActor actor = new UserActor(192729799, "vk1.a.nkYuJvupXkpl2RgH8VUuHAQFIm2jWRYn8fwbe5B2CbtecjMdaHJu-WXKeDZx6eDku6D72UIFsxePoGYLmYDr4tto6Oa6U9iTMqhWFQNdAzV5h1PjRNAjxFcjXz4Kozifoam5OmS3HnCBUzJqGYR92-5BFlu1OYXZhRG6u6w3aL3ezxfa8-bf3vjBqo8WpLLo");
-
-            try {
-
-                File file = new File("C:\\Users\\G531G\\222.jpg");
-//
-                GetMarketUploadServerResponse serverResponse =
-                        vk.photos().getMarketUploadServer(actor, 215880762).execute();
-
-                MarketUploadResponse uploadResponse = vk.upload()
-                        .photoMarket(serverResponse.getUploadUrl().toString(), file).execute();
-
-                List<SaveMarketPhotoResponse> photoList = vk.photos()
-                        .saveMarketPhoto(actor, uploadResponse.getPhoto(),
-                                uploadResponse.getServer(), uploadResponse.getHash())
-                        .groupId(215880762)
-                        .cropHash(uploadResponse.getCropHash())
-                        .cropData(uploadResponse.getCropData())
-                        .execute();
-
-                SaveMarketPhotoResponse photo = photoList.get(0);
-
-                vk.market().add(actor, -215880762, "Первый", "Первый товар", 1)
-                        .price(1000).mainPhotoId(photo.getId()).execute();
-
-
-            } catch (ApiException | ClientException ex) {
-                throw new RuntimeException(ex);
-            }
-
             parentLayer.removeAll();
             parentLayer.add(returnLayer, PointOfSalesGridLayout.initPointOfSalesGrid());
         });
