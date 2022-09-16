@@ -17,25 +17,37 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.components.contragents.form.FormForContract;
 import com.warehouse_accounting.components.contragents.grids.ContractsFilterLayout;
-import com.warehouse_accounting.components.contragents.grids.ContractsGridLayot;
+import com.warehouse_accounting.components.contragents.grids.ContractsGridLayout;
+import com.warehouse_accounting.models.dto.ContractDto;
+import com.warehouse_accounting.services.interfaces.ContractService;
 
 @SpringComponent
 @UIScope
 public class ContractsOrder extends VerticalLayout {
 
-    private final ContractsGridLayot contractsGridLayot;
+    private final ContractsGridLayout contractsGridLayout;
+
     private final ContractsFilterLayout filterLayout;
+
+    private FormForContract formForContract;
 
     private HorizontalLayout buttons;
 
-    public ContractsOrder(ContractsGridLayot contractsGridLayot, ContractsFilterLayout filterLayout) {
-        this.contractsGridLayot = contractsGridLayot;
-        this.filterLayout = filterLayout;
-        this.buttons = getGroupButton();
-        this.contractsGridLayot.setParent(this);
+    private final transient ContractService contractService;
 
-        add(buttons, filterLayout, contractsGridLayot);
+    public ContractsOrder(ContractsGridLayout contractsGridLayout, ContractsFilterLayout filterLayout,
+                          FormForContract formForContract, ContractService contractService) {
+        this.formForContract = formForContract;
+        this.contractsGridLayout = contractsGridLayout;
+        this.filterLayout = filterLayout;
+        this.contractService = contractService;
+        this.buttons = getGroupButton();
+        this.formForContract.setParent(this);
+        this.contractsGridLayout.setParent(this);
+
+        add(buttons, filterLayout, contractsGridLayout);
     }
 
     private HorizontalLayout getGroupButton() {
@@ -57,12 +69,17 @@ public class ContractsOrder extends VerticalLayout {
         Button refreshButton = new Button(refresh);
         refreshButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         refreshButton.addClickListener(click -> {
-            contractsGridLayot.refreshDate();
+            contractsGridLayout.refreshDate();
         });
 
         Image image = new Image("icons/plus.png", "Plus");
         image.setWidth("15px");
         Button contract = new Button("Договор", image);
+        contract.addClickListener(e -> {
+            hideButtonEndGrid();
+            formForContract.build();
+            add(formForContract);
+        });
         contract.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 
         Button filter = new Button("Фильтр");
@@ -138,14 +155,20 @@ public class ContractsOrder extends VerticalLayout {
     public void showButtonEndGrid(Boolean refreshGrid) {
         buttons.setVisible(true);
         if (refreshGrid) {
-            contractsGridLayot.refreshDate();
+            contractsGridLayout.refreshDate();
         }
-        contractsGridLayot.setVisible(true);
+        contractsGridLayout.setVisible(true);
     }
 
     public void hideButtonEndGrid() {
         buttons.setVisible(false);
-        contractsGridLayot.setVisible(false);
-        contractsGridLayot.setVisible(false);
+        contractsGridLayout.setVisible(false);
+        contractsGridLayout.setVisible(false);
+    }
+
+    public void editFormActivate(ContractDto contractDto) {
+        formForContract.build(contractService.getById(contractDto.getId()));
+        hideButtonEndGrid();
+        add(formForContract);
     }
 }
