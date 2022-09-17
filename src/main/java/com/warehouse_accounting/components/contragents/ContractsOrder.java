@@ -6,6 +6,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
@@ -62,7 +63,8 @@ public class ContractsOrder extends VerticalLayout {
                 "\n" +
                 "Читать инструкцию: Договоры", 3000, Notification.Position.MIDDLE));
 
-        Text contracts = new Text("Договоры");
+        Span contracts = new Span("Договоры");
+        contracts.setClassName("pageTitle");
 
         Icon refresh = new Icon(VaadinIcon.REFRESH);
         refresh.setColor("silver");

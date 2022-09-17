@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -18,7 +19,7 @@ public class ContractDto {
 
     private String number;
 
-    private LocalDate contractDate;
+    private LocalDateTime contractDate;
 
     private CompanyDto company;
 
@@ -53,6 +54,8 @@ public class ContractDto {
     private LegalDetailDto legalDetail;
 
     private String code;
+
+    private String typeOfContract;
 
     private String reward;
 
