@@ -12,8 +12,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.models.dto.TechnologicalOperationDto;
-import com.warehouse_accounting.services.interfaces.ProductionOperationsService;
-import lombok.Data;
+import com.warehouse_accounting.services.interfaces.TechnologicalOperationsService;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
@@ -24,26 +23,26 @@ import java.util.List;
 @SpringComponent
 @UIScope
 @Log4j2
-public class ProductionOperationsGridLayout extends HorizontalLayout {
-    private ProductionOperationsService productionOperationsService;
+public class TechnologicalOperationsGridLayout extends HorizontalLayout {
+    private TechnologicalOperationsService productionOperationsService;
     private List<TechnologicalOperationDto> technologicalOperationDtoList = new ArrayList<>();
 
     @Getter
     private Grid<TechnologicalOperationDto> productionOperationsDtoGrid = new Grid<>(TechnologicalOperationDto.class, false);
 
-    public ProductionOperationsGridLayout(ProductionOperationsService productionOperationsService) {
+    public TechnologicalOperationsGridLayout(TechnologicalOperationsService productionOperationsService) {
         this.productionOperationsService = productionOperationsService;
         initializingGrid();
     }
 
     public void initializingGrid () {
-        Grid.Column<TechnologicalOperationDto> idColumn = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getId).setHeader("Id");
-        idColumn.setVisible(false);
-        Grid.Column<TechnologicalOperationDto> technologicalMapName = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getTechnologicalMapName).setHeader("TechnologicalMapName");
+        Grid.Column<TechnologicalOperationDto> idColumn = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getId).setHeader("№");
+        Grid.Column<TechnologicalOperationDto> technologicalMapName = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getTechnologicalMapName).setHeader("Технологическая карта");
         Grid.Column<TechnologicalOperationDto> technologicalMapId = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getTechnologicalMapId).setHeader("TechnologicalMapId");
         technologicalMapId.setVisible(false);
-        Grid.Column<TechnologicalOperationDto> warehouseForMaterialsName = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getWarehouseForMaterialsName).setHeader("WarehouseForMaterialsName");
-        Grid.Column<TechnologicalOperationDto> warehouseForProductName = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getWarehouseForProductName).setHeader("WarehouseForProductName");
+        Grid.Column<TechnologicalOperationDto> volumeOfProduction = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getVolumeOfProduction).setHeader("Объем производства");
+        Grid.Column<TechnologicalOperationDto> warehouseForMaterialsName = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getWarehouseForMaterialsName).setHeader("Склад для материалов");
+        Grid.Column<TechnologicalOperationDto> warehouseForProductName = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getWarehouseForProductName).setHeader("Склад для продукции");
 //        Grid.Column<TechnologicalOperationDto> tasks = productionOperationsDtoGrid.addColumn(TechnologicalOperationDto::getTasks).setHeader("Tasks");
 
         productionOperationsDtoGrid.setSelectionMode(Grid.SelectionMode.MULTI);
@@ -57,12 +56,13 @@ public class ProductionOperationsGridLayout extends HorizontalLayout {
         Button menuButton = new Button(new Icon(VaadinIcon.COG));
         menuButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
-        ProductionOperationsGridLayout.ColumnToggleContextMenu columnToggleContextMenu = new ProductionOperationsGridLayout.ColumnToggleContextMenu(
+        TechnologicalOperationsGridLayout.ColumnToggleContextMenu columnToggleContextMenu = new TechnologicalOperationsGridLayout.ColumnToggleContextMenu(
                 menuButton);
         columnToggleContextMenu.addColumnToggleItem("Id", idColumn);
-        columnToggleContextMenu.addColumnToggleItem("TechnologicalMapName", technologicalMapName);
-        columnToggleContextMenu.addColumnToggleItem("TechnologicalMapId", warehouseForMaterialsName);
-        columnToggleContextMenu.addColumnToggleItem("WarehouseForMaterialsName", warehouseForProductName);
+        columnToggleContextMenu.addColumnToggleItem("Технологическая карта", technologicalMapName);
+        columnToggleContextMenu.addColumnToggleItem("Объем производства", volumeOfProduction);
+        columnToggleContextMenu.addColumnToggleItem("Склад для материалов", warehouseForMaterialsName);
+        columnToggleContextMenu.addColumnToggleItem("Склад для продукции", warehouseForProductName);
 //        columnToggleContextMenu.addColumnToggleItem("Tasks", tasks);
 
         setSizeFull();

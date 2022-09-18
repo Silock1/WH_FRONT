@@ -5,11 +5,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.warehouse_accounting.components.production.ProductionOperations;
+import com.warehouse_accounting.components.production.TechnologicalOperations;
 import com.warehouse_accounting.components.production.ProductionProcessTechnology;
 import com.warehouse_accounting.components.production.ProductionSteps;
 import com.warehouse_accounting.components.production.ProductionTasks;
-import com.warehouse_accounting.components.production.ProductionOrders;
 import com.warehouse_accounting.components.production.TechnologicalMap;
 
 import javax.annotation.PostConstruct;
@@ -27,7 +26,7 @@ public class ProductionSubMenuView extends VerticalLayout {
     private final ProductionTasks productionTasks;
     private final ProductionSteps productionSteps;
     private final ProductionProcessTechnology productionProcessTechnology;
-    private final ProductionOperations productionOperations;
+    private final TechnologicalOperations productionOperations;
     //Закомментчено до фикса так как вызывает краш вкладки Производство
 //    private final ProductionOrders productionOrders;
     private final TechnologicalMap technologicalMap;
@@ -38,7 +37,7 @@ public class ProductionSubMenuView extends VerticalLayout {
                                  ProductionTasks productionTasks,
                                  ProductionSteps productionSteps,
                                  ProductionProcessTechnology productionProcessTechnology,
-                                 ProductionOperations productionOperations,
+                                 TechnologicalOperations productionOperations,
                                  TechnologicalMap technologicalMap) {
         this.technologicalMap = technologicalMap;
         //Закомментчено до фикса так как вызывает краш вкладки Производство

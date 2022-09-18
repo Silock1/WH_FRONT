@@ -17,4 +17,5 @@ public interface EmployeeService {
     void deleteById(Long id);
 
     EmployeeDto getPrincipal();
+
 }

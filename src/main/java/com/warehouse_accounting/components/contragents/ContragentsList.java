@@ -19,10 +19,10 @@ import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.contragents.form.FormEditCotragent;
-import com.warehouse_accounting.components.contragents.form.FormNewContragent;
 import com.warehouse_accounting.components.contragents.grids.ContragentsFilterLayout;
 import com.warehouse_accounting.components.contragents.grids.ContragentsListGridLayout;
 import com.warehouse_accounting.models.dto.ContractorDto;
+import com.warehouse_accounting.services.interfaces.ContractorService;
 
 /*
 Контрагенты
@@ -33,23 +33,26 @@ public class ContragentsList extends VerticalLayout {
 
     private ContragentsListGridLayout contragentsListGridLayout;
     private ContragentsFilterLayout contragentsFilterLayout;
-    private FormNewContragent formNewContragent;
+    //    private FormNewContragent formNewContragent;
     private HorizontalLayout buttons;
     private FormEditCotragent formEditCotragent;
 
+    private final transient ContractorService contractorService;
+
     public ContragentsList(ContragentsListGridLayout contragentsListGridLayout,
                            ContragentsFilterLayout contragentsFilterLayout,
-                           FormNewContragent formNewContragent,
-                           FormEditCotragent formEditCotragent) {
+//                           FormNewContragent formNewContragent,
+                           FormEditCotragent formEditCotragent, ContractorService contractorService) {
 
         this.contragentsListGridLayout = contragentsListGridLayout;
         this.contragentsFilterLayout = contragentsFilterLayout;
-        this.formNewContragent = formNewContragent;
+//        this.formNewContragent = formNewContragent;
         this.formEditCotragent = formEditCotragent;
+        this.contractorService = contractorService;
         this.buttons = getGroupButtons();
         this.contragentsListGridLayout.setParent(this);
         this.formEditCotragent.setParent(this);
-        this.formNewContragent.setContragentsList(this);
+//        this.formNewContragent.setContragentsList(this);
         add(buttons, contragentsFilterLayout, contragentsListGridLayout);
     }
 
@@ -74,11 +77,12 @@ public class ContragentsList extends VerticalLayout {
         refreshButton.addClickListener(e -> {
             contragentsListGridLayout.refreshDate();
         });
-        Button addContragent = new Button(("Контрагент"), new Icon(VaadinIcon.PLUS));
-        addContragent.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        Image buttonIcon = new Image("icons/plus.png", "Plus");
+        buttonIcon.setWidth("14px");
+        Button addContragent = new Button("Контрагент", buttonIcon);
         addContragent.addClickListener(e -> {
             hideButtonEndGrid();
-            formEditCotragent.bild(null);
+            formEditCotragent.build();
             add(formEditCotragent);
         });
 
@@ -166,7 +170,7 @@ public class ContragentsList extends VerticalLayout {
     }
 
     public void editFormActivate(ContractorDto contractorDto) {
-        formEditCotragent.bild(contractorDto);
+        formEditCotragent.build(contractorService.getById(contractorDto.getId()));
         hideButtonEndGrid();
         add(formEditCotragent);
     }

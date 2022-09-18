@@ -380,9 +380,9 @@ public class UserSettingsView extends VerticalLayout {
             employeeDto.setPhone(phone.getValue());
             employeeDto.setInn(inn.getValue());
             positionDto.setName(position.getValue());
-            if (employeeDto.getTariff().isEmpty()) {
-                employeeDto.setTariff(Set.of(TariffDto.getDefaultTarifDto()));
-            }
+//            if (employeeDto.getTariff().isEmpty()) {
+//                employeeDto.setTariff(Set.of(TariffDto.getDefaultTarifDto()));
+//            } // временно, пока не реализована связь с базой TariffServiceImpl
             if (positionService.getAll().stream()
                     .anyMatch(positionDto -> positionDto.getName().equalsIgnoreCase(position.getValue()))
             ) {
@@ -414,7 +414,7 @@ public class UserSettingsView extends VerticalLayout {
                 }
             } else {
                 employeeDto.setPosition(positionDto);
-                employeeDto.setTariff(null);
+                employeeDto.setTariff(null); // временно, пока не реализована связь с базой
                 System.out.println(employeeDto);
                 employeeService.update(employeeDto);
             }

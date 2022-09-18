@@ -1,5 +1,6 @@
 package com.warehouse_accounting.services.impl;
 
+import com.warehouse_accounting.models.dto.CustomerOrderDto;
 import com.warehouse_accounting.models.dto.InvoiceDto;
 import com.warehouse_accounting.services.ServiceUtils;
 import com.warehouse_accounting.services.interfaces.InvoiceService;

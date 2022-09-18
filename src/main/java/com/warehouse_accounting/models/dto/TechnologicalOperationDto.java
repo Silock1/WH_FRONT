@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,8 @@ public class TechnologicalOperationDto {
     private long id;
     private String number;
     private boolean isArchive = false;
-//    private LocalDateTime technologicalOperationDateTime;
+    private boolean isPosted;
+    private LocalDate technologicalOperationDateTime;
     private BigDecimal volumeOfProduction;
     private String comments;
 

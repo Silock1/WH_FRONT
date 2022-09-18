@@ -23,20 +23,34 @@ public class CustomerOrderDto {
     Long id;
 
     LocalDateTime date;
+//    new
+    private String number;
+    private LocalDateTime invoiceDateTime;
+    private boolean isPosted;
+    private String type;
+    private Long invoiceAuthorId;
+    private String invoiceAuthorLastName;
+    private String invoiceAuthorFirstName;
 
     WarehouseDto warehouseDto = new WarehouseDto();
 
     ContractDto contractDto = new ContractDto();
 
     CompanyDto companyDto = new CompanyDto();
+    //new
+    ProjectDto projectDto = new ProjectDto();
 
     ContractorDto contractorDto = new ContractorDto();
 
     List<ProductDto> productsDto = new ArrayList<>();
+    //new
+    private List<InvoiceProductDto> productDtos;
 
     List<TaskDto> tasksDto = new ArrayList<>();
 
     List<FileDto> filesDto = new ArrayList<>();
+
+    SalesChannelDto channelDto = new SalesChannelDto();
 
     BigDecimal sum;
 
