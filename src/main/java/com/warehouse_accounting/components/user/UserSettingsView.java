@@ -12,6 +12,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -31,12 +32,14 @@ import com.warehouse_accounting.models.dto.NotificationsDto;
 import com.warehouse_accounting.models.dto.PositionDto;
 import com.warehouse_accounting.models.dto.PrintingDocumentsDto;
 import com.warehouse_accounting.models.dto.ProjectDto;
+import com.warehouse_accounting.models.dto.RoleDto;
 import com.warehouse_accounting.models.dto.SelectorDto;
 import com.warehouse_accounting.models.dto.SelectorForViewDto;
 import com.warehouse_accounting.models.dto.SettingsDto;
 import com.warehouse_accounting.models.dto.StartScreenDto;
 import com.warehouse_accounting.models.dto.TariffDto;
 import com.warehouse_accounting.models.dto.WarehouseDto;
+import com.warehouse_accounting.security.UserPrincipal;
 import com.warehouse_accounting.services.interfaces.CompanyService;
 import com.warehouse_accounting.services.interfaces.ContractorService;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
@@ -45,10 +48,12 @@ import com.warehouse_accounting.services.interfaces.LanguageService;
 import com.warehouse_accounting.services.interfaces.PositionService;
 import com.warehouse_accounting.services.interfaces.PrintingDocumentsService;
 import com.warehouse_accounting.services.interfaces.ProjectService;
+import com.warehouse_accounting.services.interfaces.RoleService;
 import com.warehouse_accounting.services.interfaces.SettingsService;
 import com.warehouse_accounting.services.interfaces.StartScreenService;
 import com.warehouse_accounting.services.interfaces.WarehouseService;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.File;
 import java.io.IOException;
@@ -96,6 +101,7 @@ public class UserSettingsView extends VerticalLayout {
     private final ProjectService projectService;
     private final PrintingDocumentsService printingDocumentsService;
     private final StartScreenService startScreenService;
+    private final RoleService roleService;
     private int numberOfAdditionalFields;
     private boolean refreshReportsAuto;
     private boolean signatureInLetters;
@@ -134,6 +140,8 @@ public class UserSettingsView extends VerticalLayout {
     private final ComboBox printingDocBox = new ComboBox();
     private final ComboBox startScreenBox = new ComboBox();
 
+    private Notification notification;
+
     public UserSettingsView(SettingsService settingsService,
                             CompanyService companyService,
                             WarehouseService warehouseService,
@@ -144,7 +152,7 @@ public class UserSettingsView extends VerticalLayout {
                             PositionService positionService,
                             EmployeeService employeeService,
                             ImageService imageService,
-                            LanguageService languageService) throws IOException {
+                            LanguageService languageService, RoleService roleService) throws IOException {
         this.companyService = companyService;
         this.warehouseService = warehouseService;
         this.contractorService = contractorService;
@@ -156,12 +164,15 @@ public class UserSettingsView extends VerticalLayout {
         this.employeeService = employeeService;
         this.positionService = positionService;
         this.imageService = imageService;
+        this.roleService = roleService;
         dsUserSettingsView();
     }
 
     public void dsUserSettingsView() throws IOException {
         initialization();
         setSizeFull();
+        //извлечение текущего сотрудника
+        employeeDto = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getEmployeeDto();
         horizontalLayout.add(createButton, closeButton, change, changeButtonPass);
         verticalLayout.add(
                 textFieldrow("Имя", firstName, employeeDto.getFirstName()),
@@ -212,9 +223,9 @@ public class UserSettingsView extends VerticalLayout {
             settingsDto = new SettingsDto();
             System.out.println("Empty");
         } else {
-            settingsDto = settingsService.getById(1L);
+            employeeDto = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getEmployeeDto();
+            settingsDto = settingsService.getById(employeeDto.getId());
         }
-        employeeDto = employeeService.getById(1L);
         companyDto = settingsDto.getCompanyDto();
         warehouseDto = settingsDto.getWarehouseDto();
         customerDto = settingsDto.getCustomerDto();
@@ -228,6 +239,7 @@ public class UserSettingsView extends VerticalLayout {
         notificationsDto = settingsDto.getNotificationsDto();
 
     }
+
 
     private HorizontalLayout setComboBox(String label, ComboBox comboBox, List list) {
         Label companyLabel = new Label(label);
@@ -355,6 +367,7 @@ public class UserSettingsView extends VerticalLayout {
         settingsDto.setRefreshReportsAuto(refreshReports.getValue());
         settingsDto.setSignatureInLetters(signatureInLet.getValue());
         settingsDto.setNotificationsDto(notificationsDto);
+        settingsDto.setEmployeeDto(employeeDto);
         return settingsDto;
     }
 
@@ -367,11 +380,8 @@ public class UserSettingsView extends VerticalLayout {
             employeeDto.setPhone(phone.getValue());
             employeeDto.setInn(inn.getValue());
             positionDto.setName(position.getValue());
-            Set<TariffDto> tariffDtos;
             if (employeeDto.getTariff().isEmpty()) {
-                tariffDtos = new HashSet<>();
-                tariffDtos.add(TariffDto.getDefaultTarifDto());
-                employeeDto.setTariff(tariffDtos);
+                employeeDto.setTariff(Set.of(TariffDto.getDefaultTarifDto()));
             }
             if (positionService.getAll().stream()
                     .anyMatch(positionDto -> positionDto.getName().equalsIgnoreCase(position.getValue()))
@@ -390,7 +400,7 @@ public class UserSettingsView extends VerticalLayout {
 
             if (!buffer.getFileName().equalsIgnoreCase("")) {
                 String filePath = "src/main/resources/static/avatars/" + new Date().getTime() + buffer.getFileName();
-                imageDto = new ImageDto(null, filePath, null);
+                imageDto = new ImageDto(employeeDto.getId(), filePath, "Picture");
                 imageService.create(imageDto);
                 imageDto = imageService.getAll().stream().filter(imageDto ->
                         imageDto.getImageUrl().equals(filePath)).findFirst().get();
@@ -404,21 +414,15 @@ public class UserSettingsView extends VerticalLayout {
                 }
             } else {
                 employeeDto.setPosition(positionDto);
+                employeeDto.setTariff(null);
+                System.out.println(employeeDto);
                 employeeService.update(employeeDto);
             }
-
-            if (employeeService.getById(1L) == null) {
-                employeeDto.setId(1L);
-                employeeService.create(employeeDto);
-            } else {
-                employeeDto.setId(1L);
-                employeeService.update(employeeDto);
-            }
-
             setComboBoxSettings();
             setNotificationSettings();
             saveSetting();
             settingsService.update(settingsDto);
+            System.out.println(settingsDto);
             UI.getCurrent().getPage().setLocation("http://localhost:4447/");
         });
     }
@@ -516,7 +520,7 @@ public class UserSettingsView extends VerticalLayout {
         System.out.println(gridNotifications.getPageSize());
 
         gridNotifications.addColumn(new ComponentRenderer<>(selectorDto ->
-                buttonQuestion(selectorDto.getDescription())))
+                        buttonQuestion(selectorDto.getDescription())))
                 .setAutoWidth(true);
 
         gridNotifications.addColumn(new ComponentRenderer<>(selectorDto -> createLabel(selectorDto.getLabel())))

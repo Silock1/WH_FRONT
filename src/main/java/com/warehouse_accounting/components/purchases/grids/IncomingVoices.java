@@ -59,7 +59,7 @@ public class IncomingVoices extends VerticalLayout {
         settingButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         ColumnToggleContextMenu<IncomingVoicesDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(settingButton);
 
-        columnToggleContextMenu.addColumnToggleItem("Серийный номер", sn);
+        columnToggleContextMenu.addColumnToggleItem("Номер накладной", sn);
         columnToggleContextMenu.addColumnToggleItem("Дата", date);
         columnToggleContextMenu.addColumnToggleItem("Грузоотправитель", otpr);
         columnToggleContextMenu.addColumnToggleItem("Грузополучатель", poluch);
