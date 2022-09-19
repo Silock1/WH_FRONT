@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 public class DateConvertor {
 
     public static final String datePattern = "dd.MM.yyyy";
-    public static final String dateTimePattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS";
+    public static final String dateTimePattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSS";
 
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(datePattern);
 

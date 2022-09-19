@@ -1,0 +1,36 @@
+
+.formLayout1{
+    margin-left: 20px;
+    margin-right: 400px;
+
+}
+.formLayout2{
+    margin-left: 20px;
+    margin-right: 400px;
+
+}
+.formLayout3{
+    margin-left: 20px;
+    margin-right: 400px;
+
+}
+
+.formLayout4{
+    margin-left: 20px;
+    margin-right: 400px;
+
+}
+
+.horizontalLayout4{
+    margin-left: 20px;
+    color: var(--lumo-secondary-text-color);
+    font-family: var(--lumo-font-family);
+    font-size: var(--lumo-font-size-s);
+    font-weight: 500;
+    margin-top: var(--lumo-space-m);
+    margin-bottom: var(--lumo-space-xs);
+    transition: color 0.4s;
+    line-height: 1.333;
+}
+
+

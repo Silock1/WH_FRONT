@@ -17,6 +17,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
+import com.warehouse_accounting.components.payments.forms.CreateIncomingPayForm;
+import com.warehouse_accounting.components.payments.forms.CreateReceiptOrderForm;
 import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.PaymentsDto;
 import com.warehouse_accounting.services.interfaces.PaymentsService;
@@ -27,7 +29,7 @@ import org.springframework.stereotype.Component;
 @Route(value = "payments", layout = AppView.class)
 public class PaymentsView extends VerticalLayout {
 
-    private HorizontalLayout horizontalToolPanelLayout = new HorizontalLayout();
+//    private HorizontalLayout horizontalToolPanelLayout = new HorizontalLayout();
     private Grid<PaymentsDto> grid = new Grid<>(PaymentsDto.class);
 
     private Button settingButton = new Button(new Icon(VaadinIcon.COG));
@@ -35,31 +37,35 @@ public class PaymentsView extends VerticalLayout {
 
     public PaymentsView(PaymentsService paymentsService) {
         this.paymentsService = paymentsService;
-        horizontalToolPanelLayout.setAlignItems(Alignment.CENTER);
 
-        configToolPanel();
-        initGrid();
+        initView();
     }
 
-    private void initGrid() {
-        grid.setSelectionMode(Grid.SelectionMode.MULTI);
-        grid.setItems(paymentsService.getAll());
+    public void initView(){
+        add(configToolPanel(), initGrid());
+    }
 
-        Grid.Column<PaymentsDto> typeOfPayment = grid.getColumnByKey("typeOfPayment").setHeader("Тип документа");
-        Grid.Column<PaymentsDto> id = grid.getColumnByKey("id").setHeader("№");
-        Grid.Column<PaymentsDto> dateTime = grid.getColumnByKey("date").setHeader("Время");
-        Grid.Column<PaymentsDto> org = grid.getColumnByKey("company").setHeader("Организация");
-        Grid.Column<PaymentsDto> invoiceOrg = grid.getColumnByKey("contract").setHeader("Счет организации");
-        Grid.Column<PaymentsDto> contrAgent = grid.getColumnByKey("contractor").setHeader("Контрагент");
-        Grid.Column<PaymentsDto> invoiceContrAgent = grid.getColumnByKey("tax").setHeader("Счет контрагента");
-        Grid.Column<PaymentsDto> amount = grid.getColumnByKey("amount").setHeader("Приход");
-        Grid.Column<PaymentsDto> paymentExpenditure = grid.getColumnByKey("paymentExpenditure").setHeader("Расход");
-        Grid.Column<PaymentsDto> target = grid.getColumnByKey("number").setHeader("Назначение платежа");
-        Grid.Column<PaymentsDto> status = grid.getColumnByKey("isDone").setHeader("Статус");
-        Grid.Column<PaymentsDto> send = grid.getColumnByKey("project").setHeader("Отправлено");
-        Grid.Column<PaymentsDto> print = grid.getColumnByKey("purpose").setHeader("Напечатано");
-        Grid.Column<PaymentsDto> comment = grid.getColumnByKey("comment").setHeader("Комментарий");
-        grid.setColumnOrder(typeOfPayment, id, dateTime, org, invoiceOrg, contrAgent, invoiceContrAgent, amount, paymentExpenditure, target, status, send, print, comment);
+    private HorizontalLayout initGrid() {
+        Grid<PaymentsDto> initGrid = new Grid<>(PaymentsDto.class);
+        initGrid.getDataProvider().refreshAll();
+        initGrid.setSelectionMode(Grid.SelectionMode.MULTI);
+        initGrid.setItems(paymentsService.getAll());
+
+        Grid.Column<PaymentsDto> typeOfPayment = initGrid.getColumnByKey("typeOfPayment").setHeader("Тип документа");
+        Grid.Column<PaymentsDto> id = initGrid.getColumnByKey("id").setHeader("№");
+        Grid.Column<PaymentsDto> dateTime = initGrid.getColumnByKey("date").setHeader("Время");
+        Grid.Column<PaymentsDto> org = initGrid.getColumnByKey("company").setHeader("Организация");
+        Grid.Column<PaymentsDto> invoiceOrg = initGrid.getColumnByKey("contract").setHeader("Счет организации");
+        Grid.Column<PaymentsDto> contrAgent = initGrid.getColumnByKey("contractor").setHeader("Контрагент");
+        Grid.Column<PaymentsDto> invoiceContrAgent = initGrid.getColumnByKey("tax").setHeader("Счет контрагента");
+        Grid.Column<PaymentsDto> amount = initGrid.getColumnByKey("amount").setHeader("Приход");
+        Grid.Column<PaymentsDto> paymentExpenditure = initGrid.getColumnByKey("paymentExpenditure").setHeader("Расход");
+        Grid.Column<PaymentsDto> target = initGrid.getColumnByKey("number").setHeader("Назначение платежа");
+        Grid.Column<PaymentsDto> status = initGrid.getColumnByKey("isDone").setHeader("Статус");
+        Grid.Column<PaymentsDto> send = initGrid.getColumnByKey("project").setHeader("Отправлено");
+        Grid.Column<PaymentsDto> print = initGrid.getColumnByKey("purpose").setHeader("Напечатано");
+        Grid.Column<PaymentsDto> comment = initGrid.getColumnByKey("comment").setHeader("Комментарий");
+        initGrid.setColumnOrder(typeOfPayment, id, dateTime, org, invoiceOrg, contrAgent, invoiceContrAgent, amount, paymentExpenditure, target, status, send, print, comment);
         settingButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         ColumnToggleContextMenu<PaymentsDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(settingButton);
 
@@ -79,15 +85,15 @@ public class PaymentsView extends VerticalLayout {
         columnToggleContextMenu.addColumnToggleItem("Комментарий", comment);
 
         HorizontalLayout headerLayout = new HorizontalLayout();
-        headerLayout.add(grid, settingButton);
-        grid.setHeightByRows(true);
+        headerLayout.add(initGrid, settingButton);
+        initGrid.setHeightByRows(true);
         headerLayout.setWidthFull();
-
-        add(headerLayout);
+        grid = initGrid;
+        return headerLayout;
     }
 
     // Здесь настройка панели инструментов
-    private void configToolPanel() {
+    private HorizontalLayout configToolPanel() {
         Button helpButton = new Button(new Icon(VaadinIcon.QUESTION_CIRCLE));
         helpButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
         helpButton.addClickListener(e -> {
@@ -117,8 +123,21 @@ public class PaymentsView extends VerticalLayout {
             //TODO повод поработать этот функционал
         });
 
-        Button addPaymentsButton = new Button("Приход", new Icon(VaadinIcon.PLUS), event -> {
-            //TODO повод поработать этот функционал
+        MenuBar paymentMenu = new MenuBar();
+        MenuItem addPaymentsButton = paymentMenu.addItem(new Icon(VaadinIcon.PLUS));
+        addPaymentsButton.add("Приход");
+        addPaymentsButton.add(new Icon(VaadinIcon.CARET_DOWN));
+        SubMenu addPaymentsButtonList = addPaymentsButton.getSubMenu();
+        MenuItem addReceiptOrder = addPaymentsButtonList.addItem("Приходный ордер");
+        addReceiptOrder.addClickListener(event -> {
+            removeAll();
+            add(new CreateReceiptOrderForm(this));
+        });
+        MenuItem addIncomingPayment = addPaymentsButtonList.addItem("Входящий платёж");
+        addIncomingPayment.addClickListener(event -> {
+            //TODO
+            removeAll();
+            add(new CreateIncomingPayForm(this));
         });
 
         Button addExpensesButton = new Button("Расходы", new Icon(VaadinIcon.PLUS), event -> {
@@ -239,8 +258,10 @@ public class PaymentsView extends VerticalLayout {
             //TODO повод поработать этот функционал
         });
 
-        horizontalToolPanelLayout.add(helpButton, importList, export, text, refreshButton, addExpensesButton,
-                addPaymentsButton, addExpensesButton, filterButton, searchField, numberField, menuBar, settingsButton);
-        add(horizontalToolPanelLayout);
+        HorizontalLayout toolPanelLayout = new HorizontalLayout();
+        toolPanelLayout.setAlignItems(Alignment.CENTER);
+        toolPanelLayout.add(helpButton, importList, export, text, refreshButton, addExpensesButton,
+                paymentMenu, addExpensesButton, filterButton, searchField, numberField, menuBar, settingsButton);
+        return toolPanelLayout;
     }
 }
