@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,9 +21,14 @@ public class TasksDto {
     private Long employeeId;
     private String employeeName;
 
-    private Long contractorId; //контракгент
+    private Long contractorId; //контрагент
     private String contractorName;
 
     private Long contractId; //документ
     private String contractNumber;
+
+    public LocalDateTime getDeadLineAsLocalDateTime(){
+        return LocalDateTime.parse(deadline);
+    }
+
 }

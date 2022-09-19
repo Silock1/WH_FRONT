@@ -14,22 +14,20 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.warehouse_accounting.components.tasks.filter.TasksFilter;
-import com.warehouse_accounting.components.tasks.forms.TasksEditForm;
-import com.warehouse_accounting.components.tasks.forms.TasksForm;
+import com.warehouse_accounting.components.tasks.forms.TaskModal;
 import com.warehouse_accounting.components.tasks.grids.TasksGrid;
-import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.ContractorService;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.TasksService;
 
 
 public class Tasks extends VerticalLayout {
-    private TasksGrid tasksGrid;
-    private TasksFilter filterLayout;
+    private final TasksGrid tasksGrid;
+    private final TasksFilter filterLayout;
     private final Div parentLayer;
     private final TextField textFieldGridSelected = new TextField();
-    private EmployeeService employeeService;
-
-    private ContractorService contractorService;
+    private final EmployeeService employeeService;
+    private final ContractorService contractorService;
 
     public Tasks(Div parentLayer, TasksService tasksService, TasksFilter filterLayout
             , EmployeeService employeeService, ContractorService contractorService) {
@@ -41,7 +39,6 @@ public class Tasks extends VerticalLayout {
         Div pageContent = new Div();
         pageContent.add(tasksGrid);
         filterLayout.setTasks(this);//оно
-        pageContent.setSizeFull();
         add(getGroupButtons(), filterLayout, pageContent);
     }
 
@@ -57,6 +54,7 @@ public class Tasks extends VerticalLayout {
 
         Label textProducts = new Label();
         textProducts.setText("Задачи");
+        textProducts.getStyle().set("font-size", "20px").set("font-weight", "bold");
 
         Button refreshButton = new Button(new Icon(VaadinIcon.REFRESH));
         refreshButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
@@ -65,10 +63,8 @@ public class Tasks extends VerticalLayout {
         addOrderButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
         addOrderButton.addClickListener(buttonClickEvent -> {
-            TasksForm tasksForm = new TasksForm(parentLayer, this
-                    , employeeService, contractorService);
-            parentLayer.removeAll();
-            parentLayer.add(tasksForm);
+            TaskModal newTaskModal = new TaskModal(employeeService, contractorService);
+            parentLayer.add(newTaskModal);
 
         });
 
@@ -84,7 +80,6 @@ public class Tasks extends VerticalLayout {
         });
 
         HorizontalLayout createMenuBar = getCreateMenuBar();
-
         groupControl.add(helpButton, textProducts, refreshButton, addOrderButton,
                 addFilterButton, searchField, createMenuBar);
         setSizeFull();
@@ -111,6 +106,4 @@ public class Tasks extends VerticalLayout {
         groupCreate.setAlignItems(Alignment.CENTER);
         return groupCreate;
     }
-
-
 }
