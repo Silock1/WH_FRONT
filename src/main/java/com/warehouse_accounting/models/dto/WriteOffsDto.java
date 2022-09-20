@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WriteOffsDto {
+
     private Long id;
 
     private LocalDateTime dateTime;
@@ -34,3 +35,5 @@ public class WriteOffsDto {
     public WriteOffsDto(long l, LocalDateTime now, CompanyDto companyDto, boolean b, boolean b1, String comment) {
     }
 }
+
+
