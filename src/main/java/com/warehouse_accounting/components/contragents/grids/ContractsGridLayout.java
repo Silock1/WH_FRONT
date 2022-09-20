@@ -61,7 +61,7 @@ public class ContractsGridLayout extends HorizontalLayout {
 
         Grid.Column<ContractDto> contractorNameColumn =
                 contractDtoGrid.addColumn(contractDto -> contractDto.getContractor().getName()).setHeader("Контрагент")
-                    .setSortable(true).setAutoWidth(true);
+                        .setSortable(true).setAutoWidth(true);
 
         Grid.Column<ContractDto> companyNameColumn =
                 contractDtoGrid.addColumn(contractDto -> contractDto.getCompany().getName()).setHeader("Организация")

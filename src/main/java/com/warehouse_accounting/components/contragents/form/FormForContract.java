@@ -1,16 +1,19 @@
 package com.warehouse_accounting.components.contragents.form;
 
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.datepicker.DatePicker;
-import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.BigDecimalField;
@@ -25,7 +28,6 @@ import com.warehouse_accounting.components.contragents.ContractsOrder;
 import com.warehouse_accounting.models.dto.CompanyDto;
 import com.warehouse_accounting.models.dto.ContractDto;
 import com.warehouse_accounting.models.dto.ContractorDto;
-import com.warehouse_accounting.models.dto.ProductionTasksDto;
 import com.warehouse_accounting.services.interfaces.CompanyService;
 import com.warehouse_accounting.services.interfaces.ContractService;
 import com.warehouse_accounting.services.interfaces.ContractorService;
@@ -33,8 +35,6 @@ import com.warehouse_accounting.services.interfaces.ContractorService;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Locale;
 import java.util.Objects;
 
 @SpringComponent
@@ -48,9 +48,9 @@ public class FormForContract extends VerticalLayout {
 
     private final ContractService contractService;
 
-    private ContractorService contractorService;
+    private final ContractorService contractorService;
 
-    private CompanyService companyService;
+    private final CompanyService companyService;
 
     private final Binder<ContractDto> contractDtoBinder = new Binder<>(ContractDto.class);
 
@@ -85,7 +85,6 @@ public class FormForContract extends VerticalLayout {
 
             if (newForm) {
                 try {
-                    contractDto.setContractDate(null);
                     contractDtoBinder.writeBean(contractDto);
                     contractService.create(contractDto);
                 } catch (ValidationException ex) {
@@ -111,7 +110,35 @@ public class FormForContract extends VerticalLayout {
             parent.showButtonEndGrid(false);
         });
 
-        layoutForButtons.add(edit, close);
+
+        //меню-бар который идёт после кнопки закрыть
+        MenuBar menuBar = new MenuBar();
+        menuBar.addThemeVariants(MenuBarVariant.LUMO_ICON, MenuBarVariant.LUMO_CONTRAST);
+
+        Icon caretDownEdit = new Icon(VaadinIcon.CARET_DOWN);
+        caretDownEdit.setSize("13px");
+
+        HorizontalLayout editVision = new HorizontalLayout(new Text("Изменить"), caretDownEdit);
+        editVision.setSpacing(false);
+
+        MenuItem editItem = menuBar.addItem(editVision);
+        SubMenu editSubMenu = editItem.getSubMenu();
+        editSubMenu.addItem("Удалить").addClickListener(event -> {
+            contractDto.setEnabled(false);
+            try {
+                contractDtoBinder.writeBean(contractDto);
+            } catch (ValidationException e) {
+                throw new RuntimeException(e);
+            }
+            contractService.update(contractDto);
+            //удаление происходит не физическое, а выставляется флаг false в столбец enabled таблицы contracts
+            removeAll();
+            parent.showButtonEndGrid(true);
+        });
+        editSubMenu.addItem("Копировать").onEnabledStateChanged(false);
+
+
+        layoutForButtons.add(edit, close, menuBar);
         layoutForButtons.setAlignItems(Alignment.CENTER);
         return layoutForButtons;
 
@@ -119,12 +146,13 @@ public class FormForContract extends VerticalLayout {
 
     public FormLayout mainForm(ContractDto contractDto) {
 
+        //макет для номера и даты
         HorizontalLayout layoutForNumberAndDate = new HorizontalLayout();
         Label label1 = new Label("Договор №");
         TextField number = new TextField();
         Label label2 = new Label("от");
-        DateTimePicker datePickerField = new DateTimePicker();
-        datePickerField.setValue(LocalDateTime.now());
+        DatePicker datePickerField = new DatePicker();
+        datePickerField.setValue(LocalDate.now());
 
         contractDtoBinder.forField(number).bind(ContractDto::getNumber, ContractDto::setNumber);
         contractDtoBinder.forField(datePickerField).bind(ContractDto::getContractDate, ContractDto::setContractDate);
@@ -132,13 +160,14 @@ public class FormForContract extends VerticalLayout {
         layoutForNumberAndDate.add(label1, number, label2, datePickerField);
 
 
+        //макет для контрагента и огранизации
         HorizontalLayout layoutForCompanyAndContractor = new HorizontalLayout();
 
         Div div = new Div();
         div.setWidth("130px");
 
         Div div1 = new Div();
-        div1.setWidth("300px");
+        div1.setWidth("160px");
 
         Label label3 = new Label("Организация");
         ComboBox<CompanyDto> companyDtoComboBox = new ComboBox<>();
@@ -160,10 +189,11 @@ public class FormForContract extends VerticalLayout {
         layoutForCompanyAndContractor.add(div1, label3, companyDtoComboBox, div, label4, contractorDtoComboBox);
 
 
+        //макет для типа договора
         HorizontalLayout layoutForTypeOfContract = new HorizontalLayout();
-        Div emptySpaceAtType = new Div();
+        Div divForType = new Div();
         Label labelForType = new Label("Тип договора");
-        emptySpaceAtType.setWidth("297px");
+        divForType.setWidth("157px");
 
         ComboBox<String> comboBoxForType = new ComboBox<>();
         comboBoxForType.setItems("Договор комиссии", "Договор купли-продажи");
@@ -179,8 +209,8 @@ public class FormForContract extends VerticalLayout {
 
         comboBoxForReward.addValueChangeListener(event -> {
             if (Objects.equals(event.getValue(), "Не рассчитывать")) {
-                layoutForTypeOfContract.remove(percentageOfTheSaleAmount, percent);
                 percentageOfTheSaleAmount.setValue(0);
+                layoutForTypeOfContract.remove(percentageOfTheSaleAmount, percent);
             } else {
                 layoutForTypeOfContract.add(percentageOfTheSaleAmount, percent);
             }
@@ -197,6 +227,8 @@ public class FormForContract extends VerticalLayout {
                 layoutForTypeOfContract.add(divForTypeOfContract, labelForReward,
                         comboBoxForReward, percentageOfTheSaleAmount, percent);
             } else {
+                percentageOfTheSaleAmount.setValue(0); //обнуление процента если был выбран договор купли-продажи
+                comboBoxForReward.setValue("Не рассчитывать"); //выставляется значение чтобы не появлялся филд для процента
                 layoutForTypeOfContract.remove(divForTypeOfContract, labelForReward,
                         comboBoxForReward, percentageOfTheSaleAmount, percent);
             }
@@ -207,9 +239,9 @@ public class FormForContract extends VerticalLayout {
         contractDtoBinder.forField(percentageOfTheSaleAmount)
                 .bind(ContractDto::getPercentageOfTheSaleAmount, ContractDto::setPercentageOfTheSaleAmount);
 
-        layoutForTypeOfContract.add(emptySpaceAtType, labelForType, comboBoxForType);
+        layoutForTypeOfContract.add(divForType, labelForType, comboBoxForType);
 
-
+        //всё что идёт после типа договора
         TextField code = new TextField();
         Label forCode = new Label("Код");
         BigDecimalField amount = new BigDecimalField();
@@ -219,12 +251,12 @@ public class FormForContract extends VerticalLayout {
         comment.getStyle().set("resize", "vertical");
         comment.getStyle().set("overflow", "auto");
         Label forComment = new Label("Комментарий");
-        Div div2 = new Div();
-        div2.setWidth("353px");
-        Div div3 = new Div();
-        div3.setWidth("283px");
-        Div div4 = new Div();
-        div4.setWidth("300px");
+        Div divForCode = new Div();
+        divForCode.setWidth("213px");
+        Div divForAmount = new Div();
+        divForAmount.setWidth("143px");
+        Div divForComment = new Div();
+        divForComment.setWidth("160px");
 
 
         ComboBox<String> reward = new ComboBox<>();
@@ -242,9 +274,9 @@ public class FormForContract extends VerticalLayout {
             contractDtoBinder.readBean(contractDto);
         }
 
-        layoutForCode.add(div2, forCode, code);
-        layoutForAmount.add(div3, forAmount, amount);
-        layoutForComment.add(div4, forComment, comment);
+        layoutForCode.add(divForCode, forCode, code);
+        layoutForAmount.add(divForAmount, forAmount, amount);
+        layoutForComment.add(divForComment, forComment, comment);
 
         FormLayout formLayout = new FormLayout();
         formLayout.setResponsiveSteps(

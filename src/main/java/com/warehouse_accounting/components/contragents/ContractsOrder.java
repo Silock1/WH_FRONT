@@ -32,9 +32,9 @@ public class ContractsOrder extends VerticalLayout {
 
     private final ContractsFilterLayout filterLayout;
 
-    private FormForContract formForContract;
+    private final FormForContract formForContract;
 
-    private HorizontalLayout buttons;
+    private final HorizontalLayout buttons;
 
     private final transient ContractService contractService;
 
@@ -70,9 +70,7 @@ public class ContractsOrder extends VerticalLayout {
         refresh.setColor("silver");
         Button refreshButton = new Button(refresh);
         refreshButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        refreshButton.addClickListener(click -> {
-            contractsGridLayout.refreshDate();
-        });
+        refreshButton.addClickListener(click -> contractsGridLayout.refreshDate());
 
         Image image = new Image("icons/plus.png", "Plus");
         image.setWidth("15px");
@@ -84,15 +82,9 @@ public class ContractsOrder extends VerticalLayout {
         });
         contract.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 
-        Button filter = new Button("Фильтр");
+        Button filter = new Button("Фильтр"); // todo: ещё не сделано
         filter.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        filter.addClickListener(e -> {
-            if (filterLayout.isVisible()) {
-                filterLayout.setVisible(false);
-            } else {
-                filterLayout.setVisible(true);
-            }
-        });
+        filter.addClickListener(e -> filterLayout.setVisible(!filterLayout.isVisible()));
 
         TextField textField = new TextField();
         textField.setPlaceholder("Номер или комментарий");

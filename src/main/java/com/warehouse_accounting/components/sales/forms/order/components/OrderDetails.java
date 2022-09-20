@@ -118,12 +118,12 @@ public class OrderDetails extends HorizontalLayout {
         Label balance = new Label("Баланс: 0,00 руб"); // todo: это должно быть изначально скрыто
 
 //        invoice.setContractDate(LocalDate.now());
-        customerOrder.getContractDto().setContractDate(LocalDateTime.now());
-        DateTimePicker unloadDate = new DateTimePicker(LocalDateTime.now());
+        customerOrder.getContractDto().setContractDate(LocalDate.now());
+        DatePicker unloadDate = new DatePicker(LocalDate.now());
         unloadDate.addValueChangeListener(
-                event -> customerOrder.getContractDto().setContractDate(event.getValue() != null ? event.getValue() : LocalDateTime.now()));
+                event -> customerOrder.getContractDto().setContractDate(event.getValue() != null ? event.getValue() : LocalDate.now()));
 //        unloadDate.setInitialPosition(LocalDate.now());
-        unloadDate.setValue(LocalDateTime.now());
+        unloadDate.setValue(LocalDate.now());
 //                        invoice.setContractDate(event.getValue() != null ? event.getValue() : LocalDate.now()));
 //        unloadDate.setInitialPosition(LocalDate.now());
 
