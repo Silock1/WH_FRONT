@@ -33,7 +33,9 @@ import com.warehouse_accounting.models.dto.TypeOfContractorDto;
 import com.warehouse_accounting.models.dto.TypeOfPriceDto;
 import com.warehouse_accounting.services.impl.AddressServiceImpl;
 import com.warehouse_accounting.services.interfaces.*;
+import org.springframework.security.core.parameters.P;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -61,6 +63,7 @@ public class FormEditCotragent extends VerticalLayout {
 
     private final ContractorDto contractorDto = new ContractorDto();
     private AddressDto addressDto;
+    private LegalDetailDto legalDetailDto = new LegalDetailDto();
 
     private final transient DadataService dadata;
 
@@ -166,11 +169,13 @@ public class FormEditCotragent extends VerticalLayout {
 //                }
 
             if (!contractorDtoBinder.validate().isOk()) {
-                return;
+                //TODO падает с ошибкой Validation has failed for some fields,
+                // если открыть и закрыть форму, а потом пытаться добавить нового
             }
             if (newForm) {
                 try {
                     addressDtoBinder.writeBean(addressDto);
+                    legalDetailDtoBinder.writeBean(legalDetailDto);
                     contractorDtoBinder.writeBean(contractorDto);
 
                     contractorService.create(contractorDto);
@@ -181,7 +186,9 @@ public class FormEditCotragent extends VerticalLayout {
                 try {
                     //alreadyMakeUpdate = true;
                     addressDtoBinder.writeBean(addressDto);
+                    legalDetailDtoBinder.writeBean(legalDetailDto);
                     contractorDtoBinder.writeBean(contractorDto);
+
 
                     contractorService.update(contractorDto);
                 } catch (ValidationException ex) {
@@ -218,17 +225,14 @@ public class FormEditCotragent extends VerticalLayout {
 
 
         nameContragentLayout.add(name);
-
         return nameContragentLayout;
     }
 
     private VerticalLayout leftGroupFormLayout(ContractorDto contractorDto) {
         VerticalLayout leftLayout = new VerticalLayout();
         leftLayout.add(getContragentAccordion(contractorDto));
-        if (!newForm) {
-            leftLayout.add(getLegalDetailAccordion(contractorDto));
-            leftLayout.add(getAccessAccordion());
-        }
+        leftLayout.add(getLegalDetailAccordion(contractorDto));
+        //leftLayout.add(getAccessAccordion());
         leftLayout.add(getSalasEndPriceAccordion(contractorDto));
         leftLayout.setWidth("450px");
         return leftLayout;
@@ -248,6 +252,15 @@ public class FormEditCotragent extends VerticalLayout {
         Tab files = new Tab(filesName);
         Tab indicators = new Tab(indicatorsName);
         Tabs tabs = new Tabs(details, payment, shipping, files, indicators);
+        if (newForm) {
+            details.setEnabled(false);
+            payment.setEnabled(false);
+            shipping.setEnabled(false);
+            indicators.setEnabled(false);
+            tabs.setSelectedTab(files);
+        } else {
+            tabs.setSelectedTab(details);
+        }
         Div tabContent = new Div();
         tabContent.setSizeFull();
         tabs.addSelectedChangeListener(event -> {
@@ -314,14 +327,11 @@ public class FormEditCotragent extends VerticalLayout {
 
         addressDto = newForm? new AddressDto() : contractorDto.getAddress();
 
-
-
         TextField cityName = new TextField();
         TextField streetName = new TextField();
         TextField buildingName = new TextField();
         TextField office = new TextField();
         TextField other = new TextField();
-
 
         addressDtoBinder.forField(cityName).bind(AddressDto::getCityName, AddressDto::setCityName);
         addressDtoBinder.forField(streetName).bind(AddressDto::getStreetName, AddressDto::setStreetName);
@@ -329,46 +339,17 @@ public class FormEditCotragent extends VerticalLayout {
         addressDtoBinder.forField(office).bind(AddressDto::getOffice, AddressDto::setOffice);
         addressDtoBinder.forField(other).bind(AddressDto::getOther, AddressDto::setOther);
 
-
         contractorDtoBinder.forField(comment).bind(ContractorDto::getComment, ContractorDto::setComment);
         contractorDtoBinder.forField(code).bind(ContractorDto::getCode, ContractorDto::setCode);
         contractorDtoBinder.forField(outerCode).bind(ContractorDto::getOuterCode, ContractorDto::setOuterCode);
 
         if (newForm) {
-            LegalDetailDto legalDetailDto = new LegalDetailDto();
-            legalDetailDtoBinder.readBean(legalDetailDto);
             contractorDto.setAddress(addressDto);
-            contractorDto.setLegalDetail(legalDetailDto);
-            contractorDto.setNumberDiscountCard("");
-
         }
         if (!newForm) {
             addressDtoBinder.readBean(addressDto);
             contractorDtoBinder.readBean(contractorDto);
         }
-
-
-//        Button buttonToAddActualAddress = new Button("Обновить адрес");
-//        buttonToAddActualAddress.setDisableOnClick(false);
-//        buttonToAddActualAddress.addClickListener(e -> {
-//            try {
-//                addressDtoBinder.writeBean(addressDto);
-//            } catch (ValidationException ex) {
-//                throw new RuntimeException(ex);
-//            }
-//            contractorService.update(contractorDto);
-//        });
-//
-//        Button buttonToCreateActualAddress = new Button("Записать адрес");
-//        buttonToCreateActualAddress.setDisableOnClick(false);
-//        buttonToCreateActualAddress.addClickListener(e -> {
-//            try {
-//                addressDtoBinder.writeBean(addressDto);
-//            } catch (ValidationException ex) {
-//                throw new RuntimeException(ex);
-//            }
-//        });
-
 
         FormLayout form = new FormLayout();
         form.addFormItem(status, "Статус");
@@ -421,7 +402,10 @@ public class FormEditCotragent extends VerticalLayout {
     //<Блок реквизиты
     private AccordionPanel getLegalDetailAccordion(ContractorDto contractorDto) {
 
-        LegalDetailDto legalDetailDto = contractorDto.getLegalDetail();
+        legalDetailDto = newForm ? new LegalDetailDto() : contractorDto.getLegalDetail();
+
+
+
 
         ComboBox<TypeOfContractorDto> typeOfContractorDtoComboBox = new ComboBox<>();
         typeOfContractorDtoComboBox.setWidth("350px");
@@ -447,8 +431,13 @@ public class FormEditCotragent extends VerticalLayout {
         legalDetailDtoBinder.forField(ogrnip).bind(LegalDetailDto::getOgrn, LegalDetailDto::setOgrn);
         legalDetailDtoBinder.forField(okpo).bind(LegalDetailDto::getOkpo, LegalDetailDto::setOkpo);
 
+        if (newForm) {
+            contractorDto.setLegalDetail(legalDetailDto);
 
-        legalDetailDtoBinder.readBean(legalDetailDto);
+        }
+        if (!newForm) {
+            legalDetailDtoBinder.readBean(legalDetailDto);
+        }
 
 
         FormLayout formLayout = new FormLayout();
@@ -492,6 +481,7 @@ public class FormEditCotragent extends VerticalLayout {
         typeOfPriceDtoComboBox.setRequired(true);
         typeOfPriceDtoComboBox.setItems(typeOfPriceService.getAll());
         typeOfPriceDtoComboBox.setItemLabelGenerator(TypeOfPriceDto::getName);
+        typeOfPriceDtoComboBox.setValue(typeOfPriceService.getById(1L));
         contractorDtoBinder.forField(typeOfPriceDtoComboBox)
                 .bind(ContractorDto::getTypeOfPrice, ContractorDto::setTypeOfPrice);
 
@@ -545,8 +535,10 @@ public class FormEditCotragent extends VerticalLayout {
 
 
         List<BankAccountDto> bankAccountDtoList = bankAccountService.getAll();
+        if (!newForm) {
+            contractorDtoBinder.readBean(contractorDto);
+        }
 
-        contractorDtoBinder.readBean(contractorDto);
 
         List<BankAccountDto> filteredList = bankAccountDtoList.stream()
                 .filter(bankAccountDto1 -> {
