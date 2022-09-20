@@ -44,6 +44,7 @@ public class SettingsServiceImpl implements SettingsService {
 
     @Override
     public void update(SettingsDto dto) {
+        System.out.println(dto);
         Call<Void> call = api.update(url, dto);
         new ServiceUtils<>(SettingsDto.class).update(call);
     }
