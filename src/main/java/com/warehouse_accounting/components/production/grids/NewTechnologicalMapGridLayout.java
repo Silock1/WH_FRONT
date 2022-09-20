@@ -21,10 +21,14 @@ import com.warehouse_accounting.components.sales.forms.order.components.Document
 import com.warehouse_accounting.models.dto.ProductDto;
 import com.warehouse_accounting.models.dto.TechnologicalMapMaterialDto;
 import com.warehouse_accounting.services.impl.ProductionStageServiceImpl;
+import com.warehouse_accounting.services.impl.TechnologicalMapMaterialsServiceImpl;
 import com.warehouse_accounting.services.impl.TechnologicalMapServiceImpl;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,18 +38,22 @@ import java.util.List;
 public class NewTechnologicalMapGridLayout extends VerticalLayout {
     private final ProductionStageServiceImpl productionStageService;
     private final TechnologicalMapServiceImpl technologicalMapService;
+    private final TechnologicalMapMaterialsServiceImpl technologicalMapMaterialsService;
     private final GoodsGridLayoutForTechnologicalMap goodsGridLayout;
     private final NewGoodsDialog newGoodsDialog;
     private Dialog dialogMaterials;
     private NewTechnologicalMapPanel newTechnologicalMapPanel;
     private VerticalLayout dialogLayout;
     private Grid<TechnologicalMapMaterialDto> grid;
+    @Getter
+    @Setter
     private List<ProductDto> selectedProductDto;
     private List<TechnologicalMapMaterialDto> technologicalMapMaterialDtoList = new ArrayList<>();
 
-    public NewTechnologicalMapGridLayout(ProductionStageServiceImpl productionStageService, TechnologicalMapServiceImpl technologicalMapService, GoodsGridLayoutForTechnologicalMap goodsGridLayout, NewGoodsDialog newGoodsDialog) {
+    public NewTechnologicalMapGridLayout(ProductionStageServiceImpl productionStageService, TechnologicalMapServiceImpl technologicalMapService, TechnologicalMapMaterialsServiceImpl technologicalMapMaterialsService, GoodsGridLayoutForTechnologicalMap goodsGridLayout, NewGoodsDialog newGoodsDialog) {
         this.productionStageService = productionStageService;
         this.technologicalMapService = technologicalMapService;
+        this.technologicalMapMaterialsService = technologicalMapMaterialsService;
         this.goodsGridLayout = goodsGridLayout;
         this.newGoodsDialog = newGoodsDialog;
         dialogMaterials = new Dialog();
@@ -114,7 +122,15 @@ public class NewTechnologicalMapGridLayout extends VerticalLayout {
             }
             if (!selectedProductDto.isEmpty()) {
                 if (newTechnologicalMapPanel != null) {
-                 //   newTechnologicalMapPanel.initMaterials();
+                    //TODO убрать
+                    TechnologicalMapMaterialDto mapMaterialDto = TechnologicalMapMaterialDto.builder()
+                            .id(newTechnologicalMapPanel.getChildren().count() + 1L)
+                            .materialId(goodsGridLayout.getSelected().getId())
+                            .materialName(goodsGridLayout.getSelected().getName())
+                            .count(BigDecimal.ONE)
+                            .build();
+                    technologicalMapMaterialsService.create(mapMaterialDto);
+                    newTechnologicalMapPanel.initMaterials();
                 }
                 init();
                 dialog.close();
@@ -136,11 +152,8 @@ public class NewTechnologicalMapGridLayout extends VerticalLayout {
         dialogLayout = new VerticalLayout(divTollBar, gridDiv, buttonDiv);
     }
 
-    public List<ProductDto> getSelectedProductDto() {
-        return selectedProductDto;
-    }
 
     public void clearSelectedProductDto() {
-        selectedProductDto = new ArrayList<>();
+        selectedProductDto.clear();
     }
 }

@@ -101,7 +101,7 @@ public class NewTechnologicalMapPanel extends HorizontalLayout {
         removeAll();
         this.technologicalMapDto = technologicalMapDto;
         getLayout(technologicalMap);
-        // Временно убрано initMaterialsGrid();
+        initMaterialsGrid();
     }
 
     private void createDateLine() {
@@ -171,39 +171,57 @@ public class NewTechnologicalMapPanel extends HorizontalLayout {
     }
 
     public void initMaterials() {
-        //  initMaterialsGrid();
+        initMaterialsGrid();
     }
 
     private void initMaterialsGrid() {
         remove(mapMaterialDtoGrid);
         mapMaterialDtoGrid = new Grid<>(TechnologicalMapMaterialDto.class, false);
-        mapMaterialDtos = new ArrayList<>();
+        if (mapMaterialDtos == null) {
+            mapMaterialDtos = new ArrayList<>();
+        }
         if (newTechnologicalMapGridLayout.getSelectedProductDto() != null && newTechnologicalMapGridLayout.getSelectedProductDto().size() > 0) {
             productDtoList = newTechnologicalMapGridLayout.getSelectedProductDto();
             for (ProductDto p : productDtoList) {
                 //TODO (Что делать с ID? добавить отдельную Модель?)добавлять в бд материалы без привязка к тех карте,а при сохранении тех карты добавлять привязку. ТАкже при удалении с грида удалять из бд
                 //TODO необходимо сохранять материал, но пока это невозможно из-зи уникальности поля materialID
-                TechnologicalMapMaterialDto t = TechnologicalMapMaterialDto.builder().id(1L).materialId(p.getId()).materialName(p.getName()).count(BigDecimal.ONE).build();
+                TechnologicalMapMaterialDto t = TechnologicalMapMaterialDto.builder()
+                        .id(count() + 1L)
+                        .materialId(p.getId())
+                        .materialName(p.getName())
+                        .count(BigDecimal.ONE)
+                        .build();
                 mapMaterialDtos.add(t);
             }
         } else {
             mapMaterialDtos = technologicalMapDto.getMaterials();
         }
 
-        Grid.Column<TechnologicalMapMaterialDto> idColumn = mapMaterialDtoGrid
-                .addColumn(TechnologicalMapMaterialDto::getId).setHeader("Id");
+//        Grid.Column<TechnologicalMapMaterialDto> idColumn = mapMaterialDtoGrid
+//                .addColumn(TechnologicalMapMaterialDto::getId).setHeader("Id");
         Grid.Column<TechnologicalMapMaterialDto> nameColumn = mapMaterialDtoGrid
                 .addColumn(TechnologicalMapMaterialDto::getMaterialId).setHeader("Код материала");
         Grid.Column<TechnologicalMapMaterialDto> expensesColumn = mapMaterialDtoGrid
                 .addColumn(TechnologicalMapMaterialDto::getMaterialName).setHeader("Наименование материала");
 
-
+//пред последний в списке дубоикат?
         Grid.Column<TechnologicalMapMaterialDto> testColumn = mapMaterialDtoGrid.addComponentColumn(mapMaterialDto -> {
+            log.error("ENTER");
+            log.error(mapMaterialDto);
             IntegerField integerField = new IntegerField();
             integerField.setMin(1);
             integerField.setValue(mapMaterialDto.getCount().intValue());
             integerField.setHelperText("шт.");
             integerField.setHasControls(true);
+            integerField.addValueChangeListener(mapMaterial ->
+            {
+                //todo оптимизировать, использовать мап? для извлечения конкретного элемента
+                for (TechnologicalMapMaterialDto materialDto : mapMaterialDtos) {
+                 if (mapMaterialDto.getId() == materialDto.getId()) {
+                     materialDto.setCount(BigDecimal.valueOf(mapMaterial.getValue()));
+                 }
+                }
+            }  );
             return integerField;
         }).setHeader("Кол-во").setWidth("150px").setFlexGrow(0);
 
@@ -211,7 +229,11 @@ public class NewTechnologicalMapPanel extends HorizontalLayout {
         Grid.Column<TechnologicalMapMaterialDto> editColumn = mapMaterialDtoGrid.addComponentColumn(mapMaterialDtoGridd -> {
             Button editButton = new Button(new Icon(VaadinIcon.CLIPBOARD_CROSS));
             editButton.addClickListener(e -> {
+
+                //todo перенести удаление при неажатии кнопки сохранить, для этого скорее всего запоминать id. решить
+                // проблему при раьоте с новой картой без материалов и с существующей картой
                 mapMaterialDtos.remove(mapMaterialDtoGridd);
+                technologicalMapMaterialsService.deleteById(mapMaterialDtoGridd.getId());
                 initMaterialsGrid();
             });
             return editButton;
@@ -238,6 +260,7 @@ public class NewTechnologicalMapPanel extends HorizontalLayout {
                 technologicalMapDto.setTechnologicalMapGroupName(groupTechnologicalMap.getValue().getName());
                 technologicalMapDto.setComment(commentField.getValue());
                 technologicalMapDto.setProductionCost(BigDecimal.valueOf(integerField.getValue()));
+                technologicalMapDto.setMaterials(mapMaterialDtos);
                 technologicalMapService.update(technologicalMapDto);
             } else {
                 technologicalMapService.create(TechnologicalMapDto.builder()
@@ -251,6 +274,7 @@ public class NewTechnologicalMapPanel extends HorizontalLayout {
             //TODO SAVE
             removeAll();
             newTechnologicalMapGridLayout.clearSelectedProductDto();
+            mapMaterialDtos.clear();
             technologicalMapDto = null;
             technologicalMap.init();
         });
@@ -258,7 +282,8 @@ public class NewTechnologicalMapPanel extends HorizontalLayout {
 
         Button close = new Button("Закрыть", buttonClickEvent -> {
             removeAll();
-            newTechnologicalMapGridLayout.clearSelectedProductDto();
+            newTechnologicalMapGridLayout.  clearSelectedProductDto();
+            mapMaterialDtos.clear();
             technologicalMapDto = null;
             technologicalMap.init();
         });
@@ -342,5 +367,10 @@ public class NewTechnologicalMapPanel extends HorizontalLayout {
 
     private void checkRequired() {
         //TODO
+    }
+
+    //TODO добавить на бек запрос возвращающий количество записей и зменить реализацию метода
+    private long count() {
+        return technologicalMapMaterialsService.count();
     }
 }
