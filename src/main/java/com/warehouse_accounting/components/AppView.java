@@ -222,6 +222,9 @@ public class AppView extends AppLayout implements PageConfigurator {
             case "Показатели":
                 subMenuView = "indicators";
                 break;
+            case "Приложения":
+                subMenuView = "applications";
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + name);
         }
