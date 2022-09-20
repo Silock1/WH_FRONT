@@ -4,6 +4,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
+import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -19,6 +21,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
 import com.warehouse_accounting.components.indiCators.grids.DocumentsGrid;
+import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.DocumentDto;
 import com.warehouse_accounting.services.interfaces.DocumentService;
 import org.springframework.stereotype.Component;
@@ -66,11 +69,7 @@ public class DocumentsView extends VerticalLayout {
             documentsGrid.refreshDate();
         });
 
-        Image image = new Image("icons/plus.png", "Plus");
-        image.setWidth("15px");
-        Button documents = new Button("Документ", image);
-        documents.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
-
+        MenuBar documents = this.createNewDocumentMenu();
         Button filter = new Button("Фильтр");
         filter.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         filter.addClickListener(e -> {
@@ -127,5 +126,62 @@ public class DocumentsView extends VerticalLayout {
 
         horizontalLayout.add(helpButton, text, refreshButton, documents, filter, textField, menuBar);
         return horizontalLayout;
+    }
+
+    private MenuBar createNewDocumentMenu() {
+
+        Image image = new Image("icons/plus.png", "Plus");
+        image.setWidth("15px");
+        image.getStyle().set("width", "var(--lumo-icon-size-s)")
+                .set("height", "var(--lumo-icon-size-s)")
+                .set("marginRight", "var(--lumo-space-s)");
+        MenuBar documents = new MenuBar();
+        MenuItem item = documents.addItem(image, e -> {});
+        item.add("Документ");
+        SubMenu docs = item.getSubMenu();
+
+        MenuItem headerSales = docs.addItem("Продажи");
+        this.styleForCategory(headerSales);
+        MenuItem customerOrder = docs.addItem("Заказы покупателей");
+        MenuItem customerInvoices = docs.addItem("Счета покупателям");
+        MenuItem shipments = docs.addItem("Отгрузка");
+
+        MenuItem headerPurchases = docs.addItem("Закупки");
+        this.styleForCategory(headerPurchases);
+        MenuItem purchasesOrders = docs.addItem("Заказы поставщикам");
+        MenuItem accountsPayable = docs.addItem("Счета поставщиков");
+        MenuItem acceptances = docs.addItem("Приемки");
+
+        MenuItem headerMoney = docs.addItem("Деньги");
+        this.styleForCategory(headerMoney);
+        MenuItem paymentsIn = docs.addItem("Входящие платежи");
+        MenuItem paymentsInOrders = docs.addItem("Приходные ордеры");
+        MenuItem paymentsOut = docs.addItem("Исходящие платежи");
+        MenuItem paymentsOutOrders = docs.addItem("Расходные ордеры");
+
+        MenuItem headerGoods = docs.addItem("Склад");
+        this.styleForCategory(headerGoods);
+        MenuItem internalOrders = docs.addItem("Внутренние заказы");
+        MenuItem movements = docs.addItem("Перемещения");
+        MenuItem inventory = docs.addItem("Инвентаризация");
+        MenuItem posting = docs.addItem("Оприходования");
+        MenuItem writeOffs = docs.addItem("Списания");
+
+        MenuItem headerProduction = docs.addItem("Производство");
+        this.styleForCategory(headerProduction);
+        MenuItem technologicalOperation = docs.addItem("Технологическая операция");
+        MenuItem productionOrder = docs.addItem("Заказ на производство");
+        MenuItem productionTask = docs.addItem("Производственное задание");
+
+        return documents;
+    }
+    private void styleForCategory(MenuItem header) {
+        header.getElement()
+                .getStyle()
+                .set("background-color", "lightgray")
+                .set("font-weight", "bold")
+                .set("font-size", "12px")
+                .set("margin", "0px")
+                .set("padding", "0px");
     }
 }
