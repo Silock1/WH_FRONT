@@ -520,7 +520,7 @@ public class UserSettingsView extends VerticalLayout {
         System.out.println(gridNotifications.getPageSize());
 
         gridNotifications.addColumn(new ComponentRenderer<>(selectorDto ->
-                buttonQuestion(selectorDto.getDescription())))
+                        buttonQuestion(selectorDto.getDescription())))
                 .setAutoWidth(true);
 
         gridNotifications.addColumn(new ComponentRenderer<>(selectorDto -> createLabel(selectorDto.getLabel())))
