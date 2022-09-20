@@ -30,7 +30,7 @@ public class SettingsView extends AppLayout {
         settingsTitle.addClassName("tableTitle");
         createSubPanel(settingsList, settingsTabs);
 
-        List<String> imExList = Arrays.asList("Импорт", "Экспорт", "Интернет-магазины", "Токены");
+        List<String> imExList = Arrays.asList("Импорт", "Экспорт", "Онлайн-торговля", "Токены");
         Tabs importExportTabs = new Tabs();
         importExportTabs.setOrientation(Tabs.Orientation.VERTICAL);
         Span importExportTitle = new Span("ОБМЕН ДАННЫМИ");
@@ -81,7 +81,7 @@ public class SettingsView extends AppLayout {
         tabsList.put("Скидки", "discount");
         tabsList.put("Импорт", "import");
         tabsList.put("Экспорт", "export");
-        tabsList.put("Интернет-магазины", "connectorsettings");
+        tabsList.put("Онлайн-торговля", "applications");
         tabsList.put("Токены", "token");
         tabsList.put("Юр. лица", "mycompany");
         tabsList.put("Сотрудники", "employee");
