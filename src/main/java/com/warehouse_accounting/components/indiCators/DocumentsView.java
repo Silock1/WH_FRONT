@@ -4,8 +4,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
-import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -21,7 +19,6 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
 import com.warehouse_accounting.components.indiCators.grids.DocumentsGrid;
-import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.DocumentDto;
 import com.warehouse_accounting.services.interfaces.DocumentService;
 import org.springframework.stereotype.Component;
@@ -69,7 +66,7 @@ public class DocumentsView extends VerticalLayout {
             documentsGrid.refreshDate();
         });
 
-        MenuBar documents = this.createNewDocumentMenu();
+        MenuBar documents = this.createNewDocumentMenu(); //не реализовна логика
         Button filter = new Button("Фильтр");
         filter.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         filter.addClickListener(e -> {
@@ -136,13 +133,13 @@ public class DocumentsView extends VerticalLayout {
                 .set("height", "var(--lumo-icon-size-s)")
                 .set("marginRight", "var(--lumo-space-s)");
         MenuBar documents = new MenuBar();
-        MenuItem item = documents.addItem(image, e -> {});
+        MenuItem item = documents.addItem(image);
         item.add("Документ");
         SubMenu docs = item.getSubMenu();
 
         MenuItem headerSales = docs.addItem("Продажи");
         this.styleForCategory(headerSales);
-        MenuItem customerOrder = docs.addItem("Заказы покупателей");
+        MenuItem customerOrder = docs.addItem("Заказы покупателей", event -> {});
         MenuItem customerInvoices = docs.addItem("Счета покупателям");
         MenuItem shipments = docs.addItem("Отгрузка");
 
@@ -175,6 +172,7 @@ public class DocumentsView extends VerticalLayout {
 
         return documents;
     }
+
     private void styleForCategory(MenuItem header) {
         header.getElement()
                 .getStyle()
