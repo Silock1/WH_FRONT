@@ -1,18 +1,13 @@
 package com.warehouse_accounting.components.retail.forms;
 
 import com.vaadin.flow.component.Component;
-
-
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -87,6 +82,7 @@ public class CreatePointOfSalesForm extends VerticalLayout {
     private Select<String> formCreateOrdersWithTheStatus;
     private Span prepayment;
 
+    boolean isMain = true;
 
     public CreatePointOfSalesForm(Div parentLayer, Component returnLayer) {
         this.parentLayer = parentLayer;

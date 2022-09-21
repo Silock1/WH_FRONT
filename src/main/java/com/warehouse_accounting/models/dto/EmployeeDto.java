@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Data
@@ -40,6 +41,7 @@ public class EmployeeDto {
 
     private ImageDto image;
 
+    @NotNull
     private Set<TariffDto> tariff;
 
     @Override

@@ -17,13 +17,19 @@ public class ApplicationDto {
 
     private String description;
 
-    private String developer;
+//    private String developer;
+//
+//    private String devSite;
+//
+//    private String devMail;
 
-    private String devSite;
+//    private Boolean isAuthorized;
 
-    private String devMail;
+//    private Long logoId;
 
-    private Boolean isFree;
+    private Integer vkUserId;
 
-    private Long logoId;
+    private String vkAccessToken;
+
+    private Integer vkGroupId;
 }
