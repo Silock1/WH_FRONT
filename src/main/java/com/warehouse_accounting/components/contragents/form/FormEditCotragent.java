@@ -404,9 +404,6 @@ public class FormEditCotragent extends VerticalLayout {
 
         legalDetailDto = newForm ? new LegalDetailDto() : contractorDto.getLegalDetail();
 
-
-
-
         ComboBox<TypeOfContractorDto> typeOfContractorDtoComboBox = new ComboBox<>();
         typeOfContractorDtoComboBox.setWidth("350px");
         typeOfContractorDtoComboBox.setItems(typeOfContractorService.getAll());
