@@ -55,6 +55,7 @@ retrofit:
     retail_url: api/retail
     role_url: api/roles
     settings_url: api/settings
+    notifications_url: api/notifications
     start_screen_url: api/start_screen
     stats_url: api/stats
     street_url: api/streets
