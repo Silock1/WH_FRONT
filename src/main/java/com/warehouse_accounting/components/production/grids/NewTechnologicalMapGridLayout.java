@@ -20,6 +20,7 @@ import com.warehouse_accounting.components.production.forms.NewTechnologicalMapP
 import com.warehouse_accounting.components.sales.forms.order.components.DocumentOperationsToolbar;
 import com.warehouse_accounting.models.dto.ProductDto;
 import com.warehouse_accounting.models.dto.TechnologicalMapMaterialDto;
+import com.warehouse_accounting.services.impl.ProductServiceImpl;
 import com.warehouse_accounting.services.impl.ProductionStageServiceImpl;
 import com.warehouse_accounting.services.impl.TechnologicalMapMaterialsServiceImpl;
 import com.warehouse_accounting.services.impl.TechnologicalMapServiceImpl;
@@ -28,7 +29,6 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +39,7 @@ public class NewTechnologicalMapGridLayout extends VerticalLayout {
     private final ProductionStageServiceImpl productionStageService;
     private final TechnologicalMapServiceImpl technologicalMapService;
     private final TechnologicalMapMaterialsServiceImpl technologicalMapMaterialsService;
+    private final ProductServiceImpl productService;
     private final GoodsGridLayoutForTechnologicalMap goodsGridLayout;
     private final NewGoodsDialog newGoodsDialog;
     private Dialog dialogMaterials;
@@ -47,20 +48,21 @@ public class NewTechnologicalMapGridLayout extends VerticalLayout {
     private Grid<TechnologicalMapMaterialDto> grid;
     @Getter
     @Setter
-    private List<ProductDto> selectedProductDto;
+    private ProductDto selectedProductDto;
     private List<TechnologicalMapMaterialDto> technologicalMapMaterialDtoList = new ArrayList<>();
 
-    public NewTechnologicalMapGridLayout(ProductionStageServiceImpl productionStageService, TechnologicalMapServiceImpl technologicalMapService, TechnologicalMapMaterialsServiceImpl technologicalMapMaterialsService, GoodsGridLayoutForTechnologicalMap goodsGridLayout, NewGoodsDialog newGoodsDialog) {
+    public NewTechnologicalMapGridLayout(ProductionStageServiceImpl productionStageService, TechnologicalMapServiceImpl technologicalMapService, TechnologicalMapMaterialsServiceImpl technologicalMapMaterialsService, ProductServiceImpl productService, GoodsGridLayoutForTechnologicalMap goodsGridLayout, NewGoodsDialog newGoodsDialog) {
         this.productionStageService = productionStageService;
         this.technologicalMapService = technologicalMapService;
         this.technologicalMapMaterialsService = technologicalMapMaterialsService;
+        this.productService = productService;
         this.goodsGridLayout = goodsGridLayout;
         this.newGoodsDialog = newGoodsDialog;
         dialogMaterials = new Dialog();
         createDialogLayout(dialogMaterials);
         dialogMaterials.add(dialogLayout);
         dialogMaterials.setSizeFull();
-        selectedProductDto = new ArrayList<>();
+        selectedProductDto = null;
     }
 
     public void init() {
@@ -118,18 +120,10 @@ public class NewTechnologicalMapGridLayout extends VerticalLayout {
 
         Button chooseButton = new Button("Выбрать", buttonClickEvent -> {
             if (goodsGridLayout.getSelected() != null) {
-                selectedProductDto.add(goodsGridLayout.getSelected());
+                selectedProductDto = (goodsGridLayout.getSelected());
             }
-            if (!selectedProductDto.isEmpty()) {
+            if (selectedProductDto != null) {
                 if (newTechnologicalMapPanel != null) {
-                    //TODO убрать
-                    TechnologicalMapMaterialDto mapMaterialDto = TechnologicalMapMaterialDto.builder()
-                            .id(newTechnologicalMapPanel.getChildren().count() + 1L)
-                            .materialId(goodsGridLayout.getSelected().getId())
-                            .materialName(goodsGridLayout.getSelected().getName())
-                            .count(BigDecimal.ONE)
-                            .build();
-                    technologicalMapMaterialsService.create(mapMaterialDto);
                     newTechnologicalMapPanel.initMaterials();
                 }
                 init();
@@ -154,6 +148,16 @@ public class NewTechnologicalMapGridLayout extends VerticalLayout {
 
 
     public void clearSelectedProductDto() {
-        selectedProductDto.clear();
+        selectedProductDto = null;
     }
+
+//    public void SelectedProductDtoRemove(int index) {
+//        selectedProductDto = null;
+//    }
+
+//    public void setSelectedProductFromTechMap(List<TechnologicalMapMaterialDto> materials) {
+//        for (TechnologicalMapMaterialDto materialDto : materials) {
+//            selectedProductDto.add(productService.getById(materialDto.getId()));
+//        }
+//    }
 }

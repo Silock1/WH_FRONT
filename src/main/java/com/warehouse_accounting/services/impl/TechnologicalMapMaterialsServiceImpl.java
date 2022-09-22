@@ -44,7 +44,7 @@ public class TechnologicalMapMaterialsServiceImpl implements TechnologicalMapMat
 
     @Override
     public Long count() {
-        Call<Long> call = api.count();
+        Call<Long> call = api.count(url);
         return new ServiceUtils<>(Long.class).count(call);
     }
 

@@ -25,7 +25,7 @@ public interface TechnologicalMapMaterialsApi {
 
     @Headers("Accept: application/json")
     @GET("{url}/count")
-    Call<Long> count();
+    Call<Long> count(@Path(value = "url", encoded = true) String url);
 
     @Headers("Accept: application/json")
     @POST("{url}")
