@@ -1,0 +1,11 @@
+:host([theme~="dialog-notification"]) [part~="overlay"]
+{
+    align-self: flex-start;
+    position: absolute;
+    top: 85px;
+    right: 640px;
+    height: 120px;
+    width: 400px;
+    margin: 0px;
+    padding: 0px;
+}

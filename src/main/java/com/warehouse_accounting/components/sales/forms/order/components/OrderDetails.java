@@ -2,6 +2,7 @@ package com.warehouse_accounting.components.sales.forms.order.components;
 
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
@@ -14,6 +15,7 @@ import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 // Связанные дтошки InvoiceDto, InvoiceProductDto, ContractorDto, ProductDto, Companydto, AddressDto(нет её)
@@ -120,7 +122,8 @@ public class OrderDetails extends HorizontalLayout {
         DatePicker unloadDate = new DatePicker(LocalDate.now());
         unloadDate.addValueChangeListener(
                 event -> customerOrder.getContractDto().setContractDate(event.getValue() != null ? event.getValue() : LocalDate.now()));
-        unloadDate.setInitialPosition(LocalDate.now());
+//        unloadDate.setInitialPosition(LocalDate.now());
+        unloadDate.setValue(LocalDate.now());
 //                        invoice.setContractDate(event.getValue() != null ? event.getValue() : LocalDate.now()));
 //        unloadDate.setInitialPosition(LocalDate.now());
 

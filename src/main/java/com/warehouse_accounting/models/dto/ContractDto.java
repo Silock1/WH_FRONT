@@ -20,35 +20,46 @@ public class ContractDto {
 
     private LocalDate contractDate;
 
-    private CompanyDto companyDto;
+    private CompanyDto company;
 
-    private BankAccountDto bankAccountDto;
+//    private BankAccountDto bankAccountDto;
 
-    private ContractorDto contractorDto;
+    private ContractorDto contractor;
 
     private BigDecimal amount;
 
-    private BigDecimal paid;
+//    private BigDecimal paid;
+//
+//    private BigDecimal done;
+//
+//    private Boolean isSharedAccess;
+//
+//    private DepartmentDto ownerDepartment;
+//
+//    private EmployeeDto ownerEmployee;
 
-    private BigDecimal done;
-
-    private Boolean isSharedAccess;
-
-    private DepartmentDto ownerDepartment;
-
-    private EmployeeDto ownerEmployee;
-
-    private Boolean isSend;
-
-    private Boolean isPrint;
+//    private Boolean isSend;
+//
+//    private Boolean isPrint;
 
     private Boolean archive;
 
     private String comment;
 
-    private LocalDate whenChange;
+//    private LocalDate whenChange;
+//
+//    private EmployeeDto whoChange;
 
-    private EmployeeDto whoChange;
+    private LegalDetailDto legalDetail;
 
-    private LegalDetailDto legalDetailDto;
+    private String code;
+
+    private String typeOfContract;
+
+    private String reward;
+
+    private Integer percentageOfTheSaleAmount;
+
+    private Boolean enabled;
+
 }
