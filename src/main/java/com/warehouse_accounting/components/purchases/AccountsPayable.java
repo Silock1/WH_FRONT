@@ -97,7 +97,9 @@ public class AccountsPayable extends VerticalLayout {
         addOrderButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         addOrderButton.addClickListener(buttonClickEvent -> {
             removeAll();
-            add(new CreateInvoiceForm(parentLayer, supplierInvoiceGridLayout));
+            CreateInvoiceForm сreateInvoiceForm = new CreateInvoiceForm(parentLayer, supplierInvoiceGridLayout);
+            сreateInvoiceForm.setOnCloseHandler(() -> initPage());
+            add(сreateInvoiceForm);
         });
 
         Button addFilterButton = new Button("Фильтр");

@@ -185,13 +185,13 @@ public class CreateInvoiceForm extends VerticalLayout {
                 notification.setPosition(Notification.Position.BOTTOM_STRETCH);
             }
             parentLayer.removeAll();
-            parentLayer.add(returnLayer, supplierInvoiceGridLayout.initSupplierInvoiceGrid()); // здесь статика была
+            parentLayer.add(returnLayer, supplierInvoiceGridLayout); // здесь статика была
         });
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_SMALL);
 
         close = new Button("Закрыть", e -> {
-            parentLayer.removeAll();
-            parentLayer.add(returnLayer, supplierInvoiceGridLayout.initSupplierInvoiceGrid()); // здесь статика была
+//            parentLayer.removeAll();
+//            parentLayer.add(returnLayer, supplierInvoiceGridLayout.initSupplierInvoiceGrid()); // здесь статика была
         });
         close.addThemeVariants(ButtonVariant.LUMO_CONTRAST, ButtonVariant.LUMO_SMALL);
 

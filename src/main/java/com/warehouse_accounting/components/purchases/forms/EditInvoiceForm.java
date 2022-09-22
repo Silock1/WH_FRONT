@@ -232,13 +232,13 @@ public class EditInvoiceForm extends VerticalLayout {
                 notification.setPosition(Notification.Position.BOTTOM_STRETCH);
             }
             parentLayer.removeAll();
-            parentLayer.add(returnLayer, supplierInvoiceGridLayout.initSupplierInvoiceGrid()); // здесь была статика
+            parentLayer.add(returnLayer, supplierInvoiceGridLayout); // здесь была статика
         });
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS,ButtonVariant.LUMO_SMALL);
 
         Button close = new Button("Закрыть", e -> {
             parentLayer.removeAll();
-            parentLayer.add(returnLayer, supplierInvoiceGridLayout.initSupplierInvoiceGrid()); // здесь была статика
+            parentLayer.add(returnLayer, supplierInvoiceGridLayout); // здесь была статика
         });
         close.addThemeVariants(ButtonVariant.LUMO_CONTRAST,ButtonVariant.LUMO_SMALL);
 
