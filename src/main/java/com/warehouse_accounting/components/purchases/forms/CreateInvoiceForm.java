@@ -189,10 +189,7 @@ public class CreateInvoiceForm extends VerticalLayout {
         });
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_SMALL);
 
-        close = new Button("Закрыть", e -> {
-//            parentLayer.removeAll();
-//            parentLayer.add(returnLayer, supplierInvoiceGridLayout.initSupplierInvoiceGrid()); // здесь статика была
-        });
+        close = new Button("Закрыть", e -> {});
         close.addThemeVariants(ButtonVariant.LUMO_CONTRAST, ButtonVariant.LUMO_SMALL);
 
         MenuBar change = new MenuBar();
