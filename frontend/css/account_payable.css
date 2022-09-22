@@ -1,0 +1,10 @@
+
+
+:host([theme~="dialog-top-right"]) [part~="overlay"]
+{
+    align-self: flex-start;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    -moz-animation-direction: revert;
+}
