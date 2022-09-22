@@ -128,8 +128,9 @@ public class PurchasesSubMenuView extends VerticalLayout {
 
     private AccountsPayable initAccountsPayable(Div pageContent) {
         if (Objects.isNull(accountsPayable)) {
-            accountsPayable = new AccountsPayable(pageContent, accountsPayableFilter, statusService);
-        }
+            accountsPayable = new AccountsPayable(pageContent, accountsPayableFilter, statusService, warehouseService, contractService, contractorService,
+                    projectService, employeeService, departmentService,
+                    productService, companyService);        }
         return accountsPayable;
     }
 
