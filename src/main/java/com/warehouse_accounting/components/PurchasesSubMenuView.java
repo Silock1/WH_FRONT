@@ -8,6 +8,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.purchases.*;
 import com.warehouse_accounting.components.purchases.filter.AccountsPayableFilter;
+import com.warehouse_accounting.components.purchases.grids.IncomingVoices;
 import com.warehouse_accounting.services.interfaces.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -37,15 +38,22 @@ public class PurchasesSubMenuView extends VerticalLayout {
     private final ProductService productService;
     private final CompanyService companyService;
     private final InvoicesReceived invoicesReceived;
+    private final IncomingVoices incomingVoices;
+    private final IncomingVoicesService incomingVoicesService;
 
     private final AcceptanceService acceptanceService;
+    private StatusService statusService;
 
-    public PurchasesSubMenuView(WarehouseService warehouseService,
+    public PurchasesSubMenuView(WarehouseService warehouseService,IncomingVoicesService incomingVoicesService,
+                                IncomingVoices incomingVoices,
                                 ContractService contractService, ContractorService contractorService,
                                 ProjectService projectService, EmployeeService employeeService,
                                 DepartmentService departmentService, ProductService productService,
-                                CompanyService companyService, @Qualifier("invoicesReceived") InvoicesReceived invoicesReceived, AcceptanceService acceptanceService) {
+                                CompanyService companyService, @Qualifier("invoicesReceived") InvoicesReceived invoicesReceived,
+                                AcceptanceService acceptanceService, StatusService statusService) {
         this.warehouseService = warehouseService;
+        this.incomingVoices = incomingVoices;
+        this.incomingVoicesService = incomingVoicesService;
         this.contractService = contractService;
         this.contractorService = contractorService;
         this.projectService = projectService;
@@ -55,6 +63,7 @@ public class PurchasesSubMenuView extends VerticalLayout {
         this.companyService = companyService;
         this.invoicesReceived = invoicesReceived;
         this.acceptanceService = acceptanceService;
+        this.statusService = statusService;
         pageContent.setSizeFull();
         pageContent.add(initPurchasesOrders(pageContent));
         add(initSubMenu(), pageContent);
@@ -67,7 +76,8 @@ public class PurchasesSubMenuView extends VerticalLayout {
                 "Приемки",
                 "Возвраты поставщикам",
                 "Счета-фактуры полученные",
-                "Управление закупками");
+                "Управление закупками",
+                "Входящие накладные ЕГАИС");
         Tabs subMenuTabs = subMenuTabs(purchasesMenuItems);
 
         subMenuTabs.addSelectedChangeListener(event -> {
@@ -100,6 +110,10 @@ public class PurchasesSubMenuView extends VerticalLayout {
                     pageContent.removeAll();
                     pageContent.add(new Span("Управление закупками"));
                     break;
+                case "Входящие накладные ЕГАИС":
+                    pageContent.removeAll();
+                    pageContent.add((incomingVoices));
+                    break;
             }
         });
         return subMenuTabs;
@@ -114,7 +128,7 @@ public class PurchasesSubMenuView extends VerticalLayout {
 
     private AccountsPayable initAccountsPayable(Div pageContent) {
         if (Objects.isNull(accountsPayable)) {
-            accountsPayable = new AccountsPayable(pageContent, accountsPayableFilter);
+            accountsPayable = new AccountsPayable(pageContent, accountsPayableFilter, statusService);
         }
         return accountsPayable;
     }

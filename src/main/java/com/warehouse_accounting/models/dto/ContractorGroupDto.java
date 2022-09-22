@@ -15,4 +15,9 @@ public class ContractorGroupDto {
     private String name;
 
     private String sortNumber;
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

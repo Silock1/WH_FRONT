@@ -116,6 +116,12 @@
             <version>14.4.6</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.vk.api</groupId>
+            <artifactId>sdk</artifactId>
+            <version>1.0.14</version>
+        </dependency>
+
     </dependencies>
     <dependencyManagement>
         <dependencies>
