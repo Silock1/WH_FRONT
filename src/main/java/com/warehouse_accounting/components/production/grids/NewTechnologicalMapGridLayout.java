@@ -146,18 +146,7 @@ public class NewTechnologicalMapGridLayout extends VerticalLayout {
         dialogLayout = new VerticalLayout(divTollBar, gridDiv, buttonDiv);
     }
 
-
     public void clearSelectedProductDto() {
         selectedProductDto = null;
     }
-
-//    public void SelectedProductDtoRemove(int index) {
-//        selectedProductDto = null;
-//    }
-
-//    public void setSelectedProductFromTechMap(List<TechnologicalMapMaterialDto> materials) {
-//        for (TechnologicalMapMaterialDto materialDto : materials) {
-//            selectedProductDto.add(productService.getById(materialDto.getId()));
-//        }
-//    }
 }
