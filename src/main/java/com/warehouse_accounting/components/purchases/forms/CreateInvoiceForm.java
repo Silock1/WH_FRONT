@@ -29,6 +29,7 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.purchases.grids.SupplierInvoiceGridLayout;
+import com.warehouse_accounting.components.sales.forms.order.types.DocumentCloseHandler;
 import com.warehouse_accounting.models.dto.SupplierInvoiceDto;
 import com.warehouse_accounting.services.impl.SupplierInvoiceServiceImpl;
 import com.warehouse_accounting.services.interfaces.SupplierInvoiceService;
@@ -64,6 +65,7 @@ public class CreateInvoiceForm extends VerticalLayout {
     private Checkbox checkboxNDS; //Input c чек-бокса НДС
     private Checkbox checkboxOnNDS; //Input c чек-бокса Цена включает НДС
     private SupplierInvoiceGridLayout supplierInvoiceGridLayout = new SupplierInvoiceGridLayout();
+    private  Button close;
 
     public CreateInvoiceForm(Div parentLayer, Component returnLayer) {
         this.parentLayer = parentLayer;
@@ -183,14 +185,11 @@ public class CreateInvoiceForm extends VerticalLayout {
                 notification.setPosition(Notification.Position.BOTTOM_STRETCH);
             }
             parentLayer.removeAll();
-            parentLayer.add(returnLayer, supplierInvoiceGridLayout.initSupplierInvoiceGrid()); // здесь статика была
+            parentLayer.add(returnLayer, supplierInvoiceGridLayout); // здесь статика была
         });
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_SMALL);
 
-        Button close = new Button("Закрыть", e -> {
-            parentLayer.removeAll();
-            parentLayer.add(returnLayer, supplierInvoiceGridLayout.initSupplierInvoiceGrid()); // здесь статика была
-        });
+        close = new Button("Закрыть", e -> {});
         close.addThemeVariants(ButtonVariant.LUMO_CONTRAST, ButtonVariant.LUMO_SMALL);
 
         MenuBar change = new MenuBar();
@@ -472,5 +471,9 @@ public class CreateInvoiceForm extends VerticalLayout {
             space.add(new HorizontalLayout());
         }
         return space;
+    }
+
+    public void setOnCloseHandler(DocumentCloseHandler closeHandler) {
+        close.addClickListener(event -> closeHandler.close());
     }
 }

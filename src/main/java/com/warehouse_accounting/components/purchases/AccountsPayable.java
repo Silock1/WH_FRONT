@@ -20,7 +20,15 @@ import com.warehouse_accounting.components.purchases.filter.AccountsPayableFilte
 import com.warehouse_accounting.components.purchases.forms.CreateInvoiceForm;
 import com.warehouse_accounting.components.purchases.grids.SupplierInvoiceGridLayout;
 import com.warehouse_accounting.models.dto.StatusDto;
+import com.warehouse_accounting.services.interfaces.CompanyService;
+import com.warehouse_accounting.services.interfaces.ContractService;
+import com.warehouse_accounting.services.interfaces.ContractorService;
+import com.warehouse_accounting.services.interfaces.DepartmentService;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
+import com.warehouse_accounting.services.interfaces.ProductService;
+import com.warehouse_accounting.services.interfaces.ProjectService;
 import com.warehouse_accounting.services.interfaces.StatusService;
+import com.warehouse_accounting.services.interfaces.WarehouseService;
 
 
 /*
@@ -39,8 +47,14 @@ public class AccountsPayable extends VerticalLayout {
     private GridForStatus gridForStatus;
 
 
-    public AccountsPayable(Div parentLayer, AccountsPayableFilter filterLayout, StatusService statusService) {
-        this.filterLayout = filterLayout;
+    public AccountsPayable(Div parentLayer, AccountsPayableFilter filterLayout, StatusService statusService,
+                           WarehouseService warehouseService, ContractService contractService,
+                           ContractorService contractorService, ProjectService projectService,
+                           EmployeeService employeeService, DepartmentService departmentService,
+                           ProductService productService, CompanyService companyService) {
+        this.filterLayout = new AccountsPayableFilter(warehouseService, contractService, contractorService,
+                projectService, employeeService, departmentService,
+                productService, companyService);
         this.parentLayer = parentLayer;
         this.statusService = statusService;
         this.supplierInvoiceGridLayout = new SupplierInvoiceGridLayout();
@@ -48,8 +62,14 @@ public class AccountsPayable extends VerticalLayout {
 //        pageContent.add(supplierInvoiceGridLayout.settingButton);
 //        pageContent.add(supplierInvoiceGridLayout.initSupplierInvoiceGrid()); // здесь статика была
 //        pageContent.setSizeFull();
-        add(getGroupButtons());
-        add(supplierInvoiceGridLayout);
+        initPage();
+    }
+
+    private void initPage() {
+        removeAll();
+        supplierInvoiceGridLayout.setSizeFull();
+        add(getGroupButtons(), filterLayout, supplierInvoiceGridLayout);
+        filterLayout.setVisible(false);
     }
 
     private HorizontalLayout getGroupButtons() {
@@ -77,7 +97,9 @@ public class AccountsPayable extends VerticalLayout {
         addOrderButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         addOrderButton.addClickListener(buttonClickEvent -> {
             removeAll();
-            add(new CreateInvoiceForm(parentLayer, supplierInvoiceGridLayout));
+            CreateInvoiceForm сreateInvoiceForm = new CreateInvoiceForm(parentLayer, supplierInvoiceGridLayout);
+            сreateInvoiceForm.setOnCloseHandler(() -> initPage());
+            add(сreateInvoiceForm);
         });
 
         Button addFilterButton = new Button("Фильтр");
@@ -154,6 +176,9 @@ public class AccountsPayable extends VerticalLayout {
         }
         statusItem.getSubMenu().addItem("Настроить...", e -> {
             gridForStatus = new GridForStatus(statusService, getClass().getSimpleName());
+            gridForStatus.setOnCloseHandler(() -> {
+                initPage();
+            });
         });
 
         HorizontalLayout groupStatus = new HorizontalLayout();

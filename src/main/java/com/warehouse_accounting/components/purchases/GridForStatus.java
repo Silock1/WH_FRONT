@@ -22,6 +22,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.warehouse_accounting.components.sales.forms.order.types.DocumentCloseHandler;
 import com.warehouse_accounting.models.dto.StatusDto;
 import com.warehouse_accounting.services.impl.StatusServiceImpl;
 import com.warehouse_accounting.services.interfaces.StatusService;
@@ -44,6 +45,7 @@ public class GridForStatus extends Grid<StatusDto> {
     private String nameOfClass;
     private HorizontalLayout emptyFieldErrorLayout;
     private Dialog statusDialog;
+    private Button saveButton;
 
 
     public GridForStatus( StatusService statusService, String nameOfClass) {
@@ -70,7 +72,7 @@ public class GridForStatus extends Grid<StatusDto> {
         Button closeButton = new Button("Закрыть", new Icon(VaadinIcon.CLOSE_SMALL));
         closeButton.getStyle().set("background-color", "white").set("color", "grey").set("size", "22px").set("text-decoration", "underline");
         closeButton.setIconAfterText(true);
-        Button saveButton = new Button("Сохранить");
+        saveButton = new Button("Сохранить");
         saveButton.getStyle().set("background-color", "#aec612").set("color", "white").set("size", "22px");
         Button cancelButton = new Button("Отменить");
         cancelButton.getStyle().set("background-color", "#ededed").set("color", "black").set("size", "22px");
@@ -412,8 +414,6 @@ public class GridForStatus extends Grid<StatusDto> {
             statusDialog.close();
             saveGrid();
             cleanGrid();
-            UI.getCurrent().getPage().reload();
-
         }
     }
     private void cleanGrid() {
@@ -497,5 +497,9 @@ public class GridForStatus extends Grid<StatusDto> {
         removedStatusLineList.add(statusLine);
         statusLineList.remove(statusLine);
         this.refreshGrid();
+    }
+
+    public void setOnCloseHandler(DocumentCloseHandler closeHandler) {
+        saveButton.addClickListener(event -> closeHandler.close());
     }
 }
