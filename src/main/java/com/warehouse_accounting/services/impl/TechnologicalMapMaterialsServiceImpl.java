@@ -43,6 +43,12 @@ public class TechnologicalMapMaterialsServiceImpl implements TechnologicalMapMat
     }
 
     @Override
+    public Long count() {
+        Call<Long> call = api.count(url);
+        return new ServiceUtils<>(Long.class).count(call);
+    }
+
+    @Override
     public void create(TechnologicalMapMaterialDto dto) {
         Call<Void> call = api.create(url, dto);
         new ServiceUtils<>(TechnologicalMapMaterialDto.class).create(call);

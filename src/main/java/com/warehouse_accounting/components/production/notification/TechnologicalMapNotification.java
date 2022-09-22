@@ -34,7 +34,7 @@ public class TechnologicalMapNotification extends Notification {
                         "\n"),
                 new Div(new Text("Читать инструкцию: "), anchor1),
                 new Div(new Text("Видео: "), anchor2),
-                new Div(new Text("Видео:"), anchor3)
+                new Div(new Text("Видео: "), anchor3)
 
         );
         return closeBtn(text);

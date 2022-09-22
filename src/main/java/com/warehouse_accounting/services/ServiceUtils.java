@@ -93,6 +93,21 @@ public class ServiceUtils<T> {
         }
     }
 
+    public Long count(Call<T> call) {
+        Long dto = 0L;
+        try {
+            Response<T> response = call.execute();
+            if (response.isSuccessful()) {
+                dto = (Long) response.body();
+                log.info("Успешно выполнен запрос на получение {} ", getTypeName());
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на получение {}", response.code(), getTypeName());
+            }
+        } catch (Exception e) {
+            log.error("Произошла ошибка при выполнении запроса на получение {}", getTypeName(), e);
+        }
+        return dto;
+    }
     public List<T> getSlice(Call<List<T>> call, int offset, int limit, String name, String code) {
         List<T> list = Collections.emptyList();
         try {

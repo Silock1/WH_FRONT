@@ -31,5 +31,9 @@ public interface TechnologicalMapApi {
 
     @Headers("Accept: application/json")
     @DELETE("{url}/{id}")
+    Call<Void> deleteByIdPermanent(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
+
+    @Headers("Accept: application/json")
+    @DELETE("{url}/isDeleted/{id}")
     Call<Void> deleteById(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
 }

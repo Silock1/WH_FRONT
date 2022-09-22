@@ -19,6 +19,7 @@ public class TechnologicalMapDto {
     private String name;
     private String comment;
     private boolean isArchived = false;
+    private boolean isDeleted;
     private BigDecimal productionCost = BigDecimal.valueOf(0);
 
     private Long technologicalMapGroupId;

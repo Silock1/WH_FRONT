@@ -14,4 +14,6 @@ public interface TechnologicalMapService {
     void update(TechnologicalMapDto dto);
 
     void deleteById(Long id);
+
+    void deleteByIdPermanent(Long id);
 }
