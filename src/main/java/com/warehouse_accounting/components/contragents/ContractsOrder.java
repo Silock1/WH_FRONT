@@ -6,6 +6,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
@@ -17,25 +18,37 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.components.contragents.form.FormForContract;
 import com.warehouse_accounting.components.contragents.grids.ContractsFilterLayout;
-import com.warehouse_accounting.components.contragents.grids.ContractsGridLayot;
+import com.warehouse_accounting.components.contragents.grids.ContractsGridLayout;
+import com.warehouse_accounting.models.dto.ContractDto;
+import com.warehouse_accounting.services.interfaces.ContractService;
 
 @SpringComponent
 @UIScope
 public class ContractsOrder extends VerticalLayout {
 
-    private final ContractsGridLayot contractsGridLayot;
+    private final ContractsGridLayout contractsGridLayout;
+
     private final ContractsFilterLayout filterLayout;
 
-    private HorizontalLayout buttons;
+    private final FormForContract formForContract;
 
-    public ContractsOrder(ContractsGridLayot contractsGridLayot, ContractsFilterLayout filterLayout) {
-        this.contractsGridLayot = contractsGridLayot;
+    private final HorizontalLayout buttons;
+
+    private final transient ContractService contractService;
+
+    public ContractsOrder(ContractsGridLayout contractsGridLayout, ContractsFilterLayout filterLayout,
+                          FormForContract formForContract, ContractService contractService) {
+        this.formForContract = formForContract;
+        this.contractsGridLayout = contractsGridLayout;
         this.filterLayout = filterLayout;
+        this.contractService = contractService;
         this.buttons = getGroupButton();
-        this.contractsGridLayot.setParent(this);
+        this.formForContract.setParent(this);
+        this.contractsGridLayout.setParent(this);
 
-        add(buttons, filterLayout, contractsGridLayot);
+        add(buttons, filterLayout, contractsGridLayout);
     }
 
     private HorizontalLayout getGroupButton() {
@@ -50,30 +63,28 @@ public class ContractsOrder extends VerticalLayout {
                 "\n" +
                 "Читать инструкцию: Договоры", 3000, Notification.Position.MIDDLE));
 
-        Text contracts = new Text("Договоры");
+        Span contracts = new Span("Договоры");
+        contracts.setClassName("pageTitle");
 
         Icon refresh = new Icon(VaadinIcon.REFRESH);
         refresh.setColor("silver");
         Button refreshButton = new Button(refresh);
         refreshButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        refreshButton.addClickListener(click -> {
-            contractsGridLayot.refreshDate();
-        });
+        refreshButton.addClickListener(click -> contractsGridLayout.refreshDate());
 
         Image image = new Image("icons/plus.png", "Plus");
         image.setWidth("15px");
         Button contract = new Button("Договор", image);
+        contract.addClickListener(e -> {
+            hideButtonEndGrid();
+            formForContract.build();
+            add(formForContract);
+        });
         contract.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 
-        Button filter = new Button("Фильтр");
+        Button filter = new Button("Фильтр"); // todo: ещё не сделано
         filter.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        filter.addClickListener(e -> {
-            if (filterLayout.isVisible()) {
-                filterLayout.setVisible(false);
-            } else {
-                filterLayout.setVisible(true);
-            }
-        });
+        filter.addClickListener(e -> filterLayout.setVisible(!filterLayout.isVisible()));
 
         TextField textField = new TextField();
         textField.setPlaceholder("Номер или комментарий");
@@ -138,14 +149,20 @@ public class ContractsOrder extends VerticalLayout {
     public void showButtonEndGrid(Boolean refreshGrid) {
         buttons.setVisible(true);
         if (refreshGrid) {
-            contractsGridLayot.refreshDate();
+            contractsGridLayout.refreshDate();
         }
-        contractsGridLayot.setVisible(true);
+        contractsGridLayout.setVisible(true);
     }
 
     public void hideButtonEndGrid() {
         buttons.setVisible(false);
-        contractsGridLayot.setVisible(false);
-        contractsGridLayot.setVisible(false);
+        contractsGridLayout.setVisible(false);
+        contractsGridLayout.setVisible(false);
+    }
+
+    public void editFormActivate(ContractDto contractDto) {
+        formForContract.build(contractService.getById(contractDto.getId()));
+        hideButtonEndGrid();
+        add(formForContract);
     }
 }

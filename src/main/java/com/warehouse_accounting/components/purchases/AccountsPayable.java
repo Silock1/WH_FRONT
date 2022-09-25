@@ -4,6 +4,7 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
@@ -15,12 +16,10 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.purchases.filter.AccountsPayableFilter;
 import com.warehouse_accounting.components.purchases.forms.CreateInvoiceForm;
 import com.warehouse_accounting.components.purchases.grids.SupplierInvoiceGridLayout;
-import com.warehouse_accounting.components.tasks.filter.TasksFilter;
+import com.warehouse_accounting.models.dto.StatusDto;
 import com.warehouse_accounting.services.interfaces.CompanyService;
 import com.warehouse_accounting.services.interfaces.ContractService;
 import com.warehouse_accounting.services.interfaces.ContractorService;
@@ -28,12 +27,15 @@ import com.warehouse_accounting.services.interfaces.DepartmentService;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.ProductService;
 import com.warehouse_accounting.services.interfaces.ProjectService;
+import com.warehouse_accounting.services.interfaces.StatusService;
 import com.warehouse_accounting.services.interfaces.WarehouseService;
-import org.springframework.beans.factory.annotation.Autowired;
+
 
 /*
 Счета поставщиков
  */
+
+@CssImport(value = "./css/account_payable.css", themeFor = "vaadin-*-overlay")
 public class AccountsPayable extends VerticalLayout {
 
     private SupplierInvoiceGridLayout supplierInvoiceGridLayout;
@@ -41,19 +43,33 @@ public class AccountsPayable extends VerticalLayout {
     private final TextField textField = new TextField();
     private final Div parentLayer;
 
+    private StatusService statusService;
+    private GridForStatus gridForStatus;
 
 
-
-    public AccountsPayable(Div parentLayer, AccountsPayableFilter filterLayout) {
-        this.filterLayout = filterLayout;
+    public AccountsPayable(Div parentLayer, AccountsPayableFilter filterLayout, StatusService statusService,
+                           WarehouseService warehouseService, ContractService contractService,
+                           ContractorService contractorService, ProjectService projectService,
+                           EmployeeService employeeService, DepartmentService departmentService,
+                           ProductService productService, CompanyService companyService) {
+        this.filterLayout = new AccountsPayableFilter(warehouseService, contractService, contractorService,
+                projectService, employeeService, departmentService,
+                productService, companyService);
         this.parentLayer = parentLayer;
+        this.statusService = statusService;
         this.supplierInvoiceGridLayout = new SupplierInvoiceGridLayout();
 //        Div pageContent = new Div();
 //        pageContent.add(supplierInvoiceGridLayout.settingButton);
 //        pageContent.add(supplierInvoiceGridLayout.initSupplierInvoiceGrid()); // здесь статика была
 //        pageContent.setSizeFull();
-        add(getGroupButtons());
-        add(supplierInvoiceGridLayout);
+        initPage();
+    }
+
+    private void initPage() {
+        removeAll();
+        supplierInvoiceGridLayout.setSizeFull();
+        add(getGroupButtons(), filterLayout, supplierInvoiceGridLayout);
+        filterLayout.setVisible(false);
     }
 
     private HorizontalLayout getGroupButtons() {
@@ -81,7 +97,9 @@ public class AccountsPayable extends VerticalLayout {
         addOrderButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         addOrderButton.addClickListener(buttonClickEvent -> {
             removeAll();
-            add(new CreateInvoiceForm(parentLayer, supplierInvoiceGridLayout));
+            CreateInvoiceForm сreateInvoiceForm = new CreateInvoiceForm(parentLayer, supplierInvoiceGridLayout);
+            сreateInvoiceForm.setOnCloseHandler(() -> initPage());
+            add(сreateInvoiceForm);
         });
 
         Button addFilterButton = new Button("Фильтр");
@@ -149,9 +167,20 @@ public class AccountsPayable extends VerticalLayout {
         horizontalLayout.setAlignItems(Alignment.CENTER);
 
         MenuItem statusItem = statusMenuBar.addItem(horizontalLayout);
+        for (StatusDto st : statusService.getAllByNameOfClass(getClass().getSimpleName())) {
+            Icon icon = new Icon(VaadinIcon.STOP);
+            icon.getStyle().set("color", st.getColorCode());
+            icon.setSize("20px");
+            statusItem.getSubMenu().addItem(new HorizontalLayout(icon, new Label(st.getTitleOfStatus())), e -> {
+            }).setEnabled(false);
+        }
         statusItem.getSubMenu().addItem("Настроить...", e -> {
-
+            gridForStatus = new GridForStatus(statusService, getClass().getSimpleName());
+            gridForStatus.setOnCloseHandler(() -> {
+                initPage();
+            });
         });
+
         HorizontalLayout groupStatus = new HorizontalLayout();
         groupStatus.add(statusMenuBar);
         groupStatus.setSpacing(false);

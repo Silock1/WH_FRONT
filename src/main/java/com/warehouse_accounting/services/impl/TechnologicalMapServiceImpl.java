@@ -54,4 +54,10 @@ public class TechnologicalMapServiceImpl implements TechnologicalMapService {
         Call<Void> call = api.deleteById(url, id);
         new ServiceUtils<>(TechnologicalMapDto.class).delete(call);
     }
+
+    @Override
+    public void deleteByIdPermanent(Long id) {
+        Call<Void> call = api.deleteByIdPermanent(url, id);
+        new ServiceUtils<>(TechnologicalMapDto.class).delete(call);
+    }
 }

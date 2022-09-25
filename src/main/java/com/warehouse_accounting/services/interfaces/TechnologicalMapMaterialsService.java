@@ -15,4 +15,6 @@ public interface TechnologicalMapMaterialsService {
     void update(TechnologicalMapMaterialDto dto);
 
     void deleteById(Long id);
+
+    Long count();
 }

@@ -24,6 +24,10 @@ public interface TechnologicalMapMaterialsApi {
     Call<TechnologicalMapMaterialDto> getById(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
 
     @Headers("Accept: application/json")
+    @GET("{url}/count")
+    Call<Long> count(@Path(value = "url", encoded = true) String url);
+
+    @Headers("Accept: application/json")
     @POST("{url}")
     Call<Void> create(@Path(value = "url", encoded = true) String url, @Body TechnologicalMapMaterialDto technologicalMapMaterialDto);
 

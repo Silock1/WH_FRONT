@@ -44,12 +44,11 @@ public class SupplierInvoiceGridLayout extends HorizontalLayout {
     Grid<SupplierInvoiceDto> supplierInvoiceDtoGrid = new Grid<>(SupplierInvoiceDto.class, false);
 
     public SupplierInvoiceGridLayout() {
-        add(initSupplierInvoiceGrid(), settingButton);
         setSizeFull();
-//        initSupplierInvoiceGrid();
+        initSupplierInvoiceGrid();
     }
 
-    public Grid<SupplierInvoiceDto> initSupplierInvoiceGrid(){
+    public void initSupplierInvoiceGrid(){
 
 //        Grid<SupplierInvoiceDto> supplierInvoiceDtoGrid = new Grid<>(SupplierInvoiceDto.class, false);
 
@@ -119,7 +118,7 @@ public class SupplierInvoiceGridLayout extends HorizontalLayout {
             }
         });
 
-        return supplierInvoiceDtoGrid;
+        add(supplierInvoiceDtoGrid,settingButton);
     }
 
     private void editEndSave(SupplierInvoiceService supplierInvoiceService,SupplierInvoiceDto person){

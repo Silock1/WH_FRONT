@@ -42,13 +42,15 @@ public class PurchasesSubMenuView extends VerticalLayout {
     private final IncomingVoicesService incomingVoicesService;
 
     private final AcceptanceService acceptanceService;
+    private StatusService statusService;
 
     public PurchasesSubMenuView(WarehouseService warehouseService,IncomingVoicesService incomingVoicesService,
                                 IncomingVoices incomingVoices,
                                 ContractService contractService, ContractorService contractorService,
                                 ProjectService projectService, EmployeeService employeeService,
                                 DepartmentService departmentService, ProductService productService,
-                                CompanyService companyService, @Qualifier("invoicesReceived") InvoicesReceived invoicesReceived, AcceptanceService acceptanceService) {
+                                CompanyService companyService, @Qualifier("invoicesReceived") InvoicesReceived invoicesReceived,
+                                AcceptanceService acceptanceService, StatusService statusService) {
         this.warehouseService = warehouseService;
         this.incomingVoices = incomingVoices;
         this.incomingVoicesService = incomingVoicesService;
@@ -61,6 +63,7 @@ public class PurchasesSubMenuView extends VerticalLayout {
         this.companyService = companyService;
         this.invoicesReceived = invoicesReceived;
         this.acceptanceService = acceptanceService;
+        this.statusService = statusService;
         pageContent.setSizeFull();
         pageContent.add(initPurchasesOrders(pageContent));
         add(initSubMenu(), pageContent);
@@ -125,8 +128,9 @@ public class PurchasesSubMenuView extends VerticalLayout {
 
     private AccountsPayable initAccountsPayable(Div pageContent) {
         if (Objects.isNull(accountsPayable)) {
-            accountsPayable = new AccountsPayable(pageContent, accountsPayableFilter);
-        }
+            accountsPayable = new AccountsPayable(pageContent, accountsPayableFilter, statusService, warehouseService, contractService, contractorService,
+                    projectService, employeeService, departmentService,
+                    productService, companyService);        }
         return accountsPayable;
     }
 
