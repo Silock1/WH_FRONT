@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,8 @@ public class DocumentDto {
     private String type;
 
     private String docNumber;
+
+    private LocalDateTime date;
 
     private BigDecimal sum;
 
@@ -58,10 +61,14 @@ public class DocumentDto {
 
     private String comments;
 
+    private LocalDateTime updateAt;
+
     private Long updatedFromEmployeeId;
     private String updatedFromEmployeeFirstname;
 
     private List<TaskDto> tasks = new ArrayList<>();
 
     private List<FileDto> files = new ArrayList<>();
+
+    private List<ProductDto> products = new ArrayList<>();
 }

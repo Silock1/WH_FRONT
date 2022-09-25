@@ -6,6 +6,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.warehouse_accounting.components.address.AddressForm;
 import com.warehouse_accounting.components.sales.ComissionerReports;
 import com.warehouse_accounting.components.sales.CustomerGoodsToRealize;
 import com.warehouse_accounting.components.sales.CustomerInvoices;
@@ -51,10 +52,10 @@ public class SalesSubMenuView extends VerticalLayout {
     private DepartmentService departmentService;
     private EmployeeService employeeService;
     private final ProductService productService;
-//    private final InvoiceService invoiceService;
     private final CustomerOrderService customerOrderService;
-
     private final SalesChannelsService channelsService;
+    private final AddressForm addressForm;
+    private final AddressService addressService;
 
     public SalesSubMenuView(SalesShipmentsFilter salesShipmentsFilter,
                             CustomerOrdersFilter customerOrdersFilter, GoodsToRealizeGiveService goodsToRealizeGiveService,
@@ -62,7 +63,8 @@ public class SalesSubMenuView extends VerticalLayout {
                             ContractorService contractorService, ContractService contractService, ProjectService projectService,
                             WarehouseService warehouseService, DepartmentService departmentService, EmployeeService employeeService,
                             GoodsToRealizeFilter filterLayout, GoodsToRealizeFilter goodsToRealizeFilter,
-                            ProductService productService, CustomerOrderService customerOrderService, SalesChannelsService channelsService) {
+                            ProductService productService, CustomerOrderService customerOrderService, SalesChannelsService channelsService,
+                            AddressForm addressForm, AddressService addressService) {
         this.goodsToRealizeFilter = goodsToRealizeFilter;
         this.customerOrdersFilter = customerOrdersFilter;
         this.companyService = companyService;
@@ -76,6 +78,8 @@ public class SalesSubMenuView extends VerticalLayout {
         this.productService = productService;
         this.customerOrderService = customerOrderService;
         this.channelsService = channelsService;
+        this.addressForm = addressForm;
+        this.addressService = addressService;
 
         pageContent.setSizeFull();
         this.goodsToRealizeGetService = goodsToRealizeGetService;
@@ -147,7 +151,8 @@ public class SalesSubMenuView extends VerticalLayout {
     private CustomerOrders initCustomerOrders(Div pageContent){
         if (Objects.isNull(customerOrders)) {
             customerOrders = new CustomerOrders(pageContent, companyService, contractorService, contractService,
-                    projectService, warehouseService, employeeService, departmentService, productService, customerOrderService, channelsService);
+                    projectService, warehouseService, employeeService, departmentService, productService, customerOrderService,
+                    channelsService, addressForm, addressService);
         }
         return customerOrders;
     }

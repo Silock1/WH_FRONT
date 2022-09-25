@@ -15,6 +15,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.warehouse_accounting.components.address.AddressForm;
 import com.warehouse_accounting.components.sales.filter.CustomerOrdersFilter;
 import com.warehouse_accounting.components.sales.forms.order.OrderPanel;
 import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
@@ -32,19 +33,20 @@ public class CustomerOrders extends VerticalLayout {
     private EmployeeService employeeService;
     private DepartmentService departmentService;
     private final ProductService productService;
-//    private final InvoiceService invoiceService;
     private final CustomerOrderService customerOrderService;
     private final Div parentLayer;
     private final CustomerOrdersFilter customerOrdersFilter;
     private final SalesGridLayout salesGridLayout;
     private final TextField textFieldGridSelected = new TextField();
-
     private final SalesChannelsService channelsService;
+    private final AddressForm addressForm;
+    private final AddressService addressService;
 
     public CustomerOrders(Div parentLayer, CompanyService companyService, ContractorService contractorService,
                           ContractService contractService, ProjectService projectService, WarehouseService warehouseService,
                           EmployeeService employeeService, DepartmentService departmentService, ProductService productService,
-                          CustomerOrderService customerOrderService, SalesChannelsService channelsService) {
+                          CustomerOrderService customerOrderService, SalesChannelsService channelsService, AddressForm addressForm,
+                          AddressService addressService) {
         this.parentLayer = parentLayer;
         this.companyService = companyService;
         this.contractorService = contractorService;
@@ -56,6 +58,8 @@ public class CustomerOrders extends VerticalLayout {
         this.productService = productService;
         this.customerOrderService = customerOrderService;
         this.channelsService = channelsService;
+        this.addressForm = addressForm;
+        this.addressService = addressService;
 
         customerOrdersFilter = new CustomerOrdersFilter(companyService, contractorService, contractService,
                 projectService, warehouseService, employeeService, departmentService);
@@ -87,7 +91,7 @@ public class CustomerOrders extends VerticalLayout {
         addOrderButton.addClickListener(event -> {
             removeAll();
             OrderPanel orderPanel = new OrderPanel(companyService, contractorService, productService, warehouseService,
-                    contractService, projectService, customerOrderService, channelsService);
+                    contractService, projectService, customerOrderService, channelsService, addressForm, addressService);
             orderPanel.setOnCloseHandler(() -> initPage());
             add(orderPanel);
         });

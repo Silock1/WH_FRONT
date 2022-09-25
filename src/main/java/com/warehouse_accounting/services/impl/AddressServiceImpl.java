@@ -53,4 +53,11 @@ public class AddressServiceImpl implements AddressService {
         Call<Void> call = api.deleteById(url, id);
         new ServiceUtils<>(AddressDto.class).delete(call);
     }
+
+    @Override
+    public AddressDto getByFullAddress(String fullAddress) {
+        Call<AddressDto> call = api.getByFullAddress(url, fullAddress);
+        return new ServiceUtils<>(AddressDto.class).getByFullAddress(call, fullAddress);
+    }
+
 }

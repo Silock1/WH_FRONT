@@ -26,12 +26,12 @@ public class OrderHeader extends HorizontalLayout {
         Label invoiceLabel = new Label("Заказ покупателя №");
 
         TextField orderNumber = new TextField();
-        orderNumber.addValueChangeListener(x -> customerOrder.setNumber(x.getValue()));
+        orderNumber.addValueChangeListener(x -> customerOrder.setDocNumber(x.getValue()));
 
         Label fromLabel = new Label(" от ");
 
-        DateTimePicker invoiceDate = new DateTimePicker(LocalDateTime.now());
-        invoiceDate.addValueChangeListener(event -> customerOrder.setInvoiceDateTime(event.getValue()));
+        DateTimePicker customerOrderDate = new DateTimePicker(LocalDateTime.now());
+//        customerOrderDate.addValueChangeListener(event -> customerOrder.setDate(event.getValue()));
 
         Icon pendingIcon = new Icon(VaadinIcon.CLOCK);
         Span pending = new Span(pendingIcon, new Span("Не оплачено"));
@@ -46,12 +46,12 @@ public class OrderHeader extends HorizontalLayout {
 
         CheckboxWithHelper isCompleted = new CheckboxWithHelper("Проведено", "Непроведённый документ - это черновик. Он не учитывается в отчетах.");
         isCompleted.setValue(true);
-        isCompleted.addValueChangeListener(event -> customerOrder.setPosted(event.getValue()));
+        isCompleted.addValueChangeListener(event -> customerOrder.setIsPosted(event.getValue()));
 
         CheckboxWithHelper isReserved = new CheckboxWithHelper("Резерв");
         isReserved.addValueChangeListener(event -> Notification.show("Not implemented"));
 
-        add(invoiceLabel, orderNumber, fromLabel, invoiceDate, pending, payRequest, marker, isCompleted, isReserved);
+        add(invoiceLabel, orderNumber, fromLabel, customerOrderDate, pending, payRequest, marker, isCompleted, isReserved);
     }
 
     public CustomerOrderDto getInvoice() {

@@ -52,15 +52,15 @@ public class SalesGridLayout extends HorizontalLayout {
 
     private HashMap<String, String> getVisibleColumn() {
         HashMap<String, String> fieldNameColumnName = new LinkedHashMap<>();
-        fieldNameColumnName.put("id", "Id");
-        fieldNameColumnName.put("date", "Дата");
-        fieldNameColumnName.put("warehouseDto", "Склад");
-        fieldNameColumnName.put("contractDto", "Контракт");
-        fieldNameColumnName.put("companyDto", "Компания");
-        fieldNameColumnName.put("contractorDto", "Контрагент");
+        fieldNameColumnName.put("docNumber", "№");
+        fieldNameColumnName.put("date", "Время");
+        fieldNameColumnName.put("contrAgentName", "Контрагент");
+        fieldNameColumnName.put("companyName", "Организация");
         fieldNameColumnName.put("sum", "Сумма");
-        fieldNameColumnName.put("comment", "Комментарий");
-        fieldNameColumnName.put("isPaid", "Продано");
+        fieldNameColumnName.put("isPaid", "Оплачено");
+        fieldNameColumnName.put("warehouseFromName", "Со склада");
+        fieldNameColumnName.put("deliveryAddressFull", "Адрес доставки");
+        fieldNameColumnName.put("comments", "Комментарий");
         return fieldNameColumnName;
     }
 }

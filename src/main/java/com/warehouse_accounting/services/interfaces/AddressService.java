@@ -15,4 +15,6 @@ public interface AddressService {
     void update(AddressDto addressDto);
 
     void deleteById(Long id);
+
+    AddressDto getByFullAddress(String fullAddress);
 }
