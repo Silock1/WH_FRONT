@@ -177,4 +177,20 @@ public class ServiceUtils<T> {
         }
         return dto;
     }
+
+    public T getByFullAddress(Call<T> call, String fullAddress) {
+        T dto = null;
+        try {
+            Response<T> response = call.execute();
+            if (response.isSuccessful()) {
+                dto = response.body();
+                log.info("Успешно выполнен запрос на получение {} по id: {}", getTypeName(), fullAddress);
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на получение {} по адресу {}", response.code(), getTypeName(), fullAddress);
+            }
+        } catch (Exception e) {
+            log.error("Произошла ошибка при выполнении запроса на получение {} по id", getTypeName(), e);
+        }
+        return dto;
+    }
 }

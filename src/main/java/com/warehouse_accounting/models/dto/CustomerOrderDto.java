@@ -1,5 +1,7 @@
 package com.warehouse_accounting.models.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.warehouse_accounting.components.util.DateConvertor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +23,7 @@ import static lombok.AccessLevel.PRIVATE;
 @FieldDefaults(level = PRIVATE)
 public class CustomerOrderDto {
 
-    Long id;
+/*    Long id;
 
     LocalDateTime date;
 //    new
@@ -70,5 +73,70 @@ public class CustomerOrderDto {
         this.sum = sum;
         this.comment = comment;
         this.isPaid = isPaid;
-    }
+    }*/
+
+    private Long id;
+
+    private String type;
+
+    private String docNumber;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateConvertor.dateTimePattern)
+    private LocalDateTime date;
+
+    private BigDecimal sum;
+
+    private Long warehouseFromId;
+    private String warehouseFromName;
+
+    private Long companyId;
+    private String companyName;
+
+    private Long contrAgentId;
+    private String contrAgentName;
+
+    private Long projectId;
+    private String projectName;
+
+    private Long salesChannelId;
+    private String salesChannelName;
+
+    private Long contractId;
+    private String contractNumber;
+
+    private Boolean isSharedAccess;
+
+//    private Long departmentId;
+//    private String departmentName;
+
+//    private Long employeeId;
+//    private String employeeFirstname;
+
+    private Boolean sent;
+
+    private Boolean print;
+
+    private String comments;
+
+    private LocalDateTime updatedAt;
+
+//    private Long updatedFromEmployeeId;
+//    private String updatedFromEmployeeFirstname;
+
+    private List<TaskDto> tasks = new ArrayList<>();
+
+    private List<FileDto> files = new ArrayList<>();
+
+    private List<ProductDto> products = new ArrayList<>();
+
+    private List<InvoiceProductDto> productDtos = new ArrayList<>();
+
+    private Boolean isPaid;
+
+    private Long deliveryAddressId;
+    private String deliveryAddressFull;
+
+    private LocalDate plannedShipmentDate;
+
+    private Boolean isPosted;
 }

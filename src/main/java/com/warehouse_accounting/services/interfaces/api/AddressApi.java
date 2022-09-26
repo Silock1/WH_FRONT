@@ -1,6 +1,7 @@
 package com.warehouse_accounting.services.interfaces.api;
 
 import com.warehouse_accounting.models.dto.AddressDto;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -33,4 +34,8 @@ public interface AddressApi {
     @Headers("Accept: application/json")
     @DELETE("{url}/{id}")
     Call<Void> deleteById(@Path(value = "url", encoded = true) String url, @Path("id") Long id);
+
+    @Headers("Accept: application/json")
+    @GET("{url}/fulladdress/{fulladdress}")
+    Call<AddressDto> getByFullAddress(@Path(value = "url", encoded = true) String url, @Path("fulladdress") String fullAddress);
 }

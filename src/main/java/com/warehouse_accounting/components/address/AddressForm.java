@@ -1,7 +1,10 @@
 package com.warehouse_accounting.components.address;
 
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.DataProvider;
@@ -37,7 +40,7 @@ public class AddressForm {
 
     private final TextArea fullAddressTextArea;
     private final String postCodeLabel;
-    private final TextArea postCodeTextArea;
+    private final TextField postCodeTextField;
     private final String countryLabel;
     private final ComboBox<CountryDto> countryComboBox;
     private final String regionLabel;
@@ -53,7 +56,10 @@ public class AddressForm {
     private final String otherLabel;
     private final TextField otherTextField;
     private final String commentLabel;
-    private final TextField commentTextField;
+    private final TextArea commentTextArea;
+
+    // кнопочка развёртывания адреса
+    private final Button btnExpandAddress;
 
     public AddressForm(
             CountryService countryService,
@@ -73,7 +79,7 @@ public class AddressForm {
         fullAddressTextArea.getStyle().set("overflow", "auto");
 
         postCodeLabel = "Индекс";
-        postCodeTextArea = new TextArea();
+        postCodeTextField = new TextField();
 
         countryLabel = "Страна";
         countryComboBox = new ComboBox<>();
@@ -112,11 +118,14 @@ public class AddressForm {
         otherTextField = new TextField();
 
         commentLabel = "Комментарий к адресу";
-        commentTextField = new TextField();
-        commentTextField.getStyle().set("resize", "both");
-        commentTextField.getStyle().set("overflow", "auto");
+        commentTextArea = new TextArea();
+        commentTextArea.getStyle().set("resize", "both");
+        commentTextArea.getStyle().set("overflow", "auto");
 
-        postCodeTextArea.addValueChangeListener(e -> {
+        btnExpandAddress = new Button(new Icon(VaadinIcon.CHEVRON_DOWN));
+
+
+        postCodeTextField.addValueChangeListener(e -> {
             generateFullName();
         });
 
@@ -154,6 +163,9 @@ public class AddressForm {
 
     public FormLayout getNewForm(String title) {
         FormLayout form = new FormLayout();
+        form.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("0", 1)
+        );
         fillForm(title, form);
         return form;
     }
@@ -163,23 +175,34 @@ public class AddressForm {
     }
 
     private void fillForm(String title, FormLayout form) {
-        form.addFormItem(fullAddressTextArea, title);
-        form.addFormItem(postCodeTextArea, postCodeLabel);
-        form.addFormItem(countryComboBox, countryLabel);
-        form.addFormItem(regionComboBox, regionLabel);
-        form.addFormItem(cityComboBox, cityLabel);
-        form.addFormItem(streetComboBox, streetLabel);
-        form.addFormItem(buildingComboBox, buildingLabel);
-        form.addFormItem(officeTextField, officeLabel);
-        form.addFormItem(otherTextField, otherLabel);
-        form.addFormItem(commentTextField, commentLabel);
+        FormLayout fullAddressForm = new FormLayout();
+        fullAddressForm.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1));
+        form.addFormItem(fullAddressTextArea, title).add(btnExpandAddress);
+        form.addFormItem(commentTextArea, commentLabel);
+        form.add(fullAddressForm);
+        btnExpandAddress.addClickListener(buttonClickEvent -> {
+            if (btnExpandAddress.getIcon().getElement().getAttribute("icon").equals("vaadin:chevron-down")) {
+                btnExpandAddress.setIcon(new Icon(VaadinIcon.CHEVRON_UP));
+                fullAddressForm.addFormItem(postCodeTextField, postCodeLabel);
+                fullAddressForm.addFormItem(countryComboBox, countryLabel);
+                fullAddressForm.addFormItem(regionComboBox, regionLabel);
+                fullAddressForm.addFormItem(cityComboBox, cityLabel);
+                fullAddressForm.addFormItem(streetComboBox, streetLabel);
+                fullAddressForm.addFormItem(buildingComboBox, buildingLabel);
+                fullAddressForm.addFormItem(officeTextField, officeLabel);
+                fullAddressForm.addFormItem(otherTextField, otherLabel);
+            } else {
+                btnExpandAddress.setIcon(new Icon(VaadinIcon.CHEVRON_DOWN));
+                fullAddressForm.removeAll();
+            }
+        });
     }
 
     public AddressDto getValue() {
         return AddressDto.builder()
                 .id(id)
                 .countryId((countryComboBox.getValue() == null) ? null : countryComboBox.getValue().getId())
-                .postCode(postCodeTextArea.getValue())
+                .postCode(postCodeTextField.getValue())
                 .regionId((regionComboBox.getValue() == null) ? null : regionComboBox.getValue().getId())
                 .cityId((cityComboBox.getValue() == null) ? null : cityComboBox.getValue().getId())
                 .cityName(cityName)
@@ -190,7 +213,7 @@ public class AddressForm {
                 .office(officeTextField.getValue())
                 .fullAddress(fullAddressTextArea.getValue())
                 .other(otherTextField.getValue())
-                .comment(commentTextField.getValue())
+                .comment(commentTextArea.getValue())
                 .build();
     }
 
@@ -201,7 +224,7 @@ public class AddressForm {
 
         id = model.getId();
 
-        postCodeTextArea.setValue(model.getPostCode());
+        if (model.getPostCode() != null) postCodeTextField.setValue(model.getPostCode());
 
         if (model.getCountryId() != null) {
             countryComboBox.setValue(this.countryService.getById(model.getCountryId()));
@@ -215,42 +238,42 @@ public class AddressForm {
         CityDto city;
         if (model.getCityId() != null) {
             city = this.cityService.getById(model.getCityId());
-        } else {
+            cityName = model.getCityName();
+            cityComboBox.setValue(city);
+        } /*else {
             city = CityDto.builder().name(model.getCityName()).build();
-        }
-        cityName = model.getCityName();
-        cityComboBox.setValue(city);
+        }*/
 
         StreetDto street;
         if (model.getStreetId() != null) {
             street = this.streetService.getById(model.getStreetId());
-        } else {
+            streetName = model.getStreetName();
+            streetComboBox.setValue(street);
+        }/* else {
             street = StreetDto.builder().name(model.getStreetName()).build();
-        }
-        streetName = model.getStreetName();
-        streetComboBox.setValue(street);
+        }*/
 
         BuildingDto building;
         if (model.getBuildingId() != null) {
             building = this.buildingService.getById(model.getBuildingId());
-        } else {
+            buildingName = model.getBuildingName();
+            buildingComboBox.setValue(building);
+        }/* else {
             building = BuildingDto.builder().name(model.getBuildingName()).build();
-        }
-        buildingName = model.getBuildingName();
-        buildingComboBox.setValue(building);
+        }*/
 
-        officeTextField.setValue(model.getOffice());
+        if (model.getOffice() != null) officeTextField.setValue(model.getOffice());
 
-        otherTextField.setValue(model.getOther());
+        if (model.getOther() != null) otherTextField.setValue(model.getOther());
 
-        commentTextField.setValue(model.getComment());
+        if (model.getComment() != null) commentTextArea.setValue(model.getComment());
 
         fullAddressTextArea.setValue(model.getFullAddress());
     }
 
     private void generateFullName() {
         StringBuilder str = new StringBuilder()
-                .append((postCodeTextArea.getValue().isEmpty()) ? "" : postCodeTextArea.getValue() + ", ")
+                .append((postCodeTextField.getValue().isEmpty()) ? "" : postCodeTextField.getValue() + ", ")
                 .append((countryComboBox.getValue() == null) ? "" : countryComboBox.getValue().getShortName() + ", ")
                 .append((regionComboBox.getValue() == null) ? "" : regionComboBox.getValue().getNameSocr() + ", ")
                 .append((cityName == null) ? "" : cityName + ", ")
@@ -345,8 +368,8 @@ public class AddressForm {
         return postCodeLabel;
     }
 
-    public TextArea getPostCodeTextArea() {
-        return postCodeTextArea;
+    public TextField getPostCodeTextField() {
+        return postCodeTextField;
     }
 
     public String getCountryLabel() {
@@ -409,7 +432,7 @@ public class AddressForm {
         return commentLabel;
     }
 
-    public TextField getCommentTextField() {
-        return commentTextField;
+    public TextArea getCommentTextArea() {
+        return commentTextArea;
     }
 }
