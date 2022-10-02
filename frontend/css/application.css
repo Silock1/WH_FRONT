@@ -70,7 +70,9 @@ html, body, td, .gwt-TextArea, textarea {
     border: 1px solid #ccc;
     border-radius: 3px;
     background: -webkit-linear-gradient(top, #fff, #e6e6e6);
-    height: 30px;
+    height: 32px;
+
+
 }
 
 .manualName {
