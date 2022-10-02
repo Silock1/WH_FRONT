@@ -9,6 +9,8 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
@@ -35,16 +37,19 @@ public class OperationsWithPoints extends VerticalLayout {
 
     private HorizontalLayout toolBar() {
         HorizontalLayout toolbarLayout = new HorizontalLayout();
+//        toolbarLayout.setClassName("borderCheck");
         SilverButton silverButton = new SilverButton();
 
-        toolbarLayout.setWidthFull();
 
+        toolbarLayout.setWidthFull();
+        toolbarLayout.setAlignItems(Alignment.CENTER);
 
         Button button1 = silverButton.btnPLusBlue("Операция");
         Button button2 = silverButton.btnBlank("Фильтр");
         Button button3 = silverButton.btnPlusYellow("Изменить");
         Button button4 = silverButton.btnPLusBlue("Контрагенты");
         Button button5 = silverButton.btnBlank("Проверка");
+        MenuBar origina = silverButton.defaultBar();
 
         Span text = new Span("Операции с баллами");
         text.setClassName("title");
@@ -52,15 +57,26 @@ public class OperationsWithPoints extends VerticalLayout {
         Button helpButton = silverButton.helpButton();
         Button refreshButton = silverButton.refreshButton();
 
+
+        MenuBar operation = silverButton.menuBarButton();
+
+
+
+
         toolbarLayout.add(
+
                 helpButton,
                 text,
                 refreshButton,
                 button1,
                 button2,
-                button3,
+
                 button4,
-                button5
+
+                operation,
+                button3,
+                button5,
+                origina
         );
         return toolbarLayout;
     }
