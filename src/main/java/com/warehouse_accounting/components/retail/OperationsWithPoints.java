@@ -27,6 +27,7 @@ public class OperationsWithPoints extends VerticalLayout {
 
     private HorizontalLayout buttons() {
         HorizontalLayout buttons = new HorizontalLayout();
+
         SilverButton silverButton = new SilverButton();
         Button button1 = silverButton.btnPLusBlue("Операция");
         Button button2 = silverButton.btnBlank("Фильтр");

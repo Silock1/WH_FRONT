@@ -12,9 +12,10 @@ public class SilverButton {
 
 
     public Button btnPLusBlue(String buttonText) {
-
         Image image = new Image("icons/plusBlue.jpg", "Plus");
         Button button = new Button(image);
+
+//        button.setHeightFull();
         button.setText(buttonText);
         button.setClassName("silverButton");
         return button;
@@ -22,8 +23,8 @@ public class SilverButton {
     }
 
     public Button btnBlank(String buttonText) {
-
         Button button = new Button();
+//        button.setHeightFull();
         button.setText(buttonText);
         button.setClassName("silverButton");
         return button;
@@ -31,9 +32,9 @@ public class SilverButton {
     }
 
     public Button btnPlusYellow(String buttonText) {
-
         Image image = new Image("icons/plusYellow.jpg", "Plus");
         Button button = new Button(image);
+//        button.setHeightFull();
         button.setText(buttonText);
         button.setClassName("silverButton");
         return button;
