@@ -6,6 +6,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.warehouse_accounting.components.retail.OperationsWithPoints;
 import com.warehouse_accounting.components.retail.PointOfSales;
 
 import java.util.Arrays;
@@ -19,6 +20,7 @@ import static com.warehouse_accounting.components.UtilView.subMenuTabs;
 public class RetailSubMenuView extends VerticalLayout {
     private final Div pageContent = new Div();
     private PointOfSales pointOfSales;
+    private OperationsWithPoints operationsWithPoints = new OperationsWithPoints();
 
     public RetailSubMenuView() {
         pageContent.setSizeFull();
@@ -66,7 +68,7 @@ public class RetailSubMenuView extends VerticalLayout {
                     break;
                 case "Операции с баллами":
                     pageContent.removeAll();
-                    pageContent.add(new Span("Операции с баллами"));
+                    pageContent.add(operationsWithPoints);
                     break;
                 case "Предоплаты":
                     pageContent.removeAll();

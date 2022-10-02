@@ -83,7 +83,6 @@ public class GoodsAndServiceView extends VerticalLayout {
         this.imageService = imageService;
         this.attributeService = attributeService;
         this.unitService = unitService;
-
         this.goodsFilter = new GoodsFilter(productGroupService, employeeService, departmentService, contractorService);
         goodsGridLayout = new GoodsGridLayout(productGroupService, productService, this);
         Div pageContent = new Div();
