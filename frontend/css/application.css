@@ -59,6 +59,20 @@ html, body, td, .gwt-TextArea, textarea {
     margin-right: 17px;
 }
 
+.silverButton {
+    border-spacing: 0;
+    border-collapse: collapse;
+    color: #222;
+    font: 12px "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    outline: 0;
+    padding: 10px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background: -webkit-linear-gradient(top, #fff, #e6e6e6);
+
+}
+
 .manualName {
     color: #222;
     font: 12px "Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
