@@ -75,6 +75,8 @@ html, body, td, .gwt-TextArea, textarea {
 
 }
 
+
+
 .manualName {
     color: #222;
     font: 12px "Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
@@ -83,6 +85,11 @@ html, body, td, .gwt-TextArea, textarea {
     line-height: 22px;
     white-space: nowrap;
     margin-right: 20px;
+}
+
+.title {
+    color: black;
+    font-size: 50px;
 }
 
 .helpButton {
@@ -123,6 +130,11 @@ html, body, td, .gwt-TextArea, textarea {
     height: 26px;
     margin-right: 15px;
 }
+
+.borderCheck {
+    border: green solid 3px;
+}
+
 .btnBorder {
     margin: 0 10px 0 0;
     padding: 0 10px;

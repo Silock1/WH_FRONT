@@ -1,8 +1,11 @@
 package com.warehouse_accounting.components.util;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
 import elemental.css.CSSStyleDeclaration;
 
@@ -15,7 +18,6 @@ public class SilverButton {
         Image image = new Image("icons/plusBlue.jpg", "Plus");
         Button button = new Button(image);
 
-//        button.setHeightFull();
         button.setText(buttonText);
         button.setClassName("silverButton");
         return button;
@@ -24,7 +26,7 @@ public class SilverButton {
 
     public Button btnBlank(String buttonText) {
         Button button = new Button();
-//        button.setHeightFull();
+
         button.setText(buttonText);
         button.setClassName("silverButton");
         return button;
@@ -34,10 +36,28 @@ public class SilverButton {
     public Button btnPlusYellow(String buttonText) {
         Image image = new Image("icons/plusYellow.jpg", "Plus");
         Button button = new Button(image);
-//        button.setHeightFull();
+
         button.setText(buttonText);
         button.setClassName("silverButton");
         return button;
 
     }
+    public Button helpButton() {
+        Button helpButton = new Button(new Image("icons/helpApp.svg", "help"));
+        helpButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_LARGE);
+        return helpButton;
+    }
+
+    public Button refreshButton() {
+
+        Icon refresh = new Icon(VaadinIcon.REFRESH);
+        refresh.setColor("silver");
+        Button refreshButton = new Button(refresh);
+        refreshButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+
+        return refreshButton;
+
+    }
+
+
 }
