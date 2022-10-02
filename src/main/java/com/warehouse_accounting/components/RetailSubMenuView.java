@@ -23,6 +23,7 @@ public class RetailSubMenuView extends VerticalLayout {
     private OperationsWithPoints operationsWithPoints = new OperationsWithPoints();
 
     public RetailSubMenuView() {
+        setSizeFull();
         pageContent.setSizeFull();
         pageContent.add(initPointOfSales(pageContent));
         add(initSubMenu(), pageContent);
