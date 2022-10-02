@@ -67,7 +67,7 @@ public class SilverButton {
     public MenuBar menuBarButton() {
 
         MenuBar myBar = new MenuBar();
-//            myBar.setWidth("93px");
+
 
         Image image = new Image("icons/operationButton.png", "operation");
         HorizontalLayout imageCont = new HorizontalLayout();
@@ -79,27 +79,41 @@ public class SilverButton {
         imageCont.add(image, caretDown);
         imageCont.setAlignItems(FlexComponent.Alignment.CENTER);
 
-//            MenuItem edit = myBar.addItem(btnPLusBlue("Операция"));
         myBar.addItem(imageCont);
 
 
-//            edit.getSubMenu().addItem("Add");
-//            edit.getSubMenu().addItem("Delete");
 
         return myBar;
     }
 
-    public MenuBar defaultBar() {
+    public MenuBar customBar() {
+        MenuBar menuBar = new MenuBar();
+
+
+        menuBar.addItem("test");
+        MenuItem item = menuBar.addItem("huy");
+
+
+
+
+        return menuBar;
+    }
+
+    public MenuBar defaultBar(String textButton) {
         MenuBar menuBar = new MenuBar();
         menuBar.addThemeVariants(MenuBarVariant.LUMO_ICON, MenuBarVariant.LUMO_CONTRAST);
+
 
         Icon caretDownEdit = new Icon(VaadinIcon.CARET_DOWN);
         caretDownEdit.setSize("13px");
 
-        HorizontalLayout editVision = new HorizontalLayout(new Text("Операция"), caretDownEdit);
+        Image image = new Image("icons/plusBlue.jpg", "Plus");
+
+        HorizontalLayout editVision = new HorizontalLayout(image, new Text(textButton), caretDownEdit);
         editVision.setSpacing(false);
 
         menuBar.addItem(editVision);
+
         return menuBar;
     }
 

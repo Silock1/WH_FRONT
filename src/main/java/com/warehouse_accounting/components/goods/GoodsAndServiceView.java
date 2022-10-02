@@ -32,6 +32,7 @@ import com.warehouse_accounting.models.dto.ProductGroupDto;
 import com.warehouse_accounting.services.interfaces.*;
 import org.springframework.stereotype.Component;
 
+import java.awt.*;
 import java.util.Optional;
 
 @UIScope
@@ -176,6 +177,8 @@ public class GoodsAndServiceView extends VerticalLayout {
         addFilterButton.addClickListener(buttonClickEvent -> goodsFilter.setVisible(!goodsFilter.isVisible()));
 
         TextField searchField = new TextField();
+
+
         searchField.setPlaceholder("наименование, код или артикул");
         searchField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         searchField.addInputListener(inputEvent -> {

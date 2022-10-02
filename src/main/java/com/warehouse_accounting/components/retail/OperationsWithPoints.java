@@ -5,7 +5,9 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Input;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -13,9 +15,12 @@ import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.util.SilverButton;
 import com.warehouse_accounting.models.dto.OperationsWithPointsDto;
+
+import java.awt.*;
 
 /**
  * Операции с баллами (Розница/Операции с баллами)
@@ -41,15 +46,12 @@ public class OperationsWithPoints extends VerticalLayout {
         SilverButton silverButton = new SilverButton();
 
 
+
         toolbarLayout.setWidthFull();
         toolbarLayout.setAlignItems(Alignment.CENTER);
 
-        Button button1 = silverButton.btnPLusBlue("Операция");
-        Button button2 = silverButton.btnBlank("Фильтр");
-        Button button3 = silverButton.btnPlusYellow("Изменить");
-        Button button4 = silverButton.btnPLusBlue("Контрагенты");
-        Button button5 = silverButton.btnBlank("Проверка");
-        MenuBar origina = silverButton.defaultBar();
+        MenuBar menuOperation = silverButton.defaultBar("Операция");
+        Button filter = silverButton.btnBlank("Фильтр");
 
         Span text = new Span("Операции с баллами");
         text.setClassName("title");
@@ -58,9 +60,16 @@ public class OperationsWithPoints extends VerticalLayout {
         Button refreshButton = silverButton.refreshButton();
 
 
-        MenuBar operation = silverButton.menuBarButton();
+        Input searchField = new Input();
+
+        searchField.setPlaceholder("Номер или комментарий");
+        searchField.setWidth("200px");
+        Input miniField = new Input();
+        miniField.setWidth("25px");
+        miniField.setValue("0");
 
 
+        MenuBar edit = silverButton.defaultBar("Изменить");
 
 
         toolbarLayout.add(
@@ -68,15 +77,12 @@ public class OperationsWithPoints extends VerticalLayout {
                 helpButton,
                 text,
                 refreshButton,
-                button1,
-                button2,
+                menuOperation,
+                filter,
+                searchField,
+                miniField,
+                edit
 
-                button4,
-
-                operation,
-                button3,
-                button5,
-                origina
         );
         return toolbarLayout;
     }
