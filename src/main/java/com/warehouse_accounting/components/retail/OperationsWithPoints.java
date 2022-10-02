@@ -12,7 +12,7 @@ public class OperationsWithPoints extends VerticalLayout {
 
     public OperationsWithPoints() {
 
-        add(new Span("Hello OperationsWithPoints HELLO WORLD TEST MERGE"));
+        add(new Span("Hello OperationsWithPoints HELLO WORLD TEST MERGE HUY"));
 
     }
 }
