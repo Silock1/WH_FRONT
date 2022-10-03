@@ -193,7 +193,7 @@ public class OperationsWithPoints extends VerticalLayout {
     }
 
     private MenuBar menuEditButton(String textButton) {
-        MenuBar menuBar = new MenuBar();
+        MenuBar menuBar = menuEditButton(textButton);
         menuBar.addThemeVariants(MenuBarVariant.LUMO_ICON, MenuBarVariant.LUMO_CONTRAST);
 
         MenuItem operation = menuBar.addItem(menuVision(textButton));
