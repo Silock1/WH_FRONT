@@ -6,7 +6,6 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -14,12 +13,7 @@ import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.router.Route;
-import elemental.css.CSSStyleDeclaration;
-
-import java.awt.*;
 
 @Route("silverButtons")
 @CssImport(value = "./css/application.css")
@@ -82,39 +76,53 @@ public class SilverButton {
         myBar.addItem(imageCont);
 
 
-
         return myBar;
     }
 
-    public MenuBar customBar() {
+
+    public MenuBar menuOperationButton(String textButton) {
         MenuBar menuBar = new MenuBar();
+        menuBar.addThemeVariants(MenuBarVariant.LUMO_ICON, MenuBarVariant.LUMO_CONTRAST);
 
+        MenuItem operation = menuBar.addItem(menuVision(textButton));
 
-        menuBar.addItem("test");
-        MenuItem item = menuBar.addItem("huy");
+        SubMenu accureSubMenu = operation.getSubMenu();
 
-
+        accureSubMenu.addItem("Начислить");//.onEnabledStateChanged(false);
+        accureSubMenu.addItem("Списать");//.onEnabledStateChanged(false);
 
 
         return menuBar;
     }
 
-    public MenuBar defaultBar(String textButton) {
+    public MenuBar menuEditButton(String textButton) {
         MenuBar menuBar = new MenuBar();
         menuBar.addThemeVariants(MenuBarVariant.LUMO_ICON, MenuBarVariant.LUMO_CONTRAST);
 
+        MenuItem operation = menuBar.addItem(menuVision(textButton));
 
-        Icon caretDownEdit = new Icon(VaadinIcon.CARET_DOWN);
-        caretDownEdit.setSize("13px");
-
-        Image image = new Image("icons/plusBlue.jpg", "Plus");
-
-        HorizontalLayout editVision = new HorizontalLayout(image, new Text(textButton), caretDownEdit);
-        editVision.setSpacing(false);
-
-        menuBar.addItem(editVision);
+        SubMenu accureSubMenu = operation.getSubMenu();
+        accureSubMenu.addItem("Удалить")
+                .getElement()
+                .setAttribute("disabled", true);
+        accureSubMenu.addItem("Копировать")
+                .getElement()
+                .setAttribute("disabled", true);
+        accureSubMenu.addItem("Массовое редактирование");
 
         return menuBar;
+    }
+
+    private HorizontalLayout menuVision(String textButton) {
+        Icon caretDownEdit = new Icon(VaadinIcon.CARET_DOWN);
+        caretDownEdit.setSize("13px");
+        Image image = new Image("icons/plusBlue.jpg", "Plus");
+
+
+        HorizontalLayout menuVision = new HorizontalLayout(image, new Text(textButton), caretDownEdit);
+        menuVision.setSpacing(false);
+        return menuVision;
+
     }
 
 

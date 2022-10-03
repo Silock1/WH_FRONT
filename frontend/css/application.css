@@ -90,6 +90,7 @@ html, body, td, .gwt-TextArea, textarea {
 .title {
     color: black;
     font-size: 30px;
+    align-items: center;
 }
 
 .helpButton {

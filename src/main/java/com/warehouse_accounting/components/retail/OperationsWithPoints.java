@@ -1,26 +1,17 @@
 package com.warehouse_accounting.components.retail;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Input;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
-import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.util.SilverButton;
 import com.warehouse_accounting.models.dto.OperationsWithPointsDto;
-
-import java.awt.*;
 
 /**
  * Операции с баллами (Розница/Операции с баллами)
@@ -50,7 +41,7 @@ public class OperationsWithPoints extends VerticalLayout {
         toolbarLayout.setWidthFull();
         toolbarLayout.setAlignItems(Alignment.CENTER);
 
-        MenuBar menuOperation = silverButton.defaultBar("Операция");
+        MenuBar menuOperation = silverButton.menuOperationButton("Операция");
         Button filter = silverButton.btnBlank("Фильтр");
 
         Span text = new Span("Операции с баллами");
@@ -69,7 +60,7 @@ public class OperationsWithPoints extends VerticalLayout {
         miniField.setValue("0");
 
 
-        MenuBar edit = silverButton.defaultBar("Изменить");
+        MenuBar edit = silverButton.menuEditButton("Изменить");
 
 
         toolbarLayout.add(
