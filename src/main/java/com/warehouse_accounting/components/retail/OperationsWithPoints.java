@@ -17,14 +17,12 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.components.util.SilverButton;
 import com.warehouse_accounting.models.dto.OperationsWithPointsDto;
-import com.warehouse_accounting.models.dto.ProductDto;
 
 /**
  * Операции с баллами (Розница/Операции с баллами)
@@ -70,7 +68,7 @@ public class OperationsWithPoints extends VerticalLayout {
         Grid.Column<OperationsWithPointsDto> contragentColumn =  pointsGrid.addColumn(OperationsWithPointsDto::getContrAgent).setHeader("Контрагент").setSortable(true);
         Grid.Column<OperationsWithPointsDto> commentaryColumn =  pointsGrid.addColumn(OperationsWithPointsDto::getCommentary).setHeader("Комментарий").setSortable(true);
 
-        Button settingButton = silverButton.settingButton();
+        Button settingButton = silverButton.buttonSetting();
         ColumnToggleContextMenu<OperationsWithPointsDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(settingButton);
         columnToggleContextMenu.addColumnToggleItem("№", idColumn);
         columnToggleContextMenu.addColumnToggleItem("Дата создания", dateCreateColumn);
@@ -96,12 +94,12 @@ public class OperationsWithPoints extends VerticalLayout {
         //MenuBar
         MenuBar menuOperation = menuOperationButton("Операция");
         //Filter
-        Button filter = silverButton.btnBlank("Фильтр");
+        Button filter = silverButton.buttonBlank("Фильтр");
         //Text
         Span text = new Span("Операции с баллами");
         text.setClassName("title");
         //Help
-        Button helpButton = silverButton.helpButton();
+        Button helpButton = silverButton.buttonHelp();
 
         //Help realisation
         helpButton.addClickListener(buttonClickEvent ->
@@ -109,7 +107,7 @@ public class OperationsWithPoints extends VerticalLayout {
         );
 
         //TODO Refresh: getList from rest
-        Button refreshButton = silverButton.refreshButton();
+        Button refreshButton = silverButton.buttonRefresh();
 
         //Inputs
         Input searchField = new Input();
@@ -195,7 +193,7 @@ public class OperationsWithPoints extends VerticalLayout {
     }
 
     private MenuBar menuEditButton(String textButton) {
-        MenuBar menuBar = new MenuBar();
+        MenuBar menuBar = menuEditButton(textButton);
         menuBar.addThemeVariants(MenuBarVariant.LUMO_ICON, MenuBarVariant.LUMO_CONTRAST);
 
         MenuItem operation = menuBar.addItem(menuVision(textButton));

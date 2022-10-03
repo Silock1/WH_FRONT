@@ -1,18 +1,11 @@
 package com.warehouse_accounting.components.util;
 
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.contextmenu.MenuItem;
-import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.menubar.MenuBar;
-import com.vaadin.flow.component.menubar.MenuBarVariant;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.Route;
 
 @Route("silverButtons")
@@ -20,7 +13,7 @@ import com.vaadin.flow.router.Route;
 public class SilverButton {
 
 
-    public Button btnPLusBlue(String buttonText) {
+    public Button buttonPLusBlue(String buttonText) {
         Image image = new Image("icons/plusBlue.jpg", "Plus");
         Button button = new Button(image);
 
@@ -30,7 +23,7 @@ public class SilverButton {
 
     }
 
-    public Button btnBlank(String buttonText) {
+    public Button buttonBlank(String buttonText) {
         Button button = new Button();
 
         button.setText(buttonText);
@@ -39,7 +32,7 @@ public class SilverButton {
 
     }
 
-    public Button btnPlusYellow(String buttonText) {
+    public Button buttonPlusYellow(String buttonText) {
         Image image = new Image("icons/plusYellow.jpg", "Plus");
         Button button = new Button(image);
 
@@ -49,13 +42,13 @@ public class SilverButton {
 
     }
 
-    public Button helpButton() {
+    public Button buttonHelp() {
         Button helpButton = new Button(new Image("icons/helpApp.svg", "help"));
         helpButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_LARGE);
         return helpButton;
     }
 
-    public Button settingButton() {
+    public Button buttonSetting() {
         Button settingButton = new Button(new Icon(VaadinIcon.COG));
         settingButton.setClassName("settingButton");
         settingButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -63,10 +56,7 @@ public class SilverButton {
     }
 
 
-
-
-
-    public Button refreshButton() {
+    public Button buttonRefresh() {
 
         Icon refresh = new Icon(VaadinIcon.REFRESH);
         refresh.setColor("silver");
