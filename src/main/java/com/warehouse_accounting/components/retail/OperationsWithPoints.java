@@ -84,15 +84,25 @@ public class OperationsWithPoints extends VerticalLayout {
         horizontalLayout.setSizeFull();
         pointsGrid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         pointsGrid.setSizeFull();
-        pointsGrid.setColumns("id",
-                "number",
-                "typeOfOperation",
-                "bonusBalls",
-                "status",
-                "date",
-                "bonusProgram",
-                "contrAgent",
-                "commentary");
+        pointsGrid.addColumn(OperationsWithPointsDto::getId).setHeader("№");
+        pointsGrid.addColumn(OperationsWithPointsDto::getDateCreate).setHeader("Дата создания");
+        pointsGrid.addColumn(OperationsWithPointsDto::getTypeOfOperation).setHeader("Тип операции");
+        pointsGrid.addColumn(OperationsWithPointsDto::getBonusBalls).setHeader("Бонусные баллы");
+        pointsGrid.addColumn(OperationsWithPointsDto::getStatus).setHeader("Статус");
+        pointsGrid.addColumn(OperationsWithPointsDto::getDateProfit).setHeader("Дата начисления");
+        pointsGrid.addColumn(OperationsWithPointsDto::getBonusProgram).setHeader("Бонусная программа");
+        pointsGrid.addColumn(OperationsWithPointsDto::getContrAgent).setHeader("Контрагент");
+        pointsGrid.addColumn(OperationsWithPointsDto::getCommentary).setHeader("Комментарий");
+
+
+//        pointsGrid.setColumns("id",
+//                "typeOfOperation",
+//                "bonusBalls",
+//                "status",
+//                "date",
+//                "bonusProgram",
+//                "contrAgent",
+//                "commentary");
 
         horizontalLayout.add(pointsGrid);
         return horizontalLayout;

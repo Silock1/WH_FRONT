@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class OperationsWithPointsDto {
     private Long id;
-    private int number;
     private String typeOfOperation;
     private int bonusBalls;
     private String status;
-    private int date; //refactoring Local date
+    private int dateCreate; //refactoring Local date
+    private int dateProfit;
     private String bonusProgram; //refactoring Object
     private String contrAgent; //refactoring Object
     private String commentary;
