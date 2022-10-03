@@ -55,6 +55,13 @@ public class SilverButton {
         return helpButton;
     }
 
+    public Button settingButton() {
+        Button settingButton = new Button(new Icon(VaadinIcon.COG));
+        settingButton.setClassName("settingButton");
+        settingButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        return settingButton;
+    }
+
 
 
 

@@ -21,8 +21,10 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
+import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.components.util.SilverButton;
 import com.warehouse_accounting.models.dto.OperationsWithPointsDto;
+import com.warehouse_accounting.models.dto.ProductDto;
 
 /**
  * Операции с баллами (Розница/Операции с баллами)
@@ -44,24 +46,45 @@ public class OperationsWithPoints extends VerticalLayout {
 
     public HorizontalLayout tableContent() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
+
         horizontalLayout.setSizeFull();
         pointsGrid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         pointsGrid.setSizeFull();
         pointsGrid.setSelectionMode(Grid.SelectionMode.MULTI);
-        pointsGrid.addColumn(OperationsWithPointsDto::getId).setHeader("№").setSortable(true);
-        pointsGrid.addColumn(OperationsWithPointsDto::getDateCreate).setHeader("Дата создания").setSortable(true);
-        pointsGrid.addColumn(OperationsWithPointsDto::getTypeOfOperation).setHeader("Тип операции").setSortable(true);
-        pointsGrid.addColumn(OperationsWithPointsDto::getBonusPoints).setHeader("Бонусные баллы").setSortable(true);
-        pointsGrid.addColumn(OperationsWithPointsDto::getStatus).setHeader("Статус").setSortable(true);
-        pointsGrid.addColumn(OperationsWithPointsDto::getDateProfit).setHeader("Дата начисления").setSortable(true);
-        pointsGrid.addColumn(OperationsWithPointsDto::getBonusProgram).setHeader("Бонусная программа").setSortable(true);
-        pointsGrid.addColumn(OperationsWithPointsDto::getContrAgent).setHeader("Контрагент").setSortable(true);
-        pointsGrid.addColumn(OperationsWithPointsDto::getCommentary).setHeader("Комментарий").setSortable(true);
 
 
-        horizontalLayout.add(pointsGrid);
+
+        horizontalLayout.add(pointsGrid, settingButtonOperations());
         return horizontalLayout;
     }
+
+    private Button settingButtonOperations() {
+        SilverButton silverButton = new SilverButton();
+        Grid.Column<OperationsWithPointsDto> idColumn =  pointsGrid.addColumn(OperationsWithPointsDto::getId).setHeader("№").setSortable(true);
+        Grid.Column<OperationsWithPointsDto> dateCreateColumn = pointsGrid.addColumn(OperationsWithPointsDto::getDateCreate).setHeader("Дата создания").setSortable(true);
+        Grid.Column<OperationsWithPointsDto> operationColumn =  pointsGrid.addColumn(OperationsWithPointsDto::getTypeOfOperation).setHeader("Тип операции").setSortable(true);
+        Grid.Column<OperationsWithPointsDto> bonusColumn =  pointsGrid.addColumn(OperationsWithPointsDto::getBonusPoints).setHeader("Бонусные баллы").setSortable(true);
+        Grid.Column<OperationsWithPointsDto> statusColumn =  pointsGrid.addColumn(OperationsWithPointsDto::getStatus).setHeader("Статус").setSortable(true);
+        Grid.Column<OperationsWithPointsDto> dateChargeColumn =  pointsGrid.addColumn(OperationsWithPointsDto::getDateProfit).setHeader("Дата начисления").setSortable(true);
+        Grid.Column<OperationsWithPointsDto> bonusProgramColumn =  pointsGrid.addColumn(OperationsWithPointsDto::getBonusProgram).setHeader("Бонусная программа").setSortable(true);
+        Grid.Column<OperationsWithPointsDto> contragentColumn =  pointsGrid.addColumn(OperationsWithPointsDto::getContrAgent).setHeader("Контрагент").setSortable(true);
+        Grid.Column<OperationsWithPointsDto> commentaryColumn =  pointsGrid.addColumn(OperationsWithPointsDto::getCommentary).setHeader("Комментарий").setSortable(true);
+
+        Button settingButton = silverButton.settingButton();
+        ColumnToggleContextMenu<OperationsWithPointsDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(settingButton);
+        columnToggleContextMenu.addColumnToggleItem("№", idColumn);
+        columnToggleContextMenu.addColumnToggleItem("Дата создания", dateCreateColumn);
+        columnToggleContextMenu.addColumnToggleItem("Тип операции", operationColumn);
+        columnToggleContextMenu.addColumnToggleItem("Бонусные баллы", bonusColumn);
+        columnToggleContextMenu.addColumnToggleItem("Статус", statusColumn);
+        columnToggleContextMenu.addColumnToggleItem("Дата начисления", dateChargeColumn);
+        columnToggleContextMenu.addColumnToggleItem("Бонусная программа", bonusProgramColumn);
+        columnToggleContextMenu.addColumnToggleItem("Контрагент", contragentColumn);
+        columnToggleContextMenu.addColumnToggleItem("Комментарий", commentaryColumn);
+        return settingButton;
+    }
+
+
 
     private HorizontalLayout toolBar() {
         HorizontalLayout toolbarLayout = new HorizontalLayout();

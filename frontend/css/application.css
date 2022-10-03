@@ -102,6 +102,18 @@ html, body, td, .gwt-TextArea, textarea {
     cursor: pointer;
 }
 
+.settingButton {
+    white-space: nowrap;
+    --lumo-button-size: var(--lumo-size-m);
+    font-family: var(--lumo-font-family);
+    font-size: var(--lumo-font-size-m);
+    font-weight: 500;
+    color: var(--_lumo-button-color, var(--lumo-primary-text-color));
+    cursor: default;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
+}
+
 #text {
     color: #222;
     font-weight: normal;
