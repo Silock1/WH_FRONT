@@ -55,75 +55,8 @@ public class SilverButton {
         return helpButton;
     }
 
-    //TODO: Menu button
 
 
-    public MenuBar menuBarButton() {
-
-        MenuBar myBar = new MenuBar();
-
-
-        Image image = new Image("icons/operationButton.png", "operation");
-        HorizontalLayout imageCont = new HorizontalLayout();
-
-        Icon caretDown = new Icon(VaadinIcon.CARET_DOWN);
-        caretDown.setSize("13px");
-
-
-        imageCont.add(image, caretDown);
-        imageCont.setAlignItems(FlexComponent.Alignment.CENTER);
-
-        myBar.addItem(imageCont);
-
-
-        return myBar;
-    }
-
-
-    public MenuBar menuOperationButton(String textButton) {
-        MenuBar menuBar = new MenuBar();
-        menuBar.addThemeVariants(MenuBarVariant.LUMO_ICON, MenuBarVariant.LUMO_CONTRAST);
-
-        MenuItem operation = menuBar.addItem(menuVision(textButton));
-
-        SubMenu accureSubMenu = operation.getSubMenu();
-
-        accureSubMenu.addItem("Начислить");//.onEnabledStateChanged(false);
-        accureSubMenu.addItem("Списать");//.onEnabledStateChanged(false);
-
-
-        return menuBar;
-    }
-
-    public MenuBar menuEditButton(String textButton) {
-        MenuBar menuBar = new MenuBar();
-        menuBar.addThemeVariants(MenuBarVariant.LUMO_ICON, MenuBarVariant.LUMO_CONTRAST);
-
-        MenuItem operation = menuBar.addItem(menuVision(textButton));
-
-        SubMenu accureSubMenu = operation.getSubMenu();
-        accureSubMenu.addItem("Удалить")
-                .getElement()
-                .setAttribute("disabled", true);
-        accureSubMenu.addItem("Копировать")
-                .getElement()
-                .setAttribute("disabled", true);
-        accureSubMenu.addItem("Массовое редактирование");
-
-        return menuBar;
-    }
-
-    private HorizontalLayout menuVision(String textButton) {
-        Icon caretDownEdit = new Icon(VaadinIcon.CARET_DOWN);
-        caretDownEdit.setSize("13px");
-        Image image = new Image("icons/plusBlue.jpg", "Plus");
-
-
-        HorizontalLayout menuVision = new HorizontalLayout(image, new Text(textButton), caretDownEdit);
-        menuVision.setSpacing(false);
-        return menuVision;
-
-    }
 
 
     public Button refreshButton() {
