@@ -47,6 +47,7 @@ public class OperationsWithPoints extends VerticalLayout {
         horizontalLayout.setSizeFull();
         pointsGrid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         pointsGrid.setSizeFull();
+        pointsGrid.setSelectionMode(Grid.SelectionMode.MULTI);
         pointsGrid.addColumn(OperationsWithPointsDto::getId).setHeader("№").setSortable(true);
         pointsGrid.addColumn(OperationsWithPointsDto::getDateCreate).setHeader("Дата создания").setSortable(true);
         pointsGrid.addColumn(OperationsWithPointsDto::getTypeOfOperation).setHeader("Тип операции").setSortable(true);
