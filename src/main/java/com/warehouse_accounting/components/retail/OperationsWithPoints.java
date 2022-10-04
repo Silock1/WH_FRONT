@@ -97,7 +97,11 @@ public class OperationsWithPoints extends VerticalLayout {
         Button filter = silverButton.buttonBlank("Фильтр");
         //Text
         Span text = new Span("Операции с баллами");
-        text.setClassName("title");
+        text.getElement().getStyle().set("font-size", "20px");
+        text.getElement().getStyle().set("color", "#222");
+        text.getElement().getStyle().set("font-weight", "bold");
+
+
         //Help
         Button helpButton = silverButton.buttonHelp();
 
