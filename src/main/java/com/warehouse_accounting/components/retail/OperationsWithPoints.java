@@ -173,9 +173,6 @@ public class OperationsWithPoints extends VerticalLayout {
         );
     }
 
-    private void helpButtonAction() {
-
-    }
 
     private MenuBar menuOperationButton(String textButton) {
         MenuBar menuBar = new MenuBar();
@@ -216,8 +213,9 @@ public class OperationsWithPoints extends VerticalLayout {
         Image image = new Image("icons/plusBlue.jpg", "Plus");
 
 
-        HorizontalLayout menuVision = new HorizontalLayout(image, new Text(textButton), caretDownEdit);
+        HorizontalLayout menuVision = new HorizontalLayout(image,  new Span(textButton),  caretDownEdit);
         menuVision.setSpacing(false);
+        menuVision.getThemeList().add("spacing-s");
         return menuVision;
 
     }
