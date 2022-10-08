@@ -1,5 +1,8 @@
 server:
   port: 4447
+  servlet:
+    session:
+      persistent: false
 
 retrofit:
   baseUrl: http://localhost:4446/
