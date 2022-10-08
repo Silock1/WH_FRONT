@@ -19,7 +19,9 @@ import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.warehouse_accounting.components.retail.grids.BonusTransactionGridLayout;
 import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.components.util.SilverButton;
 import com.warehouse_accounting.models.dto.BonusTransactionDto;
@@ -30,16 +32,24 @@ import com.warehouse_accounting.services.interfaces.BonusTransactionService;
  * Операции с баллами (Розница/Операции с баллами)
  **/
 @SpringComponent
+@Route("bonus_transaction")
 @CssImport(value = "./css/application.css")
 public class BonusTransaction extends VerticalLayout {
     private final Grid<BonusTransactionDto> pointsGrid = new Grid<>(BonusTransactionDto.class, false);
     private BonusTransactionService bonusTransactionService;
+    private BonusTransactionGridLayout bonusTransactionGridLayout;
 
-    public BonusTransaction(BonusTransactionService bonusTransactionService) {
+    public BonusTransaction(BonusTransactionService bonusTransactionService,
+                            BonusTransactionGridLayout bonusTransactionGridLayout) {
         this.bonusTransactionService = bonusTransactionService;
+        this.bonusTransactionGridLayout = bonusTransactionGridLayout;
+
         setSizeFull();
-        add(toolBar(),
-                tableContent()
+        add(    closeView(),
+                toolBar(),
+                bonusTransactionGridLayout
+
+              //  tableContent()
         );
 
     }
@@ -55,6 +65,10 @@ public class BonusTransaction extends VerticalLayout {
 
         horizontalLayout.add(pointsGrid, settingButtonOperations());
         return horizontalLayout;
+    }
+
+    public Button closeView() {
+        return new Button("CloseAll", buttonClickEvent -> this.setVisible(false));
     }
 
     private Button settingButtonOperations() {
