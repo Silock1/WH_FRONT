@@ -9,26 +9,23 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * Форма начисление или списание
- */
-@SpringComponent
 @CssImport(value = "./css/application.css")
 @Getter
 @Setter
-public class ChargeForm extends VerticalLayout {
+public class BonusTransactionForm extends VerticalLayout {
     private Button closedButton;
+    private TypeOperation typeOperation;
 
+    public BonusTransactionForm(TypeOperation typeOperation) {
+        this.typeOperation = typeOperation;
 
-    public ChargeForm() {
         setSizeFull();
         setVisible(false);
 
-        add(    buttonLine(),
+        add(buttonLine(),
                 titleLine(),
                 checkBoxLine(),
                 pointsLine(),
@@ -58,7 +55,7 @@ public class ChargeForm extends VerticalLayout {
         HorizontalLayout l = new HorizontalLayout();
 
         l.add(
-                new Span(" Начисление бонусных баллов №"),
+                new Span(String.format("%s бонусных баллов №", typeOperation.getValue())),
                 new Input(),
                 new Span("от"),
                 new Input()
@@ -96,10 +93,10 @@ public class ChargeForm extends VerticalLayout {
 
 
         l.add(
-                new Span("Начисление"),
+                new Span(typeOperation.getValue()),
                 new Input(),
                 new Span("баллов"),
-                new Span("Дата начисления"),
+                new Span(typeOperation.dateType()),
                 new Input()
         );
         return l;
@@ -156,6 +153,30 @@ public class ChargeForm extends VerticalLayout {
 
         l.add(new Span("IM GRID"));
         return l;
+
+    }
+
+    public enum TypeOperation {
+        CHARGE("Начисление"), WRITE_OFF("Списание");
+        private String type;
+
+        TypeOperation(String type) {
+            this.type = type;
+        }
+
+        public String getValue() {
+            return type;
+        }
+
+        public String dateType() {
+            if (this == CHARGE) {
+                return "Дата начислен" +
+                        "ия";
+            } else {
+                return "Дата списания";
+            }
+        }
+
 
     }
 

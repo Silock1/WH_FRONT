@@ -4,8 +4,7 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.warehouse_accounting.components.retail.forms.bonus_transaction.ChargeForm;
-import com.warehouse_accounting.components.retail.forms.bonus_transaction.WriteOffForm;
+import com.warehouse_accounting.components.retail.forms.bonus_transaction.BonusTransactionForm;
 import com.warehouse_accounting.components.retail.grids.BonusTransactionGridLayout;
 import com.warehouse_accounting.components.retail.toolbars.BonusTransactionToolBar;
 import com.warehouse_accounting.services.interfaces.BonusTransactionService;
@@ -19,24 +18,22 @@ import com.warehouse_accounting.services.interfaces.BonusTransactionService;
 @CssImport(value = "./css/application.css")
 public class BonusTransaction extends VerticalLayout {
 
-
     private BonusTransactionGridLayout grid;
-    private ChargeForm chargeForm;
-    private WriteOffForm writeOffForm;
     private BonusTransactionToolBar toolBar;
     private BonusTransactionService service;
+    private BonusTransactionForm chargeForm = new BonusTransactionForm(BonusTransactionForm.TypeOperation.CHARGE);
+    private BonusTransactionForm writeOffForm = new BonusTransactionForm(BonusTransactionForm.TypeOperation.WRITE_OFF);
+
 
     public BonusTransaction(BonusTransactionGridLayout grid,
-                            ChargeForm chargeForm,
+
                             BonusTransactionToolBar toolBar,
-                            WriteOffForm writeOffForm,
+
                             BonusTransactionService service) {
 
         this.service = service;
         this.grid = grid;
-        this.chargeForm = chargeForm;
         this.toolBar = toolBar;
-        this.writeOffForm = writeOffForm;
 
 
         setSizeFull();
