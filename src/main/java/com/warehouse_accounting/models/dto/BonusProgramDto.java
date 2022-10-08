@@ -25,6 +25,4 @@ public class BonusProgramDto {
 
     private int award;
 
-
-
 }

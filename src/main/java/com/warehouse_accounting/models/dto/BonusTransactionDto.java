@@ -5,7 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+
 
 @Data
 @Builder
@@ -15,7 +16,7 @@ public class BonusTransactionDto {
 
     private Long id;
 
-    private LocalDateTime created;
+    private LocalDate created;
 
     private TransactionType transactionType;
 
@@ -23,7 +24,7 @@ public class BonusTransactionDto {
 
     private TransactionStatus transactionStatus;
 
-    private LocalDateTime executionDate;
+    private LocalDate executionDate;
 
     private BonusProgramDto bonusProgramDto;
 
@@ -40,6 +41,5 @@ public class BonusTransactionDto {
     public enum TransactionStatus {
         WAIT_PROCESSING, COMPLETED, CANCELED
     }
-
 
 }

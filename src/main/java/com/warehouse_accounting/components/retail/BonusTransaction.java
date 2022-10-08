@@ -23,7 +23,8 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.components.util.SilverButton;
 import com.warehouse_accounting.models.dto.BonusTransactionDto;
-import com.warehouse_accounting.services.interfaces.api.BonusTransactionService;
+import com.warehouse_accounting.services.interfaces.BonusTransactionService;
+
 
 /**
  * Операции с баллами (Розница/Операции с баллами)
@@ -41,20 +42,15 @@ public class BonusTransaction extends VerticalLayout {
                 tableContent()
         );
 
-
     }
-
-
 
     public HorizontalLayout tableContent() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
-
         horizontalLayout.setSizeFull();
         pointsGrid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         pointsGrid.setItems(bonusTransactionService.getAll());
         pointsGrid.setSizeFull();
         pointsGrid.setSelectionMode(Grid.SelectionMode.MULTI);
-
 
 
         horizontalLayout.add(pointsGrid, settingButtonOperations());
@@ -63,15 +59,15 @@ public class BonusTransaction extends VerticalLayout {
 
     private Button settingButtonOperations() {
         SilverButton silverButton = new SilverButton();
-        Grid.Column<BonusTransactionDto> idColumn =  pointsGrid.addColumn(BonusTransactionDto::getId).setHeader("№").setSortable(true);
+        Grid.Column<BonusTransactionDto> idColumn = pointsGrid.addColumn(BonusTransactionDto::getId).setHeader("№").setSortable(true);
         Grid.Column<BonusTransactionDto> dateCreateColumn = pointsGrid.addColumn(BonusTransactionDto::getCreated).setHeader("Дата создания").setSortable(true);
-        Grid.Column<BonusTransactionDto> operationColumn =  pointsGrid.addColumn(BonusTransactionDto::getTransactionType).setHeader("Тип операции").setSortable(true);
-        Grid.Column<BonusTransactionDto> bonusColumn =  pointsGrid.addColumn(BonusTransactionDto::getBonusValue).setHeader("Бонусные баллы").setSortable(true);
-        Grid.Column<BonusTransactionDto> statusColumn =  pointsGrid.addColumn(BonusTransactionDto::getTransactionStatus).setHeader("Статус").setSortable(true);
-        Grid.Column<BonusTransactionDto> dateChargeColumn =  pointsGrid.addColumn(BonusTransactionDto::getExecutionDate).setHeader("Дата начисления").setSortable(true);
-        Grid.Column<BonusTransactionDto> bonusProgramColumn =  pointsGrid.addColumn(BonusTransactionDto::getBonusProgramDto).setHeader("Бонусная программа").setSortable(true);
-        Grid.Column<BonusTransactionDto> contragentColumn =  pointsGrid.addColumn(BonusTransactionDto::getContragent).setHeader("Контрагент").setSortable(true);
-        Grid.Column<BonusTransactionDto> commentaryColumn =  pointsGrid.addColumn(BonusTransactionDto::getComment).setHeader("Комментарий").setSortable(true);
+        Grid.Column<BonusTransactionDto> operationColumn = pointsGrid.addColumn(BonusTransactionDto::getTransactionType).setHeader("Тип операции").setSortable(true);
+        Grid.Column<BonusTransactionDto> bonusColumn = pointsGrid.addColumn(BonusTransactionDto::getBonusValue).setHeader("Бонусные баллы").setSortable(true);
+        Grid.Column<BonusTransactionDto> statusColumn = pointsGrid.addColumn(BonusTransactionDto::getTransactionStatus).setHeader("Статус").setSortable(true);
+        Grid.Column<BonusTransactionDto> dateChargeColumn = pointsGrid.addColumn(BonusTransactionDto::getExecutionDate).setHeader("Дата начисления").setSortable(true);
+        Grid.Column<BonusTransactionDto> bonusProgramColumn = pointsGrid.addColumn(transaction -> transaction.getBonusProgramDto().getName()).setHeader("Бонусная программа").setSortable(true);
+        Grid.Column<BonusTransactionDto> contragentColumn = pointsGrid.addColumn(transaction -> transaction.getContragent().getName()).setHeader("Контрагент").setSortable(true);
+        Grid.Column<BonusTransactionDto> commentaryColumn = pointsGrid.addColumn(BonusTransactionDto::getComment).setHeader("Комментарий").setSortable(true);
 
         Button settingButton = silverButton.buttonSetting();
         ColumnToggleContextMenu<BonusTransactionDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(settingButton);
@@ -86,7 +82,6 @@ public class BonusTransaction extends VerticalLayout {
         columnToggleContextMenu.addColumnToggleItem("Комментарий", commentaryColumn);
         return settingButton;
     }
-
 
 
     private HorizontalLayout toolBar() {
@@ -222,15 +217,12 @@ public class BonusTransaction extends VerticalLayout {
         Image image = new Image("icons/plusBlue.jpg", "Plus");
 
 
-        HorizontalLayout menuVision = new HorizontalLayout(image,  new Span(textButton),  caretDownEdit);
+        HorizontalLayout menuVision = new HorizontalLayout(image, new Span(textButton), caretDownEdit);
         menuVision.setSpacing(false);
         menuVision.getThemeList().add("spacing-s");
         return menuVision;
 
     }
-
-
-
 
 
 }
