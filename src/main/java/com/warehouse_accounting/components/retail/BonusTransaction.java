@@ -19,21 +19,23 @@ import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.components.util.SilverButton;
-import com.warehouse_accounting.models.dto.OperationsWithPointsDto;
+import com.warehouse_accounting.models.dto.BonusTransactionDto;
+import com.warehouse_accounting.services.interfaces.api.BonusTransactionService;
 
 /**
  * Операции с баллами (Розница/Операции с баллами)
  **/
-
-@Route("operationsWIthPoints")
+@SpringComponent
 @CssImport(value = "./css/application.css")
-public class OperationsWithPoints extends VerticalLayout {
-    Grid<OperationsWithPointsDto> pointsGrid = new Grid<>(OperationsWithPointsDto.class, false);
+public class BonusTransaction extends VerticalLayout {
+    private final Grid<BonusTransactionDto> pointsGrid = new Grid<>(BonusTransactionDto.class, false);
+    private BonusTransactionService bonusTransactionService;
 
-    public OperationsWithPoints() {
+    public BonusTransaction(BonusTransactionService bonusTransactionService) {
+        this.bonusTransactionService = bonusTransactionService;
         setSizeFull();
         add(toolBar(),
                 tableContent()
@@ -42,11 +44,14 @@ public class OperationsWithPoints extends VerticalLayout {
 
     }
 
+
+
     public HorizontalLayout tableContent() {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
 
         horizontalLayout.setSizeFull();
         pointsGrid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
+        pointsGrid.setItems(bonusTransactionService.getAll());
         pointsGrid.setSizeFull();
         pointsGrid.setSelectionMode(Grid.SelectionMode.MULTI);
 
@@ -58,18 +63,18 @@ public class OperationsWithPoints extends VerticalLayout {
 
     private Button settingButtonOperations() {
         SilverButton silverButton = new SilverButton();
-        Grid.Column<OperationsWithPointsDto> idColumn =  pointsGrid.addColumn(OperationsWithPointsDto::getId).setHeader("№").setSortable(true);
-        Grid.Column<OperationsWithPointsDto> dateCreateColumn = pointsGrid.addColumn(OperationsWithPointsDto::getDateCreate).setHeader("Дата создания").setSortable(true);
-        Grid.Column<OperationsWithPointsDto> operationColumn =  pointsGrid.addColumn(OperationsWithPointsDto::getTypeOfOperation).setHeader("Тип операции").setSortable(true);
-        Grid.Column<OperationsWithPointsDto> bonusColumn =  pointsGrid.addColumn(OperationsWithPointsDto::getBonusPoints).setHeader("Бонусные баллы").setSortable(true);
-        Grid.Column<OperationsWithPointsDto> statusColumn =  pointsGrid.addColumn(OperationsWithPointsDto::getStatus).setHeader("Статус").setSortable(true);
-        Grid.Column<OperationsWithPointsDto> dateChargeColumn =  pointsGrid.addColumn(OperationsWithPointsDto::getDateProfit).setHeader("Дата начисления").setSortable(true);
-        Grid.Column<OperationsWithPointsDto> bonusProgramColumn =  pointsGrid.addColumn(OperationsWithPointsDto::getBonusProgram).setHeader("Бонусная программа").setSortable(true);
-        Grid.Column<OperationsWithPointsDto> contragentColumn =  pointsGrid.addColumn(OperationsWithPointsDto::getContrAgent).setHeader("Контрагент").setSortable(true);
-        Grid.Column<OperationsWithPointsDto> commentaryColumn =  pointsGrid.addColumn(OperationsWithPointsDto::getCommentary).setHeader("Комментарий").setSortable(true);
+        Grid.Column<BonusTransactionDto> idColumn =  pointsGrid.addColumn(BonusTransactionDto::getId).setHeader("№").setSortable(true);
+        Grid.Column<BonusTransactionDto> dateCreateColumn = pointsGrid.addColumn(BonusTransactionDto::getCreated).setHeader("Дата создания").setSortable(true);
+        Grid.Column<BonusTransactionDto> operationColumn =  pointsGrid.addColumn(BonusTransactionDto::getTransactionType).setHeader("Тип операции").setSortable(true);
+        Grid.Column<BonusTransactionDto> bonusColumn =  pointsGrid.addColumn(BonusTransactionDto::getBonusValue).setHeader("Бонусные баллы").setSortable(true);
+        Grid.Column<BonusTransactionDto> statusColumn =  pointsGrid.addColumn(BonusTransactionDto::getTransactionStatus).setHeader("Статус").setSortable(true);
+        Grid.Column<BonusTransactionDto> dateChargeColumn =  pointsGrid.addColumn(BonusTransactionDto::getExecutionDate).setHeader("Дата начисления").setSortable(true);
+        Grid.Column<BonusTransactionDto> bonusProgramColumn =  pointsGrid.addColumn(BonusTransactionDto::getBonusProgramDto).setHeader("Бонусная программа").setSortable(true);
+        Grid.Column<BonusTransactionDto> contragentColumn =  pointsGrid.addColumn(BonusTransactionDto::getContragent).setHeader("Контрагент").setSortable(true);
+        Grid.Column<BonusTransactionDto> commentaryColumn =  pointsGrid.addColumn(BonusTransactionDto::getComment).setHeader("Комментарий").setSortable(true);
 
         Button settingButton = silverButton.buttonSetting();
-        ColumnToggleContextMenu<OperationsWithPointsDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(settingButton);
+        ColumnToggleContextMenu<BonusTransactionDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(settingButton);
         columnToggleContextMenu.addColumnToggleItem("№", idColumn);
         columnToggleContextMenu.addColumnToggleItem("Дата создания", dateCreateColumn);
         columnToggleContextMenu.addColumnToggleItem("Тип операции", operationColumn);

@@ -6,7 +6,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.warehouse_accounting.components.retail.OperationsWithPoints;
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.warehouse_accounting.components.retail.BonusTransaction;
 import com.warehouse_accounting.components.retail.PointOfSales;
 
 import java.util.Arrays;
@@ -14,15 +15,16 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.warehouse_accounting.components.UtilView.subMenuTabs;
-
+@SpringComponent
 @Route(value = "retail", layout = AppView.class)
 @PageTitle("Розница")
 public class RetailSubMenuView extends VerticalLayout {
     private final Div pageContent = new Div();
     private PointOfSales pointOfSales;
-    private OperationsWithPoints operationsWithPoints = new OperationsWithPoints();
+    private final BonusTransaction bonusTransaction;
 
-    public RetailSubMenuView() {
+    public RetailSubMenuView(BonusTransaction bonusTransaction) {
+        this.bonusTransaction = bonusTransaction;
         setSizeFull();
         pageContent.setSizeFull();
         pageContent.add(initPointOfSales(pageContent));
@@ -69,7 +71,7 @@ public class RetailSubMenuView extends VerticalLayout {
                     break;
                 case "Операции с баллами":
                     pageContent.removeAll();
-                    pageContent.add(operationsWithPoints);
+                    pageContent.add(bonusTransaction);
                     break;
                 case "Предоплаты":
                     pageContent.removeAll();
