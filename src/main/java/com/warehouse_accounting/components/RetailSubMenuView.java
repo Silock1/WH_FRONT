@@ -7,6 +7,7 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.retail.BonusTransaction;
 import com.warehouse_accounting.components.retail.PointOfSales;
 
@@ -18,6 +19,7 @@ import static com.warehouse_accounting.components.UtilView.subMenuTabs;
 @SpringComponent
 @Route(value = "retail", layout = AppView.class)
 @PageTitle("Розница")
+@UIScope
 public class RetailSubMenuView extends VerticalLayout {
     private final Div pageContent = new Div();
     private PointOfSales pointOfSales;

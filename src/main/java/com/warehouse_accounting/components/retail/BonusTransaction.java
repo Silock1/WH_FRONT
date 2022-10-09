@@ -4,6 +4,7 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.retail.forms.bonus_transaction.BonusTransactionForm;
 import com.warehouse_accounting.components.retail.grids.BonusTransactionGridLayout;
 import com.warehouse_accounting.components.retail.toolbars.BonusTransactionToolBar;
@@ -16,6 +17,7 @@ import com.warehouse_accounting.services.interfaces.BonusTransactionService;
 @SpringComponent
 @Route("bonus_transaction")
 @CssImport(value = "./css/application.css")
+@UIScope
 public class BonusTransaction extends VerticalLayout {
 
     private BonusTransactionGridLayout grid;
@@ -34,6 +36,7 @@ public class BonusTransaction extends VerticalLayout {
         this.service = service;
         this.grid = grid;
         this.toolBar = toolBar;
+
 
 
         setSizeFull();

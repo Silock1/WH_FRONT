@@ -5,6 +5,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.components.util.SilverButton;
 
@@ -12,6 +13,7 @@ import com.warehouse_accounting.models.dto.BonusTransactionDto;
 import com.warehouse_accounting.services.interfaces.BonusTransactionService;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 
 @SpringComponent
 @Getter
