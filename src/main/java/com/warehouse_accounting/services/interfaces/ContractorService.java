@@ -15,4 +15,6 @@ public interface ContractorService {
     void update(ContractorDto dto);
 
     void deleteById(Long id);
+
+    ContractorDto findByName(List<ContractorDto> list, String name);
 }

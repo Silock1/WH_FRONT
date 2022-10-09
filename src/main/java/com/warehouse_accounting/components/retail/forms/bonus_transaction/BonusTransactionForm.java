@@ -11,6 +11,8 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.UIScope;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,11 +25,11 @@ public class BonusTransactionForm extends VerticalLayout {
     private Button closedButton;
     private TypeOperation typeOperation;
     private Button saveButton;
-    private Input idInput;
-    private Input bonusValueInput;
-    private ComboBox bonusProgram;
-    private ComboBox contractor;
-    private Input comment;
+    private IntegerField idInput;
+    private IntegerField bonusValueInput;
+    private ComboBox<String> bonusProgram;
+    private ComboBox<String> contractor;
+    private TextField comment;
     private DatePicker executionDate;
     private DatePicker createdDate;
 
@@ -36,7 +38,6 @@ public class BonusTransactionForm extends VerticalLayout {
         this.typeOperation = typeOperation;
         setSizeFull();
         setVisible(false);
-
 
 
         add(
@@ -52,27 +53,6 @@ public class BonusTransactionForm extends VerticalLayout {
 
         );
     }
-
-
-//    id +
-//    private LocalDate created;
-//
-//    private BonusTransactionDto.TransactionType transactionType;
-//
-//    private Long bonusValue; +
-//
-//    private BonusTransactionDto.TransactionStatus transactionStatus;
-//
-//    private LocalDate executionDate;
-//
-//    private BonusProgramDto bonusProgramDto;
-//
-//    private ContractorDto contragent = new ContractorDto();
-//
-//    private String comment;
-//
-//    private EmployeeDto owner = new EmployeeDto();
-
 
     public HorizontalLayout buttonLine() {
         HorizontalLayout l = new HorizontalLayout();
@@ -90,10 +70,9 @@ public class BonusTransactionForm extends VerticalLayout {
         HorizontalLayout l = new HorizontalLayout();
 
 
-
         l.add(
                 new Span(String.format("%s бонусных баллов №", typeOperation.getValue())),
-                idInput = new Input(),//id
+                idInput = new IntegerField(),//id
                 new Span("от"),
                 createdDate = new DatePicker()//created
 
@@ -106,11 +85,11 @@ public class BonusTransactionForm extends VerticalLayout {
     public HorizontalLayout checkBoxLine() {
         HorizontalLayout l = new HorizontalLayout();
 
-        bonusProgram = new ComboBox();
-        bonusProgram.setItems("Program1", "Program2", "Program3");
+        bonusProgram = new ComboBox<>();
 
-        contractor = new ComboBox();
-        contractor.setItems("Contr1", "Contr2", "Contr3");
+
+        contractor = new ComboBox<>();
+
 
         l.add(
                 new Span("Бонусная программа"),
@@ -131,7 +110,7 @@ public class BonusTransactionForm extends VerticalLayout {
 
         l.add(
                 new Span(typeOperation.getValue()),
-                bonusValueInput = new Input(),//bonusValue
+                bonusValueInput = new IntegerField(),//bonusValue
                 new Span("баллов"),
                 new Span(typeOperation.dateType()),
                 executionDate = new DatePicker()//executionDate дата начисления/списания
@@ -158,7 +137,7 @@ public class BonusTransactionForm extends VerticalLayout {
 
 
         l.add(
-                comment = new Input()
+                comment = new TextField()
         );//comment
         return l;
 

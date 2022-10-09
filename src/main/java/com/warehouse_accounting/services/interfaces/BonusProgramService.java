@@ -14,4 +14,5 @@ public interface BonusProgramService {
     void update(BonusProgramDto bonusProgramDto);
 
     void deleteById(Long id);
+    BonusProgramDto findByName(List<BonusProgramDto> list, String name);
 }

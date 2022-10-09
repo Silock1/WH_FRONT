@@ -28,11 +28,11 @@ public class BonusTransactionDto {
 
     private BonusProgramDto bonusProgramDto;
 
-    private ContractorDto contragent = new ContractorDto();
+    private ContractorDto contragent;
 
     private String comment;
 
-    private EmployeeDto owner = new EmployeeDto();
+    private EmployeeDto owner;
 
     public enum TransactionType {
         EARNING, SPENDING

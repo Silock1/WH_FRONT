@@ -53,4 +53,15 @@ public class ContractorServiceImpl implements ContractorService {
         Call<Void> call = api.deleteById(url, id);
         new ServiceUtils<>(ContractorDto.class).delete(call);
     }
+
+    @Override
+    public ContractorDto findByName(List<ContractorDto> list, String name) {
+        ContractorDto dto = new ContractorDto();
+       for(ContractorDto contractor: list) {
+           if (name.equals(contractor.getName())) {
+               dto = contractor;
+           }
+       }
+       return dto;
+    }
 }

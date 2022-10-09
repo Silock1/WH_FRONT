@@ -1,6 +1,7 @@
 package com.warehouse_accounting.services.impl;
 
 import com.warehouse_accounting.models.dto.BonusProgramDto;
+import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.services.ServiceUtils;
 import com.warehouse_accounting.services.interfaces.BonusProgramService;
 import com.warehouse_accounting.services.interfaces.api.BonusProgramApi;
@@ -56,5 +57,16 @@ public class BonusProgramServiceImpl implements BonusProgramService {
         Call<Void> call = api.deleteById(url, id);
         new ServiceUtils<>(BonusProgramDto.class).delete(call);
 
+    }
+
+    @Override
+    public BonusProgramDto findByName(List<BonusProgramDto> list, String name) {
+        BonusProgramDto programDto = new BonusProgramDto();
+        for(BonusProgramDto program: list) {
+            if (name.equals(program.getName())) {
+                programDto = program;
+            }
+        }
+        return programDto;
     }
 }
