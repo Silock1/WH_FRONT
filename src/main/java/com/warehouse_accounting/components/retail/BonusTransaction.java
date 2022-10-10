@@ -1,7 +1,10 @@
 package com.warehouse_accounting.components.retail;
 
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -15,6 +18,7 @@ import com.warehouse_accounting.services.interfaces.BonusProgramService;
 import com.warehouse_accounting.services.interfaces.BonusTransactionService;
 import com.warehouse_accounting.services.interfaces.ContractorService;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,15 +48,13 @@ public class BonusTransaction extends VerticalLayout {
                             BonusTransactionService service,
                             BonusProgramService programService,
                             ContractorService contractorService) {
-
         this.service = service;
         this.programService = programService;
         this.contractorService = contractorService;
         this.grid = grid;
         this.toolBar = toolBar;
 
-
-
+        setFormFields();
         setSizeFull();
         setCloseButtonCharge();
         setCloseButtonWriteOff();
@@ -110,44 +112,59 @@ public class BonusTransaction extends VerticalLayout {
     }
 
     private void setFormLogic() {
-        List<String> programList = new ArrayList<>();
-        for(BonusProgramDto bonus: programService.getAll()) {
-            programList.add(bonus.getName());
-        }
-
-        List<String> contractorList = new ArrayList<>();
-        for(ContractorDto contractor: contractorService.getAll()){
-            contractorList.add(contractor.getName());
-        }
-
-        chargeForm.getBonusProgram().setItems(programList);
-        chargeForm.getContractor().setItems(contractorList);
-
         chargeForm.getSaveButton().addClickListener(click -> {
-            BonusTransactionDto dto = new BonusTransactionDto();
-
-            System.out.println("SAVE");
-            dto.setId(Long.valueOf(chargeForm.getIdInput().getValue()));
-            dto.setExecutionDate(chargeForm.getExecutionDate().getValue());
-            dto.setCreated(chargeForm.getCreatedDate().getValue());
-            dto.setComment(chargeForm.getComment().getValue());
-            dto.setBonusValue(Long.valueOf(chargeForm.getBonusValueInput().getValue()));
-
-
-            String contractorName = chargeForm.getContractor().getValue();
-            System.out.println(contractorName);
-            dto.setContragent(contractorService.findByName(contractorService.getAll(), contractorName));
-
-            String programName = chargeForm.getBonusProgram().getValue();
-            dto.setBonusProgramDto(programService.findByName(programService.getAll(),programName));
-
-            System.out.println(dto);
-            service.create(dto);
-
-
+            service.create(getDtoForm());
 
         });
 
+    }
+
+
+    private void setFormFields() {
+        chargeForm.getIdInput().setValue(0);
+        chargeForm.getComment().setValue("");
+        chargeForm.getBonusValueInput().setValue(0);
+        chargeForm.getExecutionDate().setValue(LocalDate.now());
+        chargeForm.getCreatedDate().setValue(LocalDate.now());
+        chargeForm.getBonusProgram().setItems(getProgramNames());
+        chargeForm.getContractor().setItems(getContractorNames());
+
+
+    }
+
+    private List<String> getProgramNames() {
+        List<String> programList = new ArrayList<>();
+        for (BonusProgramDto bonus : programService.getAll()) {
+            programList.add(bonus.getName());
+        }
+        return programList;
+    }
+
+    private List<String> getContractorNames() {
+        List<String> contractorList = new ArrayList<>();
+        for (ContractorDto contractor : contractorService.getAll()) {
+            contractorList.add(contractor.getName());
+        }
+
+        return contractorList;
+    }
+
+    private BonusTransactionDto getDtoForm() {
+        BonusTransactionDto dto = new BonusTransactionDto();
+        dto.setId(Long.valueOf(chargeForm.getIdInput().getValue()));
+        dto.setExecutionDate(chargeForm.getExecutionDate().getValue());
+        dto.setCreated(chargeForm.getCreatedDate().getValue());
+        dto.setComment(chargeForm.getComment().getValue());
+        dto.setBonusValue(Long.valueOf(chargeForm.getBonusValueInput().getValue()));
+
+
+        String contractorName = chargeForm.getContractor().getValue();
+        dto.setContragent(contractorService.findByName(contractorService.getAll(), contractorName));
+
+        String programName = chargeForm.getBonusProgram().getValue();
+        dto.setBonusProgramDto(programService.findByName(programService.getAll(), programName));
+
+        return dto;
     }
 
 
