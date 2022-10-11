@@ -1,11 +1,9 @@
 package com.warehouse_accounting.components.retail;
 
-import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -18,7 +16,6 @@ import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.services.interfaces.BonusProgramService;
 import com.warehouse_accounting.services.interfaces.BonusTransactionService;
 import com.warehouse_accounting.services.interfaces.ContractorService;
-
 
 import java.time.LocalDate;
 import java.util.List;
@@ -38,8 +35,8 @@ public class BonusTransaction extends VerticalLayout {
     private BonusTransactionService service;
     private BonusProgramService programService;
     private ContractorService contractorService;
-    private BonusTransactionForm chargeForm = new BonusTransactionForm(BonusTransactionForm.TypeOperation.CHARGE);
-    private BonusTransactionForm writeOffForm = new BonusTransactionForm(BonusTransactionForm.TypeOperation.WRITE_OFF);
+    private BonusTransactionForm earningForm = new BonusTransactionForm(BonusTransactionForm.TypeOperation.CHARGE);
+    private BonusTransactionForm spendingForm = new BonusTransactionForm(BonusTransactionForm.TypeOperation.WRITE_OFF);
 
 
     public BonusTransaction(BonusTransactionGridLayout grid,
@@ -58,89 +55,97 @@ public class BonusTransaction extends VerticalLayout {
         setMultiSelect();
         setVisibleChangeSubmenu();
         setSelectItem();
-        setCloseButtonCharge();
-        setCloseButtonWriteOff();
-        setSubMenuCharge();
-        setSubMenuWriteOff();
-        setRefreshButtonLogic();
-        setFormLogic();
+        setCloseButtonEarning();
+        setCloseButtonSpending();
+        setSubMenuEarning();
+        setSubMenuSpending();
+        setRefreshButton();
+        loadSpendingForm();
+        loadEarningForm();
         setDeleteLogic();
-
-        add(toolBar, grid, chargeForm, writeOffForm);
+        setCopyLogic();
+        add(toolBar, grid, earningForm, spendingForm);
 
     }
 
     private void setSelectItem() {
         grid.getPointsGrid().addItemDoubleClickListener(event -> {
-                    setFormFields(event.getItem());
-                    openChargeFormVisible();
+                    BonusTransactionDto.TransactionType currentType = event.getItem().getTransactionType();
+                    if (currentType == BonusTransactionDto.TransactionType.EARNING) {
+                        setChargeFormFields(event.getItem());
+                        openEarningForm();
+                    } else {
+                        setWriteOffFormFields(event.getItem());
+                        openSpendingForm();
+                    }
+
+
                 }
         );
 
     }
 
 
-    private void setCloseButtonCharge() {
-        chargeForm.getClosedButton().addClickListener(buttonClickEvent -> {
-                    closeChargeFormVisible();
+    private void setCloseButtonEarning() {
+        earningForm.getClosedButton().addClickListener(buttonClickEvent -> {
+                    closeEarningForm();
                     updateGrid();
 
                 }
         );
     }
 
-    private void setCloseButtonWriteOff() {
-        writeOffForm.getClosedButton().addClickListener(buttonClickEvent -> {
-                    grid.setVisible(true);
-                    toolBar.setVisible(true);
-                    writeOffForm.setVisible(false);
+    private void setCloseButtonSpending() {
+        spendingForm.getClosedButton().addClickListener(buttonClickEvent -> {
+                    closeSpendingForm();
                     updateGrid();
                 }
         );
     }
 
-    private void openChargeFormVisible() {
+    private void openEarningForm() {
         grid.setVisible(false);
         toolBar.setVisible(false);
-        chargeForm.setVisible(true);
+        earningForm.setVisible(true);
     }
 
-    private void openWriteOffFormVisible() {
+    private void openSpendingForm() {
         grid.setVisible(false);
         toolBar.setVisible(false);
-        writeOffForm.setVisible(true);
+        spendingForm.setVisible(true);
 
     }
 
-    private void closeChargeFormVisible() {
+    private void closeEarningForm() {
         grid.setVisible(true);
         toolBar.setVisible(true);
-        chargeForm.setVisible(false);
+        earningForm.setVisible(false);
 
     }
 
-    private void closeWriteOffFormVisible() {
-        grid.setVisible(false);
-        toolBar.setVisible(false);
-        chargeForm.setVisible(true);
-
+    private void closeSpendingForm() {
+        grid.setVisible(true);
+        toolBar.setVisible(true);
+        spendingForm.setVisible(false);
     }
 
     private void updateGrid() {
         grid.getPointsGrid().setItems(service.getAll());
     }
 
-    private void setRefreshButtonLogic() {
+    private void setRefreshButton() {
         toolBar.getRefreshButton().addClickListener(buttonClickEvent -> {
             updateGrid();
         });
     }
 
-    private void setSubMenuCharge() {
+    private void setSubMenuEarning() {
         toolBar.getMenuBarOperation().getItems().get(0).getSubMenu().addItem("Начислить",
                 menuItemClickEvent -> {
-                    setFormFields(new BonusTransactionDto());
-                    openChargeFormVisible();
+
+
+                    setChargeFormFields(new BonusTransactionDto());
+                    openEarningForm();
                 }
         );
     }
@@ -162,68 +167,132 @@ public class BonusTransaction extends VerticalLayout {
 
     }
 
-    private void setSubMenuWriteOff() {
+
+    private void setSubMenuSpending() {
         toolBar.getMenuBarOperation().getItems().get(0).getSubMenu().addItem("Списать",
                 menuItemClickEvent -> {
-                    openWriteOffFormVisible();
+                    BonusTransactionDto dto = BonusTransactionDto.builder()
+                            .transactionType(BonusTransactionDto.TransactionType.SPENDING)
+                            .build();
+
+                    setWriteOffFormFields(dto);
+                    openSpendingForm();
                 }
         );
     }
 
-    private void setFormLogic() {
+    private void loadEarningForm() {
 
-        chargeForm.getBonusProgram().setItems(getBonusPrograms());
-        chargeForm.getBonusProgram().setValue(getBonusPrograms().get(0));
-        chargeForm.getContractor().setItems(getContractors());
-        chargeForm.getContractor().setValue(getContractors().get(0));
-        chargeForm.getContractor().setItemLabelGenerator(ContractorDto::getName);
-        chargeForm.getBonusProgram().setItemLabelGenerator(BonusProgramDto::getName);
+        earningForm.getBonusProgram().setItems(getBonusPrograms());
+        earningForm.getBonusProgram().setValue(getBonusPrograms().get(0));
+        earningForm.getContractor().setItems(getContractors());
+        earningForm.getContractor().setValue(getContractors().get(0));
+        earningForm.getContractor().setItemLabelGenerator(ContractorDto::getName);
+        earningForm.getBonusProgram().setItemLabelGenerator(BonusProgramDto::getName);
 
 
-        chargeForm.getSaveButton().addClickListener(click -> {
+        earningForm.getSaveButton().addClickListener(click -> {
 
-            service.create(getDtoForm());
+            service.create(getFromChargeForm());
 
         });
 
 
     }
 
+    private void loadSpendingForm() {
 
-    private void setFormFields(BonusTransactionDto dto) {
+        spendingForm.getBonusProgram().setItems(getBonusPrograms());
+        spendingForm.getBonusProgram().setValue(getBonusPrograms().get(0));
+        spendingForm.getContractor().setItems(getContractors());
+        spendingForm.getContractor().setValue(getContractors().get(0));
+        spendingForm.getContractor().setItemLabelGenerator(ContractorDto::getName);
+        spendingForm.getBonusProgram().setItemLabelGenerator(BonusProgramDto::getName);
+
+        spendingForm.getSaveButton().addClickListener(click -> {
+
+            service.create(getFromWriteOffForm());
+
+        });
+    }
+
+    private BonusTransactionDto getFromWriteOffForm() {
+
+        BonusTransactionDto dto = new BonusTransactionDto();
+
+        dto.setId(Long.valueOf(spendingForm.getIdInput().getValue()));
+        dto.setExecutionDate(spendingForm.getExecutionDate().getValue());
+        dto.setCreated(spendingForm.getCreatedDate().getValue());
+        dto.setComment(spendingForm.getComment().getValue());
+        dto.setBonusValue(Long.valueOf(spendingForm.getBonusValueInput().getValue()));
+        dto.setBonusProgramDto(spendingForm.getBonusProgram().getValue());
+        dto.setContragent(spendingForm.getContractor().getValue());
+        dto.setTransactionType(BonusTransactionDto.TransactionType.SPENDING);
+        dto.setTransactionStatus(BonusTransactionDto.TransactionStatus.COMPLETED);
+
+        return dto;
+
+    }
+
+
+    private void setChargeFormFields(BonusTransactionDto dto) {
 
         if (dto.getId() == null) {
-            chargeForm.getIdInput().setValue(0);
-            chargeForm.getComment().setValue("");
-            chargeForm.getBonusValueInput().setValue(0);
-            chargeForm.getExecutionDate().setValue(LocalDate.now());
-            chargeForm.getCreatedDate().setValue(LocalDate.now());
+            earningForm.getIdInput().setValue(0);
+            earningForm.getComment().setValue("");
+            earningForm.getBonusValueInput().setValue(0);
+            earningForm.getExecutionDate().setValue(LocalDate.now());
+            earningForm.getCreatedDate().setValue(LocalDate.now());
         } else {
-            chargeForm.getIdInput().setValue(Math.toIntExact(dto.getId()));
-            chargeForm.getComment().setValue(dto.getComment());
-            chargeForm.getBonusValueInput().setValue(Math.toIntExact(dto.getBonusValue()));
-            chargeForm.getExecutionDate().setValue(dto.getExecutionDate());
-            chargeForm.getCreatedDate().setValue(dto.getCreated());
+            earningForm.getIdInput().setValue(Math.toIntExact(dto.getId()));
+            earningForm.getComment().setValue(dto.getComment());
+            earningForm.getBonusValueInput().setValue(Math.toIntExact(dto.getBonusValue()));
+            earningForm.getExecutionDate().setValue(dto.getExecutionDate());
+            earningForm.getCreatedDate().setValue(dto.getCreated());
 
         }
-        dto.setBonusProgramDto(chargeForm.getBonusProgram().getValue());
-        dto.setContragent(chargeForm.getContractor().getValue());
+        dto.setBonusProgramDto(earningForm.getBonusProgram().getValue());
+        dto.setContragent(earningForm.getContractor().getValue());
+
+        System.out.println(dto);
+
+    }
+
+    private void setWriteOffFormFields(BonusTransactionDto dto) {
+
+        if (dto.getId() == null) {
+            spendingForm.getIdInput().setValue(0);
+            spendingForm.getComment().setValue("");
+            spendingForm.getBonusValueInput().setValue(0);
+            spendingForm.getExecutionDate().setValue(LocalDate.now());
+            spendingForm.getCreatedDate().setValue(LocalDate.now());
+        } else {
+            spendingForm.getIdInput().setValue(Math.toIntExact(dto.getId()));
+            spendingForm.getComment().setValue(dto.getComment());
+            spendingForm.getBonusValueInput().setValue(Math.toIntExact(dto.getBonusValue()));
+            spendingForm.getExecutionDate().setValue(dto.getExecutionDate());
+            spendingForm.getCreatedDate().setValue(dto.getCreated());
+
+        }
+        dto.setBonusProgramDto(spendingForm.getBonusProgram().getValue());
+        dto.setContragent(spendingForm.getContractor().getValue());
 
 
     }
 
-    private BonusTransactionDto getDtoForm() {
+    private BonusTransactionDto getFromChargeForm() {
         BonusTransactionDto dto = new BonusTransactionDto();
 
-        dto.setId(Long.valueOf(chargeForm.getIdInput().getValue()));
-        dto.setExecutionDate(chargeForm.getExecutionDate().getValue());
-        dto.setCreated(chargeForm.getCreatedDate().getValue());
-        dto.setComment(chargeForm.getComment().getValue());
-        dto.setBonusValue(Long.valueOf(chargeForm.getBonusValueInput().getValue()));
-        dto.setBonusProgramDto(chargeForm.getBonusProgram().getValue());
-        dto.setContragent(chargeForm.getContractor().getValue());
+        dto.setId(Long.valueOf(earningForm.getIdInput().getValue()));
+        dto.setExecutionDate(earningForm.getExecutionDate().getValue());
+        dto.setCreated(earningForm.getCreatedDate().getValue());
+        dto.setComment(earningForm.getComment().getValue());
+        dto.setBonusValue(Long.valueOf(earningForm.getBonusValueInput().getValue()));
+        dto.setBonusProgramDto(earningForm.getBonusProgram().getValue());
+        dto.setContragent(earningForm.getContractor().getValue());
+        dto.setTransactionType(BonusTransactionDto.TransactionType.EARNING);
+        dto.setTransactionStatus(BonusTransactionDto.TransactionStatus.COMPLETED);
 
-        System.out.println(dto);
 
         return dto;
     }
@@ -253,6 +322,12 @@ public class BonusTransaction extends VerticalLayout {
         });
 
 
+    }
+
+    private void setCopyLogic() {
+        toolBar.getCopyItem().addClickListener(event -> {
+            Notification.show("Берем лист из выделенных и прогоняем через метод create");
+        });
     }
 
     private List<BonusProgramDto> getBonusPrograms() {
