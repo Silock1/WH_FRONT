@@ -59,6 +59,24 @@ html, body, td, .gwt-TextArea, textarea {
     margin-right: 17px;
 }
 
+.silverButton {
+    border-spacing: 0;
+    border-collapse: collapse;
+    color: #222;
+    font: 12px "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    outline: 0;
+    padding: 10px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background: -webkit-linear-gradient(top, #fff, #e6e6e6);
+    height: 32px;
+
+
+}
+
+
+
 .manualName {
     color: #222;
     font: 12px "Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
@@ -69,6 +87,12 @@ html, body, td, .gwt-TextArea, textarea {
     margin-right: 20px;
 }
 
+.title {
+    color: black;
+    font-size: 30px;
+    align-items: center;
+}
+
 .helpButton {
     width: 15px;
     min-width: 15px;
@@ -76,6 +100,18 @@ html, body, td, .gwt-TextArea, textarea {
     margin-right: 10px!important;
     display: inline-block;
     cursor: pointer;
+}
+
+.settingButton {
+    white-space: nowrap;
+    --lumo-button-size: var(--lumo-size-m);
+    font-family: var(--lumo-font-family);
+    font-size: var(--lumo-font-size-m);
+    font-weight: 500;
+    color: var(--_lumo-button-color, var(--lumo-primary-text-color));
+    cursor: default;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
 }
 
 #text {
@@ -107,6 +143,11 @@ html, body, td, .gwt-TextArea, textarea {
     height: 26px;
     margin-right: 15px;
 }
+
+.borderCheck {
+    border: green solid 3px;
+}
+
 .btnBorder {
     margin: 0 10px 0 0;
     padding: 0 10px;
