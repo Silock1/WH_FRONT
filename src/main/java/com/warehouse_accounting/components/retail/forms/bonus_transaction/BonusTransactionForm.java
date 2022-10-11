@@ -14,6 +14,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.models.dto.BonusProgramDto;
+import com.warehouse_accounting.models.dto.ContractorDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,8 +29,8 @@ public class BonusTransactionForm extends VerticalLayout {
     private Button saveButton;
     private IntegerField idInput;
     private IntegerField bonusValueInput;
-    private ComboBox<String> bonusProgram;
-    private ComboBox<String> contractor;
+    private ComboBox<BonusProgramDto> bonusProgram;
+    private ComboBox<ContractorDto> contractor;
     private TextField comment;
     private DatePicker executionDate;
     private DatePicker createdDate;

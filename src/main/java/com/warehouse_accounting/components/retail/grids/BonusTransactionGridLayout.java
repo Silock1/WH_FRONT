@@ -37,8 +37,9 @@ public class BonusTransactionGridLayout extends HorizontalLayout {
 
         horizontalLayout.setSizeFull();
         pointsGrid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
+        pointsGrid.setHeightByRows(true);
+
         pointsGrid.setItems(service.getAll());
-        pointsGrid.setSizeFull();
         pointsGrid.setSelectionMode(Grid.SelectionMode.MULTI);
 
 

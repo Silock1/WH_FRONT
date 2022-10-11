@@ -16,6 +16,7 @@ import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.warehouse_accounting.components.util.SilverButton;
 import com.warehouse_accounting.services.interfaces.BonusTransactionService;
@@ -26,9 +27,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BonusTransactionToolBar extends HorizontalLayout {
-    private MenuBar menuBar;
+    private MenuBar menuBarOperation;
     private BonusTransactionService service;
     private Button refreshButton;
+    private IntegerField miniField;
+    private MenuBar menuBarChanged;
+    private MenuItem deleteItem;
+    private MenuItem copyItem;
 
     public BonusTransactionToolBar(BonusTransactionService service) {
         this.service = service;
@@ -47,7 +52,9 @@ public class BonusTransactionToolBar extends HorizontalLayout {
         toolbarLayout.setAlignItems(Alignment.CENTER);
 
         //MenuBar
-        MenuBar menuOperation = menuOperationButton();
+        menuBarOperation = new MenuBar();
+        menuBarOperation.addThemeVariants(MenuBarVariant.LUMO_ICON, MenuBarVariant.LUMO_CONTRAST);
+        menuBarOperation.addItem(menuVision("Операция"));
         //Filter
         Button filter = silverButton.buttonBlank("Фильтр");
         //Text
@@ -73,23 +80,38 @@ public class BonusTransactionToolBar extends HorizontalLayout {
         Input searchField = new Input();
         searchField.setPlaceholder("Номер или комментарий");
         searchField.setWidth("200px");
-        Input miniField = new Input();
+        miniField = new IntegerField();
         miniField.setWidth("25px");
-        miniField.setValue("0");
+        miniField.setValue(0);
+        miniField.setReadOnly(true);
 
         //MenuBar Edit
-        MenuBar edit = menuEditButton();
+        menuBarChanged = new MenuBar();
+        menuBarChanged.addThemeVariants(MenuBarVariant.LUMO_ICON, MenuBarVariant.LUMO_CONTRAST);
+
+        MenuItem operation = menuBarChanged.addItem(menuVision("Изменить"));
+
+        SubMenu accureSubMenu = operation.getSubMenu();
+        deleteItem = accureSubMenu.addItem("Удалить");
+        deleteItem
+                .getElement()
+                .setAttribute("disabled", true);
+
+        copyItem = accureSubMenu.addItem("Копировать");
+        copyItem.getElement()
+                .setAttribute("disabled", true);
+        accureSubMenu.addItem("Массовое редактирование");
 
 
         toolbarLayout.add(
                 helpButton,
                 text,
                 refreshButton,
-                menuOperation,
+                menuBarOperation,
                 filter,
                 searchField,
                 miniField,
-                edit
+                menuBarChanged
 
         );
         return toolbarLayout;
@@ -129,15 +151,6 @@ public class BonusTransactionToolBar extends HorizontalLayout {
                         "Читать инструкцию: Бонусные программы"
         );
 
-    }
-
-    private MenuBar menuOperationButton() {
-        menuBar = new MenuBar();
-        menuBar.addThemeVariants(MenuBarVariant.LUMO_ICON, MenuBarVariant.LUMO_CONTRAST);
-        menuBar.addItem(menuVision("Операция"));
-
-
-        return menuBar;
     }
 
     private MenuBar menuEditButton() {
