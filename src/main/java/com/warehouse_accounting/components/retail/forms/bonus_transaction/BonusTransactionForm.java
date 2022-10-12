@@ -4,7 +4,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.Input;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -13,7 +12,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.models.dto.BonusProgramDto;
 import com.warehouse_accounting.models.dto.ContractorDto;
 import lombok.Getter;
@@ -40,8 +38,6 @@ public class BonusTransactionForm extends VerticalLayout {
        this.typeOperation = typeOperation;
         setSizeFull();
         setVisible(false);
-
-
 
 
         add(
@@ -180,7 +176,7 @@ public class BonusTransactionForm extends VerticalLayout {
     }
 
     public enum TypeOperation {
-        CHARGE("Начисление"), WRITE_OFF("Списание");
+        EARNING("Начисление"), SPENDING("Списание");
         private String type;
 
         TypeOperation(String type) {
@@ -192,7 +188,7 @@ public class BonusTransactionForm extends VerticalLayout {
         }
 
         public String dateType() {
-            if (this == CHARGE) {
+            if (this == EARNING) {
                 return "Дата начислен" +
                         "ия";
             } else {
