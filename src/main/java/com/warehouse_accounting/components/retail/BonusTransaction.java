@@ -65,8 +65,8 @@ public class BonusTransaction extends VerticalLayout {
         setSubMenuEarning();
         setSubMenuSpending();
         setRefreshButton();
-        loadSpendingForm();
-        loadEarningForm();
+        saveButtonSpendingRealise();
+        saveButtonEarningRealise();
         setDeleteLogic();
         setCopyLogic();
         add(toolBar, grid, earningForm, spendingForm);
@@ -149,7 +149,7 @@ public class BonusTransaction extends VerticalLayout {
         toolBar.getMenuBarOperation().getItems().get(0).getSubMenu().addItem("Начислить",
                 menuItemClickEvent -> {
 
-
+                    // loadForm(earningForm);
                     setChargeFormFields(new BonusTransactionDto());
                     openEarningForm();
                 }
@@ -177,34 +177,59 @@ public class BonusTransaction extends VerticalLayout {
     private void setSubMenuSpending() {
         toolBar.getMenuBarOperation().getItems().get(0).getSubMenu().addItem("Списать",
                 menuItemClickEvent -> {
-                    BonusTransactionDto dto = BonusTransactionDto.builder()
-                            .transactionType(BonusTransactionDto.TransactionType.SPENDING)
-                            .build();
 
-                    setWriteOffFormFields(dto);
+
+                    setWriteOffFormFields(new BonusTransactionDto());
                     openSpendingForm();
                 }
         );
     }
 
-    private void loadEarningForm() {
-
-        earningForm.getBonusProgram().setItems(getBonusPrograms());
-        earningForm.getBonusProgram().setValue(getBonusPrograms().get(0));
-        earningForm.getContractor().setItems(getContractors());
-        earningForm.getContractor().setValue(getContractors().get(0));
-        earningForm.getContractor().setItemLabelGenerator(ContractorDto::getName);
-        earningForm.getBonusProgram().setItemLabelGenerator(BonusProgramDto::getName);
-
-
+    private void saveButtonEarningRealise() {
         earningForm.getSaveButton().addClickListener(click -> {
-
             transactionService.create(getFromChargeForm());
 
         });
+    }
+
+    private void saveButtonSpendingRealise() {
+        spendingForm.getSaveButton().addClickListener(click -> {
+
+            transactionService.create(getFromWriteOffForm());
+
+        });
+    }
+
+    private void loadForm(BonusTransactionForm form) {
+
+        form.getBonusProgram().setItems(getBonusPrograms());
+        form.getBonusProgram().setValue(getBonusPrograms().get(0));
+        form.getContractor().setItems(getContractors());
+        form.getContractor().setValue(getContractors().get(0));
+        form.getContractor().setItemLabelGenerator(ContractorDto::getName);
+        form.getBonusProgram().setItemLabelGenerator(BonusProgramDto::getName);
 
 
     }
+
+//    private void loadEarningForm() {
+//
+//        earningForm.getBonusProgram().setItems(getBonusPrograms());
+//        earningForm.getBonusProgram().setValue(getBonusPrograms().get(0));
+//        earningForm.getContractor().setItems(getContractors());
+//        earningForm.getContractor().setValue(getContractors().get(0));
+//        earningForm.getContractor().setItemLabelGenerator(ContractorDto::getName);
+//        earningForm.getBonusProgram().setItemLabelGenerator(BonusProgramDto::getName);
+//
+//
+//        earningForm.getSaveButton().addClickListener(click -> {
+//
+//            transactionService.create(getFromChargeForm());
+//
+//        });
+//
+//
+//    }
 
     private void loadSpendingForm() {
 
@@ -243,6 +268,9 @@ public class BonusTransaction extends VerticalLayout {
 
     private void setChargeFormFields(BonusTransactionDto dto) {
 
+        dto.setBonusProgramDto(earningForm.getBonusProgram().getValue());
+        dto.setContragent(earningForm.getContractor().getValue());
+
         if (dto.getId() == null) {
             earningForm.getIdInput().setValue(0);
             earningForm.getComment().setValue("");
@@ -257,14 +285,24 @@ public class BonusTransaction extends VerticalLayout {
             earningForm.getCreatedDate().setValue(dto.getCreated());
 
         }
-        dto.setBonusProgramDto(earningForm.getBonusProgram().getValue());
-        dto.setContragent(earningForm.getContractor().getValue());
 
-        System.out.println(dto);
+        earningForm.getBonusProgram().setItems(getBonusPrograms());
+        earningForm.getBonusProgram().setValue(getBonusPrograms().get(0));
+        earningForm.getContractor().setItems(getContractors());
+        earningForm.getContractor().setValue(getContractors().get(0));
+        earningForm.getContractor().setItemLabelGenerator(ContractorDto::getName);
+        earningForm.getBonusProgram().setItemLabelGenerator(BonusProgramDto::getName);
+
+
+
 
     }
 
     private void setWriteOffFormFields(BonusTransactionDto dto) {
+
+        dto.setTransactionType(BonusTransactionDto.TransactionType.SPENDING);
+        dto.setBonusProgramDto(spendingForm.getBonusProgram().getValue());
+        dto.setContragent(spendingForm.getContractor().getValue());
 
         if (dto.getId() == null) {
             spendingForm.getIdInput().setValue(0);
@@ -280,8 +318,14 @@ public class BonusTransaction extends VerticalLayout {
             spendingForm.getCreatedDate().setValue(dto.getCreated());
 
         }
-        dto.setBonusProgramDto(spendingForm.getBonusProgram().getValue());
-        dto.setContragent(spendingForm.getContractor().getValue());
+        spendingForm.getBonusProgram().setItems(getBonusPrograms());
+        spendingForm.getBonusProgram().setValue(getBonusPrograms().get(0));
+        spendingForm.getContractor().setItems(getContractors());
+        spendingForm.getContractor().setValue(getContractors().get(0));
+        spendingForm.getContractor().setItemLabelGenerator(ContractorDto::getName);
+        spendingForm.getBonusProgram().setItemLabelGenerator(BonusProgramDto::getName);
+
+
 
 
     }

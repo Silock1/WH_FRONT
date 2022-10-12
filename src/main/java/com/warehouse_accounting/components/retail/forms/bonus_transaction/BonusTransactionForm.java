@@ -37,9 +37,11 @@ public class BonusTransactionForm extends VerticalLayout {
 
     public BonusTransactionForm(TypeOperation typeOperation) {
 
-        this.typeOperation = typeOperation;
+       this.typeOperation = typeOperation;
         setSizeFull();
         setVisible(false);
+
+
 
 
         add(
