@@ -57,18 +57,21 @@ public class BonusTransaction extends VerticalLayout {
         this.grid = grid;
         this.toolBar = toolBar;
 
-        setMultiSelect();
+        setMiniField();
         setVisibleChangeSubmenu();
         setSelectItem();
+
         setCloseButtonEarning();
         setCloseButtonSpending();
+        setSaveButtonSpending();
+        setSaveButtonEarning();
         setSubMenuEarning();
         setSubMenuSpending();
         setRefreshButton();
-        saveButtonSpendingRealise();
-        saveButtonEarningRealise();
+
         setDeleteLogic();
         setCopyLogic();
+
         add(toolBar, grid, earningForm, spendingForm);
 
     }
@@ -165,7 +168,7 @@ public class BonusTransaction extends VerticalLayout {
         );
     }
 
-    private void saveButtonEarningRealise() {
+    private void setSaveButtonEarning() {
         earningForm.getSaveButton().addClickListener(click -> {
             transactionService.create(getDataFromForm(earningForm));
 
@@ -173,7 +176,7 @@ public class BonusTransaction extends VerticalLayout {
         });
     }
 
-    private void saveButtonSpendingRealise() {
+    private void setSaveButtonSpending() {
         spendingForm.getSaveButton().addClickListener(click -> {
             transactionService.create(getDataFromForm(spendingForm));
 
@@ -229,13 +232,21 @@ public class BonusTransaction extends VerticalLayout {
     }
 
 
-    private void setMultiSelect() {
+    private void setMiniField() {
 
         grid.getPointsGrid().asMultiSelect().addSelectionListener(multiSelectionEvent -> {
             toolBar.getMiniField().setValue(multiSelectionEvent.getAllSelectedItems().size());
         });
 
 
+    }
+
+
+    private void setSelectedItems() {
+        grid.getPointsGrid().asMultiSelect().addSelectionListener(event -> {
+            selectedItems = event.getAllSelectedItems();
+
+        });
     }
 
     private void setDeleteLogic() {
@@ -250,14 +261,6 @@ public class BonusTransaction extends VerticalLayout {
 
 
     }
-
-    private void setSelectedItems() {
-        grid.getPointsGrid().asMultiSelect().addSelectionListener(event -> {
-            selectedItems = event.getAllSelectedItems();
-
-        });
-    }
-
 
     private void setCopyLogic() {
         setSelectedItems();
