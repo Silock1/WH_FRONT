@@ -77,10 +77,12 @@ public class BonusTransaction extends VerticalLayout {
         grid.getPointsGrid().addItemDoubleClickListener(event -> {
                     BonusTransactionDto.TransactionType currentType = event.getItem().getTransactionType();
                     if (currentType == BonusTransactionDto.TransactionType.EARNING) {
-                        setChargeFormFields(event.getItem());
+                        setForm(event.getItem(), earningForm);
+                      //  setChargeFormFields(event.getItem());
                         openEarningForm();
                     } else {
-                        setWriteOffFormFields(event.getItem());
+                      //  setWriteOffFormFields(event.getItem());
+                        setForm(event.getItem(), spendingForm);
                         openSpendingForm();
                     }
 
@@ -150,7 +152,8 @@ public class BonusTransaction extends VerticalLayout {
                 menuItemClickEvent -> {
 
                     // loadForm(earningForm);
-                    setChargeFormFields(new BonusTransactionDto());
+                   // setChargeFormFields(new BonusTransactionDto());
+                    setForm(new BonusTransactionDto(), earningForm);
                     openEarningForm();
                 }
         );
@@ -179,7 +182,8 @@ public class BonusTransaction extends VerticalLayout {
                 menuItemClickEvent -> {
 
 
-                    setWriteOffFormFields(new BonusTransactionDto());
+                    //setWriteOffFormFields(new BonusTransactionDto());
+                    setForm(new BonusTransactionDto(), spendingForm);
                     openSpendingForm();
                 }
         );
@@ -264,71 +268,94 @@ public class BonusTransaction extends VerticalLayout {
         return dto;
 
     }
-
-
-    private void setChargeFormFields(BonusTransactionDto dto) {
-
-        dto.setBonusProgramDto(earningForm.getBonusProgram().getValue());
-        dto.setContragent(earningForm.getContractor().getValue());
+    private void setForm(BonusTransactionDto dto, BonusTransactionForm form) {
+        dto.setBonusProgramDto(form.getBonusProgram().getValue());
+        dto.setContragent(form.getContractor().getValue());
 
         if (dto.getId() == null) {
-            earningForm.getIdInput().setValue(0);
-            earningForm.getComment().setValue("");
-            earningForm.getBonusValueInput().setValue(0);
-            earningForm.getExecutionDate().setValue(LocalDate.now());
-            earningForm.getCreatedDate().setValue(LocalDate.now());
+            form.getIdInput().setValue(0);
+            form.getComment().setValue("");
+            form.getBonusValueInput().setValue(0);
+            form.getExecutionDate().setValue(LocalDate.now());
+            form.getCreatedDate().setValue(LocalDate.now());
         } else {
-            earningForm.getIdInput().setValue(Math.toIntExact(dto.getId()));
-            earningForm.getComment().setValue(dto.getComment());
-            earningForm.getBonusValueInput().setValue(Math.toIntExact(dto.getBonusValue()));
-            earningForm.getExecutionDate().setValue(dto.getExecutionDate());
-            earningForm.getCreatedDate().setValue(dto.getCreated());
+            form.getIdInput().setValue(Math.toIntExact(dto.getId()));
+            form.getComment().setValue(dto.getComment());
+            form.getBonusValueInput().setValue(Math.toIntExact(dto.getBonusValue()));
+            form.getExecutionDate().setValue(dto.getExecutionDate());
+            form.getCreatedDate().setValue(dto.getCreated());
 
         }
 
-        earningForm.getBonusProgram().setItems(getBonusPrograms());
-        earningForm.getBonusProgram().setValue(getBonusPrograms().get(0));
-        earningForm.getContractor().setItems(getContractors());
-        earningForm.getContractor().setValue(getContractors().get(0));
-        earningForm.getContractor().setItemLabelGenerator(ContractorDto::getName);
-        earningForm.getBonusProgram().setItemLabelGenerator(BonusProgramDto::getName);
-
-
-
-
+        form.getBonusProgram().setItems(getBonusPrograms());
+        form.getBonusProgram().setValue(getBonusPrograms().get(0));
+        form.getContractor().setItems(getContractors());
+        form.getContractor().setValue(getContractors().get(0));
+        form.getContractor().setItemLabelGenerator(ContractorDto::getName);
+        form.getBonusProgram().setItemLabelGenerator(BonusProgramDto::getName);
     }
 
-    private void setWriteOffFormFields(BonusTransactionDto dto) {
-
-        dto.setTransactionType(BonusTransactionDto.TransactionType.SPENDING);
-        dto.setBonusProgramDto(spendingForm.getBonusProgram().getValue());
-        dto.setContragent(spendingForm.getContractor().getValue());
-
-        if (dto.getId() == null) {
-            spendingForm.getIdInput().setValue(0);
-            spendingForm.getComment().setValue("");
-            spendingForm.getBonusValueInput().setValue(0);
-            spendingForm.getExecutionDate().setValue(LocalDate.now());
-            spendingForm.getCreatedDate().setValue(LocalDate.now());
-        } else {
-            spendingForm.getIdInput().setValue(Math.toIntExact(dto.getId()));
-            spendingForm.getComment().setValue(dto.getComment());
-            spendingForm.getBonusValueInput().setValue(Math.toIntExact(dto.getBonusValue()));
-            spendingForm.getExecutionDate().setValue(dto.getExecutionDate());
-            spendingForm.getCreatedDate().setValue(dto.getCreated());
-
-        }
-        spendingForm.getBonusProgram().setItems(getBonusPrograms());
-        spendingForm.getBonusProgram().setValue(getBonusPrograms().get(0));
-        spendingForm.getContractor().setItems(getContractors());
-        spendingForm.getContractor().setValue(getContractors().get(0));
-        spendingForm.getContractor().setItemLabelGenerator(ContractorDto::getName);
-        spendingForm.getBonusProgram().setItemLabelGenerator(BonusProgramDto::getName);
-
-
-
-
-    }
+//    private void setChargeFormFields(BonusTransactionDto dto) {
+//
+//        dto.setBonusProgramDto(earningForm.getBonusProgram().getValue());
+//        dto.setContragent(earningForm.getContractor().getValue());
+//
+//        if (dto.getId() == null) {
+//            earningForm.getIdInput().setValue(0);
+//            earningForm.getComment().setValue("");
+//            earningForm.getBonusValueInput().setValue(0);
+//            earningForm.getExecutionDate().setValue(LocalDate.now());
+//            earningForm.getCreatedDate().setValue(LocalDate.now());
+//        } else {
+//            earningForm.getIdInput().setValue(Math.toIntExact(dto.getId()));
+//            earningForm.getComment().setValue(dto.getComment());
+//            earningForm.getBonusValueInput().setValue(Math.toIntExact(dto.getBonusValue()));
+//            earningForm.getExecutionDate().setValue(dto.getExecutionDate());
+//            earningForm.getCreatedDate().setValue(dto.getCreated());
+//
+//        }
+//
+//        earningForm.getBonusProgram().setItems(getBonusPrograms());
+//        earningForm.getBonusProgram().setValue(getBonusPrograms().get(0));
+//        earningForm.getContractor().setItems(getContractors());
+//        earningForm.getContractor().setValue(getContractors().get(0));
+//        earningForm.getContractor().setItemLabelGenerator(ContractorDto::getName);
+//        earningForm.getBonusProgram().setItemLabelGenerator(BonusProgramDto::getName);
+//
+//
+//    }
+//
+//    private void setWriteOffFormFields(BonusTransactionDto dto) {
+//
+//        dto.setTransactionType(BonusTransactionDto.TransactionType.SPENDING);
+//        dto.setBonusProgramDto(spendingForm.getBonusProgram().getValue());
+//        dto.setContragent(spendingForm.getContractor().getValue());
+//
+//        if (dto.getId() == null) {
+//            spendingForm.getIdInput().setValue(0);
+//            spendingForm.getComment().setValue("");
+//            spendingForm.getBonusValueInput().setValue(0);
+//            spendingForm.getExecutionDate().setValue(LocalDate.now());
+//            spendingForm.getCreatedDate().setValue(LocalDate.now());
+//        } else {
+//            spendingForm.getIdInput().setValue(Math.toIntExact(dto.getId()));
+//            spendingForm.getComment().setValue(dto.getComment());
+//            spendingForm.getBonusValueInput().setValue(Math.toIntExact(dto.getBonusValue()));
+//            spendingForm.getExecutionDate().setValue(dto.getExecutionDate());
+//            spendingForm.getCreatedDate().setValue(dto.getCreated());
+//
+//        }
+//        spendingForm.getBonusProgram().setItems(getBonusPrograms());
+//        spendingForm.getBonusProgram().setValue(getBonusPrograms().get(0));
+//        spendingForm.getContractor().setItems(getContractors());
+//        spendingForm.getContractor().setValue(getContractors().get(0));
+//        spendingForm.getContractor().setItemLabelGenerator(ContractorDto::getName);
+//        spendingForm.getBonusProgram().setItemLabelGenerator(BonusProgramDto::getName);
+//
+//
+//
+//
+//    }
 
     private BonusTransactionDto getFromChargeForm() {
         BonusTransactionDto dto = new BonusTransactionDto();
