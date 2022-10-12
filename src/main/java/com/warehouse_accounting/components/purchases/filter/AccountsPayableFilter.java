@@ -1,9 +1,15 @@
 package com.warehouse_accounting.components.purchases.filter;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Header;
+import com.vaadin.flow.component.html.Input;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -11,10 +17,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import com.warehouse_accounting.components.purchases.AccountsPayable;
+import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.*;
 import com.warehouse_accounting.services.interfaces.*;
-import lombok.Setter;
 
 import java.io.IOException;
 import java.util.List;
@@ -61,8 +66,18 @@ public class AccountsPayableFilter extends VerticalLayout {
 
     Button find = new Button("Найти");
     Button clear = new Button("Очистить");
-    Button bookmarks = new Button(new Icon(VaadinIcon.BOOKMARK));
+    Dialog dialog = new Dialog();
+    Button bookmarks = new Button(new Icon(VaadinIcon.BOOKMARK), buttonClickEvent -> dialog.open());
+    Button closeBookmarks = new Button(new Icon(VaadinIcon.CLOSE_SMALL), buttonClickEvent -> dialog.close());
+    Label bookmarksWindowName = new Label();
+    Header topBookmarkHeader = new Header();
+    Header middleBookmarkHeader = new Header();
+    Header bottomBookmarkHeader = new Header();
+    Button saveBookmark = new Button("Сохранить закладку");
+    Button cancelBookmark = new Button("Отменить", buttonClickEvent -> dialog.close());
+    Input bookmarkTitle = new Input();
     Button settingButton = new Button(new Icon(VaadinIcon.COG));
+    ColumnToggleContextMenu<Button> columnToggleContextMenu = new ColumnToggleContextMenu<>(settingButton);
     DatePicker periodStart = new DatePicker("Период");
     DatePicker periodEnd = new DatePicker("до");
     TextField incomingNumber = new TextField();
@@ -136,6 +151,8 @@ public class AccountsPayableFilter extends VerticalLayout {
         var horizontalLayout = new HorizontalLayout();
         find.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
         clear.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        dialog.add(bookmarkVerticalLayout());
+        columnToggleContextMenu.add(settingsCheckboxesLayout());
         periodStart.setWidth("100px");
         periodEnd.setWidth("100px");
         incomingNumber.setLabel("Входящий номер");
@@ -250,5 +267,50 @@ public class AccountsPayableFilter extends VerticalLayout {
 
         horizontalLayout.add(employeeBox);
         return horizontalLayout;
+    }
+
+    private VerticalLayout bookmarkVerticalLayout() {
+        var verticalLayout = new VerticalLayout();
+        var horizontalLayout = new HorizontalLayout();
+        bookmarksWindowName.setText("Закладки");
+        bookmarkTitle.getStyle().set("margin", "1rem");
+        saveBookmark.getStyle().set("margin", "0.2rem");
+        saveBookmark.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+        cancelBookmark.getStyle().set("margin", "0.2rem");
+        topBookmarkHeader.add(bookmarksWindowName);
+        topBookmarkHeader.getStyle().set("font-size", "20px").set("font-weight", "bold");
+        topBookmarkHeader.setWidth("500px");
+        bookmarkTitle.setWidth("420px");
+        middleBookmarkHeader.setText("Название");
+        middleBookmarkHeader.add(bookmarkTitle);
+        bottomBookmarkHeader.add(saveBookmark, cancelBookmark);
+        horizontalLayout.add(topBookmarkHeader, closeBookmarks);
+        verticalLayout.add(horizontalLayout, middleBookmarkHeader, bottomBookmarkHeader);
+        return verticalLayout;
+    }
+
+    private VerticalLayout settingsCheckboxesLayout() {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setSpacing(false);
+        String[] namesOfFields = {"Период", "до", "Входящий номер", "Входящая дата", "до", "Оплата", "Приемка",
+                "План. дата оплаты", "до", "Товар или группа", "Склад", "Проект", "Контрагент", "Группа контрагента",
+                "Счет контрагента", "Договор", "Владелец контрагента", "Организация", "Счет организации", "Статус",
+                "Проведено", "Напечатано", "Отправлено", "Владелец-сотрудник", "Владелец-отдел", "Общий доступ",
+                "Когда изменен", "до", "Кто изменил"};
+        Component[] valuesOfFields = {periodStart, periodEnd, incomingNumber, incomingDataStart, incomingDataEnd, payment,
+                acceptance, periodStart2, periodEnd2, productDtoComboBox, warehouseDtoComboBox, projectDtoComboBox,
+                contractorDtoComboBox, contractorGroupBox, contractorAccount, contractDtoComboBox, employeeDtoComboBox,
+                companyDtoComboBox, companyAccount, status, accountingEntry, printed, sent, employeeDtoBox,
+                departmentDtoComboBox, generalAccess, periodStart3, periodEnd3, employeeBox};
+        for (int i = 0; i < namesOfFields.length; i++) {
+            layout.add(createCheckBoxWithListener(new Checkbox(namesOfFields[i]), valuesOfFields[i]));
+        }
+        return layout;
+    }
+
+    Checkbox createCheckBoxWithListener(Checkbox checkbox, Component component) {
+        checkbox.setValue(true);
+        checkbox.addClickListener(event -> component.setVisible(checkbox.getValue()));
+        return checkbox;
     }
 }
