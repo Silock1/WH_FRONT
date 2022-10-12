@@ -2,7 +2,6 @@ package com.warehouse_accounting.components.retail;
 
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -16,9 +15,13 @@ import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.services.interfaces.BonusProgramService;
 import com.warehouse_accounting.services.interfaces.BonusTransactionService;
 import com.warehouse_accounting.services.interfaces.ContractorService;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -30,23 +33,25 @@ import java.util.List;
 @UIScope
 public class BonusTransaction extends VerticalLayout {
 
-    private BonusTransactionGridLayout grid;
-    private BonusTransactionToolBar toolBar;
-    private BonusTransactionService service;
-    private BonusProgramService programService;
-    private ContractorService contractorService;
-    private BonusTransactionForm earningForm = new BonusTransactionForm(BonusTransactionForm.TypeOperation.CHARGE);
-    private BonusTransactionForm spendingForm = new BonusTransactionForm(BonusTransactionForm.TypeOperation.WRITE_OFF);
-
+    private final BonusTransactionGridLayout grid;
+    private final BonusTransactionToolBar toolBar;
+    private final BonusTransactionService transactionService;
+    private final BonusProgramService programService;
+    private final ContractorService contractorService;
+    private final BonusTransactionForm earningForm = new BonusTransactionForm(BonusTransactionForm.TypeOperation.CHARGE);
+    private final BonusTransactionForm spendingForm = new BonusTransactionForm(BonusTransactionForm.TypeOperation.WRITE_OFF);
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    private Set<BonusTransactionDto> selectedItems;
 
     public BonusTransaction(BonusTransactionGridLayout grid,
 
                             BonusTransactionToolBar toolBar,
 
-                            BonusTransactionService service,
+                            BonusTransactionService transactionService,
                             BonusProgramService programService,
                             ContractorService contractorService) {
-        this.service = service;
+        this.transactionService = transactionService;
         this.programService = programService;
         this.contractorService = contractorService;
         this.grid = grid;
@@ -130,7 +135,8 @@ public class BonusTransaction extends VerticalLayout {
     }
 
     private void updateGrid() {
-        grid.getPointsGrid().setItems(service.getAll());
+
+        grid.getPointsGrid().setItems(transactionService.getAll());
     }
 
     private void setRefreshButton() {
@@ -193,7 +199,7 @@ public class BonusTransaction extends VerticalLayout {
 
         earningForm.getSaveButton().addClickListener(click -> {
 
-            service.create(getFromChargeForm());
+            transactionService.create(getFromChargeForm());
 
         });
 
@@ -211,7 +217,7 @@ public class BonusTransaction extends VerticalLayout {
 
         spendingForm.getSaveButton().addClickListener(click -> {
 
-            service.create(getFromWriteOffForm());
+            transactionService.create(getFromWriteOffForm());
 
         });
     }
@@ -300,34 +306,48 @@ public class BonusTransaction extends VerticalLayout {
     private void setMultiSelect() {
 
         grid.getPointsGrid().asMultiSelect().addSelectionListener(multiSelectionEvent -> {
-
             toolBar.getMiniField().setValue(multiSelectionEvent.getAllSelectedItems().size());
         });
+
 
     }
 
     private void setDeleteLogic() {
 
-        grid.getPointsGrid().asMultiSelect().addSelectionListener(event -> {
-
-            toolBar.getDeleteItem().addClickListener(clickDelete -> {
-
-                for (BonusTransactionDto dto : event.getAllSelectedItems()) {
-                    service.deleteById(dto.getId());
-                }
-                updateGrid();
-            });
-
-
+        setSelectedItems();
+        toolBar.getDeleteItem().addClickListener(eventDelete -> {
+            for (BonusTransactionDto dto : selectedItems) {
+                transactionService.deleteById(dto.getId());
+            }
+            updateGrid();
         });
 
 
     }
 
-    private void setCopyLogic() {
-        toolBar.getCopyItem().addClickListener(event -> {
-            Notification.show("Берем лист из выделенных и прогоняем через метод create");
+    private void setSelectedItems() {
+        grid.getPointsGrid().asMultiSelect().addSelectionListener(event -> {
+            selectedItems = event.getAllSelectedItems();
+
         });
+    }
+
+
+    private void setCopyLogic() {
+        setSelectedItems();
+
+        toolBar.getCopyItem().addClickListener(eventCopy -> {
+            for (BonusTransactionDto dto : selectedItems) {
+                //set id 0 чтобы он создал новый при create, иначе с тем же id не создает
+                dto.setId(0L);
+                //заглушка
+                dto.setOwner(null);
+                transactionService.create(dto);
+            }
+            updateGrid();
+        });
+
+
     }
 
     private List<BonusProgramDto> getBonusPrograms() {
