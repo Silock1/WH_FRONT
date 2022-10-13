@@ -2,6 +2,7 @@ package com.warehouse_accounting.components.retail;
 
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -72,7 +73,7 @@ public class BonusTransaction extends VerticalLayout {
         setSubMenuEarning();
         setSubMenuSpending();
         setRefreshButton();
-
+        setSubMenuMassEdit();
         setFilterButttonLogic();
         setDeleteLogic();
         setCopyLogic();
@@ -149,6 +150,11 @@ public class BonusTransaction extends VerticalLayout {
                     openForm(earningForm);
                 }
         );
+    }
+
+    private void setSubMenuMassEdit() {
+        toolBar.getMassEdit().addClickListener(event ->
+                Notification.show("ЗАГЛУШКА"));
     }
 
     private void setVisibleChangeSubmenu() {

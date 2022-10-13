@@ -35,6 +35,7 @@ public class BonusTransactionToolBar extends HorizontalLayout {
     private MenuItem deleteItem;
     private MenuItem copyItem;
     private Button filterButton;
+    private MenuItem massEdit;
 
     public BonusTransactionToolBar(BonusTransactionService service) {
         this.service = service;
@@ -101,7 +102,7 @@ public class BonusTransactionToolBar extends HorizontalLayout {
         copyItem = accureSubMenu.addItem("Копировать");
         copyItem.getElement()
                 .setAttribute("disabled", true);
-        accureSubMenu.addItem("Массовое редактирование");
+        massEdit = accureSubMenu.addItem("Массовое редактирование");
 
 
         toolbarLayout.add(
