@@ -4,6 +4,8 @@ import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -65,7 +67,7 @@ public class BonusTransaction extends VerticalLayout {
         setMiniField();
         setVisibleChangeSubmenu();
         setSelectItem();
-
+        setFilterTextField();
         setCloseButtonEarning();
         setCloseButtonSpending();
         setSaveButtonSpending();
@@ -106,6 +108,20 @@ public class BonusTransaction extends VerticalLayout {
         );
     }
 
+    private void setFilterTextField() {
+        TextField filterField = toolBar.getSearchField();
+        filterField.setValueChangeMode(ValueChangeMode.LAZY);
+
+        filterField.addValueChangeListener(
+                field ->
+                {
+                    updateGrid(transactionService.filter(field.getValue()));
+
+                }
+        );
+
+    }
+
     private void setCloseButtonSpending() {
         spendingForm.getClosedButton().addClickListener(buttonClickEvent -> {
                     closeForm(spendingForm);
@@ -135,6 +151,11 @@ public class BonusTransaction extends VerticalLayout {
     private void updateGrid() {
 
         grid.getPointsGrid().setItems(transactionService.getAll());
+    }
+
+    private void updateGrid(List<BonusTransactionDto> list) {
+
+        grid.getPointsGrid().setItems(list);
     }
 
     private void setRefreshButton() {
@@ -204,7 +225,6 @@ public class BonusTransaction extends VerticalLayout {
     private void setForm(BonusTransactionDto dto, BonusTransactionForm form) {
         dto.setBonusProgramDto(form.getBonusProgram().getValue());
         dto.setContragent(form.getContractor().getValue());
-
 
 
         if (dto.getId() == null) {

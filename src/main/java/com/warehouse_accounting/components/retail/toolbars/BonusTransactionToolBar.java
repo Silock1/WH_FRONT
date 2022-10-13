@@ -17,6 +17,7 @@ import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.warehouse_accounting.components.util.SilverButton;
 import com.warehouse_accounting.services.interfaces.BonusTransactionService;
@@ -36,6 +37,7 @@ public class BonusTransactionToolBar extends HorizontalLayout {
     private MenuItem copyItem;
     private Button filterButton;
     private MenuItem massEdit;
+    private TextField searchField;
 
     public BonusTransactionToolBar(BonusTransactionService service) {
         this.service = service;
@@ -79,7 +81,7 @@ public class BonusTransactionToolBar extends HorizontalLayout {
 
 
         //Inputs
-        Input searchField = new Input();
+        searchField = new TextField();
         searchField.setPlaceholder("Номер или комментарий");
         searchField.setWidth("200px");
         miniField = new IntegerField();

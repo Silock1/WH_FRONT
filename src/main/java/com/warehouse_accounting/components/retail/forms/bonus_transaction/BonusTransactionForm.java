@@ -4,6 +4,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -11,7 +12,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import com.vaadin.flow.component.textfield.IntegerField;
-import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.TextArea;
+import com.warehouse_accounting.components.retail.grids.FileGridLayOut;
 import com.warehouse_accounting.models.dto.BonusProgramDto;
 import com.warehouse_accounting.models.dto.ContractorDto;
 import lombok.Getter;
@@ -29,13 +31,14 @@ public class BonusTransactionForm extends VerticalLayout {
     private IntegerField bonusValueInput;
     private ComboBox<BonusProgramDto> bonusProgram;
     private ComboBox<ContractorDto> contractor;
-    private TextField comment;
+    private TextArea comment;
     private DatePicker executionDate;
     private DatePicker createdDate;
+    private FileGridLayOut fileGridLayOut = new FileGridLayOut();
 
     public BonusTransactionForm(TypeOperation typeOperation) {
 
-       this.typeOperation = typeOperation;
+        this.typeOperation = typeOperation;
         setSizeFull();
         setVisible(false);
 
@@ -45,6 +48,7 @@ public class BonusTransactionForm extends VerticalLayout {
                 titleLine(),
                 checkBoxLine(),
                 pointsLine(),
+                new H1("Ниже заглушки не рабочие"),
                 headerCommentLine(),
                 commentLine(),
                 taskButtonLine(),
@@ -68,11 +72,13 @@ public class BonusTransactionForm extends VerticalLayout {
 
     public HorizontalLayout titleLine() {
         HorizontalLayout l = new HorizontalLayout();
+        idInput = new IntegerField();
+        idInput.setWidth("40px");
 
 
         l.add(
                 new Span(String.format("%s бонусных баллов №", typeOperation.getValue())),
-                idInput = new IntegerField(),//id
+                idInput,
                 new Span("от"),
                 createdDate = new DatePicker()//created
 
@@ -84,22 +90,24 @@ public class BonusTransactionForm extends VerticalLayout {
 
     public HorizontalLayout checkBoxLine() {
         HorizontalLayout l = new HorizontalLayout();
+        Icon icon = new Icon(VaadinIcon.PENCIL);
 
         bonusProgram = new ComboBox<>();
-
-
         contractor = new ComboBox<>();
+
+
+        icon.setSize("10px");
 
 
         l.add(
                 new Span("Бонусная программа"),
                 bonusProgram,//combobox bonusProgram
-                new Icon(VaadinIcon.PENCIL),
+                icon,
                 new Span("Контрагент"),
                 contractor//combobox contrAgent
         );
 
-
+        l.setAlignItems(Alignment.CENTER);
         return l;
 
     }
@@ -134,11 +142,13 @@ public class BonusTransactionForm extends VerticalLayout {
 
     public HorizontalLayout commentLine() {
         HorizontalLayout l = new HorizontalLayout();
+        comment = new TextArea();
+        comment.setWidth("500px");
+        comment.setHeight("70px");
+        comment.setPlaceholder("Комментарий");
 
+        l.add(comment);
 
-        l.add(
-                comment = new TextField()
-        );//comment
         return l;
 
     }
@@ -170,7 +180,7 @@ public class BonusTransactionForm extends VerticalLayout {
         HorizontalLayout l = new HorizontalLayout();
 
 
-        l.add(new Span("IM GRID"));
+        l.add(fileGridLayOut);
         return l;
 
     }

@@ -16,5 +16,7 @@ public interface BonusTransactionService {
 
     void deleteById(Long id);
 
+    List<BonusTransactionDto> filter(String filterText);
+
 
 }

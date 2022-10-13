@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
@@ -54,5 +55,20 @@ public class BonusTransactionImpl implements BonusTransactionService {
         Call<Void> call = api.deleteById(url, id);
         new ServiceUtils<>(BonusTransactionDto.class).delete(call);
 
+    }
+
+    @Override
+    public List<BonusTransactionDto> filter(String filterText) {
+        List<BonusTransactionDto> list = new ArrayList<>();
+        for (BonusTransactionDto dto : getAll()) {
+            if (dto.getComment().contains(filterText)) {
+
+                list.add(dto);
+            } else if (filterText.contains(String.valueOf(dto.getId()))) {
+                list.add(dto);
+            }
+        }
+
+        return list;
     }
 }
