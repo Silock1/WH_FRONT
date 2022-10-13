@@ -55,7 +55,11 @@ public class BonusTransactionGridLayout extends HorizontalLayout {
         Grid.Column<BonusTransactionDto> bonusProgramColumn = pointsGrid.addColumn(transaction -> transaction.getBonusProgramDto().getName()).setHeader("Бонусная программа").setSortable(true);
         Grid.Column<BonusTransactionDto> contragentColumn = pointsGrid.addColumn(transaction -> transaction.getContragent().getName()).setHeader("Контрагент").setSortable(true);
         Grid.Column<BonusTransactionDto> commentaryColumn = pointsGrid.addColumn(BonusTransactionDto::getComment).setHeader("Комментарий").setSortable(true);
+        Grid.Column<BonusTransactionDto> departmentColumn = pointsGrid.addColumn(transaction -> transaction.getOwner().getDepartment().getName()).setHeader("Владелец-отдел").setSortable(true);
         Grid.Column<BonusTransactionDto> ownerColumn = pointsGrid.addColumn(transaction -> transaction.getOwner().getFirstName()).setHeader("Владелец-сотрудник").setSortable(true);
+       // Grid.Column<BonusTransactionDto> ownerChangeColumn = pointsGrid.addColumn(transaction -> transaction.getOwner().getFirstName()).setHeader("Кто изменил").setSortable(true);
+        //Todo: Дата изменения. Добавить дату изменения в модель BonusTransaction. LocalDate.now() при создании. А затем при изменении.
+        //Todo: Кто изменил. Добавить поле в модель BonusTransaction getPrincipalManually()
 
         Button settingButton = silverButton.buttonSetting();
         ColumnToggleContextMenu<BonusTransactionDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(settingButton);
@@ -69,6 +73,9 @@ public class BonusTransactionGridLayout extends HorizontalLayout {
         columnToggleContextMenu.addColumnToggleItem("Контрагент", contragentColumn);
         columnToggleContextMenu.addColumnToggleItem("Комментарий", commentaryColumn);
         columnToggleContextMenu.addColumnToggleItem("Владелец-сотрудник", ownerColumn);
+        columnToggleContextMenu.addColumnToggleItem("Владелец-отдел", departmentColumn);
+        //Todo: Дата изменения Добавить дату изменения в модель BonusTransaction
+        //Todo: Кто изменил. owner
         return settingButton;
     }
 
