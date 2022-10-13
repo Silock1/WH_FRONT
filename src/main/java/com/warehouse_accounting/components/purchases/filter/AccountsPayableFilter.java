@@ -20,6 +20,8 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.models.dto.*;
 import com.warehouse_accounting.services.interfaces.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,6 +30,8 @@ import java.util.List;
 
 @SpringComponent
 @UIScope
+@Getter
+@Setter
 public class AccountsPayableFilter extends VerticalLayout {
     private final WarehouseService warehouseService;
     private final ContractService contractService;
@@ -64,55 +68,55 @@ public class AccountsPayableFilter extends VerticalLayout {
         setVisible(false);
     }
 
-    Button find = new Button("Найти");
-    Button clear = new Button("Очистить");
-    Dialog dialog = new Dialog();
-    Button bookmarks = new Button(new Icon(VaadinIcon.BOOKMARK), buttonClickEvent -> dialog.open());
-    Button closeBookmarks = new Button(new Icon(VaadinIcon.CLOSE_SMALL), buttonClickEvent -> dialog.close());
-    Label bookmarksWindowName = new Label();
-    Header topBookmarkHeader = new Header();
-    Header middleBookmarkHeader = new Header();
-    Header bottomBookmarkHeader = new Header();
-    Button saveBookmark = new Button("Сохранить закладку");
-    Button cancelBookmark = new Button("Отменить", buttonClickEvent -> dialog.close());
-    Input bookmarkTitle = new Input();
-    Button settingButton = new Button(new Icon(VaadinIcon.COG));
-    ColumnToggleContextMenu<Button> columnToggleContextMenu = new ColumnToggleContextMenu<>(settingButton);
-    DatePicker periodStart = new DatePicker("Период");
-    DatePicker periodEnd = new DatePicker("до");
-    TextField incomingNumber = new TextField();
-    DatePicker incomingDataStart = new DatePicker("Входящая дата");
-    DatePicker incomingDataEnd = new DatePicker("до");
-    ComboBox<String> payment = new ComboBox<>("Оплата", "Оплачено",
+    private Button find = new Button("Найти");
+    private Button clear = new Button("Очистить");
+    private Dialog dialog = new Dialog();
+    private Button bookmarks = new Button(new Icon(VaadinIcon.BOOKMARK), buttonClickEvent -> dialog.open());
+    private Button closeBookmarks = new Button(new Icon(VaadinIcon.CLOSE_SMALL), buttonClickEvent -> dialog.close());
+    private Label bookmarksWindowName = new Label();
+    private Header topBookmarkHeader = new Header();
+    private Header middleBookmarkHeader = new Header();
+    private Header bottomBookmarkHeader = new Header();
+    private Button saveBookmark = new Button("Сохранить закладку");
+    private Button cancelBookmark = new Button("Отменить", buttonClickEvent -> dialog.close());
+    private Input bookmarkTitle = new Input();
+    private Button settingButton = new Button(new Icon(VaadinIcon.COG));
+    private ColumnToggleContextMenu<Button> columnToggleContextMenu = new ColumnToggleContextMenu<>(settingButton);
+    private DatePicker periodStart = new DatePicker("Период");
+    private DatePicker periodEnd = new DatePicker("до");
+    private TextField incomingNumber = new TextField();
+    private DatePicker incomingDataStart = new DatePicker("Входящая дата");
+    private DatePicker incomingDataEnd = new DatePicker("до");
+    private ComboBox<String> payment = new ComboBox<>("Оплата", "Оплачено",
             "Частично оплачено", "Не оплачено", "Просрочено");
 
-    ComboBox<String> acceptance = new ComboBox<>("Приемка", "Принято", "Частично принято", "Не принято");
-    DatePicker periodStart2 = new DatePicker("План. дата оплаты");
-    DatePicker periodEnd2 = new DatePicker("до");
-    ComboBox<ProductDto> productDtoComboBox = new ComboBox<>("Товар или группа");
-    ComboBox<WarehouseDto> warehouseDtoComboBox = new ComboBox<>("Склад");
-    ComboBox<ProjectDto> projectDtoComboBox = new ComboBox<>("Проект");
+    private ComboBox<String> acceptance = new ComboBox<>("Приемка", "Принято", "Частично принято", "Не принято");
+    private DatePicker periodStart2 = new DatePicker("План. дата оплаты");
+    private DatePicker periodEnd2 = new DatePicker("до");
+    private ComboBox<ProductDto> productDtoComboBox = new ComboBox<>("Товар или группа");
+    private ComboBox<WarehouseDto> warehouseDtoComboBox = new ComboBox<>("Склад");
+    private ComboBox<ProjectDto> projectDtoComboBox = new ComboBox<>("Проект");
 
-    ComboBox<ContractorDto> contractorDtoComboBox = new ComboBox<>("Контрагент");
-    ComboBox<String> contractorGroupBox = new ComboBox<>("Группа контрагента");
-    TextField contractorAccount = new TextField("Счет контрагента");
-    ComboBox<ContractDto> contractDtoComboBox = new ComboBox<>("Договор");
-    ComboBox<EmployeeDto> employeeDtoComboBox = new ComboBox<>("Владелец контрагента");
+    private ComboBox<ContractorDto> contractorDtoComboBox = new ComboBox<>("Контрагент");
+    private ComboBox<String> contractorGroupBox = new ComboBox<>("Группа контрагента");
+    private TextField contractorAccount = new TextField("Счет контрагента");
+    private ComboBox<ContractDto> contractDtoComboBox = new ComboBox<>("Договор");
+    private ComboBox<EmployeeDto> employeeDtoComboBox = new ComboBox<>("Владелец контрагента");
 
-    ComboBox<CompanyDto> companyDtoComboBox = new ComboBox<>("Организация");
-    TextField companyAccount = new TextField("Счет организации");
-    ComboBox<String> status = new ComboBox<>("Статус");
-    ComboBox<String> accountingEntry = new ComboBox<>("Проведено", "Да", "Нет");
-    ComboBox<String> printed = new ComboBox<>("Напечатано", "Да", "Нет");
+    private ComboBox<CompanyDto> companyDtoComboBox = new ComboBox<>("Организация");
+    private TextField companyAccount = new TextField("Счет организации");
+    private ComboBox<String> status = new ComboBox<>("Статус");
+    private ComboBox<String> accountingEntry = new ComboBox<>("Проведено", "Да", "Нет");
+    private ComboBox<String> printed = new ComboBox<>("Напечатано", "Да", "Нет");
 
-    ComboBox<String> sent = new ComboBox<>("Отправлено", "Да", "Нет");
-    ComboBox<EmployeeDto> employeeDtoBox = new ComboBox<>("Владелец-сотрудник");
-    ComboBox<DepartmentDto> departmentDtoComboBox = new ComboBox<>("Владелец-отдел");
-    ComboBox<String> generalAccess = new ComboBox<>("Общий доступ", "Да", "Нет");
-    DatePicker periodStart3 = new DatePicker("Когда изменен");
-    DatePicker periodEnd3 = new DatePicker("до");
+    private ComboBox<String> sent = new ComboBox<>("Отправлено", "Да", "Нет");
+    private ComboBox<EmployeeDto> employeeDtoBox = new ComboBox<>("Владелец-сотрудник");
+    private ComboBox<DepartmentDto> departmentDtoComboBox = new ComboBox<>("Владелец-отдел");
+    private ComboBox<String> generalAccess = new ComboBox<>("Общий доступ", "Да", "Нет");
+    private  DatePicker periodStart3 = new DatePicker("Когда изменен");
+    private DatePicker periodEnd3 = new DatePicker("до");
 
-    ComboBox<EmployeeDto> employeeBox = new ComboBox<>("Кто изменил");
+    private ComboBox<EmployeeDto> employeeBox = new ComboBox<>("Кто изменил");
 
     private void actionClear() {
         clear.addClickListener(e -> {
