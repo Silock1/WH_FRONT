@@ -11,6 +11,8 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.warehouse_accounting.components.retail.grids.FileGridLayOut;
@@ -48,7 +50,6 @@ public class BonusTransactionForm extends VerticalLayout {
                 titleLine(),
                 checkBoxLine(),
                 pointsLine(),
-                new H1("Ниже заглушки не рабочие"),
                 headerCommentLine(),
                 commentLine(),
                 taskButtonLine(),
@@ -129,11 +130,19 @@ public class BonusTransactionForm extends VerticalLayout {
 
     public HorizontalLayout headerCommentLine() {
         HorizontalLayout l = new HorizontalLayout();
+        Tabs commentHeader = new Tabs();
+        Tab homeTab = new Tab("Главная");
+        homeTab.setSelected(true);
+        Tab documentsTab = new Tab("Связанные документы");
+        commentHeader.add(homeTab, documentsTab);
 
+        commentHeader.addSelectedChangeListener(selected -> {
+            comment.setVisible(selected.getSelectedTab().getLabel().equals("Главная"));
+
+        } );
 
         l.add(
-                new Span("Главная"),
-                new Span("Связанные документы")
+                commentHeader
 
         );
         return l;
@@ -146,6 +155,7 @@ public class BonusTransactionForm extends VerticalLayout {
         comment.setWidth("500px");
         comment.setHeight("70px");
         comment.setPlaceholder("Комментарий");
+
 
         l.add(comment);
 

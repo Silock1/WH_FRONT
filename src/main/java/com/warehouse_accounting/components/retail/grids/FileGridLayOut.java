@@ -35,9 +35,9 @@ public class FileGridLayOut extends HorizontalLayout {
 
 
         //TODO: Нужен сервис для файла.
-        List<FileDto> fileList = new ArrayList<>();
-        fileList.add(FileDto.builder().id(1L).createdDate(new Date()).build());
-        fileGrid.setItems(fileList);
+//        List<FileDto> fileList = new ArrayList<>();
+//        fileList.add(FileDto.builder().id(1L).createdDate(new Date()).build());
+       // fileGrid.setItems(fileList);
 
     }
 
