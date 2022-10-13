@@ -2,7 +2,6 @@ package com.warehouse_accounting.components.retail;
 
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
@@ -176,7 +175,7 @@ public class BonusTransaction extends VerticalLayout {
 
     private void setSubMenuMassEdit() {
         toolBar.getMassEdit().addClickListener(event ->
-                silverButton.greenNotification("ЗАГЛУШКА"));
+                silverButton.greenNotification("ИЗМЕНИТЬ"));
     }
 
     private void setVisibleChangeSubmenu() {

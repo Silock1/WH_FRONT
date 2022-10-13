@@ -9,11 +9,6 @@ import com.warehouse_accounting.models.dto.FileDto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-
 @Getter
 @Setter
 @Route("filegrid")
@@ -34,7 +29,7 @@ public class FileGridLayOut extends HorizontalLayout {
         fileGrid.setHeightByRows(true);
 
 
-        //TODO: Нужен сервис для файла.
+       // TODO: Нужен сервис для файла. Перед сервисом нужно изменить связь Employee File on ManyToMany
 //        List<FileDto> fileList = new ArrayList<>();
 //        fileList.add(FileDto.builder().id(1L).createdDate(new Date()).build());
        // fileGrid.setItems(fileList);

@@ -1,6 +1,5 @@
 package com.warehouse_accounting.components.retail.forms.bonus_transaction;
 
-
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
@@ -9,9 +8,10 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
+import com.warehouse_accounting.components.util.SilverButton;
 
 public class FilterForm extends VerticalLayout {
-
+    private SilverButton silverButton =  new SilverButton();
     public FilterForm() {
         setVisible(false);
         add(lineOne(),lineTwo());
@@ -22,10 +22,10 @@ public class FilterForm extends VerticalLayout {
         HorizontalLayout layout = new HorizontalLayout();
         layout.add(
 
-                new Button("Найти"),
-                new Button("Очистить"),
-                new Button(new Icon(VaadinIcon.BOOKMARK)),
-                new Button(new Icon(VaadinIcon.COG)),
+                new Button("Найти", click -> silverButton.greenNotification("НАЙТИ") ),
+                new Button("Очистить",  click -> silverButton.greenNotification("Очистить")),
+                new Button(new Icon(VaadinIcon.BOOKMARK),  click -> silverButton.greenNotification("Закладки")),
+                new Button(new Icon(VaadinIcon.COG),  click -> silverButton.greenNotification("Колесо")),
                 new DatePicker("Период"),
                 new DatePicker("до"),
                 new ComboBox<>("Тип операции"),
