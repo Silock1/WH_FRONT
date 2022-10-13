@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.Date;
+import java.time.LocalDate;
+
 
 @Data
 @Builder
@@ -36,14 +37,14 @@ public class TariffDto {
 
     private Integer totalPrice;
 
-    private Date dateStartSubscription;
+    private LocalDate dateStartSubscription;
 
-    private Date dateEndSubscription;
+    private LocalDate dateEndSubscription;
 
     public static TariffDto getDefaultTarifDto() {
         return new TariffDto(1L, "tarifName", 1, 1, 1,
                 1, 1, true, true, true,
-                60, 500, new Date(), new Date());
+                60, 500, LocalDate.now(), LocalDate.now());
     }
 
 }

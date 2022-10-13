@@ -15,6 +15,7 @@ import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.services.interfaces.BonusProgramService;
 import com.warehouse_accounting.services.interfaces.BonusTransactionService;
 import com.warehouse_accounting.services.interfaces.ContractorService;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,6 +41,7 @@ public class BonusTransaction extends VerticalLayout {
     private final ContractorService contractorService;
     private final BonusTransactionForm earningForm = new BonusTransactionForm(BonusTransactionForm.TypeOperation.EARNING);
     private final BonusTransactionForm spendingForm = new BonusTransactionForm(BonusTransactionForm.TypeOperation.SPENDING);
+    private final EmployeeService employeeService;
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private Set<BonusTransactionDto> selectedItems;
@@ -50,12 +52,13 @@ public class BonusTransaction extends VerticalLayout {
 
                             BonusTransactionService transactionService,
                             BonusProgramService programService,
-                            ContractorService contractorService) {
+                            ContractorService contractorService, EmployeeService employeeService) {
         this.transactionService = transactionService;
         this.programService = programService;
         this.contractorService = contractorService;
         this.grid = grid;
         this.toolBar = toolBar;
+        this.employeeService = employeeService;
 
         setMiniField();
         setVisibleChangeSubmenu();
@@ -188,6 +191,8 @@ public class BonusTransaction extends VerticalLayout {
         dto.setBonusProgramDto(form.getBonusProgram().getValue());
         dto.setContragent(form.getContractor().getValue());
 
+
+
         if (dto.getId() == null) {
             form.getIdInput().setValue(0);
             form.getComment().setValue("");
@@ -220,6 +225,7 @@ public class BonusTransaction extends VerticalLayout {
         dto.setBonusValue(Long.valueOf(form.getBonusValueInput().getValue()));
         dto.setBonusProgramDto(form.getBonusProgram().getValue());
         dto.setContragent(form.getContractor().getValue());
+        dto.setOwner(employeeService.getPrincipalManually());
 
         if (form.equals(earningForm)) {
             dto.setTransactionType(BonusTransactionDto.TransactionType.EARNING);

@@ -5,15 +5,12 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.components.util.SilverButton;
-
 import com.warehouse_accounting.models.dto.BonusTransactionDto;
 import com.warehouse_accounting.services.interfaces.BonusTransactionService;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
 
 @SpringComponent
 @Getter
@@ -58,7 +55,7 @@ public class BonusTransactionGridLayout extends HorizontalLayout {
         Grid.Column<BonusTransactionDto> bonusProgramColumn = pointsGrid.addColumn(transaction -> transaction.getBonusProgramDto().getName()).setHeader("Бонусная программа").setSortable(true);
         Grid.Column<BonusTransactionDto> contragentColumn = pointsGrid.addColumn(transaction -> transaction.getContragent().getName()).setHeader("Контрагент").setSortable(true);
         Grid.Column<BonusTransactionDto> commentaryColumn = pointsGrid.addColumn(BonusTransactionDto::getComment).setHeader("Комментарий").setSortable(true);
-      //  Grid.Column<BonusTransactionDto> ownerColumn = pointsGrid.addColumn(transaction -> transaction.getOwner().getFirstName()).setHeader("Владелец-сотрудник").setSortable(true);
+        Grid.Column<BonusTransactionDto> ownerColumn = pointsGrid.addColumn(transaction -> transaction.getOwner().getFirstName()).setHeader("Владелец-сотрудник").setSortable(true);
 
         Button settingButton = silverButton.buttonSetting();
         ColumnToggleContextMenu<BonusTransactionDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(settingButton);
@@ -71,7 +68,7 @@ public class BonusTransactionGridLayout extends HorizontalLayout {
         columnToggleContextMenu.addColumnToggleItem("Бонусная программа", bonusProgramColumn);
         columnToggleContextMenu.addColumnToggleItem("Контрагент", contragentColumn);
         columnToggleContextMenu.addColumnToggleItem("Комментарий", commentaryColumn);
-      //  columnToggleContextMenu.addColumnToggleItem("Владелец-сотрудник", ownerColumn);
+        columnToggleContextMenu.addColumnToggleItem("Владелец-сотрудник", ownerColumn);
         return settingButton;
     }
 

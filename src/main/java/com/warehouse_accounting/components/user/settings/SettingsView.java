@@ -8,7 +8,10 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,9 +22,12 @@ import java.util.Map;
 @Route(value = "profile")
 @CssImport(value = "./css/settings.css", themeFor = "vaadin-app-layout")
 @CssImport(value = "./css/settings.css")
+@SpringComponent
+@UIScope
 public class SettingsView extends AppLayout {
-
-    public SettingsView() {
+    private EmployeeService employeeService;
+    public SettingsView(EmployeeService employeeService) {
+        this.employeeService = employeeService;
 
         List<String> settingsList = Arrays.asList("Настройки компании", "Сценарии", "Скидки");
         Tabs settingsTabs = new Tabs();
@@ -45,7 +51,7 @@ public class SettingsView extends AppLayout {
         catalogTitle.addClassName("tableTitle");
         createSubPanel(catalogList, catalogTabs);
 
-        addToNavbar(new AppView());
+        addToNavbar(new AppView(employeeService));
         addToDrawer(settingsTitle,
                 settingsTabs,
                 importExportTitle,
