@@ -13,6 +13,7 @@ import com.warehouse_accounting.components.retail.forms.bonus_transaction.BonusT
 import com.warehouse_accounting.components.retail.forms.bonus_transaction.FilterForm;
 import com.warehouse_accounting.components.retail.grids.BonusTransactionGridLayout;
 import com.warehouse_accounting.components.retail.toolbars.BonusTransactionToolBar;
+import com.warehouse_accounting.components.util.SilverButton;
 import com.warehouse_accounting.models.dto.BonusProgramDto;
 import com.warehouse_accounting.models.dto.BonusTransactionDto;
 import com.warehouse_accounting.models.dto.ContractorDto;
@@ -50,7 +51,7 @@ public class BonusTransaction extends VerticalLayout {
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private Set<BonusTransactionDto> selectedItems;
-
+    private SilverButton silverButton = new SilverButton();
     public BonusTransaction(BonusTransactionGridLayout grid,
                             BonusTransactionToolBar toolBar,
                             BonusTransactionService transactionService,
@@ -175,7 +176,7 @@ public class BonusTransaction extends VerticalLayout {
 
     private void setSubMenuMassEdit() {
         toolBar.getMassEdit().addClickListener(event ->
-                Notification.show("ЗАГЛУШКА"));
+                silverButton.greenNotification("ЗАГЛУШКА"));
     }
 
     private void setVisibleChangeSubmenu() {

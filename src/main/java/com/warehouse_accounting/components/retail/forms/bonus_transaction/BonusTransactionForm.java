@@ -8,6 +8,7 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
@@ -16,6 +17,7 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.warehouse_accounting.components.retail.grids.FileGridLayOut;
+import com.warehouse_accounting.components.util.SilverButton;
 import com.warehouse_accounting.models.dto.BonusProgramDto;
 import com.warehouse_accounting.models.dto.ContractorDto;
 import lombok.Getter;
@@ -37,6 +39,7 @@ public class BonusTransactionForm extends VerticalLayout {
     private DatePicker executionDate;
     private DatePicker createdDate;
     private FileGridLayOut fileGridLayOut = new FileGridLayOut();
+    private SilverButton silverButton = new SilverButton();
 
     public BonusTransactionForm(TypeOperation typeOperation) {
 
@@ -65,7 +68,7 @@ public class BonusTransactionForm extends VerticalLayout {
         l.add(
                 saveButton = new Button("Сохранить"),
                 closedButton = new Button("Закрыть"),
-                new Button("Изменить")//Menubar удалить копировать ЗАГЛУШКА
+                new Button("Изменить", click -> silverButton.greenNotification("ИЗМЕНИТЬ"))//Menubar удалить копировать ЗАГЛУШКА
         );
         return l;
 
@@ -92,13 +95,10 @@ public class BonusTransactionForm extends VerticalLayout {
     public HorizontalLayout checkBoxLine() {
         HorizontalLayout l = new HorizontalLayout();
         Icon icon = new Icon(VaadinIcon.PENCIL);
-
+        icon.addClickListener(click -> silverButton.greenNotification("РЕДАКТИРОВАНИЕ BonusProgramDto"));
+        icon.setSize("10px");
         bonusProgram = new ComboBox<>();
         contractor = new ComboBox<>();
-
-
-        icon.setSize("10px");
-
 
         l.add(
                 new Span("Бонусная программа"),
@@ -169,7 +169,8 @@ public class BonusTransactionForm extends VerticalLayout {
 
         l.add(
                 new Span("Задачи"),
-                new Button("Задачи"));
+                new Button("Задачи", click -> silverButton.greenNotification("ЗАДАЧИ"))
+        );
         return l;
 
     }
@@ -180,7 +181,7 @@ public class BonusTransactionForm extends VerticalLayout {
 
         l.add(
                 new Span("Файлы"),
-                new Button("Файлы"));
+                new Button("Файлы", click -> silverButton.greenNotification("ФАЙЛЫ")));
         return l;
 
     }
