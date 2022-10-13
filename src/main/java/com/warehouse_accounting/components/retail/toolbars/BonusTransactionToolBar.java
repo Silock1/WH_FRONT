@@ -34,6 +34,7 @@ public class BonusTransactionToolBar extends HorizontalLayout {
     private MenuBar menuBarChanged;
     private MenuItem deleteItem;
     private MenuItem copyItem;
+    private Button filterButton;
 
     public BonusTransactionToolBar(BonusTransactionService service) {
         this.service = service;
@@ -56,7 +57,7 @@ public class BonusTransactionToolBar extends HorizontalLayout {
         menuBarOperation.addThemeVariants(MenuBarVariant.LUMO_ICON, MenuBarVariant.LUMO_CONTRAST);
         menuBarOperation.addItem(menuVision("Операция"));
         //Filter
-        Button filter = silverButton.buttonBlank("Фильтр");
+        filterButton = silverButton.buttonBlank("Фильтр");
         //Text
         Span text = new Span("Операции с баллами");
         text.getElement().getStyle().set("font-size", "20px");
@@ -108,7 +109,7 @@ public class BonusTransactionToolBar extends HorizontalLayout {
                 text,
                 refreshButton,
                 menuBarOperation,
-                filter,
+                filterButton,
                 searchField,
                 miniField,
                 menuBarChanged

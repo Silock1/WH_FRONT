@@ -7,6 +7,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.retail.forms.bonus_transaction.BonusTransactionForm;
+import com.warehouse_accounting.components.retail.forms.bonus_transaction.FilterForm;
 import com.warehouse_accounting.components.retail.grids.BonusTransactionGridLayout;
 import com.warehouse_accounting.components.retail.toolbars.BonusTransactionToolBar;
 import com.warehouse_accounting.models.dto.BonusProgramDto;
@@ -42,14 +43,13 @@ public class BonusTransaction extends VerticalLayout {
     private final BonusTransactionForm earningForm = new BonusTransactionForm(BonusTransactionForm.TypeOperation.EARNING);
     private final BonusTransactionForm spendingForm = new BonusTransactionForm(BonusTransactionForm.TypeOperation.SPENDING);
     private final EmployeeService employeeService;
+    private final FilterForm filterForm = new FilterForm();
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private Set<BonusTransactionDto> selectedItems;
 
     public BonusTransaction(BonusTransactionGridLayout grid,
-
                             BonusTransactionToolBar toolBar,
-
                             BonusTransactionService transactionService,
                             BonusProgramService programService,
                             ContractorService contractorService, EmployeeService employeeService) {
@@ -59,6 +59,7 @@ public class BonusTransaction extends VerticalLayout {
         this.grid = grid;
         this.toolBar = toolBar;
         this.employeeService = employeeService;
+
 
         setMiniField();
         setVisibleChangeSubmenu();
@@ -72,10 +73,11 @@ public class BonusTransaction extends VerticalLayout {
         setSubMenuSpending();
         setRefreshButton();
 
+        setFilterButttonLogic();
         setDeleteLogic();
         setCopyLogic();
 
-        add(toolBar, grid, earningForm, spendingForm);
+        add(toolBar, filterForm, grid, earningForm, spendingForm);
 
     }
 
@@ -109,6 +111,12 @@ public class BonusTransaction extends VerticalLayout {
                     updateGrid();
                 }
         );
+    }
+
+    private void setFilterButttonLogic() {
+        toolBar.getFilterButton().addClickListener(event -> {
+            filterForm.setVisible(!filterForm.isVisible());
+        });
     }
 
     private void openForm(BonusTransactionForm form) {
@@ -275,8 +283,6 @@ public class BonusTransaction extends VerticalLayout {
             for (BonusTransactionDto dto : selectedItems) {
                 //set id 0 чтобы он создал новый при create, иначе с тем же id не создает
                 dto.setId(0L);
-                //заглушка
-                dto.setOwner(null);
                 transactionService.create(dto);
             }
             updateGrid();
