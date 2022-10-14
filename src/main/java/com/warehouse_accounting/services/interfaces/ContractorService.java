@@ -16,5 +16,4 @@ public interface ContractorService {
 
     void deleteById(Long id);
 
-    ContractorDto findByName(List<ContractorDto> list, String name);
 }

@@ -18,5 +18,4 @@ public interface BonusTransactionService {
 
     List<BonusTransactionDto> filter(String filterText);
 
-
 }
