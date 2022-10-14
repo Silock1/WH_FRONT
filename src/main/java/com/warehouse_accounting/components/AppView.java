@@ -52,13 +52,11 @@ public class AppView extends AppLayout implements PageConfigurator {
     private Boolean imgUrlExist = true;
     private EmployeeDto tmpEmployeeDto;
 
-    private Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://localhost:4446")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-    private EmployeeService employeeService = new EmployeeServiceImpl("api/employees", retrofit);
 
-    public AppView() {
+    private EmployeeService employeeService;
+
+    public AppView(EmployeeService employeeService) {
+        this.employeeService = employeeService;
         prepareNavBarTabs();
     }
 
