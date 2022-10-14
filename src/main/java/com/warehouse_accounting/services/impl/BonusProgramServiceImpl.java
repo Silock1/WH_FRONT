@@ -59,14 +59,4 @@ public class BonusProgramServiceImpl implements BonusProgramService {
 
     }
 
-    @Override
-    public BonusProgramDto findByName(List<BonusProgramDto> list, String name) {
-        BonusProgramDto programDto = new BonusProgramDto();
-        for(BonusProgramDto program: list) {
-            if (name.equals(program.getName())) {
-                programDto = program;
-            }
-        }
-        return programDto;
-    }
-}
+ }
