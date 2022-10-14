@@ -175,7 +175,7 @@ public class BonusTransaction extends VerticalLayout {
 
     private void setSubMenuMassEdit() {
         toolBar.getMassEdit().addClickListener(event ->
-                silverButton.greenNotification("ИЗМЕНИТЬ"));
+                silverButton.greenNotification("Массовое редактирование"));
     }
 
     private void setVisibleChangeSubmenu() {
