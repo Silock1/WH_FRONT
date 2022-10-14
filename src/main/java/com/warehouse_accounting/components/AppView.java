@@ -47,7 +47,7 @@ public class AppView extends AppLayout implements PageConfigurator {
     private EmployeeDto tmpEmployeeDto;
 
 
-    private EmployeeService employeeService ;
+    private EmployeeService employeeService;
 
     public AppView(EmployeeService employeeService) {
         this.employeeService = employeeService;

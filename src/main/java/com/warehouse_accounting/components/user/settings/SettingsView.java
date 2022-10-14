@@ -25,7 +25,7 @@ import java.util.Map;
 @SpringComponent
 @UIScope
 public class SettingsView extends AppLayout {
-    private EmployeeService employeeService;
+    private final EmployeeService employeeService;
     public SettingsView(EmployeeService employeeService) {
         this.employeeService = employeeService;
 

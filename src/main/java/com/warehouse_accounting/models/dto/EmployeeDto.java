@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -44,6 +45,10 @@ public class EmployeeDto {
     @NotNull
     private Set<TariffDto> tariff;
 
+    private IpNetworkDto ipNetwork = new IpNetworkDto();
+
+    private Set<IpAddressDto> ipAddress = new HashSet<>();
+
     @Override
     public String toString() {
         return "EmployeeDto{" +
@@ -62,6 +67,8 @@ public class EmployeeDto {
                 ", roles=" + roles +
                 ", image=" + image +
                 ", tariff=" + tariff +
+                ", ipNetwork=" + ipNetwork +
+                ", ipAddress=" + ipAddress +
                 '}';
     }
 }
