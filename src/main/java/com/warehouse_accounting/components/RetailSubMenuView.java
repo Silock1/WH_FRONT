@@ -8,7 +8,6 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-
 import com.warehouse_accounting.components.retail.BonusTransaction;
 import com.warehouse_accounting.components.retail.PointOfSales;
 
