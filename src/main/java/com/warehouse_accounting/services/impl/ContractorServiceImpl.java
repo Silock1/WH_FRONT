@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
 import retrofit2.Retrofit;
-
 import java.util.List;
 
 @Log4j2
@@ -53,4 +52,5 @@ public class ContractorServiceImpl implements ContractorService {
         Call<Void> call = api.deleteById(url, id);
         new ServiceUtils<>(ContractorDto.class).delete(call);
     }
+
 }

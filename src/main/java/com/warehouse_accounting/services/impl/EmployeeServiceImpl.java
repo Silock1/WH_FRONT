@@ -1,11 +1,13 @@
 package com.warehouse_accounting.services.impl;
 
 import com.warehouse_accounting.models.dto.EmployeeDto;
+import com.warehouse_accounting.security.UserPrincipal;
 import com.warehouse_accounting.services.ServiceUtils;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.api.EmployeeApi;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -65,6 +67,10 @@ public class EmployeeServiceImpl implements EmployeeService {
             log.error("Произошла ошибка при выполнении запроса информации о работнике");
         }
         return employeeDto;
+    }
+
+    public EmployeeDto getPrincipalManually() {
+        return ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getEmployeeDto();
     }
 
 

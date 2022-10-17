@@ -6,6 +6,8 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.router.Route;
 
 @Route("silverButtons")
@@ -30,6 +32,13 @@ public class SilverButton {
         button.setClassName("silverButton");
         return button;
 
+    }
+
+    public Notification greenNotification(String textMessage) {
+        Notification notification = Notification
+                .show(textMessage);
+        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+       return notification;
     }
 
     public Button buttonPlusYellow(String buttonText) {
@@ -66,6 +75,8 @@ public class SilverButton {
         return refreshButton;
 
     }
+
+    //TODO: MenuBars
 
 
 }

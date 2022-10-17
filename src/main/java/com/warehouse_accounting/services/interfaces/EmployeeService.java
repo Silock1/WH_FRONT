@@ -16,6 +16,8 @@ public interface EmployeeService {
 
     void deleteById(Long id);
 
+    @Deprecated //Возвращает null
     EmployeeDto getPrincipal();
 
+    EmployeeDto getPrincipalManually();
 }

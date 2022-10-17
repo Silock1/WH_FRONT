@@ -1,5 +1,8 @@
 server:
   port: 4447
+  servlet:
+    session:
+      persistent: false
 
   servlet:
     session:
@@ -18,6 +21,8 @@ retrofit:
     attribute_of_calculation_object_url: api/attribute_of_calculation_objects   #[]
     bank_account_url: api/bank_accounts
     bankAccount_url: api/bankAccounts   #404
+    bonusTransaction_url: api/bonus_transactions
+    bonusProgram_url: api/bonus_program
     building_url: api/buildings
     call_url: api/calls
     city_url: api/cities
