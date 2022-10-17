@@ -28,6 +28,12 @@ public class BonusTransactionDto {
 
     private BonusProgramDto bonusProgramDto;
 
+    private LocalDate changedDate = LocalDate.now();
+
+    private EmployeeDto changedEmployee;
+
+    private boolean generalAccess = false;
+
     private ContractorDto contragent;
 
     private String comment;

@@ -4,10 +4,6 @@ server:
     session:
       persistent: false
 
-  servlet:
-    session:
-      persistent: false
-
 retrofit:
   baseUrl: http://localhost:4446/
 

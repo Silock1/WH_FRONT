@@ -14,10 +14,13 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.warehouse_accounting.components.retail.grids.FileGridLayOut;
 import com.warehouse_accounting.components.util.SilverButton;
 import com.warehouse_accounting.models.dto.BonusProgramDto;
 import com.warehouse_accounting.models.dto.ContractorDto;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,6 +41,9 @@ public class BonusTransactionForm extends VerticalLayout {
     private DatePicker createdDate;
     private FileGridLayOut fileGridLayOut = new FileGridLayOut();
     private SilverButton silverButton = new SilverButton();
+    private Upload fileUpload;
+    private Button taskButton;
+
 
     public BonusTransactionForm(TypeOperation typeOperation) {
 
@@ -137,7 +143,7 @@ public class BonusTransactionForm extends VerticalLayout {
         commentHeader.addSelectedChangeListener(selected -> {
             comment.setVisible(selected.getSelectedTab().getLabel().equals("Главная"));
 
-        } );
+        });
 
         l.add(
                 commentHeader
@@ -163,11 +169,14 @@ public class BonusTransactionForm extends VerticalLayout {
 
     public HorizontalLayout taskButtonLine() {
         HorizontalLayout l = new HorizontalLayout();
+        taskButton = silverButton.buttonPLusBlue("Задачи");
+        taskButton.addClickListener(click -> silverButton.greenNotification("ЗАДАЧИ"));
 
 
         l.add(
                 new Span("Задачи"),
-                new Button("Задачи", click -> silverButton.greenNotification("ЗАДАЧИ"))
+                taskButton
+
         );
         return l;
 
@@ -175,11 +184,20 @@ public class BonusTransactionForm extends VerticalLayout {
 
     public HorizontalLayout filesButtonLine() {
         HorizontalLayout l = new HorizontalLayout();
+        MultiFileMemoryBuffer multiBuffer = new MultiFileMemoryBuffer();
+        fileUpload = new Upload(multiBuffer);
+        fileUpload.setUploadButton(silverButton.buttonPLusBlue("Файлы"));
+        fileUpload.setDropAllowed(false);
+        fileUpload.addSucceededListener(event ->
+        {
+            System.out.println(event.getFileName());
+            System.out.println(event.getContentLength());
+        });
 
-
+        l.setAlignItems(Alignment.CENTER);
         l.add(
                 new Span("Файлы"),
-                new Button("Файлы", click -> silverButton.greenNotification("ФАЙЛЫ")));
+                fileUpload);
         return l;
 
     }
