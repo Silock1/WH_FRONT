@@ -22,11 +22,18 @@ import com.warehouse_accounting.models.dto.BonusProgramDto;
 import com.warehouse_accounting.models.dto.ContractorDto;
 import com.warehouse_accounting.models.dto.EmployeeDto;
 import com.warehouse_accounting.models.dto.FileDto;
+import com.warehouse_accounting.services.interfaces.BonusTransactionService;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.FileService;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
+//TODO: При нажатии начисление или списание неявно создавать объект. При нажатии на закрыть удалить объект. Если ввести id, то нужно будет перед
+//TODO: сохранением изменить этот id на тот, что написал
 
 @CssImport(value = "./css/application.css")
 @Getter
@@ -42,16 +49,14 @@ public class BonusTransactionForm extends VerticalLayout {
     private TextArea comment;
     private DatePicker executionDate;
     private DatePicker createdDate;
-
     private FileService fileService;
-
     private final EmployeeService employeeService;
-
     private FileGridLayOut fileGridLayOut;
     private SilverButton silverButton = new SilverButton();
     private Upload fileUpload;
     private Button taskButton;
-
+    private List<FileDto> filesByIdTrans = new ArrayList<>();
+    private BonusTransactionService bonusTransactionService;
 
     public BonusTransactionForm(TypeOperation typeOperation, FileService fileService, EmployeeService employeeService) {
         this.fileService = fileService;
@@ -208,7 +213,8 @@ public class BonusTransactionForm extends VerticalLayout {
             fileService.create(fileDto);
             fileGridLayOut.updateFileGridColumns();
 
-            System.out.println(fileService.getFilesByTransactionId(1L));
+            filesByIdTrans = fileService.getFilesByTransactionId(Long.valueOf(idInput.getValue()));
+            System.out.println(filesByIdTrans.size());
         });
 
         l.setAlignItems(Alignment.CENTER);

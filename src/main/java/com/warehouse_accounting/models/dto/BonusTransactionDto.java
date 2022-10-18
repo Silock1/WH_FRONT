@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Data
@@ -37,6 +39,8 @@ public class BonusTransactionDto {
     private EmployeeDto ownerDto;
 
     private EmployeeDto ownerChangedDto;
+
+    private List<FileDto> filesDto = new ArrayList<>();
 
     private boolean generalAccess = false;
 
