@@ -4,15 +4,11 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
-import com.warehouse_accounting.models.dto.BonusTransactionDto;
-import com.warehouse_accounting.models.dto.EmployeeDto;
 import com.warehouse_accounting.models.dto.FileDto;
+import com.warehouse_accounting.services.interfaces.FileService;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -20,12 +16,18 @@ import java.time.LocalDate;
 public class FileGridLayOut extends HorizontalLayout {
     private Grid<FileDto> fileGrid = new Grid<>(FileDto.class, false);
 
+    private FileService fileService;
 
-    public FileGridLayOut() {
 
+
+    public FileGridLayOut(FileService fileService) {
+        this.fileService = fileService;
+
+        setColumns();
         gridCreate();
         add(fileGrid);
     }
+
 
     private void gridCreate() {
         fileGrid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
@@ -35,6 +37,10 @@ public class FileGridLayOut extends HorizontalLayout {
         fileGrid.addColumn(file -> file.getEmployeeDto().getFirstName()).setHeader("Сотрудник").setResizable(true);
         fileGrid.setHeightByRows(true);
 
+    }
+
+    private void setColumns() {
+       fileGrid.setItems(fileService.getAll());
     }
 
 }

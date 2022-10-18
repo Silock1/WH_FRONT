@@ -16,12 +16,17 @@ import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.retail.grids.FileGridLayOut;
 import com.warehouse_accounting.components.util.SilverButton;
 import com.warehouse_accounting.models.dto.BonusProgramDto;
 import com.warehouse_accounting.models.dto.ContractorDto;
+import com.warehouse_accounting.services.impl.FileServiceImpl;
+import com.warehouse_accounting.services.interfaces.FileService;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 @CssImport(value = "./css/application.css")
@@ -38,19 +43,23 @@ public class BonusTransactionForm extends VerticalLayout {
     private TextArea comment;
     private DatePicker executionDate;
     private DatePicker createdDate;
-    private FileGridLayOut fileGridLayOut = new FileGridLayOut();
+
+    private FileService fileService;
+
+    private FileGridLayOut fileGridLayOut;
     private SilverButton silverButton = new SilverButton();
     private Upload fileUpload;
     private Button taskButton;
 
 
-    public BonusTransactionForm(TypeOperation typeOperation) {
+    public BonusTransactionForm(TypeOperation typeOperation, FileService fileService) {
+        this.fileService = fileService;
 
         this.typeOperation = typeOperation;
         setSizeFull();
         setVisible(false);
 
-
+        fileGridLayOut = new FileGridLayOut(this.fileService);
         add(
                 buttonLine(),
                 titleLine(),

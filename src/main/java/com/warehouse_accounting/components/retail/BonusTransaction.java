@@ -20,9 +20,11 @@ import com.warehouse_accounting.services.interfaces.BonusProgramService;
 import com.warehouse_accounting.services.interfaces.BonusTransactionService;
 import com.warehouse_accounting.services.interfaces.ContractorService;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
+import com.warehouse_accounting.services.interfaces.FileService;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -43,27 +45,34 @@ public class BonusTransaction extends VerticalLayout {
     private final BonusTransactionService transactionService;
     private final BonusProgramService programService;
     private final ContractorService contractorService;
-    private final BonusTransactionForm earningForm = new BonusTransactionForm(BonusTransactionForm.TypeOperation.EARNING);
-    private final BonusTransactionForm spendingForm = new BonusTransactionForm(BonusTransactionForm.TypeOperation.SPENDING);
+    private final FileService fileService;
+    private final BonusTransactionForm earningForm;
+    private final BonusTransactionForm spendingForm;
     private final EmployeeService employeeService;
+
     private final FilterForm filterForm = new FilterForm();
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private Set<BonusTransactionDto> selectedItems;
     private SilverButton silverButton = new SilverButton();
+    @Autowired
     public BonusTransaction(BonusTransactionGridLayout grid,
                             BonusTransactionToolBar toolBar,
                             BonusTransactionService transactionService,
                             BonusProgramService programService,
-                            ContractorService contractorService, EmployeeService employeeService) {
+                            ContractorService contractorService, FileService fileService, EmployeeService employeeService
+                            ) {
+
         this.transactionService = transactionService;
         this.programService = programService;
         this.contractorService = contractorService;
         this.grid = grid;
         this.toolBar = toolBar;
+        this.fileService = fileService;
         this.employeeService = employeeService;
 
-
+        earningForm = new BonusTransactionForm(BonusTransactionForm.TypeOperation.EARNING, this.fileService);
+        spendingForm  = new BonusTransactionForm(BonusTransactionForm.TypeOperation.SPENDING, this.fileService);
         setMiniField();
         setVisibleChangeSubmenu();
         setSelectItem();
@@ -83,6 +92,8 @@ public class BonusTransaction extends VerticalLayout {
         add(toolBar, filterForm, grid, earningForm, spendingForm);
 
     }
+
+
 
     private void setSelectItem() {
         grid.getPointsGrid().addItemDoubleClickListener(event -> {
