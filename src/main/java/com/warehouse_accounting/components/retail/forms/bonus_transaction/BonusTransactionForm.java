@@ -16,17 +16,16 @@ import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.retail.grids.FileGridLayOut;
 import com.warehouse_accounting.components.util.SilverButton;
 import com.warehouse_accounting.models.dto.BonusProgramDto;
 import com.warehouse_accounting.models.dto.ContractorDto;
-import com.warehouse_accounting.services.impl.FileServiceImpl;
+import com.warehouse_accounting.models.dto.EmployeeDto;
+import com.warehouse_accounting.models.dto.FileDto;
+import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.FileService;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 @CssImport(value = "./css/application.css")
@@ -46,16 +45,19 @@ public class BonusTransactionForm extends VerticalLayout {
 
     private FileService fileService;
 
+    private final EmployeeService employeeService;
+
     private FileGridLayOut fileGridLayOut;
     private SilverButton silverButton = new SilverButton();
     private Upload fileUpload;
     private Button taskButton;
 
 
-    public BonusTransactionForm(TypeOperation typeOperation, FileService fileService) {
+    public BonusTransactionForm(TypeOperation typeOperation, FileService fileService, EmployeeService employeeService) {
         this.fileService = fileService;
-
         this.typeOperation = typeOperation;
+        this.employeeService = employeeService;
+
         setSizeFull();
         setVisible(false);
 
@@ -193,13 +195,18 @@ public class BonusTransactionForm extends VerticalLayout {
     public HorizontalLayout filesButtonLine() {
         HorizontalLayout l = new HorizontalLayout();
         MultiFileMemoryBuffer multiBuffer = new MultiFileMemoryBuffer();
+        EmployeeDto currentEmployee = employeeService.getPrincipalManually();
         fileUpload = new Upload(multiBuffer);
         fileUpload.setUploadButton(silverButton.buttonPLusBlue("Файлы"));
         fileUpload.setDropAllowed(false);
         fileUpload.addSucceededListener(event ->
         {
-            System.out.println(event.getFileName());
-            System.out.println(event.getContentLength());
+            FileDto fileDto = new FileDto();
+            fileDto.setSize(round((double) event.getContentLength() / 1_000_000));
+            fileDto.setName(event.getFileName());
+            fileDto.setEmployeeDto(currentEmployee);
+            fileService.create(fileDto);
+            fileGridLayOut.updateFileGridColumns();
         });
 
         l.setAlignItems(Alignment.CENTER);
@@ -208,6 +215,10 @@ public class BonusTransactionForm extends VerticalLayout {
                 fileUpload);
         return l;
 
+    }
+
+    private double round(double number) {
+        return (double) Math.round(number * 100) / 100;
     }
 
     public HorizontalLayout filesTableLine() {

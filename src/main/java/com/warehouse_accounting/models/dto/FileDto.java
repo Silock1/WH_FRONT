@@ -16,6 +16,6 @@ public class FileDto {
     private Long id;
     private String name;
     private double size;
-    private LocalDate createdDate;
+    private LocalDate createdDate = LocalDate.now();
     private EmployeeDto employeeDto;
 }

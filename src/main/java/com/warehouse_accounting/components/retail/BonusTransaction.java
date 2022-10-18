@@ -71,8 +71,8 @@ public class BonusTransaction extends VerticalLayout {
         this.fileService = fileService;
         this.employeeService = employeeService;
 
-        earningForm = new BonusTransactionForm(BonusTransactionForm.TypeOperation.EARNING, this.fileService);
-        spendingForm  = new BonusTransactionForm(BonusTransactionForm.TypeOperation.SPENDING, this.fileService);
+        earningForm = new BonusTransactionForm(BonusTransactionForm.TypeOperation.EARNING, this.fileService, this.employeeService);
+        spendingForm  = new BonusTransactionForm(BonusTransactionForm.TypeOperation.SPENDING, this.fileService, this.employeeService);
         setMiniField();
         setVisibleChangeSubmenu();
         setSelectItem();
