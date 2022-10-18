@@ -28,17 +28,17 @@ public class BonusTransactionDto {
 
     private BonusProgramDto bonusProgramDto;
 
-    private LocalDate changedDate = LocalDate.now();
-
-    private EmployeeDto changedEmployee;
-
-    private boolean generalAccess = false;
-
-    private ContractorDto contragent;
+    private ContractorDto contractorDto;
 
     private String comment;
 
-    private EmployeeDto owner;
+    private LocalDate dateChange = LocalDate.now();
+
+    private EmployeeDto ownerDto;
+
+    private EmployeeDto ownerChangedDto;
+
+    private boolean generalAccess = false;
 
     public enum TransactionType {
         EARNING, SPENDING

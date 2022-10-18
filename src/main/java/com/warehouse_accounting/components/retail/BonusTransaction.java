@@ -224,7 +224,7 @@ public class BonusTransaction extends VerticalLayout {
 
     private void setForm(BonusTransactionDto dto, BonusTransactionForm form) {
         dto.setBonusProgramDto(form.getBonusProgram().getValue());
-        dto.setContragent(form.getContractor().getValue());
+        dto.setContractorDto(form.getContractor().getValue());
 
 
         if (dto.getId() == null) {
@@ -258,9 +258,9 @@ public class BonusTransaction extends VerticalLayout {
         dto.setComment(form.getComment().getValue());
         dto.setBonusValue(Long.valueOf(form.getBonusValueInput().getValue()));
         dto.setBonusProgramDto(form.getBonusProgram().getValue());
-        dto.setContragent(form.getContractor().getValue());
-        dto.setOwner(employeeService.getPrincipalManually());
-        dto.setChangedEmployee(employeeService.getPrincipalManually());
+        dto.setContractorDto(form.getContractor().getValue());
+        dto.setOwnerDto(employeeService.getPrincipalManually());
+        dto.setOwnerChangedDto(employeeService.getPrincipalManually());
 
         if (form.equals(earningForm)) {
             dto.setTransactionType(BonusTransactionDto.TransactionType.EARNING);
