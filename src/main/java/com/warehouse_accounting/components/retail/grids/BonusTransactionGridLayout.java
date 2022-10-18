@@ -47,20 +47,20 @@ public class BonusTransactionGridLayout extends HorizontalLayout {
     private Button settingButtonOperations() {
         SilverButton silverButton = new SilverButton();
 
-        Grid.Column<BonusTransactionDto> idColumn = pointsGrid.addColumn(BonusTransactionDto::getId).setHeader("№").setSortable(true);
-        Grid.Column<BonusTransactionDto> dateCreateColumn = pointsGrid.addColumn(BonusTransactionDto::getCreated).setHeader("Дата создания").setSortable(true);
-        Grid.Column<BonusTransactionDto> operationColumn = pointsGrid.addColumn(BonusTransactionDto::getTransactionType).setHeader("Тип операции").setSortable(true);
-        Grid.Column<BonusTransactionDto> bonusColumn = pointsGrid.addColumn(BonusTransactionDto::getBonusValue).setHeader("Бонусные баллы").setSortable(true);
-        Grid.Column<BonusTransactionDto> statusColumn = pointsGrid.addColumn(BonusTransactionDto::getTransactionStatus).setHeader("Статус").setSortable(true);
-        Grid.Column<BonusTransactionDto> dateChargeColumn = pointsGrid.addColumn(BonusTransactionDto::getExecutionDate).setHeader("Дата начисления").setSortable(true);
-        Grid.Column<BonusTransactionDto> bonusProgramColumn = pointsGrid.addColumn(transaction -> transaction.getBonusProgramDto().getName()).setHeader("Бонусная программа").setSortable(true);
-        Grid.Column<BonusTransactionDto> contractorColumn = pointsGrid.addColumn(transaction -> transaction.getContractorDto().getName()).setHeader("Контрагент").setSortable(true);
-        Grid.Column<BonusTransactionDto> commentaryColumn = pointsGrid.addColumn(BonusTransactionDto::getComment).setHeader("Комментарий").setSortable(true);
-        Grid.Column<BonusTransactionDto> departmentColumn = pointsGrid.addColumn(transaction -> transaction.getOwnerDto().getDepartment().getName()).setHeader("Владелец-отдел").setSortable(true);
-        Grid.Column<BonusTransactionDto> generalAccessColumn = pointsGrid.addColumn(BonusTransactionDto::isGeneralAccess).setHeader("Общий доступ").setSortable(true);
-        Grid.Column<BonusTransactionDto> ownerColumn = pointsGrid.addColumn(transaction -> transaction.getOwnerDto().getFirstName()).setHeader("Владелец-сотрудник").setSortable(true);
-        Grid.Column<BonusTransactionDto> dateChangedColumn = pointsGrid.addColumn(BonusTransactionDto::getDateChange).setHeader("Дата изменения").setSortable(true);
-        Grid.Column<BonusTransactionDto> employeeChangeColumn = pointsGrid.addColumn(transaction -> transaction.getOwnerChangedDto().getFirstName()).setHeader("Кто изменил").setSortable(true);
+        Grid.Column<BonusTransactionDto> idColumn = pointsGrid.addColumn(BonusTransactionDto::getId).setHeader("№").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> dateCreateColumn = pointsGrid.addColumn(BonusTransactionDto::getCreated).setHeader("Дата создания").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> operationColumn = pointsGrid.addColumn(BonusTransactionDto::getTransactionType).setHeader("Тип операции").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> bonusColumn = pointsGrid.addColumn(BonusTransactionDto::getBonusValue).setHeader("Бонусные баллы").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> statusColumn = pointsGrid.addColumn(BonusTransactionDto::getTransactionStatus).setHeader("Статус").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> dateChargeColumn = pointsGrid.addColumn(BonusTransactionDto::getExecutionDate).setHeader("Дата начисления").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> bonusProgramColumn = pointsGrid.addColumn(transaction -> transaction.getBonusProgramDto().getName()).setHeader("Бонусная программа").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> contractorColumn = pointsGrid.addColumn(transaction -> transaction.getContractorDto().getName()).setHeader("Контрагент").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> commentaryColumn = pointsGrid.addColumn(BonusTransactionDto::getComment).setHeader("Комментарий").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> departmentColumn = pointsGrid.addColumn(transaction -> transaction.getOwnerDto().getDepartment().getName()).setHeader("Владелец-отдел").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> generalAccessColumn = pointsGrid.addColumn(BonusTransactionDto::isGeneralAccess).setHeader("Общий доступ").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> ownerColumn = pointsGrid.addColumn(transaction -> transaction.getOwnerDto().getFirstName()).setHeader("Владелец-сотрудник").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> dateChangedColumn = pointsGrid.addColumn(BonusTransactionDto::getDateChange).setHeader("Дата изменения").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> employeeChangeColumn = pointsGrid.addColumn(transaction -> transaction.getOwnerChangedDto().getFirstName()).setHeader("Кто изменил").setSortable(true).setResizable(true);
 
 
         Button settingButton = silverButton.buttonSetting();
