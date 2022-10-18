@@ -33,6 +33,8 @@ public class FileServiceImpl implements FileService {
         return new ServiceUtils<>(FileDto.class).getAll(call);
     }
 
+
+
     @Override
     public FileDto getById(Long id) {
         Call<FileDto> call = api.getById(url, id);
@@ -55,5 +57,11 @@ public class FileServiceImpl implements FileService {
     public void deleteById(Long id) {
         Call<Void> call = api.deleteById(url, id);
         new ServiceUtils<>(FileDto.class).delete(call);
+    }
+
+    @Override
+    public List<FileDto> getFilesByTransactionId(Long id) {
+       Call<List<FileDto>> call = api.getFilesByTransactionId(url, id);
+       return new ServiceUtils<>(FileDto.class).getAll(call);
     }
 }

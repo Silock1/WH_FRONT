@@ -16,4 +16,6 @@ public interface FileService {
 
     void deleteById(Long id);
 
+    List<FileDto> getFilesByTransactionId(Long id);
+
 }
