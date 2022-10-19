@@ -22,7 +22,7 @@ public class FileGridLayOut extends HorizontalLayout {
     public FileGridLayOut(FileService fileService) {
         this.fileService = fileService;
 
-        updateFileGridColumns();
+      //  updateFileGridColumns();
         gridCreate();
         add(fileGrid);
     }
@@ -38,8 +38,8 @@ public class FileGridLayOut extends HorizontalLayout {
 
     }
 
-    public void updateFileGridColumns() {
-        fileGrid.setItems(fileService.getAll());
-    }
+//    public void updateFileGridColumns() {
+//        fileGrid.setItems(fileService.getAll());
+//    }
 
 }

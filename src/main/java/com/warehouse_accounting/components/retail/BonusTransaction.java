@@ -8,7 +8,7 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import com.warehouse_accounting.components.retail.forms.bonus_transaction.BonusTransactionForm;
+import com.warehouse_accounting.components.retail.forms.bonus_transaction.BonusTransactionView;
 import com.warehouse_accounting.components.retail.forms.bonus_transaction.FilterForm;
 import com.warehouse_accounting.components.retail.grids.BonusTransactionGridLayout;
 import com.warehouse_accounting.components.retail.toolbars.BonusTransactionToolBar;
@@ -16,6 +16,7 @@ import com.warehouse_accounting.components.util.SilverButton;
 import com.warehouse_accounting.models.dto.BonusProgramDto;
 import com.warehouse_accounting.models.dto.BonusTransactionDto;
 import com.warehouse_accounting.models.dto.ContractorDto;
+import com.warehouse_accounting.models.dto.FileDto;
 import com.warehouse_accounting.services.interfaces.BonusProgramService;
 import com.warehouse_accounting.services.interfaces.BonusTransactionService;
 import com.warehouse_accounting.services.interfaces.ContractorService;
@@ -46,8 +47,8 @@ public class BonusTransaction extends VerticalLayout {
     private final BonusProgramService programService;
     private final ContractorService contractorService;
     private final FileService fileService;
-    private final BonusTransactionForm earningForm;
-    private final BonusTransactionForm spendingForm;
+    private final BonusTransactionView earningForm;
+    private final BonusTransactionView spendingForm;
     private final EmployeeService employeeService;
 
     private final FilterForm filterForm = new FilterForm();
@@ -71,8 +72,8 @@ public class BonusTransaction extends VerticalLayout {
         this.fileService = fileService;
         this.employeeService = employeeService;
 
-        earningForm = new BonusTransactionForm(BonusTransactionForm.TypeOperation.EARNING, this.fileService, this.employeeService);
-        spendingForm  = new BonusTransactionForm(BonusTransactionForm.TypeOperation.SPENDING, this.fileService, this.employeeService);
+        earningForm = new BonusTransactionView(BonusTransactionView.TypeOperation.EARNING, this.fileService, this.employeeService);
+        spendingForm  = new BonusTransactionView(BonusTransactionView.TypeOperation.SPENDING, this.fileService, this.employeeService);
         setMiniField();
         setVisibleChangeSubmenu();
         setSelectItem();
@@ -99,10 +100,15 @@ public class BonusTransaction extends VerticalLayout {
         grid.getPointsGrid().addItemDoubleClickListener(event -> {
                     BonusTransactionDto.TransactionType currentType = event.getItem().getTransactionType();
                     if (currentType == BonusTransactionDto.TransactionType.EARNING) {
+
                         setForm(event.getItem(), earningForm);
+                        earningForm.setFileList(event.getItem().getId());
+                       // earningForm.setFileList(Long.valueOf(earningForm.getIdInput().getValue()));
                         openForm(earningForm);
                     } else {
                         setForm(event.getItem(), spendingForm);
+                      //  spendingForm.setFileList(Long.valueOf(spendingForm.getIdInput().getValue()));
+                        spendingForm.setFileList(event.getItem().getId());
                         openForm(spendingForm);
                     }
                 }
@@ -147,13 +153,13 @@ public class BonusTransaction extends VerticalLayout {
         });
     }
 
-    private void openForm(BonusTransactionForm form) {
+    private void openForm(BonusTransactionView form) {
         grid.setVisible(false);
         toolBar.setVisible(false);
         form.setVisible(true);
     }
 
-    private void closeForm(BonusTransactionForm form) {
+    private void closeForm(BonusTransactionView form) {
         grid.setVisible(true);
         toolBar.setVisible(true);
         form.setVisible(false);
@@ -178,6 +184,7 @@ public class BonusTransaction extends VerticalLayout {
     private void setSubMenuEarning() {
         toolBar.getMenuBarOperation().getItems().get(0).getSubMenu().addItem("Начислить",
                 menuItemClickEvent -> {
+                    earningForm.setFileList(0L);
                     setForm(new BonusTransactionDto(), earningForm);
                     openForm(earningForm);
                 }
@@ -210,7 +217,7 @@ public class BonusTransaction extends VerticalLayout {
     private void setSubMenuSpending() {
         toolBar.getMenuBarOperation().getItems().get(0).getSubMenu().addItem("Списать",
                 menuItemClickEvent -> {
-
+                    spendingForm.setFileList(0L);
                     setForm(new BonusTransactionDto(), spendingForm);
                     openForm(spendingForm);
                 }
@@ -219,6 +226,16 @@ public class BonusTransaction extends VerticalLayout {
 
     private void setSaveButtonEarning() {
         earningForm.getSaveButton().addClickListener(click -> {
+            List<FileDto> files = earningForm.getFilesByIdTrans();
+            System.out.println("files");
+            files.forEach(System.out::println);
+
+            files.forEach(f -> System.out.println(fileService.createAndGetId(f)));
+
+//            for(FileDto file: files) {
+//                System.out.println(fileService.createAndGetId(file));
+//            }
+
             transactionService.create(getDataFromForm(earningForm));
 
 
@@ -233,7 +250,7 @@ public class BonusTransaction extends VerticalLayout {
     }
 
 
-    private void setForm(BonusTransactionDto dto, BonusTransactionForm form) {
+    private void setForm(BonusTransactionDto dto, BonusTransactionView form) {
         dto.setBonusProgramDto(form.getBonusProgram().getValue());
         dto.setContractorDto(form.getContractor().getValue());
 
@@ -261,7 +278,7 @@ public class BonusTransaction extends VerticalLayout {
         form.getBonusProgram().setItemLabelGenerator(BonusProgramDto::getName);
     }
 
-    private BonusTransactionDto getDataFromForm(BonusTransactionForm form) {
+    private BonusTransactionDto getDataFromForm(BonusTransactionView form) {
         BonusTransactionDto dto = new BonusTransactionDto();
         dto.setId(Long.valueOf(form.getIdInput().getValue()));
         dto.setExecutionDate(form.getExecutionDate().getValue());
@@ -272,6 +289,12 @@ public class BonusTransaction extends VerticalLayout {
         dto.setContractorDto(form.getContractor().getValue());
         dto.setOwnerDto(employeeService.getPrincipalManually());
         dto.setOwnerChangedDto(employeeService.getPrincipalManually());
+
+        form.getFilesByIdTrans().forEach(System.out::println);
+
+//        System.out.println(dto.getFilesDto());
+//        System.out.println(form.getFilesByIdTrans());
+        // dto.setFilesDto(form.getFilesByIdTrans());
 
         if (form.equals(earningForm)) {
             dto.setTransactionType(BonusTransactionDto.TransactionType.EARNING);

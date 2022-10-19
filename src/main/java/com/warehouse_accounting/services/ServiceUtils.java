@@ -67,6 +67,23 @@ public class ServiceUtils<T> {
         }
     }
 
+    public Long createAndGetId(Call<Long> call) {
+        Long id = null;
+        try {
+            Response<Long> response = call.execute();
+            if (response.isSuccessful()) {
+                id = response.body();
+                log.info("Успешно выполнен запрос на создание {}", getTypeName());
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на создании {}", response.code(), getTypeName());
+            }
+        } catch (IOException e) {
+            log.error("Произошла ошибка при выполнении запроса на создании {}", getTypeName(), e);
+        }
+
+        return id;
+    }
+
     public void update(Call<Void> call) {
         try {
             Response<Void> response = call.execute();

@@ -12,6 +12,8 @@ public interface FileService {
 
     void create(FileDto dto);
 
+    Long createAndGetId(FileDto dto);
+
     void update(FileDto dto);
 
     void deleteById(Long id);

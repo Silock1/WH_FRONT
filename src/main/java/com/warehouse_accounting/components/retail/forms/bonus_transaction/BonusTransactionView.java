@@ -38,11 +38,11 @@ import java.util.List;
 @CssImport(value = "./css/application.css")
 @Getter
 @Setter
-public class BonusTransactionForm extends VerticalLayout {
+public class BonusTransactionView extends VerticalLayout {
     private Button closedButton;
     private TypeOperation typeOperation;
     private Button saveButton;
-    private IntegerField idInput;
+    private IntegerField idInput = new IntegerField();
     private IntegerField bonusValueInput;
     private ComboBox<BonusProgramDto> bonusProgram;
     private ComboBox<ContractorDto> contractor;
@@ -56,17 +56,23 @@ public class BonusTransactionForm extends VerticalLayout {
     private Upload fileUpload;
     private Button taskButton;
     private List<FileDto> filesByIdTrans = new ArrayList<>();
+
     private BonusTransactionService bonusTransactionService;
 
-    public BonusTransactionForm(TypeOperation typeOperation, FileService fileService, EmployeeService employeeService) {
+    public BonusTransactionView(TypeOperation typeOperation, FileService fileService, EmployeeService employeeService) {
         this.fileService = fileService;
         this.typeOperation = typeOperation;
         this.employeeService = employeeService;
 
+        fileGridLayOut = new FileGridLayOut(this.fileService);
         setSizeFull();
         setVisible(false);
 
-        fileGridLayOut = new FileGridLayOut(this.fileService);
+
+     //   setFileList();
+      //  updateFileData();
+
+
         add(
                 buttonLine(),
                 titleLine(),
@@ -95,7 +101,6 @@ public class BonusTransactionForm extends VerticalLayout {
 
     public HorizontalLayout titleLine() {
         HorizontalLayout l = new HorizontalLayout();
-        idInput = new IntegerField();
         idInput.setWidth("40px");
 
 
@@ -110,7 +115,15 @@ public class BonusTransactionForm extends VerticalLayout {
         return l;
 
     }
-
+    public void setFileList(Long id) {
+        if(idInput.getValue() == null) {
+            idInput.setValue(0);
+        }
+        System.out.println(idInput.getValue());
+        filesByIdTrans = fileService.getFilesByTransactionId(id);
+        updateFileData();
+        System.out.println(filesByIdTrans);
+    }
     public HorizontalLayout checkBoxLine() {
         HorizontalLayout l = new HorizontalLayout();
         Icon icon = new Icon(VaadinIcon.PENCIL);
@@ -204,6 +217,7 @@ public class BonusTransactionForm extends VerticalLayout {
         fileUpload = new Upload(multiBuffer);
         fileUpload.setUploadButton(silverButton.buttonPLusBlue("Файлы"));
         fileUpload.setDropAllowed(false);
+
         fileUpload.addSucceededListener(event ->
         {
             FileDto fileDto = new FileDto();
@@ -212,12 +226,8 @@ public class BonusTransactionForm extends VerticalLayout {
             fileDto.setEmployeeDto(currentEmployee);
 
             filesByIdTrans.add(fileDto);
-            fileGridLayOut.getFileGrid().setItems(filesByIdTrans);
-//            fileService.create(fileDto);
-//            fileGridLayOut.updateFileGridColumns();
-//
-//            filesByIdTrans = fileService.getFilesByTransactionId(Long.valueOf(idInput.getValue()));
-//            System.out.println(filesByIdTrans.size());
+            updateFileData();
+
         });
 
         l.setAlignItems(Alignment.CENTER);
@@ -226,6 +236,10 @@ public class BonusTransactionForm extends VerticalLayout {
                 fileUpload);
         return l;
 
+    }
+
+    private void updateFileData() {
+        fileGridLayOut.getFileGrid().setItems(filesByIdTrans);
     }
 
     private double round(double number) {
