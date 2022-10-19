@@ -10,6 +10,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.retail.forms.bonus_transaction.BonusTransactionView;
 import com.warehouse_accounting.components.retail.forms.bonus_transaction.FilterForm;
+import com.warehouse_accounting.components.retail.forms.bonus_transaction.MassEditView;
 import com.warehouse_accounting.components.retail.grids.BonusTransactionGridLayout;
 import com.warehouse_accounting.components.retail.toolbars.BonusTransactionToolBar;
 import com.warehouse_accounting.components.util.SilverButton;
@@ -20,6 +21,7 @@ import com.warehouse_accounting.models.dto.FileDto;
 import com.warehouse_accounting.services.interfaces.BonusProgramService;
 import com.warehouse_accounting.services.interfaces.BonusTransactionService;
 import com.warehouse_accounting.services.interfaces.ContractorService;
+import com.warehouse_accounting.services.interfaces.DepartmentService;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.FileService;
 import lombok.AccessLevel;
@@ -36,6 +38,9 @@ import java.util.stream.Collectors;
 /**
  * Операции с баллами (Розница/Операции с баллами)
  **/
+
+//Todo рефактор. Отправить севрисы в конструкторы и там реализовывать что нужно.
+//Todo поменять комбобоксы на селект
 @SpringComponent
 @Route("bonus_transaction")
 @CssImport(value = "./css/application.css")
@@ -48,11 +53,12 @@ public class BonusTransaction extends VerticalLayout {
     private final BonusProgramService programService;
     private final ContractorService contractorService;
     private final FileService fileService;
+    private final EmployeeService employeeService;
     private final BonusTransactionView earningForm;
     private final BonusTransactionView spendingForm;
-    private final EmployeeService employeeService;
-
+    private final MassEditView massEditView;
     private final FilterForm filterForm = new FilterForm();
+
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private Set<BonusTransactionDto> selectedItems;
@@ -63,8 +69,7 @@ public class BonusTransaction extends VerticalLayout {
                             BonusTransactionToolBar toolBar,
                             BonusTransactionService transactionService,
                             BonusProgramService programService,
-                            ContractorService contractorService, FileService fileService, EmployeeService employeeService
-    ) {
+                            ContractorService contractorService, FileService fileService, EmployeeService employeeService, DepartmentService departmentService) {
 
         this.transactionService = transactionService;
         this.programService = programService;
@@ -74,6 +79,7 @@ public class BonusTransaction extends VerticalLayout {
         this.fileService = fileService;
         this.employeeService = employeeService;
 
+        massEditView = new MassEditView(this.employeeService, departmentService);
         earningForm = new BonusTransactionView(BonusTransactionView.TypeOperation.EARNING, this.fileService, this.employeeService);
         spendingForm = new BonusTransactionView(BonusTransactionView.TypeOperation.SPENDING, this.fileService, this.employeeService);
         setMiniField();
@@ -91,8 +97,9 @@ public class BonusTransaction extends VerticalLayout {
         setFilterButttonLogic();
         setDeleteLogic();
         setCopyLogic();
+        setCloseMassEdit();
 
-        add(toolBar, filterForm, grid, earningForm, spendingForm);
+        add(toolBar, filterForm, grid, earningForm, spendingForm, massEditView);
 
     }
 
@@ -204,9 +211,33 @@ public class BonusTransaction extends VerticalLayout {
     }
 
     private void setSubMenuMassEdit() {
-        toolBar.getMassEdit().addClickListener(event ->
-                silverButton.greenNotification("Массовое редактирование"));
+        toolBar.getMassEdit().addClickListener(event -> {
+            openMassEdit();
+        });
     }
+
+    private void openMassEdit() {
+        toolBar.setVisible(false);
+        grid.setVisible(false);
+        massEditView.setVisible(true);
+    }
+
+    private void closeMassEdit() {
+
+        toolBar.setVisible(true);
+        grid.setVisible(true);
+        massEditView.setVisible(false);
+
+    }
+
+    private void setCloseMassEdit() {
+        massEditView.getCloseButton().addClickListener(click ->
+        {
+            closeMassEdit();
+        });
+    }
+
+
 
     private void setVisibleChangeSubmenu() {
         MenuItem delete = toolBar.getDeleteItem();
