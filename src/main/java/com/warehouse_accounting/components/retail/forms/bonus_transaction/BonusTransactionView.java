@@ -55,7 +55,7 @@ public class BonusTransactionView extends VerticalLayout {
     private SilverButton silverButton = new SilverButton();
     private Upload fileUpload;
     private Button taskButton;
-    private List<FileDto> filesByIdTrans = new ArrayList<>();
+    private List<FileDto> filesList = new ArrayList<>();
 
     private BonusTransactionService bonusTransactionService;
 
@@ -67,11 +67,6 @@ public class BonusTransactionView extends VerticalLayout {
         fileGridLayOut = new FileGridLayOut(this.fileService);
         setSizeFull();
         setVisible(false);
-
-
-     //   setFileList();
-      //  updateFileData();
-
 
         add(
                 buttonLine(),
@@ -99,6 +94,10 @@ public class BonusTransactionView extends VerticalLayout {
 
     }
 
+    public void clearUpload() {
+        fileUpload.getElement().executeJs("this.files=[]");
+    }
+
     public HorizontalLayout titleLine() {
         HorizontalLayout l = new HorizontalLayout();
         idInput.setWidth("40px");
@@ -120,7 +119,7 @@ public class BonusTransactionView extends VerticalLayout {
             idInput.setValue(0);
         }
 
-        filesByIdTrans = fileService.getFilesByTransactionId(id);
+        filesList = fileService.getFilesByTransactionId(id);
         updateFileData();
 
     }
@@ -225,7 +224,7 @@ public class BonusTransactionView extends VerticalLayout {
             fileDto.setName(event.getFileName());
             fileDto.setEmployeeDto(currentEmployee);
 
-            filesByIdTrans.add(fileDto);
+            filesList.add(fileDto);
             updateFileData();
 
         });
@@ -239,7 +238,7 @@ public class BonusTransactionView extends VerticalLayout {
     }
 
     private void updateFileData() {
-        fileGridLayOut.getFileGrid().setItems(filesByIdTrans);
+        fileGridLayOut.getFileGrid().setItems(filesList);
     }
 
     private double round(double number) {
