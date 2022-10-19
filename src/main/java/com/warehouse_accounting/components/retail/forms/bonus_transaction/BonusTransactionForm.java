@@ -210,11 +210,14 @@ public class BonusTransactionForm extends VerticalLayout {
             fileDto.setSize(round((double) event.getContentLength() / 1_000_000));
             fileDto.setName(event.getFileName());
             fileDto.setEmployeeDto(currentEmployee);
-            fileService.create(fileDto);
-            fileGridLayOut.updateFileGridColumns();
 
-            filesByIdTrans = fileService.getFilesByTransactionId(Long.valueOf(idInput.getValue()));
-            System.out.println(filesByIdTrans.size());
+            filesByIdTrans.add(fileDto);
+            fileGridLayOut.getFileGrid().setItems(filesByIdTrans);
+//            fileService.create(fileDto);
+//            fileGridLayOut.updateFileGridColumns();
+//
+//            filesByIdTrans = fileService.getFilesByTransactionId(Long.valueOf(idInput.getValue()));
+//            System.out.println(filesByIdTrans.size());
         });
 
         l.setAlignItems(Alignment.CENTER);
