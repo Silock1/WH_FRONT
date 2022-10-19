@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
@@ -56,13 +57,14 @@ public class BonusTransaction extends VerticalLayout {
     @Setter(AccessLevel.NONE)
     private Set<BonusTransactionDto> selectedItems;
     private SilverButton silverButton = new SilverButton();
+
     @Autowired
     public BonusTransaction(BonusTransactionGridLayout grid,
                             BonusTransactionToolBar toolBar,
                             BonusTransactionService transactionService,
                             BonusProgramService programService,
                             ContractorService contractorService, FileService fileService, EmployeeService employeeService
-                            ) {
+    ) {
 
         this.transactionService = transactionService;
         this.programService = programService;
@@ -73,7 +75,7 @@ public class BonusTransaction extends VerticalLayout {
         this.employeeService = employeeService;
 
         earningForm = new BonusTransactionView(BonusTransactionView.TypeOperation.EARNING, this.fileService, this.employeeService);
-        spendingForm  = new BonusTransactionView(BonusTransactionView.TypeOperation.SPENDING, this.fileService, this.employeeService);
+        spendingForm = new BonusTransactionView(BonusTransactionView.TypeOperation.SPENDING, this.fileService, this.employeeService);
         setMiniField();
         setVisibleChangeSubmenu();
         setSelectItem();
@@ -95,7 +97,6 @@ public class BonusTransaction extends VerticalLayout {
     }
 
 
-
     private void setSelectItem() {
         grid.getPointsGrid().addItemDoubleClickListener(event -> {
                     BonusTransactionDto.TransactionType currentType = event.getItem().getTransactionType();
@@ -103,11 +104,11 @@ public class BonusTransaction extends VerticalLayout {
 
                         setForm(event.getItem(), earningForm);
                         earningForm.setFileList(event.getItem().getId());
-                       // earningForm.setFileList(Long.valueOf(earningForm.getIdInput().getValue()));
+                        // earningForm.setFileList(Long.valueOf(earningForm.getIdInput().getValue()));
                         openForm(earningForm);
                     } else {
                         setForm(event.getItem(), spendingForm);
-                      //  spendingForm.setFileList(Long.valueOf(spendingForm.getIdInput().getValue()));
+                        //  spendingForm.setFileList(Long.valueOf(spendingForm.getIdInput().getValue()));
                         spendingForm.setFileList(event.getItem().getId());
                         openForm(spendingForm);
                     }
@@ -226,26 +227,22 @@ public class BonusTransaction extends VerticalLayout {
 
     private void setSaveButtonEarning() {
         earningForm.getSaveButton().addClickListener(click -> {
-            List<FileDto> files = earningForm.getFilesByIdTrans();
-            System.out.println("files");
-            files.forEach(System.out::println);
-
-            files.forEach(f -> System.out.println(fileService.createAndGetId(f)));
-
-//            for(FileDto file: files) {
-//                System.out.println(fileService.createAndGetId(file));
-//            }
-
-            transactionService.create(getDataFromForm(earningForm));
-
+            transactionService.create(getDataFromForm(earningForm, filesMappedFromDB()));
 
         });
     }
 
+    private List<FileDto> filesMappedFromDB() {
+        List<FileDto> files = earningForm.getFilesByIdTrans();
+        files = files.stream().map(f ->
+                fileService.getById(fileService.createAndGetId(f))
+        ).collect(Collectors.toList());
+        return files;
+    }
+
     private void setSaveButtonSpending() {
         spendingForm.getSaveButton().addClickListener(click -> {
-            transactionService.create(getDataFromForm(spendingForm));
-
+            transactionService.create(getDataFromForm(spendingForm, filesMappedFromDB()));
         });
     }
 
@@ -278,7 +275,7 @@ public class BonusTransaction extends VerticalLayout {
         form.getBonusProgram().setItemLabelGenerator(BonusProgramDto::getName);
     }
 
-    private BonusTransactionDto getDataFromForm(BonusTransactionView form) {
+    private BonusTransactionDto getDataFromForm(BonusTransactionView form, List<FileDto> files) {
         BonusTransactionDto dto = new BonusTransactionDto();
         dto.setId(Long.valueOf(form.getIdInput().getValue()));
         dto.setExecutionDate(form.getExecutionDate().getValue());
@@ -289,8 +286,8 @@ public class BonusTransaction extends VerticalLayout {
         dto.setContractorDto(form.getContractor().getValue());
         dto.setOwnerDto(employeeService.getPrincipalManually());
         dto.setOwnerChangedDto(employeeService.getPrincipalManually());
+        dto.setFilesDto(files);
 
-        form.getFilesByIdTrans().forEach(System.out::println);
 
 //        System.out.println(dto.getFilesDto());
 //        System.out.println(form.getFilesByIdTrans());
