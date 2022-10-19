@@ -283,9 +283,6 @@ public class BonusTransaction extends VerticalLayout {
 
 
     private void setForm(BonusTransactionDto dto, OperationView form) {
-        dto.setBonusProgramDto(form.getBonusProgram().getValue());
-        dto.setContractorDto(form.getContractor().getValue());
-
 
         if (dto.getId() == null) {
             form.getIdInput().setValue(0);
@@ -301,13 +298,13 @@ public class BonusTransaction extends VerticalLayout {
             form.getCreatedDate().setValue(dto.getCreated());
 
         }
+        form.getSelectBonusProgramDto().setItems(getBonusPrograms());
+        form.getSelectBonusProgramDto().setValue(getBonusPrograms().get(0));
+        form.getSelectContractorDto().setItems(getContractors());
+        form.getSelectContractorDto().setValue(getContractors().get(0));
+        form.getSelectContractorDto().setItemLabelGenerator(ContractorDto::getName);
+        form.getSelectBonusProgramDto().setItemLabelGenerator(BonusProgramDto::getName);
 
-        form.getBonusProgram().setItems(getBonusPrograms());
-        form.getBonusProgram().setValue(getBonusPrograms().get(0));
-        form.getContractor().setItems(getContractors());
-        form.getContractor().setValue(getContractors().get(0));
-        form.getContractor().setItemLabelGenerator(ContractorDto::getName);
-        form.getBonusProgram().setItemLabelGenerator(BonusProgramDto::getName);
     }
 
     private BonusTransactionDto getDataFromForm(OperationView form, List<FileDto> files) {
@@ -317,8 +314,8 @@ public class BonusTransaction extends VerticalLayout {
         dto.setCreated(form.getCreatedDate().getValue());
         dto.setComment(form.getComment().getValue());
         dto.setBonusValue(Long.valueOf(form.getBonusValueInput().getValue()));
-        dto.setBonusProgramDto(form.getBonusProgram().getValue());
-        dto.setContractorDto(form.getContractor().getValue());
+        dto.setBonusProgramDto(form.getSelectBonusProgramDto().getValue());
+        dto.setContractorDto(form.getSelectContractorDto().getValue());
         dto.setOwnerDto(employeeService.getPrincipalManually());
         dto.setOwnerChangedDto(employeeService.getPrincipalManually());
         dto.setFilesDto(files);

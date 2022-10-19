@@ -9,7 +9,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.IntegerField;
@@ -44,8 +44,8 @@ public class OperationView extends VerticalLayout {
     private Button saveButton;
     private IntegerField idInput = new IntegerField();
     private IntegerField bonusValueInput;
-    private ComboBox<BonusProgramDto> bonusProgram;
-    private ComboBox<ContractorDto> contractor;
+    private Select<BonusProgramDto> selectBonusProgramDto = new Select<>();
+    private Select<ContractorDto> selectContractorDto = new Select<>();
     private TextArea comment;
     private DatePicker executionDate;
     private DatePicker createdDate;
@@ -128,15 +128,14 @@ public class OperationView extends VerticalLayout {
         Icon icon = new Icon(VaadinIcon.PENCIL);
         icon.addClickListener(click -> silverButton.greenNotification("РЕДАКТИРОВАНИЕ BonusProgramDto"));
         icon.setSize("10px");
-        bonusProgram = new ComboBox<>();
-        contractor = new ComboBox<>();
+
 
         l.add(
                 new Span("Бонусная программа"),
-                bonusProgram,//combobox bonusProgram
+                selectBonusProgramDto,
                 icon,
                 new Span("Контрагент"),
-                contractor//combobox contrAgent
+                selectContractorDto
         );
 
         l.setAlignItems(Alignment.CENTER);
