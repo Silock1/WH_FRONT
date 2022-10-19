@@ -119,10 +119,10 @@ public class BonusTransactionView extends VerticalLayout {
         if(idInput.getValue() == null) {
             idInput.setValue(0);
         }
-        System.out.println(idInput.getValue());
+
         filesByIdTrans = fileService.getFilesByTransactionId(id);
         updateFileData();
-        System.out.println(filesByIdTrans);
+
     }
     public HorizontalLayout checkBoxLine() {
         HorizontalLayout l = new HorizontalLayout();

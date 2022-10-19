@@ -4,6 +4,8 @@ import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -78,7 +80,7 @@ public class BonusTransaction extends VerticalLayout {
         spendingForm = new BonusTransactionView(BonusTransactionView.TypeOperation.SPENDING, this.fileService, this.employeeService);
         setMiniField();
         setVisibleChangeSubmenu();
-        setSelectItem();
+        setEditLogic();
         setFilterTextField();
         setCloseButtonEarning();
         setCloseButtonSpending();
@@ -96,19 +98,23 @@ public class BonusTransaction extends VerticalLayout {
 
     }
 
+    private void clearUpload(BonusTransactionView form) {
+       form.getFileUpload().getElement().executeJs("this.files=[]");
 
-    private void setSelectItem() {
+    }
+
+    private void setEditLogic() {
         grid.getPointsGrid().addItemDoubleClickListener(event -> {
                     BonusTransactionDto.TransactionType currentType = event.getItem().getTransactionType();
                     if (currentType == BonusTransactionDto.TransactionType.EARNING) {
-
+                        clearUpload(earningForm);
                         setForm(event.getItem(), earningForm);
                         earningForm.setFileList(event.getItem().getId());
-                        // earningForm.setFileList(Long.valueOf(earningForm.getIdInput().getValue()));
+
                         openForm(earningForm);
                     } else {
                         setForm(event.getItem(), spendingForm);
-                        //  spendingForm.setFileList(Long.valueOf(spendingForm.getIdInput().getValue()));
+                        clearUpload(spendingForm);
                         spendingForm.setFileList(event.getItem().getId());
                         openForm(spendingForm);
                     }
@@ -186,6 +192,7 @@ public class BonusTransaction extends VerticalLayout {
         toolBar.getMenuBarOperation().getItems().get(0).getSubMenu().addItem("Начислить",
                 menuItemClickEvent -> {
                     earningForm.setFileList(0L);
+                    clearUpload(earningForm);
                     setForm(new BonusTransactionDto(), earningForm);
                     openForm(earningForm);
                 }
@@ -219,6 +226,7 @@ public class BonusTransaction extends VerticalLayout {
         toolBar.getMenuBarOperation().getItems().get(0).getSubMenu().addItem("Списать",
                 menuItemClickEvent -> {
                     spendingForm.setFileList(0L);
+                    clearUpload(spendingForm);
                     setForm(new BonusTransactionDto(), spendingForm);
                     openForm(spendingForm);
                 }
