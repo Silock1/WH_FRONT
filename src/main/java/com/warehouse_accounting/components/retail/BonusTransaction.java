@@ -30,6 +30,8 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -61,7 +63,8 @@ public class BonusTransaction extends VerticalLayout {
 
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    private Set<BonusTransactionDto> selectedItems;
+    private Set<BonusTransactionDto> selectedItems = new HashSet<>();
+
     private SilverButton silverButton = new SilverButton();
 
     @Autowired
@@ -82,6 +85,7 @@ public class BonusTransaction extends VerticalLayout {
         massEditView = new MassEditView(this.employeeService, departmentService);
         earningForm = new BonusTransactionView(BonusTransactionView.TypeOperation.EARNING, this.fileService, this.employeeService);
         spendingForm = new BonusTransactionView(BonusTransactionView.TypeOperation.SPENDING, this.fileService, this.employeeService);
+
         setMiniField();
         setVisibleChangeSubmenu();
         setEditLogic();
@@ -98,7 +102,7 @@ public class BonusTransaction extends VerticalLayout {
         setDeleteLogic();
         setCopyLogic();
         setCloseMassEdit();
-
+        setContinueButtonLogic();
         add(toolBar, filterForm, grid, earningForm, spendingForm, massEditView);
 
     }
@@ -145,6 +149,7 @@ public class BonusTransaction extends VerticalLayout {
         );
 
     }
+
 
     private void setCloseButtonSpending() {
         spendingForm.getClosedButton().addClickListener(buttonClickEvent -> {
@@ -211,7 +216,12 @@ public class BonusTransaction extends VerticalLayout {
     }
 
     private void setSubMenuMassEdit() {
+        setSelectedItems();
         toolBar.getMassEdit().addClickListener(event -> {
+            if (selectedItems.size() == 0) {
+                selectedItems = new HashSet<>(transactionService.getAll());
+            }
+            massEditView.getSpanSelectedItems().setText(String.format("Выбрано %d элементов", selectedItems.size()));
             openMassEdit();
         });
     }
@@ -236,7 +246,6 @@ public class BonusTransaction extends VerticalLayout {
             closeMassEdit();
         });
     }
-
 
 
     private void setVisibleChangeSubmenu() {
@@ -359,6 +368,12 @@ public class BonusTransaction extends VerticalLayout {
             updateGrid();
         });
 
+    }
+
+    private void setContinueButtonLogic() {
+        setSelectedItems();
+
+        //List<BonusTransactionDto> allList = transactionService.getAll();
 
     }
 

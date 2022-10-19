@@ -29,11 +29,11 @@ public class MassEditView extends VerticalLayout {
     private final Button closeButton;
     private final Button continueButton;
     private Span spanSelectedItems;
-    private int sizeSpan;
     private ComboBox<EmployeeDto> employeeBox; //Todo поменять на селект
     private ComboBox<DepartmentDto> departmentBox; //Todo поменять на селект
     private EmployeeService employeeService;
     private DepartmentService departmentService;
+
     public MassEditView(EmployeeService employeeService, DepartmentService departmentService) {
         this.employeeService = employeeService;
         this.departmentService = departmentService;
@@ -41,6 +41,8 @@ public class MassEditView extends VerticalLayout {
         setVisible(false);
         closeButton = silverButton.buttonBlank("Закрыть");
         continueButton = silverButton.buttonBlank("Далее");
+
+
         add(
                 closeButton,
                 titleLine(),
@@ -49,6 +51,10 @@ public class MassEditView extends VerticalLayout {
                 continueButton
 
                 );
+    }
+
+    private void setContinueButtonLogic() {
+
     }
 
     private HorizontalLayout titleLine() {
@@ -62,9 +68,10 @@ public class MassEditView extends VerticalLayout {
     }
 
     private HorizontalLayout labelLine() {
-        sizeSpan = 5;//Заглушка
+
         HorizontalLayout layout = new HorizontalLayout();
-        spanSelectedItems = new Span(String.format("Выбрано %d документов", sizeSpan));
+
+        spanSelectedItems = new Span();
 
         spanSelectedItems.getElement().getStyle().set("border", "solid 1px #e2f4ff");
         spanSelectedItems.getElement().getStyle().set("background-color", "#ecf8ff");
