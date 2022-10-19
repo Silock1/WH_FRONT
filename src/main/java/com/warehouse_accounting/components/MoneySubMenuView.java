@@ -61,7 +61,6 @@ public class MoneySubMenuView extends VerticalLayout {
                 case "Взаиморасчеты":
                     pageContent.removeAll();
                     pageContent.add(paymentsSettlementsView);
-//                    pageContent.add(new Span("Взаиморасчеты"));
                     break;
                 case "Корректировки":
                     pageContent.removeAll();

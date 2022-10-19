@@ -2,13 +2,13 @@ package com.warehouse_accounting.components.retail;
 
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.warehouse_accounting.components.AppView;
 import com.warehouse_accounting.components.retail.forms.bonus_transaction.BonusTransactionView;
 import com.warehouse_accounting.components.retail.forms.bonus_transaction.FilterForm;
 import com.warehouse_accounting.components.retail.forms.bonus_transaction.MassEditView;
@@ -18,8 +18,6 @@ import com.warehouse_accounting.components.util.SilverButton;
 import com.warehouse_accounting.models.dto.BonusProgramDto;
 import com.warehouse_accounting.models.dto.BonusTransactionDto;
 import com.warehouse_accounting.models.dto.ContractorDto;
-import com.warehouse_accounting.models.dto.DepartmentDto;
-import com.warehouse_accounting.models.dto.EmployeeDto;
 import com.warehouse_accounting.models.dto.FileDto;
 import com.warehouse_accounting.services.interfaces.BonusProgramService;
 import com.warehouse_accounting.services.interfaces.BonusTransactionService;
@@ -27,13 +25,8 @@ import com.warehouse_accounting.services.interfaces.ContractorService;
 import com.warehouse_accounting.services.interfaces.DepartmentService;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.FileService;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -47,7 +40,7 @@ import java.util.stream.Collectors;
 //Todo рефактор. Отправить севрисы в конструкторы и там реализовывать что нужно.
 //Todo поменять комбобоксы на селект
 @SpringComponent
-@Route("bonus_transaction")
+@Route(value = "bonus_transaction", layout = AppView.class)
 @CssImport(value = "./css/application.css")
 @UIScope
 public class BonusTransaction extends VerticalLayout {
@@ -63,28 +56,22 @@ public class BonusTransaction extends VerticalLayout {
     private final BonusTransactionView spendingForm;
     private final MassEditView massEditView;
     private final FilterForm filterForm = new FilterForm();
-
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
     private Set<BonusTransactionDto> selectedItems = new HashSet<>();
-
     private SilverButton silverButton = new SilverButton();
 
     @Autowired
-    public BonusTransaction(BonusTransactionGridLayout grid,
-                            BonusTransactionToolBar toolBar,
-                            BonusTransactionService transactionService,
+    public BonusTransaction(BonusTransactionService transactionService,
                             BonusProgramService programService,
                             ContractorService contractorService, FileService fileService, EmployeeService employeeService, DepartmentService departmentService) {
 
         this.transactionService = transactionService;
         this.programService = programService;
         this.contractorService = contractorService;
-        this.grid = grid;
-        this.toolBar = toolBar;
         this.fileService = fileService;
         this.employeeService = employeeService;
 
+        toolBar = new BonusTransactionToolBar(this.transactionService);
+        grid = new BonusTransactionGridLayout(this.transactionService);
         massEditView = new MassEditView(this.employeeService, departmentService);
         earningForm = new BonusTransactionView(BonusTransactionView.TypeOperation.EARNING, this.fileService, this.employeeService);
         spendingForm = new BonusTransactionView(BonusTransactionView.TypeOperation.SPENDING, this.fileService, this.employeeService);
@@ -107,8 +94,8 @@ public class BonusTransaction extends VerticalLayout {
         setCloseMassEdit();
         setContinueButtonLogic();
 
-        add(toolBar, filterForm, grid, earningForm, spendingForm, massEditView);
 
+        add(toolBar, filterForm, grid, earningForm, spendingForm, massEditView);
     }
 
 
@@ -398,7 +385,6 @@ public class BonusTransaction extends VerticalLayout {
             updateGrid();
 
         });
-
 
 
     }
