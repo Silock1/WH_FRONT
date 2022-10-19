@@ -9,7 +9,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
-import com.warehouse_accounting.components.retail.forms.bonus_transaction.BonusTransactionView;
+import com.warehouse_accounting.components.retail.forms.bonus_transaction.OperationView;
 import com.warehouse_accounting.components.retail.forms.bonus_transaction.FilterForm;
 import com.warehouse_accounting.components.retail.forms.bonus_transaction.MassEditView;
 import com.warehouse_accounting.components.retail.grids.BonusTransactionGridLayout;
@@ -52,8 +52,8 @@ public class BonusTransaction extends VerticalLayout {
     private final ContractorService contractorService;
     private final FileService fileService;
     private final EmployeeService employeeService;
-    private final BonusTransactionView earningForm;
-    private final BonusTransactionView spendingForm;
+    private final OperationView earningForm;
+    private final OperationView spendingForm;
     private final MassEditView massEditView;
     private final FilterForm filterForm = new FilterForm();
     private Set<BonusTransactionDto> selectedItems = new HashSet<>();
@@ -73,8 +73,8 @@ public class BonusTransaction extends VerticalLayout {
         toolBar = new BonusTransactionToolBar(this.transactionService);
         grid = new BonusTransactionGridLayout(this.transactionService);
         massEditView = new MassEditView(this.employeeService, departmentService);
-        earningForm = new BonusTransactionView(BonusTransactionView.TypeOperation.EARNING, this.fileService, this.employeeService);
-        spendingForm = new BonusTransactionView(BonusTransactionView.TypeOperation.SPENDING, this.fileService, this.employeeService);
+        earningForm = new OperationView(OperationView.TypeOperation.EARNING, this.fileService, this.employeeService);
+        spendingForm = new OperationView(OperationView.TypeOperation.SPENDING, this.fileService, this.employeeService);
 
         setMiniField();
         setVisibleChangeSubmenu();
@@ -156,13 +156,13 @@ public class BonusTransaction extends VerticalLayout {
         });
     }
 
-    private void openForm(BonusTransactionView form) {
+    private void openForm(OperationView form) {
         grid.setVisible(false);
         toolBar.setVisible(false);
         form.setVisible(true);
     }
 
-    private void closeForm(BonusTransactionView form) {
+    private void closeForm(OperationView form) {
         grid.setVisible(true);
         toolBar.setVisible(true);
         form.setVisible(false);
@@ -282,7 +282,7 @@ public class BonusTransaction extends VerticalLayout {
     }
 
 
-    private void setForm(BonusTransactionDto dto, BonusTransactionView form) {
+    private void setForm(BonusTransactionDto dto, OperationView form) {
         dto.setBonusProgramDto(form.getBonusProgram().getValue());
         dto.setContractorDto(form.getContractor().getValue());
 
@@ -310,7 +310,7 @@ public class BonusTransaction extends VerticalLayout {
         form.getBonusProgram().setItemLabelGenerator(BonusProgramDto::getName);
     }
 
-    private BonusTransactionDto getDataFromForm(BonusTransactionView form, List<FileDto> files) {
+    private BonusTransactionDto getDataFromForm(OperationView form, List<FileDto> files) {
         BonusTransactionDto dto = new BonusTransactionDto();
         dto.setId(Long.valueOf(form.getIdInput().getValue()));
         dto.setExecutionDate(form.getExecutionDate().getValue());

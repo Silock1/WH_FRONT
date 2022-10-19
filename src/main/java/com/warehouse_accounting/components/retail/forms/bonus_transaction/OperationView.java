@@ -38,7 +38,7 @@ import java.util.List;
 @CssImport(value = "./css/application.css")
 @Getter
 @Setter
-public class BonusTransactionView extends VerticalLayout {
+public class OperationView extends VerticalLayout {
     private Button closedButton;
     private TypeOperation typeOperation;
     private Button saveButton;
@@ -59,7 +59,7 @@ public class BonusTransactionView extends VerticalLayout {
 
     private BonusTransactionService bonusTransactionService;
 
-    public BonusTransactionView(TypeOperation typeOperation, FileService fileService, EmployeeService employeeService) {
+    public OperationView(TypeOperation typeOperation, FileService fileService, EmployeeService employeeService) {
         this.fileService = fileService;
         this.typeOperation = typeOperation;
         this.employeeService = employeeService;

@@ -20,16 +20,16 @@ import java.util.LinkedHashMap;
 
 public class PointOfSalesGridLayout extends HorizontalLayout {
 
-    private static TextField textField;
+    private TextField textField = new TextField();
 
-    private static Button settingButton = new Button(new Icon(VaadinIcon.COG));
+    private Button settingButton = new Button(new Icon(VaadinIcon.COG));
 
-    public PointOfSalesGridLayout(TextField textField) {
-        this.textField = textField;
+    public PointOfSalesGridLayout(){
         add(initPointOfSalesGrid(), settingButton);
+        add(settingButton);
     }
 
-    public static Grid<PointOfSalesDto> initPointOfSalesGrid() {
+    public Grid<PointOfSalesDto> initPointOfSalesGrid() {
 
         Grid<PointOfSalesDto> pointOfSalesDtoGrid =
                 new Grid<>(PointOfSalesDto.class, false);
