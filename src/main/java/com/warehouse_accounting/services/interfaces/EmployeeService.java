@@ -14,6 +14,8 @@ public interface EmployeeService {
 
     void update(EmployeeDto employeeDto);
 
+    EmployeeDto updateWithResponse(EmployeeDto employeeDto);
+
     void deleteById(Long id);
 
     @Deprecated //Возвращает null

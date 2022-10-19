@@ -2,6 +2,7 @@ package com.warehouse_accounting.components.retail;
 
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
@@ -17,6 +18,8 @@ import com.warehouse_accounting.components.util.SilverButton;
 import com.warehouse_accounting.models.dto.BonusProgramDto;
 import com.warehouse_accounting.models.dto.BonusTransactionDto;
 import com.warehouse_accounting.models.dto.ContractorDto;
+import com.warehouse_accounting.models.dto.DepartmentDto;
+import com.warehouse_accounting.models.dto.EmployeeDto;
 import com.warehouse_accounting.models.dto.FileDto;
 import com.warehouse_accounting.services.interfaces.BonusProgramService;
 import com.warehouse_accounting.services.interfaces.BonusTransactionService;
@@ -103,6 +106,7 @@ public class BonusTransaction extends VerticalLayout {
         setCopyLogic();
         setCloseMassEdit();
         setContinueButtonLogic();
+
         add(toolBar, filterForm, grid, earningForm, spendingForm, massEditView);
 
     }
@@ -222,6 +226,8 @@ public class BonusTransaction extends VerticalLayout {
                 selectedItems = new HashSet<>(transactionService.getAll());
             }
             massEditView.getSpanSelectedItems().setText(String.format("Выбрано %d элементов", selectedItems.size()));
+            selectedItems = new HashSet<>(); //clear. clear() выкидывает exception
+
             openMassEdit();
         });
     }
@@ -371,9 +377,29 @@ public class BonusTransaction extends VerticalLayout {
     }
 
     private void setContinueButtonLogic() {
-        setSelectedItems();
 
-        //List<BonusTransactionDto> allList = transactionService.getAll();
+        massEditView.getContinueButton().addClickListener(click -> {
+            silverButton.greenNotification("Далее");
+
+            //Todo разделить колонку отдел и владелец, иначе не изменить. При сейве updat'ить employee выбранным отделом сверху в окошке
+//            EmployeeDto employee = massEditView.getEmployeeBox().getValue();
+//            DepartmentDto department = massEditView.getDepartmentBox().getValue();
+//            System.out.println(employee);
+//            System.out.println(department);
+//
+//
+//            for (BonusTransactionDto dto : new ArrayList<>(selectedItems)) {
+//                employee.setDepartment(department);
+//                dto.setOwnerDto(employeeService.updateWithResponse(employee));
+//                transactionService.update(dto);
+//
+//            }
+            closeMassEdit();
+            updateGrid();
+
+        });
+
+
 
     }
 

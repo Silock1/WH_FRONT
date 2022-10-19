@@ -29,6 +29,9 @@ public interface EmployeeApi {
     @Headers("Accept: application/json")
     @PUT("{url}")
     Call<Void> update(@Path(value = "url", encoded = true) String url, @Body EmployeeDto employeeDto);
+    @Headers("Accept: application/json")
+    @PUT("{url}")
+    Call<EmployeeDto> updateWithResponse(@Path(value = "url", encoded = true) String url, @Body EmployeeDto employeeDto);
 
     @Headers("Accept: application/json")
     @DELETE("{url}/{id}")
