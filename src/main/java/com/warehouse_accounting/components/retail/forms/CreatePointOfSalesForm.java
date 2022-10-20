@@ -91,6 +91,7 @@ public class CreatePointOfSalesForm extends VerticalLayout {
     }
 
     private VerticalLayout initTopButtons() {
+        PointOfSalesGridLayout gridLayout = new PointOfSalesGridLayout();
         VerticalLayout verticalLayout = new VerticalLayout();
 
         Button save = new Button("Сохранить", e -> { //Создание и сохранение сущности
@@ -118,13 +119,14 @@ public class CreatePointOfSalesForm extends VerticalLayout {
                 notification.setPosition(Notification.Position.BOTTOM_STRETCH);
             }
             parentLayer.removeAll();
-            parentLayer.add(returnLayer, PointOfSalesGridLayout.initPointOfSalesGrid());
+
+            parentLayer.add(returnLayer, gridLayout.initPointOfSalesGrid());
         });
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_SMALL);
 
         Button close = new Button("Закрыть", e -> {
             parentLayer.removeAll();
-            parentLayer.add(returnLayer, PointOfSalesGridLayout.initPointOfSalesGrid());
+            parentLayer.add(returnLayer, gridLayout.initPointOfSalesGrid());
         });
         close.addThemeVariants(ButtonVariant.LUMO_CONTRAST, ButtonVariant.LUMO_SMALL);
 

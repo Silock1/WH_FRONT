@@ -76,6 +76,12 @@ public class SilverButton {
 
     }
 
+    public Button greenButton(String text) {
+        Button button = new Button(text);
+        button.setClassName("greenButton");
+        return button;
+    }
+
     //TODO: MenuBars
 
 

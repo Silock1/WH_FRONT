@@ -16,7 +16,6 @@ public interface BonusTransactionApi {
     @Headers("Accept: application/json")
     @GET("{url}")
     Call<List<BonusTransactionDto>> getAll(@Path(value = "url", encoded = true) String url);
-    //test
 
     @Headers("Accept: application/json")
     @GET("{url}/{id}")
