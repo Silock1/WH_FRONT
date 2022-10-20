@@ -27,6 +27,7 @@ import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,8 +38,7 @@ import java.util.stream.Collectors;
  * Операции с баллами (Розница/Операции с баллами)
  **/
 
-//Todo рефактор. Отправить севрисы в конструкторы и там реализовывать что нужно.
-//Todo поменять комбобоксы на селект
+
 @SpringComponent
 @Route(value = "bonus_transaction", layout = AppView.class)
 @CssImport(value = "./css/application.css")
@@ -58,6 +58,7 @@ public class BonusTransaction extends VerticalLayout {
     private final FilterForm filterForm = new FilterForm();
     private Set<BonusTransactionDto> selectedItems = new HashSet<>();
     private SilverButton silverButton = new SilverButton();
+    private List<FileDto> listCopiedFiles = new ArrayList<>();
 
     @Autowired
     public BonusTransaction(BonusTransactionService transactionService,
@@ -88,7 +89,7 @@ public class BonusTransaction extends VerticalLayout {
         setSubMenuSpending();
         setRefreshButton();
         setSubMenuMassEdit();
-        setFilterButttonLogic();
+        setFilterButtonLogic();
         setDeleteLogic();
         setCopyLogic();
         setCloseMassEdit();
@@ -150,7 +151,7 @@ public class BonusTransaction extends VerticalLayout {
         );
     }
 
-    private void setFilterButttonLogic() {
+    private void setFilterButtonLogic() {
         toolBar.getFilterButton().addClickListener(event -> {
             filterForm.setVisible(!filterForm.isVisible());
         });
@@ -396,8 +397,20 @@ public class BonusTransaction extends VerticalLayout {
         toolBar.getCopyItem().addClickListener(eventCopy -> {
             for (BonusTransactionDto dto : selectedItems) {
                 //set id 0 чтобы он создал новый при create, иначе с тем же id не создает
+
+                //При копировании записей копируются и файлы к каждой.
+                //Лист файлов текущей записи создается в базе, setId0 чтобы новые создались
+                //Файлы создаются, обратно возвращаются id и через get тут же их забираем уже с id, добавляем в лист,
+                //Который сетнем записи при создании. Получатся у каждой записи свои файлы и при удалении не будет конфликтов.
+                dto.getFilesDto().forEach(f -> {
+
+                    f.setId(0L);
+                    listCopiedFiles.add(fileService.getById(fileService.createAndGetId(f)));
+                });
+                dto.setFilesDto(listCopiedFiles);
                 dto.setId(0L);
                 transactionService.create(dto);
+                listCopiedFiles.clear();
             }
 
             updateGrid();
