@@ -262,7 +262,7 @@ public class BonusTransaction extends VerticalLayout {
     private void setSaveButtonEarning() {
         earningForm.getSaveButton().addClickListener(click -> {
             transactionService.create(getDataFromForm(earningForm, filesMappedByDB(earningForm.getFilesList())));
-
+            silverButton.greenNotification("Сохранено");
         });
     }
 
@@ -355,6 +355,7 @@ public class BonusTransaction extends VerticalLayout {
             for (BonusTransactionDto dto : selectedItems) {
                 transactionService.deleteById(dto.getId());
             }
+            silverButton.greenNotification("Удалено");
             updateGrid();
         });
 
@@ -395,7 +396,9 @@ public class BonusTransaction extends VerticalLayout {
                 dto.setId(0L);
                 transactionService.create(dto);
             }
+
             updateGrid();
+            silverButton.greenNotification("Скопировано");
         });
 
 

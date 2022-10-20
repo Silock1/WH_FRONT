@@ -61,7 +61,7 @@ public class MassEditView extends VerticalLayout {
         HorizontalLayout layout = new HorizontalLayout();
         Button button = silverButton.buttonHelp();
         Span title = new Span("Массовое редактирование: Операции с баллами");
-
+        title.setClassName("miniTitle");
 
         layout.add(button, title);
         return layout;

@@ -1,7 +1,6 @@
 package com.warehouse_accounting.components.retail.forms.bonus_transaction;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Span;
@@ -59,6 +58,8 @@ public class OperationView extends VerticalLayout {
 
     private BonusTransactionService bonusTransactionService;
 
+    private Button changeButton;
+
     public OperationView(TypeOperation typeOperation, FileService fileService, EmployeeService employeeService) {
         this.fileService = fileService;
         this.typeOperation = typeOperation;
@@ -70,25 +71,97 @@ public class OperationView extends VerticalLayout {
 
         add(
                 buttonLine(),
-                titleLine(),
-                checkBoxLine(),
-                pointsLine(),
+                headerForm(),
+                mainFormLine(),
                 headerCommentLine(),
                 commentLine(),
                 taskButtonLine(),
                 filesButtonLine(),
                 filesTableLine()
-
         );
+    }
+
+    private HorizontalLayout headerForm() {
+        HorizontalLayout header = new HorizontalLayout();
+        header.setAlignItems(Alignment.CENTER);
+        idInput.setWidth("50px");
+        idInput.setClassName("miniTitle");
+
+        Span spanPercent = new Span(String.format("%s бонусных баллов №", typeOperation.getValue()));
+        spanPercent.setClassName("miniTitle");
+
+        Span from = new Span("от");
+        from.setClassName("miniTitle");
+        createdDate = new DatePicker();
+
+        header.add(
+                spanPercent,
+                idInput,
+                from,
+                createdDate
+        );
+        return header;
+    }
+
+    private HorizontalLayout mainFormLine() {
+        HorizontalLayout mainFormLine = new HorizontalLayout();
+
+        VerticalLayout leftData = new VerticalLayout();
+        HorizontalLayout leftLineTwo = new HorizontalLayout();
+        leftLineTwo.setAlignItems(Alignment.CENTER);
+        Span spanBonusProgram = new Span("Бонусная программа");
+        spanBonusProgram.setClassName("blackColor");
+        spanBonusProgram.setWidth("150px");
+        leftLineTwo.add(spanBonusProgram,
+                selectBonusProgramDto,
+                getPencil());
+
+        HorizontalLayout leftLineThree = new HorizontalLayout();
+        leftLineThree.setAlignItems(Alignment.CENTER);
+        Span spanBonusValue = new Span(typeOperation.getValue());
+        spanBonusValue.setClassName("blackColor");
+        spanBonusValue.setWidth("150px");
+
+        Span spanBalls = new Span("баллов");
+        spanBalls.setClassName("blackColor");
+        leftLineThree.add(spanBonusValue,
+                bonusValueInput = new IntegerField(),//bonusValue
+                spanBalls);
+
+        leftData.add(
+                leftLineTwo, leftLineThree
+        );
+
+        VerticalLayout rightData = new VerticalLayout();
+        HorizontalLayout rightLineTwo = new HorizontalLayout();
+        rightLineTwo.setAlignItems(Alignment.CENTER);
+        Span spanContractor = new Span("Контрагент");
+        spanContractor.setClassName("blackColor");
+        spanContractor.setWidth("120px");
+        rightLineTwo.add(spanContractor,
+                selectContractorDto);
+
+        HorizontalLayout rightLineThree = new HorizontalLayout();
+        rightLineThree.setAlignItems(Alignment.CENTER);
+        Span spanDate = new Span(typeOperation.dateType());
+        spanDate.setClassName("blackColor");
+        spanDate.setWidth("120px");
+        rightLineThree.add(spanDate,
+                executionDate = new DatePicker());
+
+        rightData.add(rightLineTwo, rightLineThree);
+        mainFormLine.add(leftData, rightData);
+        return mainFormLine;
     }
 
     public HorizontalLayout buttonLine() {
         HorizontalLayout l = new HorizontalLayout();
-
+        changeButton = silverButton.buttonBlank("Изменить");
+        changeButton.addClickListener(click -> silverButton.greenNotification("Изменить"));
         l.add(
-                saveButton = new Button("Сохранить"),
-                closedButton = new Button("Закрыть"),
-                new Button("Изменить", click -> silverButton.greenNotification("ИЗМЕНИТЬ"))//Menubar удалить копировать ЗАГЛУШКА
+                saveButton = silverButton.greenButton("Сохранить"),
+                closedButton = silverButton.buttonBlank("Закрыть"),
+                changeButton
         );
         return l;
 
@@ -98,24 +171,9 @@ public class OperationView extends VerticalLayout {
         fileUpload.getElement().executeJs("this.files=[]");
     }
 
-    public HorizontalLayout titleLine() {
-        HorizontalLayout l = new HorizontalLayout();
-        idInput.setWidth("40px");
 
-
-        l.add(
-                new Span(String.format("%s бонусных баллов №", typeOperation.getValue())),
-                idInput,
-                new Span("от"),
-                createdDate = new DatePicker()//created
-
-        );
-
-        return l;
-
-    }
     public void setFileList(Long id) {
-        if(idInput.getValue() == null) {
+        if (idInput.getValue() == null) {
             idInput.setValue(0);
         }
 
@@ -123,40 +181,7 @@ public class OperationView extends VerticalLayout {
         updateFileData();
 
     }
-    public HorizontalLayout checkBoxLine() {
-        HorizontalLayout l = new HorizontalLayout();
-        Icon icon = new Icon(VaadinIcon.PENCIL);
-        icon.addClickListener(click -> silverButton.greenNotification("РЕДАКТИРОВАНИЕ BonusProgramDto"));
-        icon.setSize("10px");
 
-
-        l.add(
-                new Span("Бонусная программа"),
-                selectBonusProgramDto,
-                icon,
-                new Span("Контрагент"),
-                selectContractorDto
-        );
-
-        l.setAlignItems(Alignment.CENTER);
-        return l;
-
-    }
-
-    public HorizontalLayout pointsLine() {
-        HorizontalLayout l = new HorizontalLayout();
-
-
-        l.add(
-                new Span(typeOperation.getValue()),
-                bonusValueInput = new IntegerField(),//bonusValue
-                new Span("баллов"),
-                new Span(typeOperation.dateType()),
-                executionDate = new DatePicker()//executionDate дата начисления/списания
-        );
-        return l;
-
-    }
 
     public HorizontalLayout headerCommentLine() {
         HorizontalLayout l = new HorizontalLayout();
@@ -198,9 +223,10 @@ public class OperationView extends VerticalLayout {
         taskButton = silverButton.buttonPLusBlue("Задачи");
         taskButton.addClickListener(click -> silverButton.greenNotification("ЗАДАЧИ"));
 
-
+        Span task = new Span("Задачи");
+        task.setClassName("blackColor");
         l.add(
-                new Span("Задачи"),
+                task,
                 taskButton
 
         );
@@ -227,13 +253,21 @@ public class OperationView extends VerticalLayout {
             updateFileData();
 
         });
-
+        Span files = new Span("Файлы");
+        files.setClassName("blackColor");
         l.setAlignItems(Alignment.CENTER);
         l.add(
-                new Span("Файлы"),
+                files,
                 fileUpload);
         return l;
 
+    }
+
+    private Icon getPencil() {
+        Icon icon = new Icon(VaadinIcon.PENCIL);
+        icon.addClickListener(click -> silverButton.greenNotification("РЕДАКТИРОВАНИЕ BonusProgramDto"));
+        icon.setSize("15px");
+        return icon;
     }
 
     private void updateFileData() {
@@ -247,8 +281,6 @@ public class OperationView extends VerticalLayout {
     public HorizontalLayout filesTableLine() {
 
         HorizontalLayout l = new HorizontalLayout();
-
-
         l.add(fileGridLayOut);
         return l;
 
