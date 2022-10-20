@@ -1,6 +1,7 @@
 package com.warehouse_accounting.components.user;
 
 import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -64,6 +65,7 @@ public class EmployeeSettingView extends VerticalLayout {
 
         Button addEmployee = new Button("Сотрудник", new Icon(VaadinIcon.PLUS));
         addEmployee.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        addEmployee.addClickListener(event -> UI.getCurrent().navigate("employee/new_employee"));
 
         Button addFilterButton = new Button("Фильтр");
         addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
@@ -213,4 +215,5 @@ public class EmployeeSettingView extends VerticalLayout {
         filterForm.setVisible(false);
         return filterForm;
     }
+
 }

@@ -1,0 +1,109 @@
+
+#rs200 {
+    margin-right: 200px;
+}
+
+#rs20 {
+    margin-right: 20px;
+}
+
+#al-c {
+    align-self: center;
+}
+
+
+vaadin-text-field {
+    width: 300px;
+}
+
+.al-r {
+    align-self: center;
+    text-align: right;
+    margin-right: 10px;
+    margin-left: 100px;
+    width: 60px;
+}
+
+.div-form-style {
+    width: 400px;
+}
+
+.orange-span {
+    font-size: 15px;
+    font-weight: normal;
+    color: #cc420c;
+}
+
+.radio-help-text {
+    padding-top: 5px;
+    padding-bottom: 12px;
+    font-style: italic;
+    font-size: 11px;
+    color: #808080;
+}
+
+.radio-style {
+    margin-bottom: 15px;
+}
+
+.short-byte-field {
+    width: 35px;
+    margin-left: 1px;
+}
+
+.dot-spacing {
+    margin-left: 1px;
+    margin-right: 1px;
+}
+
+.width300 {
+    width: 300px;
+}
+
+.ip-block-margin {
+    margin-left: 20px;
+}
+
+.stick-to-fields {
+    margin-left: 0;
+    text-align: left;
+    align-self: baseline;
+}
+
+.top-margin0 {
+    margin-top: 0;
+}
+
+.left-row {
+    width: 300px;
+    text-align: right;
+    padding-right: 50px;
+
+}
+
+#table-grid {
+    border-width: 0;
+}
+
+#table-grid vaadin-grid-cell-content {
+    align-items: center;
+    text-align: center;
+}
+
+#table-grid vaadin-grid-cell-content[slot="vaadin-grid-cell-content-1"],
+#table-grid vaadin-grid-cell-content[slot="vaadin-grid-cell-content-4"],
+#table-grid vaadin-grid-cell-content[slot="vaadin-grid-cell-content-7"],
+#table-grid vaadin-grid-cell-content[slot="vaadin-grid-cell-content-10"],
+#table-grid vaadin-grid-cell-content[slot="vaadin-grid-cell-content-13"],
+#table-grid vaadin-grid-cell-content[slot="vaadin-grid-cell-content-16"],
+#table-grid vaadin-grid-cell-content[slot="vaadin-grid-cell-content-19"],
+#table-grid vaadin-grid-cell-content[slot="vaadin-grid-cell-content-22"]{
+    text-align: right;
+}
+
+#table-grid vaadin-grid-cell-content[slot="vaadin-grid-cell-content-26"],
+#table-grid vaadin-grid-cell-content[slot="vaadin-grid-cell-content-25"],
+#table-grid vaadin-grid-cell-content[slot="vaadin-grid-cell-content-0"]{
+    border-bottom: 2px solid #186998;
+    height: 40px;
+}
