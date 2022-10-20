@@ -71,7 +71,7 @@ public class MassEditView extends VerticalLayout {
 
         HorizontalLayout layout = new HorizontalLayout();
 
-        spanSelectedItems = new Span("заглушка");
+        spanSelectedItems = new Span();
 
         spanSelectedItems.getElement().getStyle().set("border", "solid 1px #e2f4ff");
         spanSelectedItems.getElement().getStyle().set("background-color", "#ecf8ff");
