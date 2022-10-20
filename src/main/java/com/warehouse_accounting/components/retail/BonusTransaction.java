@@ -207,13 +207,15 @@ public class BonusTransaction extends VerticalLayout {
     }
 
     private void setSubMenuMassEdit() {
-        setSelectedItems();
+        //setSelectedItems();
         toolBar.getMassEdit().addClickListener(event -> {
-            if (selectedItems.size() == 0) {
-                selectedItems = new HashSet<>(transactionService.getAll());
-            }
-            massEditView.getSpanSelectedItems().setText(String.format("Выбрано %d элементов", selectedItems.size()));
-            selectedItems = new HashSet<>(); //clear. clear() выкидывает exception
+          //TODO: баги, пока на доработке
+
+//            if (selectedItems.size() == 0) {
+//                selectedItems = new HashSet<>(transactionService.getAll());
+//            }
+//            massEditView.getSpanSelectedItems().setText(String.format("Выбрано %d элементов", selectedItems.size()));
+//            selectedItems = new HashSet<>(); //clear. clear() выкидывает exception
 
             openMassEdit();
         });
