@@ -1,6 +1,6 @@
 html, body, td, .gwt-TextArea, textarea {
     color: #222;
-    font: 12px "Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+    font: 12px "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
 #promoText {
@@ -15,7 +15,7 @@ html, body, td, .gwt-TextArea, textarea {
     height: 250px;
     margin: 0 20px;
     color: #222;
-    font: 12px "Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+    font: 12px "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
 .screenWrapper {
@@ -28,9 +28,9 @@ html, body, td, .gwt-TextArea, textarea {
     border: 1px solid #cedfea;
     padding: 7px;
     border-radius: 1px;
-    z-index: 40!important;
+    z-index: 40 !important;
     color: #222;
-    font: 12px "Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+    font: 12px "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     left: 8px;
     top: 104px;
     z-index: 20;
@@ -72,14 +72,12 @@ html, body, td, .gwt-TextArea, textarea {
     background: -webkit-linear-gradient(top, #fff, #e6e6e6);
     height: 32px;
 
-
 }
-
 
 
 .manualName {
     color: #222;
-    font: 12px "Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+    font: 12px "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     font-size: 20px;
     font-weight: bold;
     line-height: 22px;
@@ -93,11 +91,20 @@ html, body, td, .gwt-TextArea, textarea {
     align-items: center;
 }
 
+.blackColor {
+    color: black;
+}
+
+.miniTitle {
+    font-size: 20px;
+    color: #222;
+}
+
 .helpButton {
     width: 15px;
     min-width: 15px;
     height: 15px;
-    margin-right: 10px!important;
+    margin-right: 10px !important;
     display: inline-block;
     cursor: pointer;
 }
@@ -132,16 +139,50 @@ html, body, td, .gwt-TextArea, textarea {
 
 #btn {
     background: #fff;
-    background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#fff),color-stop(100%,#e6e6e6));
-    background: -webkit-linear-gradient(top,#fff,#e6e6e6);
-    background: -o-linear-gradient(top,#fff,#e6e6e6);
-    background: -ms-linear-gradient(top,#fff,#e6e6e6);
-    background: linear-gradient(top,#fff,#e6e6e6);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fff), color-stop(100%, #e6e6e6));
+    background: -webkit-linear-gradient(top, #fff, #e6e6e6);
+    background: -o-linear-gradient(top, #fff, #e6e6e6);
+    background: -ms-linear-gradient(top, #fff, #e6e6e6);
+    background: linear-gradient(top, #fff, #e6e6e6);
     display: inline-block;
     font-size: 12px;
     white-space: nowrap;
     height: 26px;
     margin-right: 15px;
+}
+
+.greenButton {
+    border-spacing: 0;
+    border-collapse: collapse;
+    color: white;
+    font: 12px "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    outline: 0;
+    padding: 10px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background: -webkit-linear-gradient(top, #cce255, #a1b900);
+    height: 32px;
+
+
+    /*padding: 10px;*/
+    /*cursor: pointer;*/
+    /*border: 1px solid #ccc;*/
+    /*border-radius: 3px;*/
+    /*height: 32px;*/
+    /*    */
+    /*//border-collapse: collapse;*/
+    /*color: white;*/
+    /*font: 12px "Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;*/
+    /*margin: 0 10px 0 0;*/
+
+    /*cursor: pointer;*/
+    /*border: 1px solid #ccc;*/
+    /*border-radius: 3px;*/
+    /*display: inline-block;*/
+    /*white-space: nowrap;*/
+    /*background: -webkit-linear-gradient(top,#cce255,#a1b900);*/
+
 }
 
 .borderCheck {

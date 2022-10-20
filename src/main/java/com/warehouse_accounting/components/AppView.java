@@ -39,7 +39,6 @@ import java.util.stream.Stream;
 @Log4j2
 @CssImport(value = "./css/my-app-layout.css", themeFor = "vaadin-app-layout")
 @CssImport(value = "./css/my-app-layout.css")
-//@CssImport(value = "./css/common.css")
 public class AppView extends AppLayout implements PageConfigurator {
     private final String LOGO_PNG = "logo_main.svg";
     private final String AVATAR_PNG = "avatar-placeholder.svg";

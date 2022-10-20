@@ -11,7 +11,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.warehouse_accounting.components.retail.forms.CreatePointOfSalesForm;
 import com.warehouse_accounting.components.retail.grids.PointOfSalesGridLayout;
 
@@ -24,12 +23,12 @@ import com.warehouse_accounting.components.retail.grids.PointOfSalesGridLayout;
 public class PointOfSales extends VerticalLayout {
 
     private PointOfSalesGridLayout pointOfSalesGridLayout;
-    private final TextField textFieldGridSelected = new TextField();
+
     private final Div parentLayer;
 
     public PointOfSales(Div parentLayer) {
         this.parentLayer = parentLayer;
-        pointOfSalesGridLayout = new PointOfSalesGridLayout(textFieldGridSelected);
+        pointOfSalesGridLayout = new PointOfSalesGridLayout();
         Div pageContent = new Div();
         pageContent.add(pointOfSalesGridLayout);
         pageContent.setSizeFull();

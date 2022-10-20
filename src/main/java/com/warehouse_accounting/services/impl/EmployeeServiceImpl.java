@@ -51,6 +51,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    public EmployeeDto updateWithResponse(EmployeeDto employeeDto) {
+        Call<EmployeeDto> call = api.updateWithResponse(url, employeeDto);
+        return new ServiceUtils<>(EmployeeDto.class).updateWithResponse(call);
+    }
+
+    @Override
     public void deleteById(Long id) {
         Call<Void> call = api.deleteById(url, id);
         new ServiceUtils<>(EmployeeDto.class).delete(call);

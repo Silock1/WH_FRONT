@@ -17,13 +17,12 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.warehouse_accounting.components.util.SilverButton;
 import com.warehouse_accounting.services.interfaces.BonusTransactionService;
 import lombok.Getter;
 import lombok.Setter;
 
-@SpringComponent
+
 @Getter
 @Setter
 public class BonusTransactionToolBar extends HorizontalLayout {
