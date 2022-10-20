@@ -379,8 +379,8 @@ public class BonusTransaction extends VerticalLayout {
 //                transactionService.update(dto);
 //
 //            }
-//            closeMassEdit();
-//            updateGrid();
+            closeMassEdit();
+            updateGrid();
 
         });
 
