@@ -14,6 +14,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.warehouse_accounting.components.sales.filter.CustomerReturnsFilter;
 import com.warehouse_accounting.components.sales.forms.CustomerReturnsForm;
 import com.warehouse_accounting.components.sales.grids.CustomerReturnsGridLayout;
 
@@ -24,14 +25,16 @@ public class CustomerReturns extends VerticalLayout {
     private CustomerReturnsGridLayout customerReturnsGridLayout;
     private final TextField textFieldGridSelected = new TextField();
     private final Div parentLayer;
+    private final CustomerReturnsFilter customerReturnsFilter;
 
-    public CustomerReturns(Div parentLayer) {
+    public CustomerReturns(Div parentLayer, CustomerReturnsFilter customerReturnsFilter) {
+        this.customerReturnsFilter = customerReturnsFilter;
         this.parentLayer = parentLayer;
         customerReturnsGridLayout = new CustomerReturnsGridLayout(textFieldGridSelected);
         Div pageContent = new Div();
         pageContent.add(customerReturnsGridLayout);
         pageContent.setSizeFull();
-        add(getGroupButtons(), pageContent);
+        add(getGroupButtons(), customerReturnsFilter, pageContent);
     }
 
     private HorizontalLayout getGroupButtons() {
@@ -57,6 +60,12 @@ public class CustomerReturns extends VerticalLayout {
 
         Button addFilterButton = new Button("Фильтр");
         addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        addFilterButton.addClickListener(e ->
+                {
+                    System.out.println("КНОПКА НАЖАТА");
+                    customerReturnsFilter.setVisible(!customerReturnsFilter.isVisible());
+                }
+        );
 
         TextField searchField = new TextField();
         searchField.setPlaceholder("Номер или комментарий");
