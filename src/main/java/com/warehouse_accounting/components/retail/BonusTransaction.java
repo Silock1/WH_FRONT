@@ -279,8 +279,7 @@ public class BonusTransaction extends VerticalLayout {
 
     private List<FileDto> filesMappedByDB(List<FileDto> files) {
 
-        files = files.stream().map(f ->
-                fileService.getById(fileService.createAndGetId(f))
+        files = files.stream().map(fileService::createWithResponse
         ).collect(Collectors.toList());
         return files;
     }
@@ -400,12 +399,11 @@ public class BonusTransaction extends VerticalLayout {
 
                 //При копировании записей копируются и файлы к каждой.
                 //Лист файлов текущей записи создается в базе, setId0 чтобы новые создались
-                //Файлы создаются, обратно возвращаются id и через get тут же их забираем уже с id, добавляем в лист,
-                //Который сетнем записи при создании. Получатся у каждой записи свои файлы и при удалении не будет конфликтов.
+                //Файлы создаются и возвращаются они же, но с id из базы для того. С id null объект не сетнуть в другой.
                 dto.getFilesDto().forEach(f -> {
 
                     f.setId(0L);
-                    listCopiedFiles.add(fileService.getById(fileService.createAndGetId(f)));
+                    listCopiedFiles.add((fileService.createWithResponse(f)));
                 });
                 dto.setFilesDto(listCopiedFiles);
                 dto.setId(0L);

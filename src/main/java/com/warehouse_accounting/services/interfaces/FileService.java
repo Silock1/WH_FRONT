@@ -12,7 +12,7 @@ public interface FileService {
 
     void create(FileDto dto);
 
-    Long createAndGetId(FileDto dto);
+    FileDto createWithResponse(FileDto dto);
 
     void update(FileDto dto);
 

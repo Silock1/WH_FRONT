@@ -48,9 +48,9 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public Long createAndGetId(FileDto dto) {
-        Call<Long> call = api.createAndGetId(url, dto);
-        return new ServiceUtils<>(FileDto.class).createAndGetId(call);
+    public FileDto createWithResponse(FileDto dto) {
+        Call<FileDto> call = api.createWithResponse(url, dto);
+        return new ServiceUtils<>(FileDto.class).requestWithResponse(call);
     }
 
     @Override

@@ -53,7 +53,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDto updateWithResponse(EmployeeDto employeeDto) {
         Call<EmployeeDto> call = api.updateWithResponse(url, employeeDto);
-        return new ServiceUtils<>(EmployeeDto.class).updateWithResponse(call);
+        return new ServiceUtils<>(EmployeeDto.class).requestWithResponse(call);
     }
 
     @Override

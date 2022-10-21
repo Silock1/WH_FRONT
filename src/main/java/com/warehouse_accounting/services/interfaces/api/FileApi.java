@@ -28,7 +28,7 @@ public interface FileApi {
 
     @Headers("Accept: application/json")
     @POST("{url}")
-    Call<Long> createAndGetId(@Path(value = "url", encoded = true) String url, @Body FileDto dto);
+    Call<FileDto> createWithResponse(@Path(value = "url", encoded = true) String url, @Body FileDto dto);
 
     @Headers("Accept: application/json")
     @PUT("{url}")
