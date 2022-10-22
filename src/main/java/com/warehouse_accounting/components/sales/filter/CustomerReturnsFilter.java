@@ -48,12 +48,8 @@ public class CustomerReturnsFilter extends VerticalLayout {
         HorizontalLayout horizontalLayoutTwo = getHorizontalLayoutTwo();
         HorizontalLayout horizontalLayoutThree = getHorizontalLayoutThree();
         HorizontalLayout horizontalLayoutFour = getHorizontalLayoutFour();
-        HorizontalLayout horizontalLayoutFive = getHorizontalLayoutFive();
-        HorizontalLayout horizontalLayoutSix = getHorizontalLayoutSix();
-        HorizontalLayout horizontalLayoutSeven = getHorizontalLayoutSeven();
 
-        add(horizontalLayoutOne, horizontalLayoutTwo, horizontalLayoutThree, horizontalLayoutFour, horizontalLayoutFive,
-                horizontalLayoutSix, horizontalLayoutSeven);
+        add(horizontalLayoutOne, horizontalLayoutTwo, horizontalLayoutThree, horizontalLayoutFour);
 
         setVisible(false);
     }
@@ -70,36 +66,24 @@ public class CustomerReturnsFilter extends VerticalLayout {
         DatePicker periodStart = new DatePicker("Период");
         DatePicker periodEnd = new DatePicker("до");
 
+        DatePicker periodShipmentStart = new DatePicker("План. дата огрузки");
+        DatePicker periodShipmentEnd = new DatePicker("до");
+
+
         ComboBox<String> payment = new ComboBox<>("Оплата", "Оплачено", "Частично оплачено", "Не оплачено");
 
-
-        ComboBox<String> shipped = new ComboBox<>("Отгружено", "Отгружено", "Частично отгружено",
-                "Не отгружено", "Просрочено");
-
-
-        horizontalLayout.add(find, clear, bookmarks, settingButton, periodStart, periodEnd, payment, shipped);
-        return horizontalLayout;
-    }
-
-    private HorizontalLayout getHorizontalLayoutTwo(){
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-
-        DatePicker periodStart = new DatePicker("План. дата огрузки");
-        DatePicker periodEnd = new DatePicker("до");
-
         ComboBox<String> productComboBox = new ComboBox<>("Товар или группа");
-        ComboBox<String> typeReturn = new ComboBox<>("Тип возврата", "Частично возвращено", "Без возвратов", "Полностью возвращено");
 
         List<WarehouseDto> warehouseDtos = warehouseService.getAll();
         ComboBox<WarehouseDto> warehouseDtoComboBox = new ComboBox<>("Склад");
         warehouseDtoComboBox.setItems(warehouseDtos);
         warehouseDtoComboBox.setItemLabelGenerator(WarehouseDto::getName);
 
-        horizontalLayout.add(periodStart, periodEnd, productComboBox, typeReturn, warehouseDtoComboBox);
+        horizontalLayout.add(find, clear, bookmarks, settingButton, periodStart, periodEnd, periodShipmentStart, periodShipmentEnd, payment, productComboBox, warehouseDtoComboBox);
         return horizontalLayout;
     }
 
-    private HorizontalLayout getHorizontalLayoutThree(){
+    private HorizontalLayout getHorizontalLayoutTwo(){
         HorizontalLayout horizontalLayout = new HorizontalLayout();
 
         List<ProjectDto> projectDtos = projectService.getAll();
@@ -116,13 +100,6 @@ public class CustomerReturnsFilter extends VerticalLayout {
 
         TextField counterPartyAccount = new TextField("Счёт контрагента");
 
-        horizontalLayout.add(projectCombo, contractorsCombo, groupContractors, counterPartyAccount);
-        return horizontalLayout;
-    }
-
-    private HorizontalLayout getHorizontalLayoutFour(){
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-
         List<ContractDto> contractDtos = contractService.getAll();
         ComboBox<ContractDto> contractDtoComboBox = new ComboBox<>("Договор");
         contractDtoComboBox.setItems(contractDtos);
@@ -132,6 +109,18 @@ public class CustomerReturnsFilter extends VerticalLayout {
         ComboBox<EmployeeDto> employeeDtoComboBox = new ComboBox<>("Владелец контрагента");
         employeeDtoComboBox.setItems(employeeDtos);
         employeeDtoComboBox.setItemLabelGenerator(EmployeeDto::getLastName);
+
+        List<WarehouseDto> warehouseDtos = warehouseService.getAll();
+        ComboBox<WarehouseDto> warehouseDtoComboBox = new ComboBox<>("Склад");
+        warehouseDtoComboBox.setItems(warehouseDtos);
+        warehouseDtoComboBox.setItemLabelGenerator(WarehouseDto::getName);
+
+        horizontalLayout.add(projectCombo, contractorsCombo, groupContractors, counterPartyAccount, contractDtoComboBox, employeeDtoComboBox);
+        return horizontalLayout;
+    }
+
+    private HorizontalLayout getHorizontalLayoutThree(){
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
 
         List<CompanyDto> companyDtos = new ArrayList<>();
 
@@ -147,42 +136,27 @@ public class CustomerReturnsFilter extends VerticalLayout {
 
         TextField organizationAccount = new TextField("Счет организации");
 
-
-        horizontalLayout.add(contractDtoComboBox, employeeDtoComboBox, companyDtoComboBox, organizationAccount);
-        return horizontalLayout;
-    }
-
-    private HorizontalLayout getHorizontalLayoutFive(){
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-
         ComboBox<String> statusCombo = new ComboBox<>("Статус", "Новый", "Подтвержден", "Собран", "Отгружен", "Доставлен", "Возврат", "Отменен");
-        ComboBox<String> carriedOutCombo = new ComboBox<>("Проведено", "Да", "Нет");
-        ComboBox<String> printedCombo = new ComboBox<>("Напечатано", "Да", "Нет");
-        ComboBox<String> sentCombo = new ComboBox<>("Отправлено", "Да", "Нет");
-        horizontalLayout.add(statusCombo, carriedOutCombo, printedCombo, sentCombo);
 
+        ComboBox<String> carriedOutCombo = new ComboBox<>("Проведено", "Да", "Нет");
+
+        ComboBox<String> printedCombo = new ComboBox<>("Напечатано", "Да", "Нет");
+
+        ComboBox<String> sentCombo = new ComboBox<>("Отправлено", "Да", "Нет");
+
+        horizontalLayout.add(companyDtoComboBox, organizationAccount, statusCombo, carriedOutCombo, printedCombo, sentCombo);
         return horizontalLayout;
     }
 
-    private HorizontalLayout getHorizontalLayoutSix(){
+    private HorizontalLayout getHorizontalLayoutFour(){
         HorizontalLayout horizontalLayout = new HorizontalLayout();
 
         ComboBox<String> salesChannel = new ComboBox<>("Канал продаж");
-
-        TextField deliveryAddress = new TextField("Адрес доставки");
-        TextField shippingAddressComment = new TextField("Комментарий к адресу доставки");
 
         List<EmployeeDto> employeeDtos = employeeService.getAll();
         ComboBox<EmployeeDto> employeeDtoComboBox = new ComboBox<>("Владелец-сотрудник");
         employeeDtoComboBox.setItems(employeeDtos);
         employeeDtoComboBox.setItemLabelGenerator(EmployeeDto::getLastName);
-
-        horizontalLayout.add(salesChannel, deliveryAddress, shippingAddressComment,employeeDtoComboBox);
-        return horizontalLayout;
-    }
-
-    private HorizontalLayout getHorizontalLayoutSeven(){
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
 
         List<DepartmentDto> departmentDtos = departmentService.getAll();
         ComboBox<DepartmentDto> departmentDtoComboBox = new ComboBox<>("Владелец-отдел");
@@ -193,12 +167,13 @@ public class CustomerReturnsFilter extends VerticalLayout {
         DatePicker whenChangedStart = new DatePicker("Когда изменен: от");
         DatePicker whenChangedEnd = new DatePicker("до");
 
-        List<EmployeeDto> employeeDtos = employeeService.getAll();
-        ComboBox<EmployeeDto> employeeDtoComboBox = new ComboBox<>("Кто изменил");
-        employeeDtoComboBox.setItems(employeeDtos);
-        employeeDtoComboBox.setItemLabelGenerator(EmployeeDto::getLastName);
+        List<EmployeeDto> employeeDtosChange = employeeService.getAll();
+        ComboBox<EmployeeDto> employeeDtoChangeComboBox = new ComboBox<>("Кто изменил");
+        employeeDtoChangeComboBox.setItems(employeeDtosChange);
+        employeeDtoChangeComboBox.setItemLabelGenerator(EmployeeDto::getLastName);
 
-        horizontalLayout.add(departmentDtoComboBox, generalAccess, whenChangedStart, whenChangedEnd, employeeDtoComboBox);
+        horizontalLayout.add(salesChannel, employeeDtoComboBox, departmentDtoComboBox, generalAccess, whenChangedStart, whenChangedEnd, employeeDtoChangeComboBox);
         return horizontalLayout;
     }
+
 }

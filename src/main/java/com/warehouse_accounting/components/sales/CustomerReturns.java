@@ -61,10 +61,7 @@ public class CustomerReturns extends VerticalLayout {
         Button addFilterButton = new Button("Фильтр");
         addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         addFilterButton.addClickListener(e ->
-                {
-                    System.out.println("КНОПКА НАЖАТА");
-                    customerReturnsFilter.setVisible(!customerReturnsFilter.isVisible());
-                }
+                    customerReturnsFilter.setVisible(!customerReturnsFilter.isVisible())
         );
 
         TextField searchField = new TextField();
