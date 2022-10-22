@@ -190,7 +190,8 @@ public class SalesSubMenuView extends VerticalLayout {
 
     private CustomerReturns initCustomerReturns(Div pageContent){
         if (Objects.isNull(customerReturns)) {
-            customerReturns = new CustomerReturns(pageContent, new CustomerReturnsFilter());
+            customerReturns = new CustomerReturns(pageContent, new CustomerReturnsFilter(companyService, contractorService, contractService,
+                    projectService, warehouseService, employeeService, departmentService));
         }
         return customerReturns;
     }
