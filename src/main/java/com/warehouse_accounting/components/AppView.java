@@ -17,26 +17,20 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
-import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PageConfigurator;
 import com.vaadin.flow.server.StreamResource;
 import com.warehouse_accounting.components.help.HelpButton;
 import com.warehouse_accounting.models.dto.EmployeeDto;
-import com.warehouse_accounting.services.impl.EmployeeServiceImpl;
 import lombok.extern.log4j.Log4j2;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
 import org.apache.commons.io.FilenameUtils;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -52,13 +46,11 @@ public class AppView extends AppLayout implements PageConfigurator {
     private Boolean imgUrlExist = true;
     private EmployeeDto tmpEmployeeDto;
 
-    private Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://localhost:4446")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-    private EmployeeService employeeService = new EmployeeServiceImpl("api/employees", retrofit);
 
-    public AppView() {
+    private EmployeeService employeeService;
+
+    public AppView(EmployeeService employeeService) {
+        this.employeeService = employeeService;
         prepareNavBarTabs();
     }
 

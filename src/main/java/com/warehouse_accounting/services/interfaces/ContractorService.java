@@ -15,4 +15,5 @@ public interface ContractorService {
     void update(ContractorDto dto);
 
     void deleteById(Long id);
+
 }
