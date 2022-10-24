@@ -34,6 +34,7 @@ retrofit:
     discount_url: api/discount
     employee_url: api/employees
     feed_url: api/feed
+    file_url: api/file
     image_url: api/images
     invoice_edit_url: api/invoice_edits   #404
     invoice_product_url: api/invoice_products   # []

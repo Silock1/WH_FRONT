@@ -67,6 +67,7 @@ public class ServiceUtils<T> {
         }
     }
 
+
     public void update(Call<Void> call) {
         try {
             Response<Void> response = call.execute();
@@ -78,6 +79,23 @@ public class ServiceUtils<T> {
         } catch (IOException e) {
             log.error("Произошла ошибка при выполнении запроса на изменение {}", getTypeName(), e);
         }
+    }
+
+    public T requestWithResponse(Call<T> call) {
+        T dto = null;
+        try {
+            Response<T> response = call.execute();
+            if (response.isSuccessful()) {
+                dto = response.body();
+                log.info("Успешно выполнен запрос на изменение {}", getTypeName());
+            } else {
+                log.error("Произошла ошибка {} при выполнении запроса на изменение {}", response.code(), getTypeName());
+            }
+        } catch (IOException e) {
+            log.error("Произошла ошибка при выполнении запроса на изменение {}", getTypeName(), e);
+        }
+
+        return dto;
     }
 
     public void delete(Call<Void> call) {

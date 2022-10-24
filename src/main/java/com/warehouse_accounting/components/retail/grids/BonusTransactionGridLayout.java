@@ -4,7 +4,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.warehouse_accounting.components.util.ColumnToggleContextMenu;
 import com.warehouse_accounting.components.util.SilverButton;
 import com.warehouse_accounting.models.dto.BonusTransactionDto;
@@ -12,7 +11,7 @@ import com.warehouse_accounting.services.interfaces.BonusTransactionService;
 import lombok.Getter;
 import lombok.Setter;
 
-@SpringComponent
+
 @Getter
 @Setter
 public class BonusTransactionGridLayout extends HorizontalLayout {
@@ -46,20 +45,22 @@ public class BonusTransactionGridLayout extends HorizontalLayout {
 
     private Button settingButtonOperations() {
         SilverButton silverButton = new SilverButton();
-        Grid.Column<BonusTransactionDto> idColumn = pointsGrid.addColumn(BonusTransactionDto::getId).setHeader("№").setSortable(true);
-        Grid.Column<BonusTransactionDto> dateCreateColumn = pointsGrid.addColumn(BonusTransactionDto::getCreated).setHeader("Дата создания").setSortable(true);
-        Grid.Column<BonusTransactionDto> operationColumn = pointsGrid.addColumn(BonusTransactionDto::getTransactionType).setHeader("Тип операции").setSortable(true);
-        Grid.Column<BonusTransactionDto> bonusColumn = pointsGrid.addColumn(BonusTransactionDto::getBonusValue).setHeader("Бонусные баллы").setSortable(true);
-        Grid.Column<BonusTransactionDto> statusColumn = pointsGrid.addColumn(BonusTransactionDto::getTransactionStatus).setHeader("Статус").setSortable(true);
-        Grid.Column<BonusTransactionDto> dateChargeColumn = pointsGrid.addColumn(BonusTransactionDto::getExecutionDate).setHeader("Дата начисления").setSortable(true);
-        Grid.Column<BonusTransactionDto> bonusProgramColumn = pointsGrid.addColumn(transaction -> transaction.getBonusProgramDto().getName()).setHeader("Бонусная программа").setSortable(true);
-        Grid.Column<BonusTransactionDto> contragentColumn = pointsGrid.addColumn(transaction -> transaction.getContragent().getName()).setHeader("Контрагент").setSortable(true);
-        Grid.Column<BonusTransactionDto> commentaryColumn = pointsGrid.addColumn(BonusTransactionDto::getComment).setHeader("Комментарий").setSortable(true);
-        Grid.Column<BonusTransactionDto> departmentColumn = pointsGrid.addColumn(transaction -> transaction.getOwner().getDepartment().getName()).setHeader("Владелец-отдел").setSortable(true);
-        Grid.Column<BonusTransactionDto> ownerColumn = pointsGrid.addColumn(transaction -> transaction.getOwner().getFirstName()).setHeader("Владелец-сотрудник").setSortable(true);
-       // Grid.Column<BonusTransactionDto> ownerChangeColumn = pointsGrid.addColumn(transaction -> transaction.getOwner().getFirstName()).setHeader("Кто изменил").setSortable(true);
-        //Todo: Дата изменения. Добавить дату изменения в модель BonusTransaction. LocalDate.now() при создании. А затем при изменении.
-        //Todo: Кто изменил. Добавить поле в модель BonusTransaction getPrincipalManually()
+
+        Grid.Column<BonusTransactionDto> idColumn = pointsGrid.addColumn(BonusTransactionDto::getId).setHeader("№").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> dateCreateColumn = pointsGrid.addColumn(BonusTransactionDto::getCreated).setHeader("Дата создания").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> operationColumn = pointsGrid.addColumn(BonusTransactionDto::getTransactionType).setHeader("Тип операции").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> bonusColumn = pointsGrid.addColumn(BonusTransactionDto::getBonusValue).setHeader("Бонусные баллы").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> statusColumn = pointsGrid.addColumn(BonusTransactionDto::getTransactionStatus).setHeader("Статус").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> dateChargeColumn = pointsGrid.addColumn(BonusTransactionDto::getExecutionDate).setHeader("Дата начисления").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> bonusProgramColumn = pointsGrid.addColumn(transaction -> transaction.getBonusProgramDto().getName()).setHeader("Бонусная программа").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> contractorColumn = pointsGrid.addColumn(transaction -> transaction.getContractorDto().getName()).setHeader("Контрагент").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> commentaryColumn = pointsGrid.addColumn(BonusTransactionDto::getComment).setHeader("Комментарий").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> departmentColumn = pointsGrid.addColumn(transaction -> transaction.getOwnerDto().getDepartment().getName()).setHeader("Владелец-отдел").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> generalAccessColumn = pointsGrid.addColumn(BonusTransactionDto::isGeneralAccess).setHeader("Общий доступ").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> ownerColumn = pointsGrid.addColumn(transaction -> transaction.getOwnerDto().getFirstName()).setHeader("Владелец-сотрудник").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> dateChangedColumn = pointsGrid.addColumn(BonusTransactionDto::getDateChange).setHeader("Дата изменения").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> employeeChangeColumn = pointsGrid.addColumn(transaction -> transaction.getOwnerChangedDto().getFirstName()).setHeader("Кто изменил").setSortable(true).setResizable(true);
+
 
         Button settingButton = silverButton.buttonSetting();
         ColumnToggleContextMenu<BonusTransactionDto> columnToggleContextMenu = new ColumnToggleContextMenu<>(settingButton);
@@ -70,12 +71,14 @@ public class BonusTransactionGridLayout extends HorizontalLayout {
         columnToggleContextMenu.addColumnToggleItem("Статус", statusColumn);
         columnToggleContextMenu.addColumnToggleItem("Дата начисления", dateChargeColumn);
         columnToggleContextMenu.addColumnToggleItem("Бонусная программа", bonusProgramColumn);
-        columnToggleContextMenu.addColumnToggleItem("Контрагент", contragentColumn);
+        columnToggleContextMenu.addColumnToggleItem("Контрагент", contractorColumn);
         columnToggleContextMenu.addColumnToggleItem("Комментарий", commentaryColumn);
         columnToggleContextMenu.addColumnToggleItem("Владелец-сотрудник", ownerColumn);
+        columnToggleContextMenu.addColumnToggleItem("Общий доступ", generalAccessColumn);
         columnToggleContextMenu.addColumnToggleItem("Владелец-отдел", departmentColumn);
-        //Todo: Дата изменения Добавить дату изменения в модель BonusTransaction
-        //Todo: Кто изменил. owner
+        columnToggleContextMenu.addColumnToggleItem("Дата изменения", dateChangedColumn);
+        columnToggleContextMenu.addColumnToggleItem("Кто изменил", employeeChangeColumn);
+
         return settingButton;
     }
 

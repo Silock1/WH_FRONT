@@ -8,32 +8,39 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import com.warehouse_accounting.components.retail.forms.bonus_transaction.BonusTransactionForm;
+import com.warehouse_accounting.components.AppView;
+import com.warehouse_accounting.components.retail.forms.bonus_transaction.OperationView;
 import com.warehouse_accounting.components.retail.forms.bonus_transaction.FilterForm;
+import com.warehouse_accounting.components.retail.forms.bonus_transaction.MassEditView;
 import com.warehouse_accounting.components.retail.grids.BonusTransactionGridLayout;
 import com.warehouse_accounting.components.retail.toolbars.BonusTransactionToolBar;
 import com.warehouse_accounting.components.util.SilverButton;
 import com.warehouse_accounting.models.dto.BonusProgramDto;
 import com.warehouse_accounting.models.dto.BonusTransactionDto;
 import com.warehouse_accounting.models.dto.ContractorDto;
+import com.warehouse_accounting.models.dto.FileDto;
 import com.warehouse_accounting.services.interfaces.BonusProgramService;
 import com.warehouse_accounting.services.interfaces.BonusTransactionService;
 import com.warehouse_accounting.services.interfaces.ContractorService;
+import com.warehouse_accounting.services.interfaces.DepartmentService;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-
+import com.warehouse_accounting.services.interfaces.FileService;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
  * Операции с баллами (Розница/Операции с баллами)
  **/
+
+
 @SpringComponent
-@Route("bonus_transaction")
+@Route(value = "bonus_transaction", layout = AppView.class)
 @CssImport(value = "./css/application.css")
 @UIScope
 public class BonusTransaction extends VerticalLayout {
@@ -43,30 +50,36 @@ public class BonusTransaction extends VerticalLayout {
     private final BonusTransactionService transactionService;
     private final BonusProgramService programService;
     private final ContractorService contractorService;
-    private final BonusTransactionForm earningForm = new BonusTransactionForm(BonusTransactionForm.TypeOperation.EARNING);
-    private final BonusTransactionForm spendingForm = new BonusTransactionForm(BonusTransactionForm.TypeOperation.SPENDING);
+    private final FileService fileService;
     private final EmployeeService employeeService;
+    private final OperationView earningForm;
+    private final OperationView spendingForm;
+    private final MassEditView massEditView;
     private final FilterForm filterForm = new FilterForm();
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    private Set<BonusTransactionDto> selectedItems;
+    private Set<BonusTransactionDto> selectedItems = new HashSet<>();
     private SilverButton silverButton = new SilverButton();
-    public BonusTransaction(BonusTransactionGridLayout grid,
-                            BonusTransactionToolBar toolBar,
-                            BonusTransactionService transactionService,
+    private List<FileDto> listCopiedFiles = new ArrayList<>();
+
+    @Autowired
+    public BonusTransaction(BonusTransactionService transactionService,
                             BonusProgramService programService,
-                            ContractorService contractorService, EmployeeService employeeService) {
+                            ContractorService contractorService, FileService fileService, EmployeeService employeeService, DepartmentService departmentService) {
+
         this.transactionService = transactionService;
         this.programService = programService;
         this.contractorService = contractorService;
-        this.grid = grid;
-        this.toolBar = toolBar;
+        this.fileService = fileService;
         this.employeeService = employeeService;
 
+        toolBar = new BonusTransactionToolBar(this.transactionService);
+        grid = new BonusTransactionGridLayout(this.transactionService);
+        massEditView = new MassEditView(this.employeeService, departmentService);
+        earningForm = new OperationView(OperationView.TypeOperation.EARNING, this.fileService, this.employeeService);
+        spendingForm = new OperationView(OperationView.TypeOperation.SPENDING, this.fileService, this.employeeService);
 
         setMiniField();
         setVisibleChangeSubmenu();
-        setSelectItem();
+        setEditLogic();
         setFilterTextField();
         setCloseButtonEarning();
         setCloseButtonSpending();
@@ -76,22 +89,29 @@ public class BonusTransaction extends VerticalLayout {
         setSubMenuSpending();
         setRefreshButton();
         setSubMenuMassEdit();
-        setFilterButttonLogic();
+        setFilterButtonLogic();
         setDeleteLogic();
         setCopyLogic();
+        setCloseMassEdit();
+        setContinueButtonLogic();
 
-        add(toolBar, filterForm, grid, earningForm, spendingForm);
 
+        add(toolBar, filterForm, grid, earningForm, spendingForm, massEditView);
     }
 
-    private void setSelectItem() {
+
+    private void setEditLogic() {
         grid.getPointsGrid().addItemDoubleClickListener(event -> {
                     BonusTransactionDto.TransactionType currentType = event.getItem().getTransactionType();
                     if (currentType == BonusTransactionDto.TransactionType.EARNING) {
+                        earningForm.clearUpload();
                         setForm(event.getItem(), earningForm);
+                        earningForm.setFileList(event.getItem().getId());
                         openForm(earningForm);
                     } else {
                         setForm(event.getItem(), spendingForm);
+                        spendingForm.clearUpload();
+                        spendingForm.setFileList(event.getItem().getId());
                         openForm(spendingForm);
                     }
                 }
@@ -122,6 +142,7 @@ public class BonusTransaction extends VerticalLayout {
 
     }
 
+
     private void setCloseButtonSpending() {
         spendingForm.getClosedButton().addClickListener(buttonClickEvent -> {
                     closeForm(spendingForm);
@@ -130,19 +151,19 @@ public class BonusTransaction extends VerticalLayout {
         );
     }
 
-    private void setFilterButttonLogic() {
+    private void setFilterButtonLogic() {
         toolBar.getFilterButton().addClickListener(event -> {
             filterForm.setVisible(!filterForm.isVisible());
         });
     }
 
-    private void openForm(BonusTransactionForm form) {
+    private void openForm(OperationView form) {
         grid.setVisible(false);
         toolBar.setVisible(false);
         form.setVisible(true);
     }
 
-    private void closeForm(BonusTransactionForm form) {
+    private void closeForm(OperationView form) {
         grid.setVisible(true);
         toolBar.setVisible(true);
         form.setVisible(false);
@@ -167,16 +188,62 @@ public class BonusTransaction extends VerticalLayout {
     private void setSubMenuEarning() {
         toolBar.getMenuBarOperation().getItems().get(0).getSubMenu().addItem("Начислить",
                 menuItemClickEvent -> {
+                    earningForm.setFileList(0L);
+                    earningForm.clearUpload();
                     setForm(new BonusTransactionDto(), earningForm);
                     openForm(earningForm);
                 }
         );
     }
 
-    private void setSubMenuMassEdit() {
-        toolBar.getMassEdit().addClickListener(event ->
-                silverButton.greenNotification("Массовое редактирование"));
+    private void setSubMenuSpending() {
+        toolBar.getMenuBarOperation().getItems().get(0).getSubMenu().addItem("Списать",
+                menuItemClickEvent -> {
+                    spendingForm.setFileList(0L);
+                    spendingForm.clearUpload();
+                    setForm(new BonusTransactionDto(), spendingForm);
+                    openForm(spendingForm);
+                }
+        );
     }
+
+    private void setSubMenuMassEdit() {
+        setSelectedItems();
+        toolBar.getMassEdit().addClickListener(event -> {
+          //TODO: баги, пока на доработке
+
+            if (selectedItems.size() == 0) {
+                selectedItems = new HashSet<>(transactionService.getAll());
+            }
+            massEditView.getSpanSelectedItems().setText(String.format("Выбрано %d элементов", selectedItems.size()));
+            selectedItems = new HashSet<>(); //clear. clear() выкидывает exception
+
+            openMassEdit();
+        });
+    }
+
+    private void openMassEdit() {
+        toolBar.setVisible(false);
+        grid.setVisible(false);
+        massEditView.setVisible(true);
+    }
+
+    private void closeMassEdit() {
+
+        toolBar.setVisible(true);
+        grid.setVisible(true);
+        massEditView.setVisible(false);
+
+    }
+
+    private void setCloseMassEdit() {
+        massEditView.getCloseButton().addClickListener(click ->
+        {
+            closeMassEdit();
+            updateGrid();
+        });
+    }
+
 
     private void setVisibleChangeSubmenu() {
         MenuItem delete = toolBar.getDeleteItem();
@@ -196,36 +263,29 @@ public class BonusTransaction extends VerticalLayout {
     }
 
 
-    private void setSubMenuSpending() {
-        toolBar.getMenuBarOperation().getItems().get(0).getSubMenu().addItem("Списать",
-                menuItemClickEvent -> {
-
-                    setForm(new BonusTransactionDto(), spendingForm);
-                    openForm(spendingForm);
-                }
-        );
-    }
-
     private void setSaveButtonEarning() {
         earningForm.getSaveButton().addClickListener(click -> {
-            transactionService.create(getDataFromForm(earningForm));
-
-
+            transactionService.create(getDataFromForm(earningForm, filesMappedByDB(earningForm.getFilesList())));
+            silverButton.greenNotification("Сохранено");
         });
     }
+
 
     private void setSaveButtonSpending() {
         spendingForm.getSaveButton().addClickListener(click -> {
-            transactionService.create(getDataFromForm(spendingForm));
-
+            transactionService.create(getDataFromForm(spendingForm, filesMappedByDB(spendingForm.getFilesList())));
         });
     }
 
+    private List<FileDto> filesMappedByDB(List<FileDto> files) {
 
-    private void setForm(BonusTransactionDto dto, BonusTransactionForm form) {
-        dto.setBonusProgramDto(form.getBonusProgram().getValue());
-        dto.setContragent(form.getContractor().getValue());
+        files = files.stream().map(fileService::createWithResponse
+        ).collect(Collectors.toList());
+        return files;
+    }
 
+
+    private void setForm(BonusTransactionDto dto, OperationView form) {
 
         if (dto.getId() == null) {
             form.getIdInput().setValue(0);
@@ -241,25 +301,27 @@ public class BonusTransaction extends VerticalLayout {
             form.getCreatedDate().setValue(dto.getCreated());
 
         }
+        form.getSelectBonusProgramDto().setItems(getBonusPrograms());
+        form.getSelectBonusProgramDto().setValue(getBonusPrograms().get(0));
+        form.getSelectContractorDto().setItems(getContractors());
+        form.getSelectContractorDto().setValue(getContractors().get(0));
+        form.getSelectContractorDto().setItemLabelGenerator(ContractorDto::getName);
+        form.getSelectBonusProgramDto().setItemLabelGenerator(BonusProgramDto::getName);
 
-        form.getBonusProgram().setItems(getBonusPrograms());
-        form.getBonusProgram().setValue(getBonusPrograms().get(0));
-        form.getContractor().setItems(getContractors());
-        form.getContractor().setValue(getContractors().get(0));
-        form.getContractor().setItemLabelGenerator(ContractorDto::getName);
-        form.getBonusProgram().setItemLabelGenerator(BonusProgramDto::getName);
     }
 
-    private BonusTransactionDto getDataFromForm(BonusTransactionForm form) {
+    private BonusTransactionDto getDataFromForm(OperationView form, List<FileDto> files) {
         BonusTransactionDto dto = new BonusTransactionDto();
         dto.setId(Long.valueOf(form.getIdInput().getValue()));
         dto.setExecutionDate(form.getExecutionDate().getValue());
         dto.setCreated(form.getCreatedDate().getValue());
         dto.setComment(form.getComment().getValue());
         dto.setBonusValue(Long.valueOf(form.getBonusValueInput().getValue()));
-        dto.setBonusProgramDto(form.getBonusProgram().getValue());
-        dto.setContragent(form.getContractor().getValue());
-        dto.setOwner(employeeService.getPrincipalManually());
+        dto.setBonusProgramDto(form.getSelectBonusProgramDto().getValue());
+        dto.setContractorDto(form.getSelectContractorDto().getValue());
+        dto.setOwnerDto(employeeService.getPrincipalManually());
+        dto.setOwnerChangedDto(employeeService.getPrincipalManually());
+        dto.setFilesDto(files);
 
         if (form.equals(earningForm)) {
             dto.setTransactionType(BonusTransactionDto.TransactionType.EARNING);
@@ -296,7 +358,33 @@ public class BonusTransaction extends VerticalLayout {
             for (BonusTransactionDto dto : selectedItems) {
                 transactionService.deleteById(dto.getId());
             }
+            silverButton.greenNotification("Удалено");
             updateGrid();
+        });
+
+    }
+
+    private void setContinueButtonLogic() {
+
+        massEditView.getContinueButton().addClickListener(click -> {
+            silverButton.greenNotification("ЗАГЛУШКА Далее");
+
+            //Todo разделить колонку отдел и владелец, иначе не изменить. При сейве updat'ить employee выбранным отделом сверху в окошке
+//            EmployeeDto employee = massEditView.getEmployeeBox().getValue();
+//            DepartmentDto department = massEditView.getDepartmentBox().getValue();
+//            System.out.println(employee);
+//            System.out.println(department);
+//
+//
+//            for (BonusTransactionDto dto : new ArrayList<>(selectedItems)) {
+//                employee.setDepartment(department);
+//                dto.setOwnerDto(employeeService.updateWithResponse(employee));
+//                transactionService.update(dto);
+//
+//            }
+            closeMassEdit();
+            updateGrid();
+
         });
 
 
@@ -308,10 +396,23 @@ public class BonusTransaction extends VerticalLayout {
         toolBar.getCopyItem().addClickListener(eventCopy -> {
             for (BonusTransactionDto dto : selectedItems) {
                 //set id 0 чтобы он создал новый при create, иначе с тем же id не создает
+
+                //При копировании записей копируются и файлы к каждой.
+                //Лист файлов текущей записи создается в базе, setId0 чтобы новые создались
+                //Файлы создаются и возвращаются они же, но с id из базы для того. С id null объект не сетнуть в другой.
+                dto.getFilesDto().forEach(f -> {
+
+                    f.setId(0L);
+                    listCopiedFiles.add((fileService.createWithResponse(f)));
+                });
+                dto.setFilesDto(listCopiedFiles);
                 dto.setId(0L);
                 transactionService.create(dto);
+                listCopiedFiles.clear();
             }
+
             updateGrid();
+            silverButton.greenNotification("Скопировано");
         });
 
 

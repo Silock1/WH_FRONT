@@ -1,39 +1,45 @@
 package com.warehouse_accounting.components.retail.grids;
 
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.models.dto.FileDto;
+import com.warehouse_accounting.services.interfaces.FileService;
 import lombok.Getter;
 import lombok.Setter;
+
 
 @Getter
 @Setter
 @Route("filegrid")
-@SpringComponent
-@UIScope
 public class FileGridLayOut extends HorizontalLayout {
     private Grid<FileDto> fileGrid = new Grid<>(FileDto.class, false);
 
+    private FileService fileService;
 
-    public FileGridLayOut() {
 
+    public FileGridLayOut(FileService fileService) {
+        this.fileService = fileService;
+
+      //  updateFileGridColumns();
         gridCreate();
         add(fileGrid);
     }
 
+
     private void gridCreate() {
-        fileGrid.setColumns("id", "name", "size", "location", "createdDate");
+        fileGrid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
+        fileGrid.addColumn(FileDto::getName).setHeader("Наименование").setSortable(true).setResizable(true);
+        fileGrid.addColumn(FileDto::getSize).setHeader("Размер, МБ").setSortable(true).setResizable(true);
+        fileGrid.addColumn(FileDto::getCreatedDate).setHeader("Дата добавления").setSortable(true).setWidth("100px").setResizable(true);
+        fileGrid.addColumn(file -> file.getEmployeeDto().getFirstName()).setHeader("Сотрудник").setResizable(true);
         fileGrid.setHeightByRows(true);
 
-
-       // TODO: Нужен сервис для файла. Перед сервисом нужно изменить связь Employee File on ManyToMany
-//        List<FileDto> fileList = new ArrayList<>();
-//        fileList.add(FileDto.builder().id(1L).createdDate(new Date()).build());
-       // fileGrid.setItems(fileList);
-
     }
+
+//    public void updateFileGridColumns() {
+//        fileGrid.setItems(fileService.getAll());
+//    }
 
 }
