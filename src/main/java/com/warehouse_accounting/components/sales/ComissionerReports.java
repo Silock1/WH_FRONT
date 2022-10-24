@@ -18,6 +18,7 @@ import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
+import com.warehouse_accounting.components.sales.filter.ComissionerReportsFilter;
 import com.warehouse_accounting.components.sales.filter.SalesOrderComissionerFilter;
 import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
 import com.warehouse_accounting.services.interfaces.ComissionerReportsService;
@@ -53,11 +54,13 @@ public class ComissionerReports extends VerticalLayout {
 
     private  ProductService productService;
 
+    private final ComissionerReportsFilter comissionerReportsFilter;
+
 
 
     public ComissionerReports(/*Div parentLayer,*/CompanyService companyService, ContractorService contractorService,
                                                    ContractService contractService, ProjectService projectService, WarehouseService warehouseService,
-                                                   DepartmentService departmentService, EmployeeService employeeService) {
+                                                   DepartmentService departmentService, EmployeeService employeeService, ComissionerReportsFilter comissionerReportsFilter) {
         this.companyService = companyService;
         this.contractorService = contractorService;
         this.contractService = contractService;
@@ -65,6 +68,7 @@ public class ComissionerReports extends VerticalLayout {
         this.warehouseService = warehouseService;
         this.employeeService = employeeService;
         this.departmentService = departmentService;
+        this.comissionerReportsFilter = comissionerReportsFilter;
         //this.parentLayer = parentLayer;
         this.salesOrderComissionerFilter = new SalesOrderComissionerFilter(companyService, contractorService, contractService,
                 projectService, warehouseService, employeeService, departmentService);
@@ -72,7 +76,7 @@ public class ComissionerReports extends VerticalLayout {
         Div pageContent = new Div();
         pageContent.add(salesGridLayout);
         pageContent.setSizeFull();
-        add(getGroupButtons(), /*salesOrderComissionerFilter,*/ pageContent);
+        add(getGroupButtons(), comissionerReportsFilter, pageContent);
     }
 
 
@@ -95,8 +99,8 @@ public class ComissionerReports extends VerticalLayout {
         //ToDo кнопка Фильтр. Доработать функционал.
         Button addFilterButton = new Button("Фильтр");
         addFilterButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        addFilterButton.addClickListener(e->
-                salesOrderComissionerFilter.setVisible(!salesOrderComissionerFilter.isVisible())
+        addFilterButton.addClickListener(e ->
+                comissionerReportsFilter.setVisible(!comissionerReportsFilter.isVisible())
         );
 
         //ToDo поле Наподобии поиска

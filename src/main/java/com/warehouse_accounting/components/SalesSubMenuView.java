@@ -13,6 +13,7 @@ import com.warehouse_accounting.components.sales.CustomerInvoices;
 import com.warehouse_accounting.components.sales.CustomerOrders;
 import com.warehouse_accounting.components.sales.CustomerReturns;
 import com.warehouse_accounting.components.sales.Shipments;
+import com.warehouse_accounting.components.sales.filter.ComissionerReportsFilter;
 import com.warehouse_accounting.components.sales.filter.CustomerOrdersFilter;
 import com.warehouse_accounting.components.sales.filter.CustomerReturnsFilter;
 import com.warehouse_accounting.components.sales.filter.GoodsToRealizeFilter;
@@ -183,7 +184,8 @@ public class SalesSubMenuView extends VerticalLayout {
     private ComissionerReports initComissionerReports(Div pageContent){
         if (Objects.isNull(comissionerReports)) {
             comissionerReports = new ComissionerReports(/*pageContent,*/ companyService, contractorService, contractService,
-                    projectService, warehouseService, departmentService, employeeService);
+                    projectService, warehouseService, departmentService, employeeService, new ComissionerReportsFilter(companyService, contractorService, contractService,
+                    projectService, warehouseService, employeeService, departmentService));
         }
         return comissionerReports;
     }
