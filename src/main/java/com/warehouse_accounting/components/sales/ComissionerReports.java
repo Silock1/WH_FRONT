@@ -19,9 +19,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.warehouse_accounting.components.AppView;
 import com.warehouse_accounting.components.sales.filter.ComissionerReportsFilter;
-import com.warehouse_accounting.components.sales.filter.SalesOrderComissionerFilter;
 import com.warehouse_accounting.components.sales.grids.SalesGridLayout;
-import com.warehouse_accounting.services.interfaces.ComissionerReportsService;
 import com.warehouse_accounting.services.interfaces.CompanyService;
 import com.warehouse_accounting.services.interfaces.ContractService;
 import com.warehouse_accounting.services.interfaces.ContractorService;
@@ -38,7 +36,6 @@ import org.springframework.stereotype.Component;
 public class ComissionerReports extends VerticalLayout {
 
     private SalesGridLayout salesGridLayout;
-    private SalesOrderComissionerFilter salesOrderComissionerFilter;
     private final TextField textFieldGridSelected = new TextField();
     //private final Div parentLayer;
     private CompanyService companyService;
@@ -49,8 +46,6 @@ public class ComissionerReports extends VerticalLayout {
     private DepartmentService departmentService;
     private EmployeeService employeeService;
     private Div mainDiv;
-
-    private /*final*/ ComissionerReportsService comissionerReportsService;
 
     private  ProductService productService;
 
@@ -69,9 +64,6 @@ public class ComissionerReports extends VerticalLayout {
         this.employeeService = employeeService;
         this.departmentService = departmentService;
         this.comissionerReportsFilter = comissionerReportsFilter;
-        //this.parentLayer = parentLayer;
-        this.salesOrderComissionerFilter = new SalesOrderComissionerFilter(companyService, contractorService, contractService,
-                projectService, warehouseService, employeeService, departmentService);
         salesGridLayout = new SalesGridLayout(textFieldGridSelected);
         Div pageContent = new Div();
         pageContent.add(salesGridLayout);

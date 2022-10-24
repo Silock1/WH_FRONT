@@ -29,8 +29,6 @@ public class ComissionerReportsFilter extends VerticalLayout {
     private EmployeeService employeeService;
     private DepartmentService departmentService;
 
-//    public ComissionerReportsFilter() {};
-
     public ComissionerReportsFilter(CompanyService companyService, ContractorService contractorService,
                                 ContractService contractService, ProjectService projectService,
                                 WarehouseService warehouseService, EmployeeService employeeService,
@@ -48,12 +46,8 @@ public class ComissionerReportsFilter extends VerticalLayout {
         HorizontalLayout horizontalLayoutTwo = getHorizontalLayoutTwo();
         HorizontalLayout horizontalLayoutThree = getHorizontalLayoutThree();
         HorizontalLayout horizontalLayoutFour = getHorizontalLayoutFour();
-        HorizontalLayout horizontalLayoutFive = getHorizontalLayoutFive();
-        HorizontalLayout horizontalLayoutSix = getHorizontalLayoutSix();
-        HorizontalLayout horizontalLayoutSeven = getHorizontalLayoutSeven();
 
-        add(horizontalLayoutOne, horizontalLayoutTwo, horizontalLayoutThree, horizontalLayoutFour, horizontalLayoutFive,
-                horizontalLayoutSix, horizontalLayoutSeven);
+        add(horizontalLayoutOne, horizontalLayoutTwo, horizontalLayoutThree, horizontalLayoutFour);
 
         setVisible(false);
     }
@@ -70,37 +64,7 @@ public class ComissionerReportsFilter extends VerticalLayout {
         DatePicker periodStart = new DatePicker("Период");
         DatePicker periodEnd = new DatePicker("до");
 
-        ComboBox<String> payment = new ComboBox<>("Оплата", "Оплачено", "Частично оплачено", "Не оплачено");
-
-
-        ComboBox<String> shipped = new ComboBox<>("Отгружено", "Отгружено", "Частично отгружено",
-                "Не отгружено", "Просрочено");
-
-
-        horizontalLayout.add(find, clear, bookmarks, settingButton, periodStart, periodEnd, payment, shipped);
-        return horizontalLayout;
-    }
-
-    private HorizontalLayout getHorizontalLayoutTwo(){
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-
-        DatePicker periodStart = new DatePicker("План. дата огрузки");
-        DatePicker periodEnd = new DatePicker("до");
-
         ComboBox<String> productComboBox = new ComboBox<>("Товар или группа");
-        ComboBox<String> typeReturn = new ComboBox<>("Тип возврата", "Частично возвращено", "Без возвратов", "Полностью возвращено");
-
-        List<WarehouseDto> warehouseDtos = warehouseService.getAll();
-        ComboBox<WarehouseDto> warehouseDtoComboBox = new ComboBox<>("Склад");
-        warehouseDtoComboBox.setItems(warehouseDtos);
-        warehouseDtoComboBox.setItemLabelGenerator(WarehouseDto::getName);
-
-        horizontalLayout.add(periodStart, periodEnd, productComboBox, typeReturn, warehouseDtoComboBox);
-        return horizontalLayout;
-    }
-
-    private HorizontalLayout getHorizontalLayoutThree(){
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
 
         List<ProjectDto> projectDtos = projectService.getAll();
         ComboBox<ProjectDto> projectCombo = new ComboBox<>("Проект");
@@ -114,13 +78,11 @@ public class ComissionerReportsFilter extends VerticalLayout {
 
         ComboBox<String> groupContractors = new ComboBox<>("Группа контрагента");
 
-        TextField counterPartyAccount = new TextField("Счёт контрагента");
-
-        horizontalLayout.add(projectCombo, contractorsCombo, groupContractors, counterPartyAccount);
+        horizontalLayout.add(find, clear, bookmarks, settingButton, periodStart, periodEnd, productComboBox, projectCombo, contractorsCombo, groupContractors);
         return horizontalLayout;
     }
 
-    private HorizontalLayout getHorizontalLayoutFour(){
+    private HorizontalLayout getHorizontalLayoutTwo(){
         HorizontalLayout horizontalLayout = new HorizontalLayout();
 
         List<ContractDto> contractDtos = contractService.getAll();
@@ -147,47 +109,41 @@ public class ComissionerReportsFilter extends VerticalLayout {
 
         TextField organizationAccount = new TextField("Счет организации");
 
-
-        horizontalLayout.add(contractDtoComboBox, employeeDtoComboBox, companyDtoComboBox, organizationAccount);
-        return horizontalLayout;
-    }
-
-    private HorizontalLayout getHorizontalLayoutFive(){
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        ComboBox<String> documentTypeCombo = new ComboBox<>("Тип документа", "Все", "Полученный отчёт комиссионера", "Выданный отчёт комиссионера");
 
         ComboBox<String> statusCombo = new ComboBox<>("Статус", "Новый", "Подтвержден", "Собран", "Отгружен", "Доставлен", "Возврат", "Отменен");
-        ComboBox<String> carriedOutCombo = new ComboBox<>("Проведено", "Да", "Нет");
-        ComboBox<String> printedCombo = new ComboBox<>("Напечатано", "Да", "Нет");
-        ComboBox<String> sentCombo = new ComboBox<>("Отправлено", "Да", "Нет");
-        horizontalLayout.add(statusCombo, carriedOutCombo, printedCombo, sentCombo);
 
+        horizontalLayout.add(contractDtoComboBox, employeeDtoComboBox, companyDtoComboBox, organizationAccount, documentTypeCombo, statusCombo);
         return horizontalLayout;
     }
 
-    private HorizontalLayout getHorizontalLayoutSix(){
+    private HorizontalLayout getHorizontalLayoutThree(){
         HorizontalLayout horizontalLayout = new HorizontalLayout();
 
-        ComboBox<String> salesChannel = new ComboBox<>("Канал продаж");
+        ComboBox<String> carriedOutCombo = new ComboBox<>("Проведено", "Да", "Нет");
 
-        TextField deliveryAddress = new TextField("Адрес доставки");
-        TextField shippingAddressComment = new TextField("Комментарий к адресу доставки");
+        ComboBox<String> printedCombo = new ComboBox<>("Напечатано", "Да", "Нет");
+
+        ComboBox<String> sentCombo = new ComboBox<>("Отправлено", "Да", "Нет");
+
+        ComboBox<String> salesChannel = new ComboBox<>("Канал продаж");
 
         List<EmployeeDto> employeeDtos = employeeService.getAll();
         ComboBox<EmployeeDto> employeeDtoComboBox = new ComboBox<>("Владелец-сотрудник");
         employeeDtoComboBox.setItems(employeeDtos);
         employeeDtoComboBox.setItemLabelGenerator(EmployeeDto::getLastName);
 
-        horizontalLayout.add(salesChannel, deliveryAddress, shippingAddressComment,employeeDtoComboBox);
-        return horizontalLayout;
-    }
-
-    private HorizontalLayout getHorizontalLayoutSeven(){
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-
         List<DepartmentDto> departmentDtos = departmentService.getAll();
         ComboBox<DepartmentDto> departmentDtoComboBox = new ComboBox<>("Владелец-отдел");
         departmentDtoComboBox.setItems(departmentDtos);
         departmentDtoComboBox.setItemLabelGenerator(DepartmentDto::getName);
+
+        horizontalLayout.add(carriedOutCombo, printedCombo, sentCombo, salesChannel, employeeDtoComboBox, departmentDtoComboBox);
+        return horizontalLayout;
+    }
+
+    private HorizontalLayout getHorizontalLayoutFour(){
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
 
         ComboBox<String> generalAccess = new ComboBox<>("Общий доступ","Да", "Нет");
         DatePicker whenChangedStart = new DatePicker("Когда изменен: от");
@@ -198,7 +154,9 @@ public class ComissionerReportsFilter extends VerticalLayout {
         employeeDtoComboBox.setItems(employeeDtos);
         employeeDtoComboBox.setItemLabelGenerator(EmployeeDto::getLastName);
 
-        horizontalLayout.add(departmentDtoComboBox, generalAccess, whenChangedStart, whenChangedEnd, employeeDtoComboBox);
+
+        horizontalLayout.add(generalAccess, employeeDtoComboBox, whenChangedStart, whenChangedEnd, employeeDtoComboBox);
         return horizontalLayout;
     }
+
 }
