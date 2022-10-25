@@ -370,12 +370,23 @@ public class BonusTransaction extends VerticalLayout {
 
     private void setContinueButtonLogic() {
 
-        massEditView.getContinueButton().addClickListener(click -> {
+        massEditView.getEditButton().addClickListener(click -> {
             silverButton.greenNotification("Редактирование завершено");
             new ArrayList<>(selectedItems).forEach(dto -> {
-                dto.setDepartmentDto(massEditView.getDepartmentSelect().getValue());
-                dto.setOwnerDto(massEditView.getEmployeeSelect().getValue());
-                dto.setGeneralAccess(massEditView.isGeneralAccessFromForm());
+
+                if (massEditView.getDepartmentBox().getValue()) {
+                    dto.setDepartmentDto(massEditView.getDepartmentSelect().getValue());
+                }
+
+                if (massEditView.getEmployeeBox().getValue()) {
+                    dto.setOwnerDto(massEditView.getEmployeeSelect().getValue());
+                }
+
+                if (massEditView.getRadioGroup().getValue().equals("Да")) {
+                    dto.setGeneralAccess(massEditView.isGeneralAccessFromForm());
+                }
+
+
                 transactionService.update(dto);
             });
 

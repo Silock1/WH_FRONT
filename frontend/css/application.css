@@ -108,6 +108,14 @@ html, body, td, .gwt-TextArea, textarea {
     color: #909090;
 }
 
+.disabledButton {
+    border-collapse: collapse;
+    text-align: -webkit-left;
+    color: #222;
+    font: 12px "Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+    vertical-align: top;
+}
+
 .miniTitle {
     font-size: 20px;
     color: #222;

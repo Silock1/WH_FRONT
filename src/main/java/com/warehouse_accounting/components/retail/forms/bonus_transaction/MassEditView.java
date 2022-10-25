@@ -25,31 +25,32 @@ import lombok.Setter;
 public class MassEditView extends VerticalLayout {
     private SilverButton silverButton = new SilverButton();
     private final Button closeButton;
-    private final Button continueButton;
+    private Button editButton;
     private Span spanSelectedItems;
     private Select<EmployeeDto> employeeSelect = new Select<>();
     private Select<DepartmentDto> departmentSelect = new Select<>();
     private EmployeeService employeeService;
     private DepartmentService departmentService;
-
     private boolean generalAccessFromForm;
-
+    private RadioButtonGroup<String> radioGroup;
+    private Checkbox employeeBox;
+    private Checkbox departmentBox;
     public MassEditView(EmployeeService employeeService, DepartmentService departmentService) {
         this.employeeService = employeeService;
         this.departmentService = departmentService;
 
         setVisible(false);
         closeButton = silverButton.buttonBlank("Закрыть");
-        continueButton = silverButton.buttonBlank("Далее");
-
+        editButton = silverButton.buttonBlank("Редактировать");
         add(
                 closeButton,
                 titleLine(),
                 labelLine(),
                 dataSelectLayout(),
-                continueButton
+                editButton
         );
     }
+
 
     private HorizontalLayout titleLine() {
         HorizontalLayout layout = new HorizontalLayout();
@@ -84,7 +85,7 @@ public class MassEditView extends VerticalLayout {
         HorizontalLayout ownerLine = new HorizontalLayout();
         HorizontalLayout departmentLine = new HorizontalLayout();
         HorizontalLayout generalAccessLine = new HorizontalLayout();
-        RadioButtonGroup<String> radioGroup = new RadioButtonGroup<>();
+        radioGroup = new RadioButtonGroup<>();
         Span spanEmployee = new Span("Владелец-сотрудник");
         Span spanDepartment = new Span("Владелец-отдел");
         Span spanAccess = new Span("Общий доступ");
@@ -101,20 +102,24 @@ public class MassEditView extends VerticalLayout {
         spanEmployee.setWidth("200px");
         spanDepartment.setWidth("200px");
         spanAccess.setWidth("200px");
+
         radioGroup.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
         radioGroup.setItems("Да", "Нет");
 
+        radioGroup.setValue("Нет");
         Checkbox generalAccessBox = new Checkbox();
         generalAccessBox.addValueChangeListener(event -> generalAccessFromForm = event.getValue() );
 
+        employeeBox = new Checkbox();
+        departmentBox = new Checkbox();
         ownerLine.add(
-                new Checkbox(),
+                employeeBox,
                 spanEmployee,
                 employeeSelect
         );
 
         departmentLine.add(
-                new Checkbox(),
+                departmentBox,
                 spanDepartment,
                 departmentSelect
         );
