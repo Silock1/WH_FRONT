@@ -63,6 +63,7 @@ public class OperationView extends VerticalLayout {
     private Button changeButton;
     private EmployeeDto employeeFromDialog;
     private DepartmentDto departmentFromDialog;
+    private Boolean accessBoxFromDialog;
 
     public OperationView(TypeOperation typeOperation, FileService fileService, EmployeeService employeeService, DepartmentService departmentService) {
         this.fileService = fileService;
@@ -237,6 +238,7 @@ public class OperationView extends VerticalLayout {
         departmentLine.add(departmentLabel, departmentDtoSelect);
 
         Checkbox accessBox = new Checkbox("Общий доступ");
+        accessBox.addValueChangeListener(event -> accessBoxFromDialog = event.getValue());
         employeeDialog.add(
                 spanOwner,
                 ownerLine,
