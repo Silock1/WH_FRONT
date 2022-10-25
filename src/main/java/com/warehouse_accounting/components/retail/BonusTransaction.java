@@ -322,6 +322,7 @@ public class BonusTransaction extends VerticalLayout {
         dto.setBonusProgramDto(form.getSelectBonusProgramDto().getValue());
         dto.setContractorDto(form.getSelectContractorDto().getValue());
         dto.setOwnerDto(form.getEmployeeFromDialog());
+        dto.setDepartmentDto(form.getDepartmentFromDialog());
         dto.setOwnerChangedDto(employeeService.getPrincipalManually());
         dto.setFilesDto(files);
 

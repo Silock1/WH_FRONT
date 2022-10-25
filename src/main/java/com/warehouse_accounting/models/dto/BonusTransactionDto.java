@@ -40,6 +40,8 @@ public class BonusTransactionDto {
 
     private EmployeeDto ownerChangedDto;
 
+    private DepartmentDto departmentDto;
+
     private List<FileDto> filesDto = new ArrayList<>();
 
     private boolean generalAccess = false;

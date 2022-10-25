@@ -55,7 +55,7 @@ public class BonusTransactionGridLayout extends HorizontalLayout {
         Grid.Column<BonusTransactionDto> bonusProgramColumn = pointsGrid.addColumn(transaction -> transaction.getBonusProgramDto().getName()).setHeader("Бонусная программа").setSortable(true).setResizable(true);
         Grid.Column<BonusTransactionDto> contractorColumn = pointsGrid.addColumn(transaction -> transaction.getContractorDto().getName()).setHeader("Контрагент").setSortable(true).setResizable(true);
         Grid.Column<BonusTransactionDto> commentaryColumn = pointsGrid.addColumn(BonusTransactionDto::getComment).setHeader("Комментарий").setSortable(true).setResizable(true);
-        Grid.Column<BonusTransactionDto> departmentColumn = pointsGrid.addColumn(transaction -> transaction.getOwnerDto().getDepartment().getName()).setHeader("Владелец-отдел").setSortable(true).setResizable(true);
+        Grid.Column<BonusTransactionDto> departmentColumn = pointsGrid.addColumn(transaction -> transaction.getDepartmentDto().getName()).setHeader("Владелец-отдел").setSortable(true).setResizable(true);
         Grid.Column<BonusTransactionDto> generalAccessColumn = pointsGrid.addColumn(BonusTransactionDto::isGeneralAccess).setHeader("Общий доступ").setSortable(true).setResizable(true);
         Grid.Column<BonusTransactionDto> ownerColumn = pointsGrid.addColumn(transaction -> transaction.getOwnerDto().getFirstName()).setHeader("Владелец-сотрудник").setSortable(true).setResizable(true);
         Grid.Column<BonusTransactionDto> dateChangedColumn = pointsGrid.addColumn(BonusTransactionDto::getDateChange).setHeader("Дата изменения").setSortable(true).setResizable(true);
