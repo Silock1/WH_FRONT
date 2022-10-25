@@ -212,7 +212,7 @@ public class BonusTransaction extends VerticalLayout {
     private void setSubMenuMassEdit() {
         setSelectedItems();
         toolBar.getMassEdit().addClickListener(event -> {
-          //TODO: баги, пока на доработке
+
 
             if (selectedItems.size() == 0) {
                 selectedItems = new HashSet<>(transactionService.getAll());
@@ -240,6 +240,7 @@ public class BonusTransaction extends VerticalLayout {
     private void setCloseMassEdit() {
         massEditView.getCloseButton().addClickListener(click ->
         {
+            massEditView.clearCheckBoxes();
             clearSelectedItems();
             closeMassEdit();
             updateGrid();
@@ -371,7 +372,7 @@ public class BonusTransaction extends VerticalLayout {
     private void setContinueButtonLogic() {
 
         massEditView.getEditButton().addClickListener(click -> {
-            silverButton.greenNotification("Редактирование завершено");
+
             new ArrayList<>(selectedItems).forEach(dto -> {
 
                 if (massEditView.getDepartmentBox().getValue()) {
@@ -383,13 +384,16 @@ public class BonusTransaction extends VerticalLayout {
                 }
 
                 if (massEditView.getRadioGroup().getValue().equals("Да")) {
-                    dto.setGeneralAccess(massEditView.isGeneralAccessFromForm());
+                    dto.setGeneralAccess(massEditView.isGeneralAccessBoxFlag());
                 }
 
 
                 transactionService.update(dto);
+
             });
 
+            silverButton.greenNotification("Редактирование завершено");
+            massEditView.clearCheckBoxes();
             clearSelectedItems();
             closeMassEdit();
             updateGrid();

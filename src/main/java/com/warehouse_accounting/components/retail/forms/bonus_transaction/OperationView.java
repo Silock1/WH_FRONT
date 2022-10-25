@@ -63,7 +63,9 @@ public class OperationView extends VerticalLayout {
     private Button changeButton;
     private EmployeeDto employeeFromDialog;
     private DepartmentDto departmentFromDialog;
-    private Boolean accessBoxFromDialog;
+    private Boolean accessBoxFromDialog = false;
+    Span departmentSpan;
+    private Span employeeSpan;
 
     public OperationView(TypeOperation typeOperation, FileService fileService, EmployeeService employeeService, DepartmentService departmentService) {
         this.fileService = fileService;
@@ -174,7 +176,7 @@ public class OperationView extends VerticalLayout {
         employeeDialogLabel.setSpacing(false);
         HorizontalLayout employeeDown = new HorizontalLayout();
 
-        Span employeeSpan = new Span(employeeService.getPrincipalManually().getFirstName());
+        employeeSpan = new Span(employeeFromDialog.getFirstName());
 
         employeeSpan.setClassName("employeeName");
         employeeSpan.addClickListener(click -> getEmployeeMiniDialog().open());
@@ -186,7 +188,7 @@ public class OperationView extends VerticalLayout {
         employeeDown.setSpacing(false);
         employeeDown.setAlignItems(Alignment.CENTER);
 
-        Span departmentSpan = new Span(employeeService.getPrincipalManually().getDepartment().getName());
+        departmentSpan = new Span(departmentFromDialog.getName());
         departmentSpan.setClassName("employeeDialogLabel");
         employeeDialogLabel.add(employeeDown, departmentSpan);
         buttonLine.add(
@@ -202,7 +204,7 @@ public class OperationView extends VerticalLayout {
 
     }
 
-    //TODO: вынести в отдельный класс
+
     private Dialog getEmployeeMiniDialog() {
         Dialog employeeDialog = new Dialog();
         Span spanOwner = new Span("Владелец");
@@ -214,11 +216,12 @@ public class OperationView extends VerticalLayout {
         employeeDtoSelect.addValueChangeListener(event -> {
                     employeeFromDialog = event.getValue();
                     departmentFromDialog = employeeFromDialog.getDepartment();
+                    employeeSpan.setText(employeeFromDialog.getFirstName());
                 }
         );
 
         employeeDtoSelect.setItems(employeeService.getAll());
-        employeeDtoSelect.setValue(employeeService.getPrincipalManually()); //TODO: refactor, читать из селекта
+        employeeDtoSelect.setValue(employeeService.getPrincipalManually());
         employeeDtoSelect.setItemLabelGenerator(EmployeeDto::getFirstName);
 
         ownerLine.add(ownerLabel, employeeDtoSelect);
@@ -229,11 +232,12 @@ public class OperationView extends VerticalLayout {
         Select<DepartmentDto> departmentDtoSelect = new Select<>();
         departmentDtoSelect.addValueChangeListener(event -> {
                     departmentFromDialog = event.getValue();
+                    departmentSpan.setText(departmentFromDialog.getName());
                 }
 
         );
         departmentDtoSelect.setItems(departmentService.getAll());
-        departmentDtoSelect.setValue(employeeService.getPrincipalManually().getDepartment()); //TODO: refactor, читать из селекта
+        departmentDtoSelect.setValue(employeeService.getPrincipalManually().getDepartment());
         departmentDtoSelect.setItemLabelGenerator(DepartmentDto::getName);
 
         departmentLine.add(departmentLabel, departmentDtoSelect);

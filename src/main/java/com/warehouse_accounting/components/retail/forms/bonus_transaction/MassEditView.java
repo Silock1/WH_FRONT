@@ -26,22 +26,30 @@ public class MassEditView extends VerticalLayout {
     private SilverButton silverButton = new SilverButton();
     private final Button closeButton;
     private Button editButton;
-    private Span spanSelectedItems;
+    private Span spanSelectedItems = new Span();
     private Select<EmployeeDto> employeeSelect = new Select<>();
     private Select<DepartmentDto> departmentSelect = new Select<>();
     private EmployeeService employeeService;
     private DepartmentService departmentService;
-    private boolean generalAccessFromForm;
-    private RadioButtonGroup<String> radioGroup;
-    private Checkbox employeeBox;
-    private Checkbox departmentBox;
+    private RadioButtonGroup<String> radioGroup = new RadioButtonGroup<>();
+    private Checkbox employeeBox = new Checkbox();
+    private Checkbox departmentBox = new Checkbox();
+    private Checkbox generalAccessBox = new Checkbox();
+    private boolean employeeBoxFlag;
+    private boolean generalAccessBoxFlag;
+    private boolean departmentBoxFLag;
+
+
     public MassEditView(EmployeeService employeeService, DepartmentService departmentService) {
         this.employeeService = employeeService;
         this.departmentService = departmentService;
 
         setVisible(false);
+
+
         closeButton = silverButton.buttonBlank("Закрыть");
-        editButton = silverButton.buttonBlank("Редактировать");
+        editButton = silverButton.greenButton("Редактировать");
+        disableEditButton();
         add(
                 closeButton,
                 titleLine(),
@@ -49,6 +57,8 @@ public class MassEditView extends VerticalLayout {
                 dataSelectLayout(),
                 editButton
         );
+
+
     }
 
 
@@ -66,7 +76,7 @@ public class MassEditView extends VerticalLayout {
 
         HorizontalLayout layout = new HorizontalLayout();
 
-        spanSelectedItems = new Span();
+
         spanSelectedItems.getElement().getStyle().set("border", "solid 1px #e2f4ff");
         spanSelectedItems.getElement().getStyle().set("background-color", "#ecf8ff");
 
@@ -85,7 +95,6 @@ public class MassEditView extends VerticalLayout {
         HorizontalLayout ownerLine = new HorizontalLayout();
         HorizontalLayout departmentLine = new HorizontalLayout();
         HorizontalLayout generalAccessLine = new HorizontalLayout();
-        radioGroup = new RadioButtonGroup<>();
         Span spanEmployee = new Span("Владелец-сотрудник");
         Span spanDepartment = new Span("Владелец-отдел");
         Span spanAccess = new Span("Общий доступ");
@@ -105,13 +114,25 @@ public class MassEditView extends VerticalLayout {
 
         radioGroup.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
         radioGroup.setItems("Да", "Нет");
-
         radioGroup.setValue("Нет");
-        Checkbox generalAccessBox = new Checkbox();
-        generalAccessBox.addValueChangeListener(event -> generalAccessFromForm = event.getValue() );
 
-        employeeBox = new Checkbox();
-        departmentBox = new Checkbox();
+        generalAccessBox.addValueChangeListener(event -> {
+            generalAccessBoxFlag = event.getValue();
+            disableEditButton();
+        });
+
+        employeeBox.addValueChangeListener(event -> {
+            employeeBoxFlag = event.getValue();
+            disableEditButton();
+
+        });
+
+        departmentBox.addValueChangeListener(event -> {
+            departmentBoxFLag = event.getValue();
+            disableEditButton();
+
+        });
+
         ownerLine.add(
                 employeeBox,
                 spanEmployee,
@@ -141,5 +162,20 @@ public class MassEditView extends VerticalLayout {
         return verticalLayout;
     }
 
+    private void disableEditButton() {
+        if (!employeeBoxFlag && !departmentBoxFLag && !generalAccessBoxFlag) {
+            editButton.setEnabled(false);
+            editButton.getElement().getStyle().set("opacity", "0.5");
+        } else {
+            editButton.setEnabled(true);
+            editButton.getElement().getStyle().set("opacity", "1.0");
+        }
+    }
+
+    public void clearCheckBoxes() {
+        employeeBox.setValue(false);
+        departmentBox.setValue(false);
+        generalAccessBox.setValue(false);
+    }
 
 }
