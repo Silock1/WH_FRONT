@@ -52,6 +52,7 @@ public class BonusTransaction extends VerticalLayout {
     private final ContractorService contractorService;
     private final FileService fileService;
     private final EmployeeService employeeService;
+    private final DepartmentService departmentService;
     private final OperationView earningForm;
     private final OperationView spendingForm;
     private final MassEditView massEditView;
@@ -70,12 +71,13 @@ public class BonusTransaction extends VerticalLayout {
         this.contractorService = contractorService;
         this.fileService = fileService;
         this.employeeService = employeeService;
+        this.departmentService = departmentService;
 
         toolBar = new BonusTransactionToolBar(this.transactionService);
         grid = new BonusTransactionGridLayout(this.transactionService);
-        massEditView = new MassEditView(this.employeeService, departmentService);
-        earningForm = new OperationView(OperationView.TypeOperation.EARNING, this.fileService, this.employeeService);
-        spendingForm = new OperationView(OperationView.TypeOperation.SPENDING, this.fileService, this.employeeService);
+        massEditView = new MassEditView(this.employeeService, this.departmentService);
+        earningForm = new OperationView(OperationView.TypeOperation.EARNING, this.fileService, this.employeeService, this.departmentService);
+        spendingForm = new OperationView(OperationView.TypeOperation.SPENDING, this.fileService, this.employeeService, this.departmentService);
 
         setMiniField();
         setVisibleChangeSubmenu();
@@ -319,7 +321,7 @@ public class BonusTransaction extends VerticalLayout {
         dto.setBonusValue(Long.valueOf(form.getBonusValueInput().getValue()));
         dto.setBonusProgramDto(form.getSelectBonusProgramDto().getValue());
         dto.setContractorDto(form.getSelectContractorDto().getValue());
-        dto.setOwnerDto(employeeService.getPrincipalManually());
+        dto.setOwnerDto(form.getEmployeeFromDialog());
         dto.setOwnerChangedDto(employeeService.getPrincipalManually());
         dto.setFilesDto(files);
 

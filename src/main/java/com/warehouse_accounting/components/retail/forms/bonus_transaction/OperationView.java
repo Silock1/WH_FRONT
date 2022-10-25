@@ -1,8 +1,10 @@
 package com.warehouse_accounting.components.retail.forms.bonus_transaction;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -20,9 +22,11 @@ import com.warehouse_accounting.components.retail.grids.FileGridLayOut;
 import com.warehouse_accounting.components.util.SilverButton;
 import com.warehouse_accounting.models.dto.BonusProgramDto;
 import com.warehouse_accounting.models.dto.ContractorDto;
+import com.warehouse_accounting.models.dto.DepartmentDto;
 import com.warehouse_accounting.models.dto.EmployeeDto;
 import com.warehouse_accounting.models.dto.FileDto;
 import com.warehouse_accounting.services.interfaces.BonusTransactionService;
+import com.warehouse_accounting.services.interfaces.DepartmentService;
 import com.warehouse_accounting.services.interfaces.EmployeeService;
 import com.warehouse_accounting.services.interfaces.FileService;
 import lombok.Getter;
@@ -55,15 +59,20 @@ public class OperationView extends VerticalLayout {
     private List<FileDto> filesList = new ArrayList<>();
 
     private BonusTransactionService bonusTransactionService;
-
+    private DepartmentService departmentService;
     private Button changeButton;
+    private EmployeeDto employeeFromDialog;
+    private DepartmentDto departmentFromDialog;
 
-    public OperationView(TypeOperation typeOperation, FileService fileService, EmployeeService employeeService) {
+    public OperationView(TypeOperation typeOperation, FileService fileService, EmployeeService employeeService, DepartmentService departmentService) {
         this.fileService = fileService;
         this.typeOperation = typeOperation;
         this.employeeService = employeeService;
+        this.departmentService = departmentService;
 
         fileGridLayOut = new FileGridLayOut(this.fileService);
+        employeeFromDialog = employeeService.getPrincipalManually();
+        departmentFromDialog = employeeFromDialog.getDepartment();
         setSizeFull();
         setVisible(false);
 
@@ -167,7 +176,7 @@ public class OperationView extends VerticalLayout {
         Span employeeSpan = new Span(employeeService.getPrincipalManually().getFirstName());
 
         employeeSpan.setClassName("employeeName");
-        employeeSpan.addClickListener(click -> silverButton.greenNotification("employee dialog"));
+        employeeSpan.addClickListener(click -> getEmployeeMiniDialog().open());
 
         Icon icon = new Icon(VaadinIcon.CARET_DOWN);
         icon.getStyle().set("color", "#186999");
@@ -190,6 +199,53 @@ public class OperationView extends VerticalLayout {
         );
         return buttonLine;
 
+    }
+
+    private Dialog getEmployeeMiniDialog() {
+        Dialog employeeDialog = new Dialog();
+        Span spanOwner = new Span("Владелец");
+
+        HorizontalLayout ownerLine = new HorizontalLayout();
+        Span ownerLabel = new Span("Сотрудник");
+        ownerLabel.setWidth("75px");
+        Select<EmployeeDto> employeeDtoSelect = new Select<>();
+        employeeDtoSelect.addValueChangeListener(event -> {
+                    employeeFromDialog = event.getValue();
+                    departmentFromDialog = employeeFromDialog.getDepartment();
+                }
+        );
+
+        employeeDtoSelect.setItems(employeeService.getAll());
+        employeeDtoSelect.setValue(employeeService.getPrincipalManually());
+        employeeDtoSelect.setItemLabelGenerator(EmployeeDto::getFirstName);
+
+        ownerLine.add(ownerLabel, employeeDtoSelect);
+
+        HorizontalLayout departmentLine = new HorizontalLayout();
+        Span departmentLabel = new Span("Отдел");
+        departmentLabel.setWidth("75px");
+        Select<DepartmentDto> departmentDtoSelect = new Select<>();
+        departmentDtoSelect.addValueChangeListener(event -> {
+                    departmentFromDialog = event.getValue();
+                }
+
+        );
+        departmentDtoSelect.setItems(departmentService.getAll());
+        departmentDtoSelect.setValue(employeeService.getPrincipalManually().getDepartment());
+        departmentDtoSelect.setItemLabelGenerator(DepartmentDto::getName);
+
+        departmentLine.add(departmentLabel, departmentDtoSelect);
+
+        Checkbox accessBox = new Checkbox("Общий доступ");
+        employeeDialog.add(
+                spanOwner,
+                ownerLine,
+                departmentLine,
+                accessBox
+        );
+
+
+        return employeeDialog;
     }
 
     public void clearUpload() {
