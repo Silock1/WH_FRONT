@@ -56,9 +56,9 @@ public class ReturnGridLayout extends HorizontalLayout {
 
         fieldNameColumnName.put("number", "№");
         fieldNameColumnName.put("returnDateTime", "Время");
-        fieldNameColumnName.put("warehouseName", "На склад");
-        fieldNameColumnName.put("authorLastName", "Контрагент");
-        fieldNameColumnName.put("companyName", "Организация");
+        fieldNameColumnName.put("warehouse", "На склад");
+        fieldNameColumnName.put("contractor", "Контрагент");
+        fieldNameColumnName.put("company", "Организация");
         fieldNameColumnName.put("comment", "Комментарий");
         return fieldNameColumnName;
     }
