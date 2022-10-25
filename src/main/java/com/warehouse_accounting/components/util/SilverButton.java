@@ -34,11 +34,10 @@ public class SilverButton {
 
     }
 
-    public Notification greenNotification(String textMessage) {
+    public void greenNotification(String textMessage) {
         Notification notification = Notification
                 .show(textMessage);
         notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-       return notification;
     }
 
     public Button buttonPlusYellow(String buttonText) {

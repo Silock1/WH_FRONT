@@ -3,6 +3,7 @@ package com.warehouse_accounting.components.retail.forms.bonus_transaction;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -30,9 +31,6 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-
-//TODO: При нажатии начисление или списание неявно создавать объект. При нажатии на закрыть удалить объект. Если ввести id, то нужно будет перед
-//TODO: сохранением изменить этот id на тот, что написал
 
 @CssImport(value = "./css/application.css")
 @Getter
@@ -155,15 +153,42 @@ public class OperationView extends VerticalLayout {
     }
 
     public HorizontalLayout buttonLine() {
-        HorizontalLayout l = new HorizontalLayout();
+        HorizontalLayout buttonLine = new HorizontalLayout();
+        buttonLine.setAlignItems(Alignment.CENTER);
         changeButton = silverButton.buttonBlank("Изменить");
         changeButton.addClickListener(click -> silverButton.greenNotification("Изменить"));
-        l.add(
+        Div space = new Div();
+        space.setWidth("70px");
+
+        VerticalLayout employeeDialogLabel = new VerticalLayout();
+        employeeDialogLabel.setSpacing(false);
+        HorizontalLayout employeeDown = new HorizontalLayout();
+
+        Span employeeSpan = new Span(employeeService.getPrincipalManually().getFirstName());
+
+        employeeSpan.setClassName("employeeName");
+        employeeSpan.addClickListener(click -> silverButton.greenNotification("employee dialog"));
+
+        Icon icon = new Icon(VaadinIcon.CARET_DOWN);
+        icon.getStyle().set("color", "#186999");
+        icon.setSize("10px");
+        employeeDown.add(employeeSpan, icon);
+        employeeDown.setSpacing(false);
+        employeeDown.setAlignItems(Alignment.CENTER);
+
+        Span departmentSpan = new Span(employeeService.getPrincipalManually().getDepartment().getName());
+        departmentSpan.setClassName("employeeDialogLabel");
+        employeeDialogLabel.add(employeeDown, departmentSpan);
+        buttonLine.add(
                 saveButton = silverButton.greenButton("Сохранить"),
                 closedButton = silverButton.buttonBlank("Закрыть"),
-                changeButton
+                changeButton,
+                space,
+                new HorizontalLayout(employeeDialogLabel)
+
+
         );
-        return l;
+        return buttonLine;
 
     }
 

@@ -95,6 +95,19 @@ html, body, td, .gwt-TextArea, textarea {
     color: black;
 }
 
+.employeeName {
+    font: 12px "Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+    color: #186999;
+    cursor: pointer;
+}
+
+.employeeDialogLabel {
+    font: 12px "Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+    cursor: pointer;
+    font-size: 10px;
+    color: #909090;
+}
+
 .miniTitle {
     font-size: 20px;
     color: #222;
