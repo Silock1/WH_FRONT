@@ -202,6 +202,7 @@ public class OperationView extends VerticalLayout {
 
     }
 
+    //TODO: вынести в отдельный класс
     private Dialog getEmployeeMiniDialog() {
         Dialog employeeDialog = new Dialog();
         Span spanOwner = new Span("Владелец");
@@ -217,7 +218,7 @@ public class OperationView extends VerticalLayout {
         );
 
         employeeDtoSelect.setItems(employeeService.getAll());
-        employeeDtoSelect.setValue(employeeService.getPrincipalManually());
+        employeeDtoSelect.setValue(employeeService.getPrincipalManually()); //TODO: refactor, читать из селекта
         employeeDtoSelect.setItemLabelGenerator(EmployeeDto::getFirstName);
 
         ownerLine.add(ownerLabel, employeeDtoSelect);
@@ -232,7 +233,7 @@ public class OperationView extends VerticalLayout {
 
         );
         departmentDtoSelect.setItems(departmentService.getAll());
-        departmentDtoSelect.setValue(employeeService.getPrincipalManually().getDepartment());
+        departmentDtoSelect.setValue(employeeService.getPrincipalManually().getDepartment()); //TODO: refactor, читать из селекта
         departmentDtoSelect.setItemLabelGenerator(DepartmentDto::getName);
 
         departmentLine.add(departmentLabel, departmentDtoSelect);

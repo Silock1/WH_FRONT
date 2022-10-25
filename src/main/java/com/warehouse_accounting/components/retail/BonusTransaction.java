@@ -218,7 +218,6 @@ public class BonusTransaction extends VerticalLayout {
                 selectedItems = new HashSet<>(transactionService.getAll());
             }
             massEditView.getSpanSelectedItems().setText(String.format("Выбрано %d элементов", selectedItems.size()));
-            selectedItems = new HashSet<>(); //clear. clear() выкидывает exception
 
             openMassEdit();
         });
@@ -241,6 +240,7 @@ public class BonusTransaction extends VerticalLayout {
     private void setCloseMassEdit() {
         massEditView.getCloseButton().addClickListener(click ->
         {
+            clearSelectedItems();
             closeMassEdit();
             updateGrid();
         });
@@ -371,27 +371,25 @@ public class BonusTransaction extends VerticalLayout {
     private void setContinueButtonLogic() {
 
         massEditView.getContinueButton().addClickListener(click -> {
-            silverButton.greenNotification("ЗАГЛУШКА Далее");
+            silverButton.greenNotification("Редактирование завершено");
+            new ArrayList<>(selectedItems).forEach(dto -> {
+                dto.setDepartmentDto(massEditView.getDepartmentSelect().getValue());
+                dto.setOwnerDto(massEditView.getEmployeeSelect().getValue());
+                dto.setGeneralAccess(massEditView.isGeneralAccessFromForm());
+                transactionService.update(dto);
+            });
 
-            //Todo разделить колонку отдел и владелец, иначе не изменить. При сейве updat'ить employee выбранным отделом сверху в окошке
-//            EmployeeDto employee = massEditView.getEmployeeBox().getValue();
-//            DepartmentDto department = massEditView.getDepartmentBox().getValue();
-//            System.out.println(employee);
-//            System.out.println(department);
-//
-//
-//            for (BonusTransactionDto dto : new ArrayList<>(selectedItems)) {
-//                employee.setDepartment(department);
-//                dto.setOwnerDto(employeeService.updateWithResponse(employee));
-//                transactionService.update(dto);
-//
-//            }
+            clearSelectedItems();
             closeMassEdit();
             updateGrid();
 
         });
 
 
+    }
+
+    private void clearSelectedItems() {
+        selectedItems = new HashSet<>();
     }
 
     private void setCopyLogic() {

@@ -49,26 +49,4 @@ public class EmployeeDto {
 
     private Set<IpAddressDto> ipAddress = new HashSet<>();
 
-    @Override
-    public String toString() {
-        return "EmployeeDto{" +
-                "id=" + id +
-                ", lastName='" + lastName + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", middleName='" + middleName + '\'' +
-                ", sortNumber='" + sortNumber + '\'' +
-                ", phone='" + phone + '\'' +
-                ", inn='" + inn + '\'' +
-                ", description='" + description + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", department=" + department +
-                ", position=" + position +
-                ", roles=" + roles +
-                ", image=" + image +
-                ", tariff=" + tariff +
-                ", ipNetwork=" + ipNetwork +
-                ", ipAddress=" + ipAddress +
-                '}';
-    }
 }
