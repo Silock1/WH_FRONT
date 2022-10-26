@@ -52,6 +52,7 @@ public class BonusTransaction extends VerticalLayout {
     private final ContractorService contractorService;
     private final FileService fileService;
     private final EmployeeService employeeService;
+    private final DepartmentService departmentService;
     private final OperationView earningForm;
     private final OperationView spendingForm;
     private final MassEditView massEditView;
@@ -70,12 +71,13 @@ public class BonusTransaction extends VerticalLayout {
         this.contractorService = contractorService;
         this.fileService = fileService;
         this.employeeService = employeeService;
+        this.departmentService = departmentService;
 
         toolBar = new BonusTransactionToolBar(this.transactionService);
         grid = new BonusTransactionGridLayout(this.transactionService);
-        massEditView = new MassEditView(this.employeeService, departmentService);
-        earningForm = new OperationView(OperationView.TypeOperation.EARNING, this.fileService, this.employeeService);
-        spendingForm = new OperationView(OperationView.TypeOperation.SPENDING, this.fileService, this.employeeService);
+        massEditView = new MassEditView(this.employeeService, this.departmentService);
+        earningForm = new OperationView(OperationView.TypeOperation.EARNING, this.fileService, this.employeeService, this.departmentService);
+        spendingForm = new OperationView(OperationView.TypeOperation.SPENDING, this.fileService, this.employeeService, this.departmentService);
 
         setMiniField();
         setVisibleChangeSubmenu();
@@ -210,13 +212,12 @@ public class BonusTransaction extends VerticalLayout {
     private void setSubMenuMassEdit() {
         setSelectedItems();
         toolBar.getMassEdit().addClickListener(event -> {
-          //TODO: баги, пока на доработке
+
 
             if (selectedItems.size() == 0) {
                 selectedItems = new HashSet<>(transactionService.getAll());
             }
             massEditView.getSpanSelectedItems().setText(String.format("Выбрано %d элементов", selectedItems.size()));
-            selectedItems = new HashSet<>(); //clear. clear() выкидывает exception
 
             openMassEdit();
         });
@@ -239,6 +240,8 @@ public class BonusTransaction extends VerticalLayout {
     private void setCloseMassEdit() {
         massEditView.getCloseButton().addClickListener(click ->
         {
+            massEditView.clearCheckBoxes();
+            clearSelectedItems();
             closeMassEdit();
             updateGrid();
         });
@@ -319,8 +322,10 @@ public class BonusTransaction extends VerticalLayout {
         dto.setBonusValue(Long.valueOf(form.getBonusValueInput().getValue()));
         dto.setBonusProgramDto(form.getSelectBonusProgramDto().getValue());
         dto.setContractorDto(form.getSelectContractorDto().getValue());
-        dto.setOwnerDto(employeeService.getPrincipalManually());
+        dto.setOwnerDto(form.getEmployeeFromDialog());
+        dto.setDepartmentDto(form.getDepartmentFromDialog());
         dto.setOwnerChangedDto(employeeService.getPrincipalManually());
+        dto.setGeneralAccess(form.getAccessBoxFromDialog());
         dto.setFilesDto(files);
 
         if (form.equals(earningForm)) {
@@ -366,28 +371,40 @@ public class BonusTransaction extends VerticalLayout {
 
     private void setContinueButtonLogic() {
 
-        massEditView.getContinueButton().addClickListener(click -> {
-            silverButton.greenNotification("ЗАГЛУШКА Далее");
+        massEditView.getEditButton().addClickListener(click -> {
 
-            //Todo разделить колонку отдел и владелец, иначе не изменить. При сейве updat'ить employee выбранным отделом сверху в окошке
-//            EmployeeDto employee = massEditView.getEmployeeBox().getValue();
-//            DepartmentDto department = massEditView.getDepartmentBox().getValue();
-//            System.out.println(employee);
-//            System.out.println(department);
-//
-//
-//            for (BonusTransactionDto dto : new ArrayList<>(selectedItems)) {
-//                employee.setDepartment(department);
-//                dto.setOwnerDto(employeeService.updateWithResponse(employee));
-//                transactionService.update(dto);
-//
-//            }
+            new ArrayList<>(selectedItems).forEach(dto -> {
+
+                if (massEditView.getDepartmentBox().getValue()) {
+                    dto.setDepartmentDto(massEditView.getDepartmentSelect().getValue());
+                }
+
+                if (massEditView.getEmployeeBox().getValue()) {
+                    dto.setOwnerDto(massEditView.getEmployeeSelect().getValue());
+                }
+
+                if (massEditView.getRadioGroup().getValue().equals("Да")) {
+                    dto.setGeneralAccess(massEditView.isGeneralAccessBoxFlag());
+                }
+
+
+                transactionService.update(dto);
+
+            });
+
+            silverButton.greenNotification("Редактирование завершено");
+            massEditView.clearCheckBoxes();
+            clearSelectedItems();
             closeMassEdit();
             updateGrid();
 
         });
 
 
+    }
+
+    private void clearSelectedItems() {
+        selectedItems = new HashSet<>();
     }
 
     private void setCopyLogic() {
