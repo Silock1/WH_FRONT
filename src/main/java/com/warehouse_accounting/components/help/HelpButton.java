@@ -17,14 +17,19 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.server.StreamResource;
 import com.warehouse_accounting.components.AppView;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.SimpleFormatter;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @CssImport(value = "./css/helpBlock.css")
+@Log4j2
 public class HelpButton extends VerticalLayout {
     private boolean isVisible = false;
     private boolean bodyVisible = true;
@@ -39,6 +44,7 @@ public class HelpButton extends VerticalLayout {
         if (!isVisible) {
             isVisible = true;
 
+
         } else {
             isVisible = false;
         }
@@ -47,6 +53,7 @@ public class HelpButton extends VerticalLayout {
     }
 
     public Div helpDivInit() {
+
         Div helpContent = new Div();
         helpContent.addClassName("helpContent");
         helpContent.add(head(), managerDiv(), support(), foot());
